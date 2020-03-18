@@ -1,0 +1,11 @@
+# local package
+-e .
+
+# external requirements
+geopandas
+statsmodels
+scikit-learn
+pyproj
+census
+requests
+lxml
