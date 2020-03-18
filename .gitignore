@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# MacOS
+.DS_Store
+Icon[^M]
+
+# R
+.Rhistory
+
+# google docs
+*.gdoc
+*.gsheet
