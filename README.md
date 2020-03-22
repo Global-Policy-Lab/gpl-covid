@@ -17,7 +17,7 @@ In addition, to run some of the Python scripts, you’ll need to install the sma
 pip install -e .
 ```
 
- to install the package.
+ to install the package. Note that one script to scrape French epidemioological data currently requires a Windows environment and the `taskscheduleR` R package.
 
 ## Data Documentation
 A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
@@ -101,10 +101,10 @@ codes
 ## Replication Steps
 
 There are four stages to our analysis:
-Data collection and processing
-Regression model estimation
-SIR model projections
-Figure creation
+1. Data collection and processing
+2. Regression model estimation
+3. SIR model projections
+4. Figure creation
 
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was done through manual downloading of datasets and is described in as much detail as possible.
@@ -158,7 +158,9 @@ Additional manual steps performed to collect population and or epidemiological d
 
     f. Click the blue `Download` button under the `Search` button.
 
-    g. This data is saved in [data/raw/korea/KOR_population.csv](data/raw/korea/KOR_population.csv).
+    g. Select `CSV` as `File format` and download.
+
+    h. Open this file, remove the top two rows and the second column. Then change the header (the top row to `adm1_name, population`). Save to [data/raw/korea/KOR_population.csv](data/raw/korea/KOR_population.csv).
 
 There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix] (https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This data is saved in [data/raw/korea/KOR_health.csv](data/raw/korea/KOR_health.csv).
 
@@ -181,7 +183,7 @@ Once the manual downloads are complete, execute the following scripts to downloa
 ##### France
 1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd.
 2. `Rscript codes/data/france/set_auto_scrape.R` : Sets up scraping script
-3. `codes/data/france/scrape_conf_cases_by_region.R` to run daily using the taskscheduleR R package, which relies on Windows task scheduler. 
+3. `Rscript codes/data/france/scrape_conf_cases_by_region.R` to run daily using the taskscheduleR R package (**Note**: This script relies on Windows task scheduler currently). 
 4. `stata -b do codes/data/france/gen_adm2_to_adm1.do`: Run in Stata to match département population data with région INSEE codes and output [data/raw/france/adm2_to_adm1.csv](data/raw/france/adm2_to_adm1.csv).
 5. `stata -b do codes/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
 6. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
