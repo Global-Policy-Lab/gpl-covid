@@ -7,7 +7,7 @@ library(dplyr)
 library(magrittr)
 
 # set working directory
-dir <- "data/raw/korea/" 
+dir <- "data/interim/korea/" 
 outputname <- "KOR_interim"
 
 #load data
