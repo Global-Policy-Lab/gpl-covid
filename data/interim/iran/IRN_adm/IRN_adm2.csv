@@ -1,0 +1,269 @@
+"OBJECTID","ID_0","ISO","NAME_0","ID_1","NAME_1","ID_2","NAME_2","TYPE_2","ENGTYPE_2","NL_NAME_2","VARNAME_2"
+1,107,"IRN","Iran",1,"Alborz",1,"Karaj","Shahrestan","County",NA,NA
+2,107,"IRN","Iran",1,"Alborz",2,"Nazarabad","Shahrestan","County",NA,NA
+3,107,"IRN","Iran",1,"Alborz",3,"Savojbolagh","Shahrestan","County",NA,NA
+4,107,"IRN","Iran",1,"Alborz",4,"Shahriyar","Shahrestan","County",NA,"Shahriar"
+5,107,"IRN","Iran",2,"Ardebil",5,"Ardebil","Shahrestan","County",NA,NA
+6,107,"IRN","Iran",2,"Ardebil",6,"Bilehsavar","Shahrestan","County",NA,"Bilasavar"
+7,107,"IRN","Iran",2,"Ardebil",7,"Germi","Shahrestan","County",NA,NA
+8,107,"IRN","Iran",2,"Ardebil",8,"Khalkhal","Shahrestan","County",NA,NA
+9,107,"IRN","Iran",2,"Ardebil",9,"Neer","Shahrestan","County",NA,NA
+10,107,"IRN","Iran",2,"Ardebil",10,"Parsabad","Shahrestan","County",NA,NA
+11,107,"IRN","Iran",3,"Bushehr",11,"Bushehr","Shahrestan","County",NA,NA
+12,107,"IRN","Iran",3,"Bushehr",12,"Dashtestan","Shahrestan","County",NA,NA
+13,107,"IRN","Iran",3,"Bushehr",13,"Dashti","Shahrestan","County",NA,NA
+14,107,"IRN","Iran",3,"Bushehr",14,"Dayyer","Shahrestan","County",NA,NA
+15,107,"IRN","Iran",3,"Bushehr",15,"Deylam","Shahrestan","County",NA,NA
+16,107,"IRN","Iran",3,"Bushehr",16,"Genaveh","Shahrestan","County",NA,"Ganaveh"
+17,107,"IRN","Iran",3,"Bushehr",17,"Jam","Shahrestan","County",NA,NA
+18,107,"IRN","Iran",3,"Bushehr",18,"Tangestan","Shahrestan","County",NA,NA
+19,107,"IRN","Iran",4,"Chahar Mahall and Bakhtiari",19,"Ardal","Shahrestan","County",NA,NA
+20,107,"IRN","Iran",4,"Chahar Mahall and Bakhtiari",20,"Borujen","Shahrestan","County",NA,"Boroojen"
+21,107,"IRN","Iran",4,"Chahar Mahall and Bakhtiari",21,"Kuhrang","Shahrestan","County",NA,"Koohrang"
+22,107,"IRN","Iran",4,"Chahar Mahall and Bakhtiari",22,"Lordakan","Shahrestan","County",NA,"Lordegan"
+23,107,"IRN","Iran",4,"Chahar Mahall and Bakhtiari",23,"Shahr-e-Kord","Shahrestan","County",NA,NA
+24,107,"IRN","Iran",5,"East Azarbaijan",24,"Ahar","Shahrestan","County",NA,NA
+25,107,"IRN","Iran",5,"East Azarbaijan",25,"Bonab","Shahrestan","County",NA,NA
+26,107,"IRN","Iran",5,"East Azarbaijan",26,"Bostan Abad","Shahrestan","County",NA,"Bostanabad"
+27,107,"IRN","Iran",5,"East Azarbaijan",27,"Hashtrud","Shahrestan","County",NA,"Hashtrood"
+28,107,"IRN","Iran",5,"East Azarbaijan",28,"Heris","Shahrestan","County",NA,"Haris"
+29,107,"IRN","Iran",5,"East Azarbaijan",29,"Kaleibar","Shahrestan","County",NA,"Kalibar"
+30,107,"IRN","Iran",5,"East Azarbaijan",30,"Marand","Shahrestan","County",NA,NA
+31,107,"IRN","Iran",5,"East Azarbaijan",31,"Maraqeh","Shahrestan","County",NA,"Maragheh"
+32,107,"IRN","Iran",5,"East Azarbaijan",32,"Mianeh","Shahrestan","County",NA,NA
+33,107,"IRN","Iran",5,"East Azarbaijan",33,"Sarab","Shahrestan","County",NA,NA
+34,107,"IRN","Iran",5,"East Azarbaijan",34,"Shabestar","Shahrestan","County",NA,NA
+35,107,"IRN","Iran",5,"East Azarbaijan",35,"Tabriz","Shahrestan","County",NA,NA
+36,107,"IRN","Iran",6,"Esfahan",36,"Ardestan","Shahrestan","County",NA,NA
+37,107,"IRN","Iran",6,"Esfahan",37,"Borkhar and Meymeh","Shahrestan","County",NA,NA
+38,107,"IRN","Iran",6,"Esfahan",38,"Chadegan","Shahrestan","County",NA,NA
+39,107,"IRN","Iran",6,"Esfahan",39,"Falavarjan","Shahrestan","County",NA,NA
+40,107,"IRN","Iran",6,"Esfahan",40,"Fereydunshahr","Shahrestan","County",NA,NA
+41,107,"IRN","Iran",6,"Esfahan",41,"Golpayegan","Shahrestan","County",NA,"Gulpaigan"
+42,107,"IRN","Iran",6,"Esfahan",42,"Kashan","Shahrestan","County",NA,NA
+43,107,"IRN","Iran",6,"Esfahan",43,"Khansar","Shahrestan","County",NA,NA
+44,107,"IRN","Iran",6,"Esfahan",44,"Khomeynishahr","Shahrestan","County",NA,NA
+45,107,"IRN","Iran",6,"Esfahan",45,"Lanjan","Shahrestan","County",NA,"Lenjan"
+46,107,"IRN","Iran",6,"Esfahan",46,"Lower Semirom/Dehaghan","Shahrestan","County",NA,NA
+47,107,"IRN","Iran",6,"Esfahan",47,"Mobarakeh","Shahrestan","County",NA,NA
+48,107,"IRN","Iran",6,"Esfahan",48,"Natanz","Shahrestan","County",NA,NA
+49,107,"IRN","Iran",6,"Esfahan",49,"Nayin","Shahrestan","County",NA,NA
+50,107,"IRN","Iran",6,"Esfahan",50,"Semirom","Shahrestan","County",NA,NA
+51,107,"IRN","Iran",6,"Esfahan",51,"Tiran and Karvan","Shahrestan","County",NA,NA
+52,107,"IRN","Iran",7,"Fars",52,"Abadeh","Shahrestan","County",NA,NA
+53,107,"IRN","Iran",7,"Fars",53,"Darab","Shahrestan","County",NA,NA
+54,107,"IRN","Iran",7,"Fars",54,"Eqlid","Shahrestan","County",NA,NA
+55,107,"IRN","Iran",7,"Fars",55,"Estahban","Shahrestan","County",NA,NA
+56,107,"IRN","Iran",7,"Fars",56,"Fasa","Shahrestan","County",NA,NA
+57,107,"IRN","Iran",7,"Fars",57,"Firozabad","Shahrestan","County",NA,NA
+58,107,"IRN","Iran",7,"Fars",58,"Jahrom","Shahrestan","County",NA,NA
+59,107,"IRN","Iran",7,"Fars",59,"Kazerun","Shahrestan","County",NA,NA
+60,107,"IRN","Iran",7,"Fars",60,"Khorrambid","Shahrestan","County",NA,NA
+61,107,"IRN","Iran",7,"Fars",61,"Lamard","Shahrestan","County",NA,NA
+62,107,"IRN","Iran",7,"Fars",62,"Lar","Shahrestan","County",NA,NA
+63,107,"IRN","Iran",7,"Fars",63,"Mamasany","Shahrestan","County",NA,NA
+64,107,"IRN","Iran",7,"Fars",64,"Marvdasht","Shahrestan","County",NA,NA
+65,107,"IRN","Iran",7,"Fars",65,"Neyriz","Shahrestan","County",NA,NA
+66,107,"IRN","Iran",7,"Fars",66,"Sepidan","Shahrestan","County",NA,NA
+67,107,"IRN","Iran",7,"Fars",67,"Shiraz","Shahrestan","County",NA,NA
+68,107,"IRN","Iran",8,"Gilan",68,"Astaneh-ye-Ashrafiyeh","Shahrestan","County",NA,"Astaneh Ashrafiyeh"
+69,107,"IRN","Iran",8,"Gilan",69,"Astara","Shahrestan","County",NA,NA
+70,107,"IRN","Iran",8,"Gilan",70,"Bandar-e Anzali","Shahrestan","County",NA,NA
+71,107,"IRN","Iran",8,"Gilan",71,"Fuman","Shahrestan","County",NA,"Fooman"
+72,107,"IRN","Iran",8,"Gilan",72,"Hashtpar","Shahrestan","County",NA,NA
+73,107,"IRN","Iran",8,"Gilan",73,"Lahijan","Shahrestan","County",NA,NA
+74,107,"IRN","Iran",8,"Gilan",74,"Langrud","Shahrestan","County",NA,"Langerood"
+75,107,"IRN","Iran",8,"Gilan",75,"Rasht","Shahrestan","County",NA,NA
+76,107,"IRN","Iran",8,"Gilan",76,"Rudbar","Shahrestan","County",NA,NA
+77,107,"IRN","Iran",8,"Gilan",77,"Rudsar","Shahrestan","County",NA,"Roudsar"
+78,107,"IRN","Iran",8,"Gilan",78,"Shaft","Shahrestan","County",NA,"Shaft"
+79,107,"IRN","Iran",8,"Gilan",79,"Sume'eh Sara","Shahrestan","County",NA,"Some'e Sara"
+80,107,"IRN","Iran",9,"Golestan",80,"Aliabad","Shahrestan","County",NA,"Ali Abad"
+81,107,"IRN","Iran",9,"Golestan",81,"Gonbad-e-Kavus","Shahrestan","County",NA,"Gonbad Kavoos"
+82,107,"IRN","Iran",9,"Golestan",82,"Gorgan","Shahrestan","County",NA,NA
+83,107,"IRN","Iran",9,"Golestan",83,"Kordkuy","Shahrestan","County",NA,"Kordkooy"
+84,107,"IRN","Iran",9,"Golestan",84,"Minudasht","Shahrestan","County",NA,"Minoodasht"
+85,107,"IRN","Iran",9,"Golestan",85,"Torkaman","Shahrestan","County",NA,"Bandar Torkaman"
+86,107,"IRN","Iran",10,"Hamadan",86,"Asadabad","Shahrestan","County",NA,NA
+87,107,"IRN","Iran",10,"Hamadan",87,"Bahar","Shahrestan","County",NA,NA
+88,107,"IRN","Iran",10,"Hamadan",88,"Hamadan","Shahrestan","County",NA,NA
+89,107,"IRN","Iran",10,"Hamadan",89,"Kabudarahang","Shahrestan","County",NA,NA
+90,107,"IRN","Iran",10,"Hamadan",90,"Malayer","Shahrestan","County",NA,NA
+91,107,"IRN","Iran",10,"Hamadan",91,"Nahavand","Shahrestan","County",NA,NA
+92,107,"IRN","Iran",10,"Hamadan",92,"Razan","Shahrestan","County",NA,NA
+93,107,"IRN","Iran",10,"Hamadan",93,"Tuyserkan","Shahrestan","County",NA,NA
+94,107,"IRN","Iran",11,"Hormozgan",94,"Abu Musa","Shahrestan","County",NA,NA
+95,107,"IRN","Iran",11,"Hormozgan",95,"Bandar-e-Abbas","Shahrestan","County",NA,NA
+96,107,"IRN","Iran",11,"Hormozgan",96,"Bandar-e-Jask","Shahrestan","County",NA,"Jask"
+97,107,"IRN","Iran",11,"Hormozgan",97,"Bandar-e-Lengeh","Shahrestan","County",NA,NA
+98,107,"IRN","Iran",11,"Hormozgan",98,"Bastak","Shahrestan","County",NA,NA
+99,107,"IRN","Iran",11,"Hormozgan",99,"Greater Farur","Island","Island",NA,NA
+100,107,"IRN","Iran",11,"Hormozgan",100,"Greater Tonb","Island","Island",NA,NA
+101,107,"IRN","Iran",11,"Hormozgan",101,"Hajiabad","Shahrestan","County",NA,NA
+102,107,"IRN","Iran",11,"Hormozgan",102,"Hendorabi","Island","Island",NA,NA
+103,107,"IRN","Iran",11,"Hormozgan",103,"Kish","Island","Island",NA,NA
+104,107,"IRN","Iran",11,"Hormozgan",104,"Lavan","Island","Island",NA,NA
+105,107,"IRN","Iran",11,"Hormozgan",105,"Lesser Tonb","Island","Island",NA,NA
+106,107,"IRN","Iran",11,"Hormozgan",106,"Minab","Shahrestan","County",NA,NA
+107,107,"IRN","Iran",11,"Hormozgan",107,"Qeshm","Shahrestan","County",NA,NA
+108,107,"IRN","Iran",11,"Hormozgan",108,"Rudan","Shahrestan","County",NA,NA
+109,107,"IRN","Iran",11,"Hormozgan",109,"Sirri","Island","Island",NA,NA
+110,107,"IRN","Iran",11,"Hormozgan",110,"Strait of Hormuz","Unknown","Unknown",NA,NA
+111,107,"IRN","Iran",12,"Ilam",111,"Abdanan","Shahrestan","County",NA,NA
+112,107,"IRN","Iran",12,"Ilam",112,"Darrehshahr","Shahrestan","County",NA,NA
+113,107,"IRN","Iran",12,"Ilam",113,"Dehloran","Shahrestan","County",NA,NA
+114,107,"IRN","Iran",12,"Ilam",114,"Eevan","Shahrestan","County",NA,"Eevan"
+115,107,"IRN","Iran",12,"Ilam",115,"Ilam","Shahrestan","County",NA,NA
+116,107,"IRN","Iran",12,"Ilam",116,"Mehran","Shahrestan","County",NA,NA
+117,107,"IRN","Iran",12,"Ilam",117,"Shirvan and Chard-e-Aval","Shahrestan","County",NA,"Shirvan-o-Chardavol"
+118,107,"IRN","Iran",13,"Kerman",118,"Baft","Shahrestan","County",NA,NA
+119,107,"IRN","Iran",13,"Kerman",119,"Bam","Shahrestan","County",NA,NA
+120,107,"IRN","Iran",13,"Kerman",120,"Bardsir","Shahrestan","County",NA,NA
+121,107,"IRN","Iran",13,"Kerman",121,"Jiroft","Shahrestan","County",NA,NA
+122,107,"IRN","Iran",13,"Kerman",122,"Kahnuj","Shahrestan","County",NA,NA
+123,107,"IRN","Iran",13,"Kerman",123,"Kerman","Shahrestan","County",NA,NA
+124,107,"IRN","Iran",13,"Kerman",124,"Rafsanjan","Shahrestan","County",NA,NA
+125,107,"IRN","Iran",13,"Kerman",125,"Ravar","Shahrestan","County",NA,NA
+126,107,"IRN","Iran",13,"Kerman",126,"Sirjan","Shahrestan","County",NA,NA
+127,107,"IRN","Iran",13,"Kerman",127,"Zarand","Shahrestan","County",NA,NA
+128,107,"IRN","Iran",14,"Kermanshah",128,"Eslamabad-e-Gharb","Shahrestan","County",NA,NA
+129,107,"IRN","Iran",14,"Kermanshah",129,"Gilan-e-Gharb","Shahrestan","County",NA,NA
+130,107,"IRN","Iran",14,"Kermanshah",130,"Harsin","Shahrestan","County",NA,NA
+131,107,"IRN","Iran",14,"Kermanshah",131,"Kangavar","Shahrestan","County",NA,NA
+132,107,"IRN","Iran",14,"Kermanshah",132,"Kermanshah","Shahrestan","County",NA,NA
+133,107,"IRN","Iran",14,"Kermanshah",133,"n.a. (03)","Shahrestan","County",NA,NA
+134,107,"IRN","Iran",14,"Kermanshah",134,"Paveh","Shahrestan","County",NA,NA
+135,107,"IRN","Iran",14,"Kermanshah",135,"Qasr-e-Shirin","Shahrestan","County",NA,NA
+136,107,"IRN","Iran",14,"Kermanshah",136,"Sahneh","Shahrestan","County",NA,NA
+137,107,"IRN","Iran",14,"Kermanshah",137,"Sarpol-e-Zahab","Shahrestan","County",NA,NA
+138,107,"IRN","Iran",14,"Kermanshah",138,"Sonqor","Shahrestan","County",NA,NA
+139,107,"IRN","Iran",15,"Khuzestan",139,"Abadan","Shahrestan","County",NA,NA
+140,107,"IRN","Iran",15,"Khuzestan",140,"Ahvaz","Shahrestan","County",NA,NA
+141,107,"IRN","Iran",15,"Khuzestan",141,"Andimeshk","Shahrestan","County",NA,NA
+142,107,"IRN","Iran",15,"Khuzestan",142,"Baghemalek","Shahrestan","County",NA,"Baghmalek"
+143,107,"IRN","Iran",15,"Khuzestan",143,"Bandar-e-Mahshahr/Hendijan","Shahrestan","County",NA,NA
+144,107,"IRN","Iran",15,"Khuzestan",144,"Behbahan","Shahrestan","County",NA,NA
+145,107,"IRN","Iran",15,"Khuzestan",145,"Dasht-e-Azadegan","Shahrestan","County",NA,NA
+146,107,"IRN","Iran",15,"Khuzestan",146,"Dezful","Shahrestan","County",NA,NA
+147,107,"IRN","Iran",15,"Khuzestan",147,"Izeh County","Shahrestan","County",NA,NA
+148,107,"IRN","Iran",15,"Khuzestan",148,"Khorramshahr","Shahrestan","County",NA,NA
+149,107,"IRN","Iran",15,"Khuzestan",149,"Masjed Soleyman","Shahrestan","County",NA,"Masjed Soleyman"
+150,107,"IRN","Iran",15,"Khuzestan",150,"Ramhormoz","Shahrestan","County",NA,NA
+151,107,"IRN","Iran",15,"Khuzestan",151,"Shadegan","Shahrestan","County",NA,NA
+152,107,"IRN","Iran",15,"Khuzestan",152,"Shush","Shahrestan","County",NA,NA
+153,107,"IRN","Iran",15,"Khuzestan",153,"Shushtar","Shahrestan","County",NA,NA
+154,107,"IRN","Iran",16,"Kohgiluyeh and Buyer Ahmad",154,"Boyer Ahmad","Shahrestan","County",NA,"Yasooj"
+155,107,"IRN","Iran",16,"Kohgiluyeh and Buyer Ahmad",155,"Gachsaran","Shahrestan","County",NA,NA
+156,107,"IRN","Iran",16,"Kohgiluyeh and Buyer Ahmad",156,"Kohgiluyeh","Shahrestan","County",NA,"Dehdasht"
+157,107,"IRN","Iran",17,"Kordestan",157,"Baneh","Shahrestan","County",NA,NA
+158,107,"IRN","Iran",17,"Kordestan",158,"Bijar","Shahrestan","County",NA,NA
+159,107,"IRN","Iran",17,"Kordestan",159,"Divandarreh","Shahrestan","County",NA,NA
+160,107,"IRN","Iran",17,"Kordestan",160,"Kamyaran","Shahrestan","County",NA,NA
+161,107,"IRN","Iran",17,"Kordestan",161,"Marivan","Shahrestan","County",NA,NA
+162,107,"IRN","Iran",17,"Kordestan",162,"Qorveh","Shahrestan","County",NA,NA
+163,107,"IRN","Iran",17,"Kordestan",163,"Sanandaj","Shahrestan","County",NA,NA
+164,107,"IRN","Iran",17,"Kordestan",164,"Saqqez","Shahrestan","County",NA,NA
+165,107,"IRN","Iran",18,"Lorestan",165,"Aligudarz","Shahrestan","County",NA,"Aligoodarz"
+166,107,"IRN","Iran",18,"Lorestan",166,"Azna","Shahrestan","County",NA,NA
+167,107,"IRN","Iran",18,"Lorestan",167,"Borujerd","Shahrestan","County",NA,"Borudscherd"
+168,107,"IRN","Iran",18,"Lorestan",168,"Dalfan","Shahrestan","County",NA,"Delfan"
+169,107,"IRN","Iran",18,"Lorestan",169,"Dorud","Shahrestan","County",NA,"Dorood"
+170,107,"IRN","Iran",18,"Lorestan",170,"Khorramabad","Shahrestan","County",NA,"Chorramabad"
+171,107,"IRN","Iran",18,"Lorestan",171,"Kuhdasht","Shahrestan","County",NA,"Kuhdascht"
+172,107,"IRN","Iran",18,"Lorestan",172,"Poldokhtar","Shahrestan","County",NA,"Pol-e- Dochtar"
+173,107,"IRN","Iran",19,"Markazi",173,"Arak","Shahrestan","County",NA,NA
+174,107,"IRN","Iran",19,"Markazi",174,"Ashtiyan","Shahrestan","County",NA,"Ashtian"
+175,107,"IRN","Iran",19,"Markazi",175,"Delijan","Shahrestan","County",NA,NA
+176,107,"IRN","Iran",19,"Markazi",176,"Khomeyn","Shahrestan","County",NA,"Khomein"
+177,107,"IRN","Iran",19,"Markazi",177,"Mahalat","Shahrestan","County",NA,"Mahallat"
+178,107,"IRN","Iran",19,"Markazi",178,"Saveh","Shahrestan","County",NA,NA
+179,107,"IRN","Iran",19,"Markazi",179,"Shazand","Shahrestan","County",NA,NA
+180,107,"IRN","Iran",19,"Markazi",180,"Tafresh","Shahrestan","County",NA,NA
+181,107,"IRN","Iran",19,"Markazi",181,"Zarandiyeh","Shahrestan","County",NA,NA
+182,107,"IRN","Iran",20,"Mazandaran",182,"Amol","Shahrestan","County",NA,NA
+183,107,"IRN","Iran",20,"Mazandaran",183,"Babolsar","Shahrestan","County",NA,NA
+184,107,"IRN","Iran",20,"Mazandaran",184,"Babol","Shahrestan","County",NA,NA
+185,107,"IRN","Iran",20,"Mazandaran",185,"Behshahr","Shahrestan","County",NA,NA
+186,107,"IRN","Iran",20,"Mazandaran",186,"Chalus","Shahrestan","County",NA,"Chaloos"
+187,107,"IRN","Iran",20,"Mazandaran",187,"Juybar","Shahrestan","County",NA,NA
+188,107,"IRN","Iran",20,"Mazandaran",188,"Mahmudabad","Shahrestan","County",NA,NA
+189,107,"IRN","Iran",20,"Mazandaran",189,"Nur","Shahrestan","County",NA,"Noor"
+190,107,"IRN","Iran",20,"Mazandaran",190,"Ramsar","Shahrestan","County",NA,NA
+191,107,"IRN","Iran",20,"Mazandaran",191,"Sari","Shahrestan","County",NA,NA
+192,107,"IRN","Iran",20,"Mazandaran",192,"Savadkuh","Shahrestan","County",NA,NA
+193,107,"IRN","Iran",20,"Mazandaran",193,"Tonekabon","Shahrestan","County",NA,NA
+194,107,"IRN","Iran",21,"North Khorasan",194,"Bojnurd","Shahrestan","County",NA,NA
+195,107,"IRN","Iran",21,"North Khorasan",195,"Esfarayen","Shahrestan","County",NA,NA
+196,107,"IRN","Iran",21,"North Khorasan",196,"Jajarm","Shahrestan","County",NA,NA
+197,107,"IRN","Iran",22,"Qazvin",197,"Qazvin","Shahrestan","County",NA,NA
+198,107,"IRN","Iran",22,"Qazvin",198,"Takestan","Shahrestan","County",NA,NA
+199,107,"IRN","Iran",23,"Qom",199,"Qom","Shahrestan","County",NA,NA
+200,107,"IRN","Iran",24,"Razavi Khorasan",200,"Bardeskan","Shahrestan","County",NA,NA
+201,107,"IRN","Iran",24,"Razavi Khorasan",201,"Chenaran","Shahrestan","County",NA,NA
+202,107,"IRN","Iran",24,"Razavi Khorasan",202,"Dargaz","Shahrestan","County",NA,"Darrehgaz"
+203,107,"IRN","Iran",24,"Razavi Khorasan",203,"Fariman","Shahrestan","County",NA,NA
+204,107,"IRN","Iran",24,"Razavi Khorasan",204,"Ferdows","Shahrestan","County",NA,NA
+205,107,"IRN","Iran",24,"Razavi Khorasan",205,"Gonabad","Shahrestan","County",NA,NA
+206,107,"IRN","Iran",24,"Razavi Khorasan",206,"Kashmar/Khalilabad","Shahrestan","County",NA,NA
+207,107,"IRN","Iran",24,"Razavi Khorasan",207,"Khaf","Shahrestan","County",NA,NA
+208,107,"IRN","Iran",24,"Razavi Khorasan",208,"Mashhad","Shahrestan","County",NA,NA
+209,107,"IRN","Iran",24,"Razavi Khorasan",209,"n.a. (01)","Shahrestan","County",NA,NA
+210,107,"IRN","Iran",24,"Razavi Khorasan",210,"n.a. (02)","Shahrestan","County",NA,NA
+211,107,"IRN","Iran",24,"Razavi Khorasan",211,"Neyshabur","Shahrestan","County",NA,NA
+212,107,"IRN","Iran",24,"Razavi Khorasan",212,"Quchan","Shahrestan","County",NA,NA
+213,107,"IRN","Iran",24,"Razavi Khorasan",213,"Sabzevar","Shahrestan","County",NA,NA
+214,107,"IRN","Iran",24,"Razavi Khorasan",214,"Sarakhs","Shahrestan","County",NA,NA
+215,107,"IRN","Iran",24,"Razavi Khorasan",215,"Taybad","Shahrestan","County",NA,NA
+216,107,"IRN","Iran",24,"Razavi Khorasan",216,"Torbat-e-Heydarieh","Shahrestan","County",NA,NA
+217,107,"IRN","Iran",24,"Razavi Khorasan",217,"Torbat-e-Jam","Shahrestan","County",NA,NA
+218,107,"IRN","Iran",25,"Semnan",218,"Damghan","Shahrestan","County",NA,NA
+219,107,"IRN","Iran",25,"Semnan",219,"Garmsar","Shahrestan","County",NA,NA
+220,107,"IRN","Iran",25,"Semnan",220,"Semnan","Shahrestan","County",NA,NA
+221,107,"IRN","Iran",25,"Semnan",221,"Shahrud","Shahrestan","County",NA,NA
+222,107,"IRN","Iran",26,"Sistan and Baluchestan",222,"Chahbahar","Shahrestan","County",NA,NA
+223,107,"IRN","Iran",26,"Sistan and Baluchestan",223,"Iranshahr","Shahrestan","County",NA,NA
+224,107,"IRN","Iran",26,"Sistan and Baluchestan",224,"Khash","Shahrestan","County",NA,NA
+225,107,"IRN","Iran",26,"Sistan and Baluchestan",225,"Nikshahr","Shahrestan","County",NA,NA
+226,107,"IRN","Iran",26,"Sistan and Baluchestan",226,"Saravan","Shahrestan","County",NA,NA
+227,107,"IRN","Iran",26,"Sistan and Baluchestan",227,"Zabol","Shahrestan","County",NA,NA
+228,107,"IRN","Iran",26,"Sistan and Baluchestan",228,"Zahedan","Shahrestan","County",NA,NA
+229,107,"IRN","Iran",27,"South Khorasan",229,"Birjand","Shahrestan","County",NA,NA
+230,107,"IRN","Iran",27,"South Khorasan",230,"Nehbandan","Shahrestan","County",NA,NA
+231,107,"IRN","Iran",27,"South Khorasan",231,"Sarbisheh","Shahrestan","County",NA,NA
+232,107,"IRN","Iran",28,"Tehran",232,"Damavand","Shahrestan","County",NA,NA
+233,107,"IRN","Iran",28,"Tehran",233,"Eslamshahr","Shahrestan","County",NA,NA
+234,107,"IRN","Iran",28,"Tehran",234,"Firuzkuh","Shahrestan","County",NA,NA
+235,107,"IRN","Iran",28,"Tehran",235,"Pakdasht","Shahrestan","County",NA,NA
+236,107,"IRN","Iran",28,"Tehran",236,"Rey","Shahrestan","County",NA,"Ray"
+237,107,"IRN","Iran",28,"Tehran",237,"Robatkarim","Shahrestan","County",NA,"Robat-Karim"
+238,107,"IRN","Iran",28,"Tehran",238,"Shemiranat","Shahrestan","County",NA,NA
+239,107,"IRN","Iran",28,"Tehran",239,"Theran","Shahrestan","County",NA,NA
+240,107,"IRN","Iran",28,"Tehran",240,"Varamin","Shahrestan","County",NA,NA
+241,107,"IRN","Iran",29,"West Azarbaijan",241,"Bukan","Shahrestan","County",NA,NA
+242,107,"IRN","Iran",29,"West Azarbaijan",242,"Chaldoran","Shahrestan","County",NA,NA
+243,107,"IRN","Iran",29,"West Azarbaijan",243,"Khoy","Shahrestan","County",NA,NA
+244,107,"IRN","Iran",29,"West Azarbaijan",244,"Mahabad","Shahrestan","County",NA,NA
+245,107,"IRN","Iran",29,"West Azarbaijan",245,"Maku","Shahrestan","County",NA,NA
+246,107,"IRN","Iran",29,"West Azarbaijan",246,"Miyandoab","Shahrestan","County",NA,NA
+247,107,"IRN","Iran",29,"West Azarbaijan",247,"Naqadeh","Shahrestan","County",NA,"Naghadeh"
+248,107,"IRN","Iran",29,"West Azarbaijan",248,"Orumiyeh","Shahrestan","County",NA,"Urmia"
+249,107,"IRN","Iran",29,"West Azarbaijan",249,"Oshnaviyeh","Shahrestan","County",NA,NA
+250,107,"IRN","Iran",29,"West Azarbaijan",250,"Piranshahr","Shahrestan","County",NA,NA
+251,107,"IRN","Iran",29,"West Azarbaijan",251,"Salmas","Shahrestan","County",NA,NA
+252,107,"IRN","Iran",29,"West Azarbaijan",252,"Sardasht","Shahrestan","County",NA,NA
+253,107,"IRN","Iran",29,"West Azarbaijan",253,"Shahindezh","Shahrestan","County",NA,NA
+254,107,"IRN","Iran",29,"West Azarbaijan",254,"Takab","Shahrestan","County",NA,NA
+255,107,"IRN","Iran",30,"Yazd",255,"Ardakan","Shahrestan","County",NA,NA
+256,107,"IRN","Iran",30,"Yazd",256,"Bafq","Shahrestan","County",NA,NA
+257,107,"IRN","Iran",30,"Yazd",257,"Mehriz","Shahrestan","County",NA,"Mehreez"
+258,107,"IRN","Iran",30,"Yazd",258,"Meybod","Shahrestan","County",NA,"Maybod"
+259,107,"IRN","Iran",30,"Yazd",259,"Tabas","Shahrestan","County",NA,NA
+260,107,"IRN","Iran",30,"Yazd",260,"Taft","Shahrestan","County",NA,NA
+261,107,"IRN","Iran",30,"Yazd",261,"Yazd","Shahrestan","County",NA,NA
+262,107,"IRN","Iran",31,"Zanjan",262,"Abhar","Shahrestan","County",NA,NA
+263,107,"IRN","Iran",31,"Zanjan",263,"Khodabandeh","Shahrestan","County",NA,NA
+264,107,"IRN","Iran",31,"Zanjan",264,"Khorramdarreh","Shahrestan","County",NA,"Khoramdareh"
+265,107,"IRN","Iran",31,"Zanjan",265,"Mahneshan","Shahrestan","County",NA,NA
+266,107,"IRN","Iran",31,"Zanjan",266,"Tarom","Shahrestan","County",NA,"Abbar"
+267,107,"IRN","Iran",31,"Zanjan",267,"Zanjan","Shahrestan","County",NA,NA
+268,107,"IRN","Iran",31,"Zanjan",268,"Zarrinabad","Shahrestan","County",NA,NA

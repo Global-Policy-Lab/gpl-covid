@@ -1,0 +1,62 @@
+adm0,adm1,adm2,date,policy_category,policy_description,optional,minor,source,access_date,dow
+France,11,75,2/29/2020,event_cancel,Paris half marathon for March 1,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,7
+France,32,60,2/29/2020,no_gathering,no gathering,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,7
+France,32,60,2/29/2020,school_closure_5,5 cities,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,7
+France,,,2/29/2020,no_gathering_5000,limit gatherings of more than 5000,,,https://www.gouvernement.fr/info-coronavirus,3/14/2020,7
+France,76,82,2/29/2020,event_cancel,Championnats de France de cross-country for March 6-7,,1,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,7
+France,32,60,3/1/2020,school_closure_4,4 more cities added,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,1
+France,53,56,3/1/2020,no_gathering,,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,1
+France,53,56,3/1/2020,school_closure_3,,,,,3/14/2020,1
+France,84,74,3/2/2020,school_closure_1,,,,https://www.auvergne-rhone-alpes.ars.sante.fr/communique-de-presse-covid-19-point-de-situation-au-lundi-2-mars-14h,3/14/2020,2
+France,32,60,3/3/2020,no_gathering,professional football game,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,3
+France,44,68,3/4/2020,school_closure_3,,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,4
+France,93,13,3/4/2020,school_closure_1,one school with confirmed case closed,,,https://www.paca.ars.sante.fr/coronavirus-en-provence-alpes-cote-dazur-point-de-situation,3/15/2020,4
+France,24,45,3/5/2020,school_closure_1,"minor, due to a professor testing positive",,,https://www.centre-val-de-loire.ars.sante.fr/coronavirus-un-troisieme-cas-confirme-en-region-centre-val-de-loire,3/14/2020,5
+France,11,93,3/6/2020,school_closure_1,nursery school with confirmed case closed,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid19_20200306.pdf,3/15/2020,6
+France,11,93,3/6/2020,school_closure_1,high school with confirmed case closed,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid19_20200306.pdf,3/15/2020,6
+France,32,59,3/6/2020,school_closure_1,one school with confirmed case closed,,,https://www.hauts-de-france.ars.sante.fr/covid-19-une-ecole-fermee-dans-le-douaisis,3/14/2020,6
+France,44,68,3/6/2020,event_cancel,professional sport event to be without public,,,https://www.grand-est.ars.sante.fr/system/files/2020-03/20200306_CP_MesuresCoronavirusHautRhin.pdf,3/14/2020,6
+France,44,68,3/6/2020,no_gathering_50,"excludes shops, businesses, restaurants, bars, wedding, funerals, public transit",,,https://www.grand-est.ars.sante.fr/system/files/2020-03/20200306_CP_MesuresCoronavirusHautRhin.pdf,3/14/2020,6
+France,44,68,3/6/2020,social_distance,"minors cannot visit dependent elderly or long-term care establishments, recommend adults as well",,,https://www.grand-est.ars.sante.fr/system/files/2020-03/20200306_CP_MesuresCoronavirusHautRhin.pdf,3/14/2020,6
+France,44,68,3/6/2020,social_distance,"closed public pools, except for training and competitions",,,https://www.grand-est.ars.sante.fr/system/files/2020-03/20200306_CP_MesuresCoronavirusHautRhin.pdf,3/14/2020,6
+France,11,95,3/7/2020,school_closure_1,one school with confirmed case closed,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid19_20200307.pdf,3/15/2020,7
+France,44,68,3/7/2020,school_closure_all,only early childhood establisments,,,https://www.grand-est.ars.sante.fr/system/files/2020-03/20200306_CP_MesuresCoronavirusHautRhin.pdf,3/14/2020,7
+France,11,91,3/8/2020,school_closure_1,one school with confirmed case closed,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid19_20200308.pdf,3/15/2020,1
+France,11,95,3/8/2020,school_closure_1,nursery school with confirmed case closed,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid19_20200308.pdf,3/15/2020,1
+France,32,59,3/8/2020,school_closure_1,one school with confirmed case closed,,,https://www.hauts-de-france.ars.sante.fr/covid-19-lecole-publique-leon-lambert-de-coutiches-fermee-par-mesure-de-precaution,3/14/2020,1
+France,44,68,3/8/2020,school_closure_all,"primary and secondary schools plus daycare, excludes BTS/CPGE/GRETA training courses in high schools",,,https://www.grand-est.ars.sante.fr/system/files/2020-03/Covid19_point_GrandEst080320.pdf,3/14/2020,1
+France,75,,3/8/2020,social_distance,Visits to nursing homes strongly discouraged,1,,https://www.nouvelle-aquitaine.ars.sante.fr/communique-de-presse-coronavirus-point-de-situation-en-nouvelle-aquitaine-du-08032020,3/15/2020,1
+France,93,83,3/8/2020,school_closure_1,one school with confirmed case closed,,,https://www.paca.ars.sante.fr/coronavirus-en-provence-alpes-cote-dazur-point-de-situation-du-8-mars,3/15/2020,1
+France,94,2,3/8/2020,event_cancel,professional sport event to be without public,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,1
+France,94,2,3/8/2020,no_gathering_50,"excludes shops, businesses, restaurants, bars, wedding, funerals, public transit",,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,1
+France,94,2,3/8/2020,school_closure_1,school closure in the biggest city of corse,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,1
+France,,,3/8/2020,no_gathering_1000,limit gatherings of more than 1000,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,1
+France,11,75,3/9/2020,school_closure_1,one school with confirmed case closed,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid19_20200309.pdf,3/15/2020,2
+France,11,78,3/9/2020,school_closure_1,one school with confirmed case closed,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid19_20200309.pdf,3/15/2020,2
+France,28,14,3/9/2020,no_gathering_50,town of Biéville-Beuville only,,,https://www.normandie.ars.sante.fr/coronavirus-point-de-situation-en-normandie-1,3/15/2020,2
+France,28,14,3/9/2020,school_closure_1,school group of Biéville-Beuville,,,https://www.normandie.ars.sante.fr/coronavirus-point-de-situation-en-normandie-2,3/15/2020,2
+France,28,14,3/9/2020,social_distance,closure of certain establishments open to the public in town of Biéville-Beuville,,,https://www.normandie.ars.sante.fr/coronavirus-point-de-situation-en-normandie-3,3/15/2020,2
+France,32,60,3/9/2020,no_gathering_50,no gathering of more than 50 inside,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,2
+France,32,60,3/9/2020,school_closure_all,all school closure,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,2
+France,11,91,3/10/2020,school_closure_2,two schools with confirmed case closed,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid19_20200309.pdf,3/15/2020,3
+France,24,41,3/10/2020,school_closure_1,"minor, due to a professor testing positive",,,https://www.centre-val-de-loire.ars.sante.fr/communique-de-presse-coronavirus-informations-sur-le-lycee-de-pontlevoy-loir-et-cher,3/14/2020,3
+France,32,80,3/10/2020,school_closure_1,one school with confirmed case closed,,,https://www.hauts-de-france.ars.sante.fr/covid-19-lecole-maternelle-au-pays-des-enfants-sages-de-chaulnes-80-fermee-par-mesure-de-precaution,3/14/2020,3
+France,11,75,3/11/2020,school_closure_1,"mother of student tested positive, school closed",,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid10_20200311.pdf,3/15/2020,4
+France,53,35,3/11/2020,school_closure_1,"minor, due to a professor beeing tested positive",,,https://www.bretagne.ars.sante.fr/coronavirus-en-ille-et-vilaine-fermeture-detablissements-scolaires-de-la-commune-de-bruz,3/14/2020,4
+France,76,34,3/11/2020,school_closure_16,,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,4
+France,94,2,3/11/2020,school_closure_all,,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,4
+France,,,3/11/2020,social_distance,cannot visit dependent elderly or long-term care establishments,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,4
+France,11,75,3/12/2020,school_closure_3,three schools closed after students tested positive,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid10_20200312.pdf,3/15/2020,5
+France,24,18,3/12/2020,school_closure_1,"minor, due to a professor testing positive",,,https://www.centre-val-de-loire.ars.sante.fr/coronavirus-point-de-situation-au-12-mars-en-region-centre-val-de-loire,3/14/2020,5
+France,32,59,3/12/2020,school_closure_1,one school with confirmed case closed,,,https://www.hauts-de-france.ars.sante.fr/covid-19-le-lycee-professionnel-paul-langevin-de-waziers-ferme-par-mesure-de-precaution,3/14/2020,5
+France,75,40,3/12/2020,school_closure_1,one school with confirmed case closed,,,https://www.nouvelle-aquitaine.ars.sante.fr/communique-de-presse-coronavirus-point-de-situation-en-nouvelle-aquitaine-du-12032020,3/15/2020,5
+France,75,47,3/12/2020,school_closure_3,three schools closed after students tested positive,,,https://www.nouvelle-aquitaine.ars.sante.fr/communique-de-presse-coronavirus-point-de-situation-en-nouvelle-aquitaine-du-12032020,3/15/2020,5
+France,11,75,3/13/2020,social_distance,louvres' closure,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,6
+France,11,78,3/13/2020,social_distance,versailles' closure,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,6
+France,,,3/13/2020,no_gathering_100,limit gatherings of more than 100,,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,6
+France,,,3/13/2020,paid_sick_leave,,,,https://www.hauts-de-france.ars.sante.fr/coronavirus-covid-19-le-point-sur-la-delivrance-des-arrets-de-travail,3/14/2020,6
+France,11,,3/14/2020,social_distance,Activation of the ARS Business Continuity Plan - teleworking for not priority 1 workers,,,https://www.iledefrance.ars.sante.fr/system/files/2020-03/PointSituationCovid10_20200313.pdf,3/15/2020,7
+France,44,67,3/14/2020,no_gathering_50,"excludes shops, businesses, restaurants, bars, wedding, funerals, public transit",,,https://www.grand-est.ars.sante.fr/system/files/2020-03/CP_Coronavirus_Mesuresrenforc%C3%A9esBas-Rhin_130320.pdf,3/14/2020,7
+France,,,3/16/2020,school_closure_all,for minimum of 15 days or as long as necessary,,,https://www.gouvernement.fr/info-coronavirus,3/14/2020,2
+France,,,3/15/2020,business_closure,,,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,1
+France,,,3/17/2020,home_isolation,,,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,3

@@ -1,0 +1,27 @@
+name: gpl-covid
+channels:
+    - gerrymandr
+    - conda-forge
+    - r
+    - defaults
+dependencies:
+    - python>=3.5
+    - jupyter=1.0
+    - fuzzywuzzy=0.17
+    - geopandas=0.7
+    - pyproj=2.5
+    - census=0.8
+    - requests=2.23
+    - lxml=4.5
+    - beautifulsoup4=4.8
+    - matplotlib=3.2
+    - pip
+    - r-essentials
+    - r-tidyverse
+    - r-lubridate
+    - r-lfe
+    - r-rvest
+    - r-taskscheduleR
+    - r-rgdal
+    - r-rgeos
+    - r-tigris

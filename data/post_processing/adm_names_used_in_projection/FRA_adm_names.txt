@@ -1,0 +1,3 @@
+adm1_names:
+AuvergneRhôneAlpes, BourgogneFrancheComté, Bretagne, Centre, GrandEst, HautsdeFrance, IledeFrance,          
+Normandie, NouvelleAquitaine, Occitanie, Paca, PaysdelaLoire   

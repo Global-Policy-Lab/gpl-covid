@@ -1,0 +1,59 @@
+Countries (comma separated),Variables (comma separated),Source,Notes,URL,Date/time data most recently downloaded
+China,"cum_confirmed_cases, cum_deaths, cum_recoveries",Hubei Health Commission,,http://wjw.hubei.gov.cn/bmdt/ztzl/fkxxgzbdgrfyyq/xxfb/index_26.shtml,3/16/20
+China,"cum_confirmed_cases, cum_deaths, cum_recoveries",National Health Commission of PRC,,http://www.nhc.gov.cn/xcs/yqtb/list_gzbd.shtml,3/16/20
+China,"cum_confirmed_cases, cum_deaths, cum_recoveries",Guangdong Health Commission,,http://wsjkw.gd.gov.cn/zwyw_yqxx/index_5.html,3/16/20
+China,"cum_confirmed_cases, cum_deaths, cum_recoveries",Zhejiang Health Commision,,http://www.zj.gov.cn/col/col1228996608/index.html,3/16/20
+China,"cum_confirmed_cases, cum_deaths, cum_recoveries",DXY Crawler,,https://github.com/BlankerL/DXY-COVID-19-Data,3/18/20
+Italy,"cum_hospitalized_symptom, cum_intensive_care, cum_hospitalized, cum_home_confinement, active_cases, active_cases_new, cum_recoveries, cum_deaths, cum_confirmed_cases, cum_tests",Dipartimento della Protezione Civile,,https://github.com/pcm-dpc/COVID-19,3/18/20
+USA,"cum_confirmed_cases, active_cases, cum_deaths, cum_recoveries",Johns Hopkins University interactive dashboard,,https://github.com/CSSEGISandData/COVID-19 ,3/18/20
+Korea,cum_confirmed_cases,Daegu,,http://www.daegu.go.kr/dgcontent/index.do?menu_link=/icms/bbs/selectBoardArticle.do&menu_id=00936642&bbsId=BBS_02112&nttId=446002,3/14/20
+Korea,cum_confirmed_cases,Gyeongsangbuk-do,,https://www.gb.go.kr/Main/open_contents/section/wel/page.do?mnu_uid=5857&LARGE_CODE=360&MEDIUM_CODE=90&SMALL_CODE=10mnu_order=2,3/14/20
+Korea,cum_confirmed_cases,Jeollabuk-do,,http://www.jeonbuk.go.kr/board/list.jeonbuk?boardId=BBS_0000105&menuCd=DOM_000000105010004000&contentsSid=1189&cpath=,3/14/20
+Korea,cum_confirmed_cases,Gyeongsangbuk-do,,https://www.gb.go.kr/,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Sejong,,https://www.sejong.go.kr/bbs/R3273/list.do?cmsNoStr=17465,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Chuncheon-si,,https://www.chuncheon.go.kr/index.chuncheon?menuCd=DOM_000000599001000000,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Wonju-si,,https://www.wonju.go.kr/intro.jsp,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Gangneung-si,,https://www.gn.go.kr/,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Taebaek-si,,http://www.taebaek.go.kr/intro.jsp,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Sokcho-si,,http://www.sokcho.go.kr/intro.html,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Samcheok-si,,http://www.samcheok.go.kr/02179/02696.web,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Seoul,,http://www.seoul.go.kr/coronaV/coronaStatus.do,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Gyeonggi-do,,https://www.gg.go.kr/contents/contents.do?ciIdx=1150&menuId=2909,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Incheon,,https://www.incheon.go.kr/health/HE020409,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Busan,,http://www.busan.go.kr/corona19/index,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Ulsan,,http://www.ulsan.go.kr/corona.jsp,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Gwangju,,https://www.gwangju.go.kr/,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Chungcheongnam-do,,http://www.chungnam.go.kr/coronaStatus.do,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Chungcheongbuk-do,,http://www1.chungbuk.go.kr/covid-19/index.do,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Gyeongsangnam-do,,http://xn--19-q81ii1knc140d892b.kr/main/main.do,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Jeju,,https://www.jeju.go.kr/corona19.jsp,3/14/20
+Korea,"cum_confirmed_cases, cum_deaths, cum_recoveries, active_cases",Jeollanam-do,,https://www.jeonnam.go.kr/coronaMainPage.do,3/14/20
+France,cum_confirmed_cases,Fr-SARS-CoV-2 Open Data website,,https://www.data.gouv.fr/en/datasets/fr-sars-cov-2/,3/18/20
+France,cum_confirmed_cases,Santé publique France,updated daily,https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Iran#March_2020,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,https://time.com/5789360/iran-coronavirus-death-toll/,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://www.thechronicleherald.ca/news/world/iran-confirms-13-more-coronavirus-cases-two-deaths-health-ministry-413857/,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=199922,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=199973,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=199991,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200002,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200039,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200098,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200252,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200306,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200330,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200340,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200392,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200401,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200431,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200517,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200557,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200574,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200584,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200688,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200584,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200688,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200716,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://behdasht.gov.ir/index.jsp?siteid=1&fkeyid=&siteid=1&pageid=54782&newsview=200782,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://archive.today/TAuY9,3/18/20
+Iran,new_confirmed_cases,"Iran Ministry of Health, summarized by Wikipedia",,http://archive.today/8jWSh,3/18/20

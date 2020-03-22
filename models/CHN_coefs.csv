@@ -1,0 +1,19 @@
+adm0,policy,suffix,beta,se
+"CHN","home_isolation_L0_to_L7","",-.097,.017
+"CHN","travel_ban_local_L0_to_L7","",-.01,.038
+"CHN","home_isolation_L8_to_L14","",-.138,.016
+"CHN","travel_ban_local_L8_to_L14","",-.124,.038
+"CHN","home_isolation_L15_to_L21","",-.159,.016
+"CHN","travel_ban_local_L15_to_L21","",-.17,.035
+"CHN","home_isolation_L22_to_L28","",-.165,.016
+"CHN","travel_ban_local_L22_to_L28","",-.177,.034
+"CHN","home_isolation_L29_to_L70","",-.198,.02
+"CHN","travel_ban_local_L29_to_L70","",-.19,.035
+"CHN","comb. policy","",-1.427,.17
+"CHN","first week (home+travel)","",-.107,.034
+"CHN","second week (home+travel)","",-.262,.04
+"CHN","third week (home+travel)","",-.329,.036
+"CHN","fourth week (home+travel)","",-.342,.035
+"CHN","fifth week (home+travel)","",-.388,.036
+"CHN","no_policy rate","",.225,.095
+"CHN_Wuhan","no_policy rate","",.435,.059
