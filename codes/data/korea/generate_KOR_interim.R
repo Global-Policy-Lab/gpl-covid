@@ -73,6 +73,10 @@ df$work_from_home_optional[df$date >= as.Date("2020-03-11")] <- 1
 # define testing regime
 df$testing_regime <- 0
 df$testing_regime[df$date >= as.Date("2020-01-28")] <- 1 
+df$testing_regime[df$date >= as.Date("2020-02-04")] <- 2 
+df$testing_regime[df$date >= as.Date("2020-02-07")] <- 3 
+df$testing_regime[df$date >= as.Date("2020-02-20")] <- 4 
+df$testing_regime[df$date >= as.Date("2020-02-29")] <- 5 
 
 # no demonstration
 df$no_demonstration <- 0
