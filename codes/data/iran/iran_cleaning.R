@@ -44,6 +44,7 @@ cases_in <- 'data/interim/iran/covid_iran_cases.csv'
 policies_in <- 'data/interim/iran/covid_iran_policies.csv' 
 file_out <- 'data/interim/iran/IRN_interim.csv' 
 file_out_adm0 <- 'data/interim/iran/adm0/IRN_interim.csv' 
+dir.create('data/interim/iran/adm0', showWarnings=FALSE)
 
 ### !!! User defined !!!
 ### Iran did not report subnational data for 3/2 and 3/3/20. One option is to disaggregate the national
