@@ -187,7 +187,7 @@ Once the manual downloads are complete, execute the following scripts to downloa
 2. `python codes/data/iran/iran-split-interim-into-processed.py`
 
 ##### Italy
-`jupyter nbconvert --to python --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`: **Note**: You will need to have run [codes/data/multi_country/get_adm_info.py](codes/data/multi_country/get_adm_info.py) to generate [codes/data/interim/adm](codes/data/interim/adm) before running this.
+`python codes/data/italy/italy-download-cases-merge-policies.py`: **Note**: You will need to have run [codes/data/multi_country/get_adm_info.py](codes/data/multi_country/get_adm_info.py) to generate [codes/data/interim/adm](codes/data/interim/adm) before running this.
 
 ##### South Korea
 
