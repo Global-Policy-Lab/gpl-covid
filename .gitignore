@@ -134,3 +134,7 @@ Icon[^M]
 
 # R
 .Rhistory
+
+# other
+api_keys.json
+notebooks/iwb-sandbox.ipynb

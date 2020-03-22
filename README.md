@@ -133,9 +133,7 @@ Additional manual steps performed to collect population and or epidemiological d
 3. For city-level population data, the dataset is extracted from a compiled dataset of the 2010 Chinese City Statistical Yearbooks. We matched the city level population dataset to the city level COVID-19 epidemiology dataset. The file is in [data/raw/china/china_city_pop.csv](data/raw/china/china_city_pop.csv).
 
 ##### France
-1. Download the population data at the département level from the [National Institute of Statistics and Economic (INSEE) website](https://www.insee.fr/fr/statistiques/2012713#tableau-TCRD_004_tab1_departements) and save to [data/raw/france/TCRD_004.xls](data/raw/france/TCRD_004.xls).
-2. Download the crosswalk between département and région INSEE codes from the [National Institute of Statistics and Economic (INSEE) website](https://www.insee.fr/fr/information/3720946#titre-bloc-15) and save to [data/raw/france/departement2019.csv](data/raw/france/departement2019.csv).
-3. Download the latest file update for the number of confirmed cases per région from the [French government’s website](https://www.data.gouv.fr/en/datasets/fr-sars-cov-2/) and save it to [data/raw/france/fr-sars-cov-2-YYYYMMDD.xlsx](data/raw/france/fr-sars-cov-2-YYYYMMDD.xlsx).
+1. Download the latest file update for the number of confirmed cases per région from the [French government’s website](https://www.data.gouv.fr/en/datasets/fr-sars-cov-2/) and save it to [data/raw/france/fr-sars-cov-2-YYYYMMDD.xlsx](data/raw/france/fr-sars-cov-2-YYYYMMDD.xlsx).
 
 ##### Iran
 1. Copy all of the date lines from the "New COVID-19 cases in Iran by province" table on the [Wikipedia page tracking this outbreak in Iran](https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Iran).
@@ -173,7 +171,13 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 Once the manual downloads are complete, execute the following scripts to download the remaining data and process the full set of input data across the six countries.
 
 ##### Multi-country
-`jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/multi_country/get_adm_info.ipynb`: Generates shapefiles and csvs with administrative unit names, geographies, and populations. (**Note:** )
+`jupyter nbconvert --to python --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/multi_country/get_adm_info.ipynb`: Generates shapefiles and csvs with administrative unit names, geographies, and populations. **Note:** To run this script, you will need a U.S. Census API key, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format
+
+```json
+{
+    "census": "API_KEY_STRING"
+}
+```
 
 ##### China
 `python codes/data/china/collate_data.py`: Download, clean, and collate the Chinese city level dataset.
@@ -189,9 +193,8 @@ Once the manual downloads are complete, execute the following scripts to downloa
 1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd.
 2. `Rscript codes/data/france/set_auto_scrape.R` : Sets up scraping script
 3. `Rscript codes/data/france/scrape_conf_cases_by_region.R` to run daily using the taskscheduleR R package (**Note**: This script relies on Windows task scheduler currently). 
-4. `stata -b do codes/data/france/gen_adm2_to_adm1.do`: Run in Stata to match département population data with région INSEE codes and output [data/interim/france/adm2_to_adm1.csv](data/interim/france/adm2_to_adm1.csv).
-5. `stata -b do codes/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
-6. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
+4. `stata -b do codes/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
+5. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
 
 ##### South Korea
 

@@ -16,6 +16,7 @@ dependencies:
     - pip
     - pyproj
     - requests
+    - xlrd
     - r-base
     - rstudio
     - r-lfe
