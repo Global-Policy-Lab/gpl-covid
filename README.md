@@ -171,7 +171,7 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 Once the manual downloads are complete, execute the following scripts to download the remaining data and process the full set of input data across the six countries.
 
 ##### Multi-country
-`jupyter nbconvert --to python --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/multi_country/get_adm_info.ipynb`: Generates shapefiles and csvs with administrative unit names, geographies, and populations. **Note:** To run this script, you will need a U.S. Census API key, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format
+`python codes/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations. **Note:** To run this script, you will need a U.S. Census API key, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format
 
 ```json
 {
@@ -187,7 +187,7 @@ Once the manual downloads are complete, execute the following scripts to downloa
 2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/iran/iran-split-interim-into-processed.ipynb`
 
 ##### Italy
-`jupyter nbconvert --to python --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`
+`jupyter nbconvert --to python --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`: **Note**: You will need to have run [codes/data/multi_country/get_adm_info.py](codes/data/multi_country/get_adm_info.py) to generate [codes/data/interim/adm](codes/data/interim/adm) before running this.
 
 ##### France
 1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd.
