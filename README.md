@@ -18,6 +18,11 @@ Once you have activated this environment, to run some of the Python scripts, you
 pip install -e .
 ```
 
+One of the web scraping scripts is currently run using the taskscheduleR R package, which requires a Windows environment. If you wish to run this script, execute the following command from within the `gpl-covid` environment to add this package:
+```bash
+R CMD INSTALL taskscheduleR
+```
+
 ## Data Documentation
 A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
 
