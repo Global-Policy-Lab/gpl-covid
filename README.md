@@ -192,8 +192,8 @@ Once the manual downloads are complete, execute the following scripts to downloa
 ##### South Korea
 
 1. `Rscript codes/data/korea/download_and_clean_JHU_southkorea_data.R`: Downloads country-level data from the Johns Hopkins repository.
-2. `Rscript codes/data/korea/generate_KOR_interim.R`: Constructs policy data and merges it with health and population data
-3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/korea/korea-interim-into-processed.ipynb`
+2. `Rscript codes/data/korea/generate_KOR_interim.R`: Constructs policy data and merges it with health and population data.
+3. `python codes/data/korea/korea-interim-to-processed.py`: Formats this dataset.
 
 ##### United States
 1. `Rscript codes/data/us/download_and_clean_JHU_usa_data.R`: Downloads county- (prior to Mar 9) and state- (Mar 10 onwards) level data from the Johns Hopkins repository. The code aggregates county data to state level. You may run (using `Rscript`) or step through `codes/data/us/check_health_data.R` to detect issues with data quality. 
