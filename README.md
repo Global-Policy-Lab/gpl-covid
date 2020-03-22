@@ -158,7 +158,9 @@ Additional manual steps performed to collect population and or epidemiological d
 
     f. Click the blue `Download` button under the `Search` button.
 
-    g. This data is saved in [data/interim/korea/KOR_population.csv](data/interim/korea/KOR_population.csv).
+    g. Select `CSV` as `File format` and download.
+
+    h. Open this file, remove the top two rows and the second column. Then change the header (the top row to `adm1_name, population`). Save to [data/interim/korea/KOR_population.csv](data/interim/korea/KOR_population.csv).
 
 There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). 
 This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
