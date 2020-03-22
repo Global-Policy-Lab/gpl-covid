@@ -9,8 +9,6 @@
 
 import pandas as pd
 import numpy as np
-from pathlib import Path
-import os
 from codes import utils as cutil
 
 end_of_analysis_date = '2020-03-18'
