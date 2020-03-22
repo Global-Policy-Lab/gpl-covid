@@ -5,19 +5,23 @@ This repository contains code and data necessary to replicate the findings of ou
 ## Setup
 Scripts in this repository are written in R, Python, and Stata. Note that you will need a Stata license to fully replicate the analysis. Throughout this Readme, it is assumed that you’ll execute scripts from the repo root directory. In addition, we assume that you have an environment of Python and R packages described in <environment.yml>.
 
-To create this environment using [conda](https://docs.conda.io/projects/conda/en/latest/index.html) execute :
+To create and activate this environment using [conda](https://docs.conda.io/projects/conda/en/latest/index.html) execute :
 
 ```bash
 conda env create -f environment.yml
+conda activate gpl-covid
 ```
 
-In addition, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Execute
+Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Execute
 
 ```bash
 pip install -e .
 ```
 
- to install the package.
+One of the web scraping scripts is currently run using the taskscheduleR R package, which requires a Windows environment. If you wish to run this script, execute the following command from within the `gpl-covid` environment to add this package:
+```bash
+R CMD INSTALL taskscheduleR
+```
 
 ## Data Documentation
 A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
@@ -101,10 +105,10 @@ codes
 ## Replication Steps
 
 There are four stages to our analysis:
-Data collection and processing
-Regression model estimation
-SIR model projections
-Figure creation
+1. Data collection and processing
+2. Regression model estimation
+3. SIR model projections
+4. Figure creation
 
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was done through manual downloading of datasets and is described in as much detail as possible.
@@ -129,9 +133,7 @@ Additional manual steps performed to collect population and or epidemiological d
 3. For city-level population data, the dataset is extracted from a compiled dataset of the 2010 Chinese City Statistical Yearbooks. We matched the city level population dataset to the city level COVID-19 epidemiology dataset. The file is in [data/raw/china/china_city_pop.csv](data/raw/china/china_city_pop.csv).
 
 ##### France
-1. Download the population data at the département level from the [National Institute of Statistics and Economic (INSEE) website](https://www.insee.fr/fr/statistiques/2012713#tableau-TCRD_004_tab1_departements) and save to [data/raw/france/TCRD_004.xls](data/raw/france/TCRD_004.xls).
-2. Download the crosswalk between département and région INSEE codes from the [National Institute of Statistics and Economic (INSEE) website](https://www.insee.fr/fr/information/3720946#titre-bloc-15) and save to [data/raw/france/departement2019.csv](data/raw/france/departement2019.csv).
-3. Download the latest file update for the number of confirmed cases per région from the [French government’s website](https://www.data.gouv.fr/en/datasets/fr-sars-cov-2/) and save it to [data/raw/france/fr-sars-cov-2-YYYYMMDD.xlsx](data/raw/france/fr-sars-cov-2-YYYYMMDD.xlsx).
+1. Download the latest file update for the number of confirmed cases per région from the [French government’s website](https://www.data.gouv.fr/en/datasets/fr-sars-cov-2/) and save it to [data/raw/france/fr-sars-cov-2-YYYYMMDD.xlsx](data/raw/france/fr-sars-cov-2-YYYYMMDD.xlsx).
 
 ##### Iran
 1. Copy all of the date lines from the "New COVID-19 cases in Iran by province" table on the [Wikipedia page tracking this outbreak in Iran](https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Iran).
@@ -158,44 +160,52 @@ Additional manual steps performed to collect population and or epidemiological d
 
     f. Click the blue `Download` button under the `Search` button.
 
-    g. This data is saved in [data/raw/korea/KOR_population.csv](data/raw/korea/KOR_population.csv).
+    g. Select `CSV` as `File format` and download.
 
-There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix] (https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This data is saved in [data/raw/korea/KOR_health.csv](data/raw/korea/KOR_health.csv).
+    h. Open this file, remove the top two rows and the second column. Then change the header (the top row to `adm1_name, population`). Save to [data/interim/korea/KOR_population.csv](data/interim/korea/KOR_population.csv).
+
+2. There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). 
+This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
 
 #### Automated data collection and processing
 Once the manual downloads are complete, execute the following scripts to download the remaining data and process the full set of input data across the six countries.
 
 ##### Multi-country
-`jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/data/multi_country/get_adm_info.ipynb`: Generates shapefiles and csvs with administrative unit names, geographies, and populations.
+`python codes/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations. **Note:** To run this script, you will need a U.S. Census API key, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format
+
+```json
+{
+    "census": "API_KEY_STRING"
+}
+```
 
 ##### China
 `python codes/data/china/collate_data.py`: Download, clean, and collate the Chinese city level dataset.
 
+##### France
+1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd. **Note**: Data from this site can only be downloaded in real-time. We therefore scrape this data once per day.
+2. `Rscript codes/data/france/set_auto_scrape.R` : Sets up scraping script
+3. `Rscript codes/data/france/scrape_conf_cases_by_region.R` to run daily using the taskscheduleR R package (**Note**: This script relies on Windows task scheduler currently). 
+4. `stata -b do codes/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
+5. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
+
 ##### Iran
 1. `Rscript codes/data/iran/iran_cleaning.R`
-2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/data/iran/iran-split-interim-into-processed.ipynb`
+2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/iran/iran-split-interim-into-processed.ipynb`
 
 ##### Italy
-`jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`
-
-##### France
-1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd.
-2. `Rscript codes/data/france/set_auto_scrape.R` : Sets up scraping script
-3. `codes/data/france/scrape_conf_cases_by_region.R` to run daily using the taskscheduleR R package, which relies on Windows task scheduler. 
-4. `stata -b do codes/data/france/gen_adm2_to_adm1.do`: Run in Stata to match département population data with région INSEE codes and output [data/raw/france/adm2_to_adm1.csv](data/raw/france/adm2_to_adm1.csv).
-5. `stata -b do codes/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
-6. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
+`jupyter nbconvert --to python --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`: **Note**: You will need to have run [codes/data/multi_country/get_adm_info.py](codes/data/multi_country/get_adm_info.py) to generate [codes/data/interim/adm](codes/data/interim/adm) before running this.
 
 ##### South Korea
 
 1. `Rscript codes/data/korea/download_and_clean_JHU_southkorea_data.R`: Downloads country-level data from the Johns Hopkins repository.
 2. `Rscript codes/data/korea/generate_KOR_interim.R`: Constructs policy data and merges it with health and population data
-3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/data/korea/korea-interim-into-processed.ipynb`
+3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/korea/korea-interim-into-processed.ipynb`
 
 ##### United States
 1. `Rscript codes/data/us/download_and_clean_JHU_usa_data.R`: Downloads county- (prior to Mar 9) and state- (Mar 10 onwards) level data from the Johns Hopkins repository. The code aggregates county data to state level. You may run (using `Rscript`) or step through `codes/data/us/check_health_data.R` to detect issues with data quality. 
 2. `python download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data by running (*Note*: run this script from [codes/data/us](/codes/data/us), rather than root).
-3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --execute add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Run the jupyter notebook and check that detected testing regime changes make sense, discard any false detections (it is in a notebook so that you must manually check the detected changes).
+3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Run the jupyter notebook and check that detected testing regime changes make sense, discard any false detections (it is in a notebook so that you must manually check the detected changes).
 4. `python merge_policy_and_cases.py`: Run the script to merge all data  (*Note*: run this script from [/codes/data/us](/codes/data/us), rather than root). This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
 5. `python filter-processed-to-end-date.py`: Run the script to filter [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv) to exclude data after 3/18.
 
@@ -243,7 +253,7 @@ Note that the outputs of [codes/plotting/fig1.R](codes/plotting/fig1.R) are requ
 
 #### Appendix Table A1
 
-`jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/plotting/count-policies.ipynb`
+`jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/plotting/count-policies.ipynb`
 
 #### Appendix Figure A1
 
