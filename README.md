@@ -5,19 +5,18 @@ This repository contains code and data necessary to replicate the findings of ou
 ## Setup
 Scripts in this repository are written in R, Python, and Stata. Note that you will need a Stata license to fully replicate the analysis. Throughout this Readme, it is assumed that you’ll execute scripts from the repo root directory. In addition, we assume that you have an environment of Python and R packages described in <environment.yml>.
 
-To create this environment using [conda](https://docs.conda.io/projects/conda/en/latest/index.html) execute :
+To create and activate this environment using [conda](https://docs.conda.io/projects/conda/en/latest/index.html) execute :
 
 ```bash
 conda env create -f environment.yml
+conda activate gpl-covid
 ```
 
-In addition, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Execute
+Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Execute
 
 ```bash
 pip install -e .
 ```
-
- to install the package. Note that one script to scrape French epidemioological data currently requires a Windows environment and the `taskscheduleR` R package.
 
 ## Data Documentation
 A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
