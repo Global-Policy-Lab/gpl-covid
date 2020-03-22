@@ -1,12 +1,18 @@
+#!/usr/bin/env python
+# coding: utf-8
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from codes import utils as cutil
+from os.path import join
 
-health_dxy_file = 'data/raw/china/DXYArea.csv'
-health_jan_file = 'data/raw/china/china_city_health_jan.xlsx'
-policy_file = 'data/raw/china/china_city_policy.xlsx'
-pop_file = 'data/raw/china/china_city_pop.csv'
-output_file = 'data/processed/adm2/CHN_processed.csv'
+DATA_CHINA = cutil.DATA_RAW / "china"
+health_dxy_file = join(DATA_CHINA, 'DXYArea.csv')
+health_jan_file = join(DATA_CHINA, 'china_city_health_jan.xlsx')
+policy_file = join(DATA_CHINA, 'china_city_policy.xlsx')
+pop_file = join(DATA_CHINA, 'china_city_pop.csv')
+output_file = cutil.DATA_PROCESSED / "adm2" / 'CHN_processed.csv'
 
 ## Load and clean pre 01/24 data
 
@@ -407,6 +413,8 @@ df.loc[:, 'active_cases_imputed'] = (
     df.loc[:, 'cum_deaths_imputed'].values -
     df.loc[:, 'cum_recoveries_imputed'].values
 )
+
+output_file.parent.mkdir(parents=True, exist_ok=True)
 df.to_csv(output_file, index=True)
 print(df.describe(include='all').T)
 print(df.dtypes)
