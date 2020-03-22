@@ -101,10 +101,10 @@ codes
 ## Replication Steps
 
 There are four stages to our analysis:
-Data collection and processing
-Regression model estimation
-SIR model projections
-Figure creation
+1. Data collection and processing
+2. Regression model estimation
+3. SIR model projections
+4. Figure creation
 
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was done through manual downloading of datasets and is described in as much detail as possible.
@@ -158,9 +158,10 @@ Additional manual steps performed to collect population and or epidemiological d
 
     f. Click the blue `Download` button under the `Search` button.
 
-    g. This data is saved in [data/raw/korea/KOR_population.csv](data/raw/korea/KOR_population.csv).
+    g. This data is saved in [data/raw/korea/KOR_population.csv](data/interim/korea/KOR_population.csv).
 
-There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix] (https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This data is saved in [data/raw/korea/KOR_health.csv](data/raw/korea/KOR_health.csv).
+There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). 
+This data is saved in [data/raw/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
 
 #### Automated data collection and processing
 Once the manual downloads are complete, execute the following scripts to download the remaining data and process the full set of input data across the six countries.
