@@ -173,17 +173,17 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 Once the manual downloads are complete, execute the following scripts to download the remaining data and process the full set of input data across the six countries.
 
 ##### Multi-country
-`jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/data/multi_country/get_adm_info.ipynb`: Generates shapefiles and csvs with administrative unit names, geographies, and populations.
+`jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/multi_country/get_adm_info.ipynb`: Generates shapefiles and csvs with administrative unit names, geographies, and populations.
 
 ##### China
 `python codes/data/china/collate_data.py`: Download, clean, and collate the Chinese city level dataset.
 
 ##### Iran
 1. `Rscript codes/data/iran/iran_cleaning.R`
-2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/data/iran/iran-split-interim-into-processed.ipynb`
+2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/iran/iran-split-interim-into-processed.ipynb`
 
 ##### Italy
-`jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`
+`jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`
 
 ##### France
 1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd.
@@ -197,12 +197,12 @@ Once the manual downloads are complete, execute the following scripts to downloa
 
 1. `Rscript codes/data/korea/download_and_clean_JHU_southkorea_data.R`: Downloads country-level data from the Johns Hopkins repository.
 2. `Rscript codes/data/korea/generate_KOR_interim.R`: Constructs policy data and merges it with health and population data
-3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/data/korea/korea-interim-into-processed.ipynb`
+3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/korea/korea-interim-into-processed.ipynb`
 
 ##### United States
 1. `Rscript codes/data/us/download_and_clean_JHU_usa_data.R`: Downloads county- (prior to Mar 9) and state- (Mar 10 onwards) level data from the Johns Hopkins repository. The code aggregates county data to state level. You may run (using `Rscript`) or step through `codes/data/us/check_health_data.R` to detect issues with data quality. 
 2. `python download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data by running (*Note*: run this script from [codes/data/us](/codes/data/us), rather than root).
-3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --execute add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Run the jupyter notebook and check that detected testing regime changes make sense, discard any false detections (it is in a notebook so that you must manually check the detected changes).
+3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Run the jupyter notebook and check that detected testing regime changes make sense, discard any false detections (it is in a notebook so that you must manually check the detected changes).
 4. `python merge_policy_and_cases.py`: Run the script to merge all data  (*Note*: run this script from [/codes/data/us](/codes/data/us), rather than root). This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
 5. `python filter-processed-to-end-date.py`: Run the script to filter [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv) to exclude data after 3/18.
 
@@ -250,7 +250,7 @@ Note that the outputs of [codes/plotting/fig1.R](codes/plotting/fig1.R) are requ
 
 #### Appendix Table A1
 
-`jupyter nbconvert --ExecutePreprocessor.timeout=None --execute codes/plotting/count-policies.ipynb`
+`jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/plotting/count-policies.ipynb`
 
 #### Appendix Figure A1
 
