@@ -164,7 +164,7 @@ Additional manual steps performed to collect population and or epidemiological d
 
     h. Open this file, remove the top two rows and the second column. Then change the header (the top row to `adm1_name, population`). Save to [data/interim/korea/KOR_population.csv](data/interim/korea/KOR_population.csv).
 
-There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). 
+2. There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). 
 This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
 
 #### Automated data collection and processing
@@ -182,19 +182,19 @@ Once the manual downloads are complete, execute the following scripts to downloa
 ##### China
 `python codes/data/china/collate_data.py`: Download, clean, and collate the Chinese city level dataset.
 
+##### France
+1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd. **Note**: Data from this site can only be downloaded in real-time. We therefore scrape this data once per day.
+2. `Rscript codes/data/france/set_auto_scrape.R` : Sets up scraping script
+3. `Rscript codes/data/france/scrape_conf_cases_by_region.R` to run daily using the taskscheduleR R package (**Note**: This script relies on Windows task scheduler currently). 
+4. `stata -b do codes/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
+5. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
+
 ##### Iran
 1. `Rscript codes/data/iran/iran_cleaning.R`
 2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/iran/iran-split-interim-into-processed.ipynb`
 
 ##### Italy
 `jupyter nbconvert --to python --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`: **Note**: You will need to have run [codes/data/multi_country/get_adm_info.py](codes/data/multi_country/get_adm_info.py) to generate [codes/data/interim/adm](codes/data/interim/adm) before running this.
-
-##### France
-1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd.
-2. `Rscript codes/data/france/set_auto_scrape.R` : Sets up scraping script
-3. `Rscript codes/data/france/scrape_conf_cases_by_region.R` to run daily using the taskscheduleR R package (**Note**: This script relies on Windows task scheduler currently). 
-4. `stata -b do codes/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
-5. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
 
 ##### South Korea
 
