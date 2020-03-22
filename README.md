@@ -179,12 +179,12 @@ Once the manual downloads are complete, execute the following scripts to downloa
 
 ##### France
 1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd. **Note**: Data from this site can only be downloaded in real-time. We therefore scrape this data once per day.
-2. `stata -b do codes/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
+2. `stata -b do codes/data/frgiance/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
 3. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
 
 ##### Iran
 1. `Rscript codes/data/iran/iran_cleaning.R`
-2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/iran/iran-split-interim-into-processed.ipynb`
+2. `python codes/data/iran/iran-split-interim-into-processed.py`
 
 ##### Italy
 `jupyter nbconvert --to python --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`: **Note**: You will need to have run [codes/data/multi_country/get_adm_info.py](codes/data/multi_country/get_adm_info.py) to generate [codes/data/interim/adm](codes/data/interim/adm) before running this.
