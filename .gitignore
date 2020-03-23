@@ -134,6 +134,7 @@ Icon[^M]
 
 # R
 .Rhistory
+.Rapp.history
 
 # other
 api_keys.json
