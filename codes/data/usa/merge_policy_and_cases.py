@@ -1,12 +1,13 @@
 import pandas as pd
 import numpy as np
 import os
+import codes.utils as cutil
 
 from functools import reduce
 
-raw_data_dir = '../../../data/raw/usa'
-int_data_dir = '../../../data/interim/usa'
-proc_data_dir = '../../../data/processed/adm1'
+raw_data_dir = cutil.DATA_RAW / 'usa'
+int_data_dir = cutil.DATA_INTERIM / 'usa'
+proc_data_dir = cutil.DATA_PROCESSED / 'adm1'
 
 # rename the states
 state_acronyms_to_names = \
@@ -353,7 +354,7 @@ def main():
 			cases_data_subset.drop([key], axis=1).reset_index(drop=True)
 
 	# add in population 
-	pops1 = pd.read_csv(os.path.join(int_data_dir.replace('usa','adm') , 'adm1/adm1.csv'), index_col = [0,1])
+	pops1 = pd.read_csv(os.path.join(str(int_data_dir).replace('usa','adm') , 'adm1/adm1.csv'), index_col = [0,1])
 	cases_data_to_publish = cases_data_subset.join(pops1.loc['USA'].population,on='adm1_name', how='left')
 	assert cases_data_to_publish.population.isnull().sum()==0, 'poplation is null'
     

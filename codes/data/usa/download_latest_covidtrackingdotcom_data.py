@@ -5,10 +5,13 @@ import os
 import pandas as pd
 import numpy as np
 
+import codes.utils as cutil
+
 http = urllib3.PoolManager()
 
 states_url = 'https://covidtracking.com/api/states/daily'
-path_to_data = '../../../data/'
+path_to_data = cutil.DATA
+
 def read_covid_tracking_data(this_data_url):
     r = http.request('GET', this_data_url)
     json_data = r.data.decode('utf-8')
