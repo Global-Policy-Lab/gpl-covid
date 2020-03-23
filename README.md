@@ -120,7 +120,7 @@ Policy data for all countries was manually collected from a variety of sources a
 - South Korea: [data/raw/korea/korea_policy_static_20200318.xlsx](data/raw/korea/korea_policy_static_20200318.xlsx)
 - United States: [data/raw/usa/US_COVID-19_policies.csv](data/raw/usa/US_COVID-19_policies.csv)
 
-Additional manual steps performed to collect population and or epidemiological data are described for each country below. Our epidemiological sources for all countries are listed [here](references/epi_data_sources.csv).
+Additional manual steps performed to collect population and/or epidemiological data, and to merge this with the above policy data, are described for each country below. Our epidemiological sources for all countries are listed [here](references/epi_data_sources.csv).
 
 ##### China
 1. For data from January 24, 2020 onwards, we relied on [an open source GitHub project](https://github.com/BlankerL/DXY-COVID-19-Data). Download the data and save it to [data/raw/china/DXYArea.csv](data/raw/china/DXYArea.csv).
@@ -197,7 +197,7 @@ Once the manual downloads are complete, execute the following scripts to downloa
 
 ##### United States
 1. `Rscript codes/data/usa/download_and_clean_JHU_usa_data.R`: Downloads county- (prior to Mar 9) and state- (Mar 10 onwards) level data from the Johns Hopkins repository. The code aggregates county data to state level. You may run (using `Rscript`) or step through `codes/data/usa/check_health_data.R` to detect issues with data quality. 
-2. `python codes/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data
+2. `python codes/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
 3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Run the jupyter notebook and check that detected testing regime changes make sense, discard any false detections (it is in a notebook so you should manually check the detected changes, but you may run it directly using our choices).
 4. `python codes/data/usa/merge_policy_and_cases.py`: Run the script to merge all data . This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
 5. `python codes/data/usa/filter-processed-to-end-date.py`: Run the script to filter [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv) to exclude data after 3/18.
