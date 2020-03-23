@@ -12,10 +12,9 @@ library(ggplot2)
 
 data_dir <- "data/"
 output_dir <- "results/figures/fig1/"
-dir.create(output_dir, recursive=TRUE, showWarnings=FALSE)
 
 if (!dir.exists(output_dir)){ #make dir if it doesn't exist
-  dir.create(output_dir)
+  dir.create(output_dir, recursive=TRUE)
 }
 
 #################
