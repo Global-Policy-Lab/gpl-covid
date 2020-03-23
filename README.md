@@ -1,4 +1,4 @@
-# Global Policy Lab COVID-19 Analysis
+# The Effect of Large-Scale Anti-Contagion Policies on the Coronavirus (COVID-19) Pandemic
 
 This repository contains code and data necessary to replicate the findings of our paper [INSERT arXiv CITATION].
 
