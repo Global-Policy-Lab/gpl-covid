@@ -28,6 +28,7 @@ Finally, to estimate the regression models, you will need several package instal
 ssc install reghdfe, replace
 ssc install ftools, replace # the latest version of reghdfe would also require the installation of ftools
 ssc install coefplot, replace
+ssc install filelist, replace
 ```
 
 ## Data Documentation
