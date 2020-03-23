@@ -213,7 +213,7 @@ Once the manual downloads are complete, execute the following scripts to downloa
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
 
-`stata -b do codes/models/alt_growth_rates/MASTER_run_all.do`
+`stata -b do codes/models/alt_growth_rates/MASTER_run_all_reg.do`
 
 ### SIR model projections
 Once the regression coefficients have been estimated in the above models, run the following code to generate projections of active and cumulative infections using an SIR model:
