@@ -5,8 +5,11 @@ clear all
 // optional scheme for graphs
 capture set scheme covid19_fig3 
 
-// create folders for figure output
+// create folders for figure output 
+capture mkdir "figures/"
+capture mkdir "figures/fig3/" 
 capture mkdir "figures/fig3/raw" 
+capture mkdir "figures/appendix/" 
 capture mkdir "figures/appendix/error_dist" 
 
 // run .do files
