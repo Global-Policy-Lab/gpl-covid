@@ -120,7 +120,7 @@ Policy data for all countries was manually collected from a variety of sources a
 - South Korea: [data/raw/korea/korea_policy_static_20200318.xlsx](data/raw/korea/korea_policy_static_20200318.xlsx)
 - United States: [data/raw/usa/US_COVID-19_policies.csv](data/raw/usa/US_COVID-19_policies.csv)
 
-Additional manual steps performed to collect population and/or epidemiological data, and to merge this with the above policy data, are described for each country below. Our epidemiological sources for all countries are listed [here](references/epi_data_sources.csv).
+Additional manual steps performed to collect population and/or epidemiological data, and to merge this with the above policy data, are described for each country below. Our epidemiological and policy data sources for all countries are listed [here](references/data_sources_static_20200321.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
 ##### China
 1. For data from January 24, 2020 onwards, we relied on [an open source GitHub project](https://github.com/BlankerL/DXY-COVID-19-Data). Download the data and save it to [data/raw/china/DXYArea.csv](data/raw/china/DXYArea.csv).
@@ -246,7 +246,7 @@ Note that the outputs of [codes/plotting/fig1.R](codes/plotting/fig1.R) are requ
 
 #### Appendix Table A1
 
-`jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/plotting/count-policies.ipynb`
+`python codes/plotting/count-policies.py`
 
 #### Appendix Figure A1
 
