@@ -134,11 +134,13 @@ Icon[^M]
 
 # R
 .Rhistory
+.Rapp.history
 
 # RStudio
 .Rproj.user/
 gpl-covid.Rproj
 
 # other
-api_keys.json
 notebooks/iwb-sandbox.ipynb
+.vscode
+api_keys.json

@@ -11,7 +11,8 @@ library(magrittr)
 library(ggplot2)
 
 data_dir <- "data/"
-output_dir <- "figures/fig1/"
+output_dir <- "results/figures/fig1/"
+dir.create(output_dir, recursive=TRUE, showWarnings=FALSE)
 
 #################
 
@@ -261,13 +262,12 @@ mtext("Date",side=1,col="black",line=2.5)
 dev.off()
 
 ### Cases Map ###
-
-map <- readOGR(paste0(data_dir, "interim/iran/IRN_adm/IRN_adm1.shp"))
+map <- readOGR(paste0(data_dir, "interim/adm/adm1/adm1.shp"))
+map <- map[map$adm0_name=='IRN',]
 centroids <- gCentroid(map, byid = T)
 map$lon <- centroids$x
 map$lat <- centroids$y
-units <- as.data.frame(map[,c("NAME_1", "lon", "lat")])
-colnames(units)[1] <- "adm1_name"
+units <- as.data.frame(map[,c("adm1_name", "longitude", "latitude")])
 adm1$date <- as.Date(adm1$date, format='%Y-%m-%d')
 adm1 <- adm1[adm1$date==max(adm1$date),]
 adm1 <- arrange(adm1, adm1_name)
@@ -285,7 +285,7 @@ points(adm1$lon, adm1$lat, col=alpha("darkred", 0.35),
 
 dev.off()
 
-#######################################################################
+######################################################################
 
 country <- "CHN"
 
@@ -375,9 +375,10 @@ mtext("Date",side=1,col="black",line=2.5)
 
 dev.off()
 
-### Cases Map ###
+## Cases Map ###
 
-map <- readOGR(paste0(data_dir, "raw/china/fig1_china_map.shp"))
+map <- readOGR(paste0(data_dir, "interim/adm/adm2/adm2.shp"))
+map <- map[map$adm0_name == 'CHN', ]
 adm2$date <- as.Date(adm2$date, format='%Y-%m-%d')
 adm2 <- adm2[adm2$date==max(adm2$date),]
 units <- as.data.frame(map[,c("adm1_name", "adm2_name", "longitude", "latitude")])
@@ -574,7 +575,7 @@ color.list <- c("darkgreen",
   
   national <-  read.csv(paste0(data_dir, 
                                "interim/france/france_jhu_cases.csv"), header = T, stringsAsFactors = F) %>% # merge JHU dataset because adm1 has no deaths
-    select(date, cases = cumulative_confirmed_cases, deaths = cumulative_deaths)
+    select(date, cases = cum_confirmed_cases, deaths = cum_deaths)
   national$date <- as.Date(national$date, format='%Y-%m-%d')
   national <- subset(national, date >= "2020-02-27" & date <= "2020-03-18")
 national <- arrange(national, date)
@@ -587,7 +588,7 @@ national <- arrange(national, date)
 ids <- unique(adm1$adm1_name) 
 for (id in ids){
   if (nrow(subset(adm1, adm1_name==id))!= length(unique(adm1$date))){
-    adm1 <- subset(adm1$adm1_id!=id)
+    adm1 <- subset(adm1, adm1_name!=id)
   }
 }
 
@@ -811,4 +812,3 @@ plot(map)
 points(adm1$lon, adm1$lat, col=alpha("darkred", 0.35), 
        pch=19, cex=0.15*sqrt(adm1$cum_confirmed_cases))
 dev.off()
-

@@ -1,7 +1,6 @@
 library(tidyverse)
-source("codes/data/china/download_and_clean_JHU_china.R")
-source("codes/data/france/download_and_clean_JHU_france.R")
-source("codes/data/iran/download_and_clean_JHU_iran.R")
-source("codes/data/italy/download_and_clean_JHU_italy.R")
-source("codes/data/korea/download_and_clean_JHU_southkorea_data.R")
-source("codes/data/us/download_and_clean_JHU_usa_data.R")
+for (i in c("china", "france", "iran", "italy", "korea", "usa"))
+{
+    dir.create(paste("data/interim/",i, sep=""), recursive=TRUE, showWarnings=FALSE)
+    source(paste("codes/data/", i, "/download_and_clean_JHU_", i, ".R", sep=""))
+}

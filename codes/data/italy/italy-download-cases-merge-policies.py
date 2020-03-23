@@ -8,39 +8,25 @@
 # - Merge collected policies
 # - Save outputs at `data/processed/adm1/ITA_processed.csv` and `data/processed/adm2/ITA_processed.csv`
 
-# In[ ]:
-
-
-import os
-from pathlib import Path
 import pandas as pd
 import numpy as np
+from codes import utils as cutil
 
 end_of_analysis_date = '2020-03-18'
-
+policies_date = "20200318"
 
 # #### Define paths
 
-# In[ ]:
-
-
-# Root of project
-dir_gpl_covid = Path(os.getcwd()).parent.parent.parent
-
-dir_data = dir_gpl_covid / 'data'
-
 # Administrative unit names
-path_adm1 = dir_data / 'interim' / 'adm' / 'adm1' / 'adm1.csv'
-path_adm2 = dir_data / 'interim' / 'adm' / 'adm2' / 'adm2.csv'
+adm_dir = cutil.DATA_INTERIM / 'adm'
+path_adm1 = adm_dir / 'adm1' / 'adm1.csv'
+path_adm2 = adm_dir / 'adm2' / 'adm2.csv'
 
 # Template for processed dataset (output of this notebook)
-path_template = dir_data / 'processed' / '[country]_processed.csv'
+path_template = cutil.DATA_PROCESSED / '[country]_processed.csv'
+dir_italy_raw = cutil.DATA_RAW / 'italy'
+dir_italy_interim = cutil.DATA_INTERIM / 'italy'
 
-dir_italy_raw = dir_gpl_covid / 'data' / 'raw' / 'italy'
-dir_italy_interim = dir_gpl_covid / 'data' / 'interim' / 'italy'
-dir_processed = dir_gpl_covid / 'data' / 'processed'
-
-policies_date = "20200318"
 
 # Inputs
 # CSV form of policies Google sheet
@@ -56,16 +42,13 @@ path_italy_interim_province = dir_italy_interim / 'italy-cases-by-province.csv'
 path_italy_interim_region = dir_italy_interim / 'italy-cases-by-region.csv'
 
 ## Final outputs
-path_processed_region = dir_processed / 'adm1' / 'ITA_processed.csv'
-path_processed_province = dir_processed / 'adm2' / 'ITA_processed.csv'
+path_processed_region = cutil.DATA_PROCESSED / 'adm1' / 'ITA_processed.csv'
+path_processed_province = cutil.DATA_PROCESSED / 'adm2' / 'ITA_processed.csv'
 
 
 # ## Download and read raw data from Github
 
 # #### Read inputs
-
-# In[ ]:
-
 
 # Administrative unit names
 adm1_df = pd.read_csv(path_adm1)
@@ -82,22 +65,6 @@ policies_full = pd.read_csv(path_italy_policies)
 
 
 # ##### Save raw case data from URL to project folder
-
-# In[ ]:
-
-
-adm2_cases.tail()
-
-
-# In[ ]:
-
-
-adm1_cases.tail()
-
-
-# In[ ]:
-
-
 adm2_cases.to_csv(path_italy_raw_province, index=False)
 adm1_cases.to_csv(path_italy_raw_region, index=False)
 
@@ -107,9 +74,6 @@ adm1_cases.to_csv(path_italy_raw_region, index=False)
 # ###### Settings
 # Affixes defined in `data_dictionary.gsheet`
 
-# In[ ]:
-
-
 cumulative_prefix = 'cum_'
 imputed_suffix = '_imputed'
 popweighted_suffix = '_popwt'
@@ -117,9 +81,6 @@ optional_suffix = '_opt'
 
 
 # ### Translate field names from Italian to project naming scheme
-
-# In[ ]:
-
 
 # Column names based on table descriptions here: https://github.com/pcm-dpc/COVID-19
 replace_dict = {
@@ -150,10 +111,6 @@ adm1_cases = adm1_cases.rename(columns=replace_dict)
 
 
 # Clean date column
-
-# In[ ]:
-
-
 def extract_date_from_datetime(dates):
     return pd.to_datetime(dates.str[:10])
 
@@ -162,20 +119,12 @@ adm1_cases['date'] = extract_date_from_datetime(adm1_cases['date'])
 
 
 # Clean lat-lon coordinates
-
-# In[ ]:
-
-
 adm2_cases.loc[:,['lat','lon']] = adm2_cases.loc[:,['lat','lon']].replace(0, np.nan)
 assert adm1_cases['lat'].isnull().sum() == 0
 assert adm1_cases['lon'].isnull().sum() == 0
 
 
 # Clean unknown province names
-
-# In[ ]:
-
-
 # "In fase di definizione/aggiornamento" translates to "Being defined / updated". These observations are dropped from the final output
 adm2_cases['adm2_name'] = adm2_cases['adm2_name'].replace(
     'In fase di definizione/aggiornamento', 'Unknown')
@@ -390,10 +339,6 @@ def impute_cumulative_df(df, src_col, dst_col, groupby_col):
 
 
 # #### Impute all cumulative totals in imputed column, fill as null where cumulative totals fall in source column
-
-# In[ ]:
-
-
 # Impute adm2 cumulative total (just one)
 adm2_cases = impute_cumulative_df(
     adm2_cases, 
@@ -409,10 +354,7 @@ for src_col in adm1_cases_cum_cols:
 
 
 # #### Save processed health data to `interim` folder
-
-# In[ ]:
-
-
+path_italy_interim_province.parent.mkdir(parents=True, exist_ok=True)
 adm2_cases.to_csv(path_italy_interim_province, index=False)
 adm1_cases.to_csv(path_italy_interim_region, index=False)
 
@@ -420,10 +362,6 @@ adm1_cases.to_csv(path_italy_interim_region, index=False)
 # ## Merge Health with Policies
 
 # Clean data
-
-# In[ ]:
-
-
 policies_full['Date'] = pd.to_datetime(policies_full['Date'])
 policies_full['Policy'] = policies_full['Policy'].str.strip()
 

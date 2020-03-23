@@ -7,45 +7,31 @@
 # - Merge populations
 # - Save outputs at `data/processed/adm0/IRN_processed.csv` and `data/processed/adm2/IRN_processed.csv`
 
-# In[ ]:
-
-
 import pandas as pd
 import numpy as np
-from pathlib import Path
-import os
+from codes import utils as cutil
 
 end_of_analysis_date = '2020-03-18'
 
 
 # Define paths
 
-# In[ ]:
-
-
 # Project directory
-dir_gpl_covid = Path(os.getcwd()).parent.parent.parent
-
-dir_data_interim = dir_gpl_covid / 'data' / 'interim' / 'iran'
-dir_data_processed = dir_gpl_covid / 'data' / 'processed'
-dir_adm_pop = dir_gpl_covid / 'data' / 'interim' / 'adm'
+dir_data_interim = cutil.DATA_INTERIM / 'iran'
+dir_adm_pop = cutil.DATA_INTERIM / 'adm'
 
 # Input
 path_iran_interim_adm0 = dir_data_interim / 'adm0' / 'IRN_interim.csv'
 path_iran_interim_adm1 = dir_data_interim / 'IRN_interim.csv'
 path_pop_adm1 = dir_adm_pop / 'adm1' / 'adm1.csv'
-path_template = dir_gpl_covid / 'data' / 'processed' / '[country]_processed.csv'
+path_template = cutil.DATA_PROCESSED / '[country]_processed.csv'
 
 # Outputs
-path_iran_processed_adm0 = dir_data_processed / 'adm0' / 'IRN_processed.csv'
-path_iran_processed_adm1 = dir_data_processed / 'adm1' / 'IRN_processed.csv'
+path_iran_processed_adm0 = cutil.DATA_PROCESSED / 'adm0' / 'IRN_processed.csv'
+path_iran_processed_adm1 = cutil.DATA_PROCESSED / 'adm1' / 'IRN_processed.csv'
 
 
 # Read interim datasets
-
-# In[ ]:
-
-
 adm0_df = pd.read_csv(path_iran_interim_adm0, parse_dates=['date'])
 adm1_df = pd.read_csv(path_iran_interim_adm1, parse_dates=['date'])
 
@@ -56,34 +42,17 @@ adm1_pop_df = pd.read_csv(path_pop_adm1)
 # #### Clean `adm1_df` and `adm0_df`
 
 # Rename `adm2` to `adm1` (correct previous coding error), remove old `adm1`
-
-# In[ ]:
-
-
 adm1_df = adm1_df.drop(columns=['adm1_name'])
 adm1_df = adm1_df.rename(columns={'adm2_name':'adm1_name'})
 
 
 # Drop unnecessary columns (these totals are accounted for in `cum_` columns
-
-# In[ ]:
-
-
 adm0_df = adm0_df.drop(columns=['new_confirmed_cases', 'new_deaths_national'])
 adm1_df = adm1_df.drop(columns=['new_confirmed_cases', 'new_confirmed_cases_imputed'])
-
-
-# In[ ]:
-
-
 adm1_df = adm1_df.sort_values(['date', 'adm1_name'])
 
 
 # Merge in population
-
-# In[ ]:
-
-
 adm1_pop_iran = adm1_pop_df.loc[adm1_pop_df['adm0_name'] == 'IRN'].copy()
 
 # Standardize province names to `adm1.csv`
@@ -118,10 +87,6 @@ assert adm1_df['population'].isnull().sum() == 0
 
 
 # Define imputation functions
-
-# In[ ]:
-
-
 def convert_non_monotonic_to_nan(array):
     """Converts a numpy array to a monotonically increasing one.
     Args:
@@ -211,10 +176,6 @@ def impute_cumulative_df(df, src_col, dst_col, groupby_col):
 
 
 # Impute cumulative confirmed cases
-
-# In[ ]:
-
-
 imputed_suffix = "_imputed"
 cumulative_prefix = "cum_"
 
@@ -225,37 +186,19 @@ adm1_df = impute_cumulative_df(adm1_df, src_col, dst_col, 'adm1_name')
 
 # Check that all columns are in template
 
-# In[ ]:
-
-
 template = pd.read_csv(path_template)
-
-
-# In[ ]:
-
-
 assert len(set(adm0_df.columns) - set(template.columns)) == 0
 assert len(set(adm1_df.columns) - set(template.columns)) == 0
 
 
 # Check that date does not extend past end of analysis
-
-# In[ ]:
-
-
 assert adm1_df['date'].max() <= pd.to_datetime(end_of_analysis_date)
 
 
 # Output to `IRN_processed.csv` datasets
 
-# In[ ]:
-
-
+path_iran_processed_adm0.parent.mkdir(parents=True, exist_ok=True)
+path_iran_processed_adm1.parent.mkdir(parents=True, exist_ok=True)
 adm0_df.to_csv(path_iran_processed_adm0, index=False)
-
-
-# In[ ]:
-
-
 adm1_df.to_csv(path_iran_processed_adm1, index=False)
 

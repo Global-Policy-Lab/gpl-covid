@@ -1,4 +1,4 @@
-# Global Policy Lab COVID-19 Analysis
+# The Effect of Large-Scale Anti-Contagion Policies on the Coronavirus (COVID-19) Pandemic
 
 This repository contains code and data necessary to replicate the findings of our paper [INSERT arXiv CITATION].
 
@@ -12,93 +12,92 @@ conda env create -f environment.yml
 conda activate gpl-covid
 ```
 
-Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Execute
+**Note:** RStudio is commented out of that environment, because it causes dependency clashes in a Windows environment. If you are not in Windows, and would like to use the RStudio app, feel free to uncomment it before creating the environment. Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Execute
 
 ```bash
 pip install -e .
 ```
 
-One of the web scraping scripts is currently run using the taskscheduleR R package, which requires a Windows environment. If you wish to run this script, execute the following command from within the `gpl-covid` environment to add this package:
-```bash
-R CMD INSTALL taskscheduleR
+To run one of the scripts, you will also need an API key for the US Census API, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format:
+
+```json
+{
+    "census": "API_KEY_STRING"
+}
 ```
 
 ## Data Documentation
 A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
 
 ## Code Structure
-
 ```text
 codes
 ├── data
-│   ├── china
-│   │   └── collate_data.py
-│   ├── france
-│   │   ├── format_infected.do
-│   │   ├── format_policy.do
-│   │   ├── gen_adm2_to_adm1.do
-│   │   ├── scrape_conf_cases_by_region.R
-│   │   └── set_auto_scrape.R
-│   ├── iran
-│   │   ├── iran-split-interim-into-processed.ipynb
-│   │   ├── iran-split-interim-into-processed.py
-│   │   └── iran_cleaning.R
-│   ├── italy
-│   │   ├── italy-download-cases-merge-policies.ipynb
-│   │   └── italy-download-cases-merge-policies.py
-│   ├── korea
-│   │   ├── download_and_clean_JHU_southkorea_data.R
-│   │   ├── generate_KOR_interim.R
-│   │   ├── korea-interim-to-processed.ipynb
-│   │   └── make_JHU_comparison_data.R
-│   ├── multi_country
-│   │   ├── get_JHU_country_data.R
-│   │   ├── get_adm_info.ipynb
-│   │   └── luna_manual_match.csv
-│   └── us
-│       ├── US_cleaning_school_district_closures.R
-│       ├── add_testing_regimes_to_covidtrackingdotcom_data.ipynb
-│       ├── aggregating_US_policy_to_state_level.R
-│       ├── check_health_data.R
-│       ├── download_and_clean_JHU_usa_data.R
-│       ├── download_latest_covidtrackingdotcom_data.py
-│       ├── filter-processed-to-end-date.ipynb
-│       ├── filter-processed-to-end-date.py
-│       ├── merge_policy_and_cases.py
-│       └── population_data.csv
+│   ├── china
+│   │   ├── collate_data.py
+│   │   └── download_and_clean_JHU_china.R
+│   ├── france
+│   │   ├── download_and_clean_JHU_france.R
+│   │   ├── format_infected.do
+│   │   ├── format_policy.do
+│   │   └── scrape_conf_cases_by_region.R
+│   ├── iran
+│   │   ├── download_and_clean_JHU_iran.R
+│   │   ├── iran-split-interim-into-processed.py
+│   │   └── iran_cleaning.R
+│   ├── italy
+│   │   ├── download_and_clean_JHU_italy.R
+│   │   └── italy-download-cases-merge-policies.py
+│   ├── korea
+│   │   ├── download_and_clean_JHU_korea.R
+│   │   ├── generate_KOR_interim.R
+│   │   ├── korea-interim-to-processed.py
+│   │   └── make_JHU_comparison_data.R
+│   ├── multi_country
+│   │   ├── download_6_countries_JHU.R
+│   │   ├── get_JHU_country_data.R
+│   │   └── get_adm_info.py
+│   └── usa
+│       ├── US_cleaning_school_district_closures.R
+│       ├── add_testing_regimes_to_covidtrackingdotcom_data.ipynb
+│       ├── check_health_data.R
+│       ├── download_and_clean_JHU_usa.R
+│       ├── download_latest_covidtrackingdotcom_data.py
+│       ├── filter-processed-to-end-date.py
+│       └── merge_policy_and_cases.py
 ├── models
-│   ├── CHN_create_CBs.R
-│   ├── CHN_generate_data_and_model_projection.R
-│   ├── FRA_create_CBs.R
-│   ├── FRA_generate_data_and_model_projection.R
-│   ├── IRN_create_CBs.R
-│   ├── IRN_generate_data_and_model_projection.R
-│   ├── ITA_create_CBs.R
-│   ├── ITA_generate_data_and_model_projection.R
-│   ├── KOR_create_CBs.R
-│   ├── KOR_generate_data_and_model_projection.R
-│   ├── USA_create_CBs.R
-│   ├── USA_generate_data_and_model_projection.R
-│   ├── alt_growth_rates
-│   │   ├── CHN_adm2.do
-│   │   ├── FRA_adm1.do
-│   │   ├── IRN_adm1.do
-│   │   ├── ITA_adm2.do
-│   │   ├── KOR_adm1.do
-│   │   ├── MASTER_run_all_reg.do
-│   │   └── USA_adm1.do
-│   ├── get_gamma.py
-│   ├── predict_felm.R
-│   ├── projection_helper_functions.R
-│   └── run_all_CB_simulations.R
+│   ├── CHN_create_CBs.R
+│   ├── CHN_generate_data_and_model_projection.R
+│   ├── FRA_create_CBs.R
+│   ├── FRA_generate_data_and_model_projection.R
+│   ├── IRN_create_CBs.R
+│   ├── IRN_generate_data_and_model_projection.R
+│   ├── ITA_create_CBs.R
+│   ├── ITA_generate_data_and_model_projection.R
+│   ├── KOR_create_CBs.R
+│   ├── KOR_generate_data_and_model_projection.R
+│   ├── USA_create_CBs.R
+│   ├── USA_generate_data_and_model_projection.R
+│   ├── alt_growth_rates
+│   │   ├── CHN_adm2.do
+│   │   ├── FRA_adm1.do
+│   │   ├── IRN_adm1.do
+│   │   ├── ITA_adm2.do
+│   │   ├── KOR_adm1.do
+│   │   ├── MASTER_run_all_reg.do
+│   │   └── USA_adm1.do
+│   ├── get_gamma.py
+│   ├── predict_felm.R
+│   ├── projection_helper_functions.R
+│   └── run_all_CB_simulations.R
 ├── plotting
-│   ├── count-policies.ipynb
-│   ├── examine_lagged_relationship_between_new_deaths_recoveries_and_older_cases.R
-│   ├── fig1.R
-│   ├── fig2.R
-│   ├── fig4_analysis.py
-│   ├── figA2.py
-│   └── gen_fig4.py
+│   ├── count-policies.py
+│   ├── examine_lagged_relationship_between_new_deaths_recoveries_and_older_cases.R
+│   ├── fig1.R
+│   ├── fig2.R
+│   ├── fig4_analysis.py
+│   ├── figA2.py
+│   └── gen_fig4.py
 └── utils.py
 ```
 
@@ -125,7 +124,7 @@ Policy data for all countries was manually collected from a variety of sources a
 - South Korea: [data/raw/korea/korea_policy_static_20200318.xlsx](data/raw/korea/korea_policy_static_20200318.xlsx)
 - United States: [data/raw/usa/US_COVID-19_policies.csv](data/raw/usa/US_COVID-19_policies.csv)
 
-Additional manual steps performed to collect population and or epidemiological data are described for each country below. Our epidemiological sources for all countries are listed [here](references/epi_data_sources.csv).
+Additional manual steps performed to collect population and/or epidemiological data, and to merge this with the above policy data, are described for each country below. Our epidemiological and policy data sources for all countries are listed [here](references/data_sources_static_20200321.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
 ##### China
 1. For data from January 24, 2020 onwards, we relied on [an open source GitHub project](https://github.com/BlankerL/DXY-COVID-19-Data). Download the data and save it to [data/raw/china/DXYArea.csv](data/raw/china/DXYArea.csv).
@@ -171,44 +170,35 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 Once the manual downloads are complete, execute the following scripts to download the remaining data and process the full set of input data across the six countries.
 
 ##### Multi-country
-1.  `python codes/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations. **Note:** To run this script, you will need a U.S. Census API key, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format:
-
-```json
-{
-    "census": "API_KEY_STRING"
-}
-```
+1.  `python codes/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations. **Note:** To run this script, you will need a U.S. Census API key. See [Setup](##Setup)
 2. `Rscript codes/data/multi_country/download_6_countries_JHU.R`: Downloads 6 countries' data from the Johns Hopkins University Data underlying the dashboard [here](https://coronavirus.jhu.edu/map.html).
 
 ##### China
 `python codes/data/china/collate_data.py`: Download, clean, and collate the Chinese city level dataset.
 
 ##### France
-1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd. **Note**: Data from this site can only be downloaded in real-time. We therefore scrape this data once per day.
-2. `Rscript codes/data/france/set_auto_scrape.R` : Sets up scraping script
-3. `Rscript codes/data/france/scrape_conf_cases_by_region.R` to run daily using the taskscheduleR R package (**Note**: This script relies on Windows task scheduler currently). 
-4. `stata -b do codes/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
-5. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
+1. `Rscript codes/data/france/scrape_conf_cases_by_region.R`: R script that scrapes data on the number of confirmed cases by région in a table from the [Santé publique France website]  (https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde). The script outputs [data/raw/france/france_confirmed_cases_by_region_yyyymmdd.csv](data/raw/france), where the date suffix is the date for the number of confirmed cases on the website, i.e. cases on yyyy-mm-dd. **Note**: Data from this site can only be downloaded in real-time. We therefore scrape this data once per day.
+2. `stata -b do codes/data/frgiance/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset.
+3. `stata -b do codes/data/france/format_policy.do`: Run in Stata to format the manually collected policy dataset and merge it with the epidemiological data.
 
 ##### Iran
 1. `Rscript codes/data/iran/iran_cleaning.R`
-2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/iran/iran-split-interim-into-processed.ipynb`
+2. `python codes/data/iran/iran-split-interim-into-processed.py`
 
 ##### Italy
-`jupyter nbconvert --to python --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/italy/italy-download-cases-merge-policies.ipynb`: **Note**: You will need to have run [codes/data/multi_country/get_adm_info.py](codes/data/multi_country/get_adm_info.py) to generate [codes/data/interim/adm](codes/data/interim/adm) before running this.
+`python codes/data/italy/italy-download-cases-merge-policies.py`: **Note**: You will need to have run [codes/data/multi_country/get_adm_info.py](codes/data/multi_country/get_adm_info.py) to generate [codes/data/interim/adm](codes/data/interim/adm) before running this.
 
 ##### South Korea
 
-1. `Rscript codes/data/korea/download_and_clean_JHU_southkorea_data.R`: Downloads country-level data from the Johns Hopkins repository.
-2. `Rscript codes/data/korea/generate_KOR_interim.R`: Constructs policy data and merges it with health and population data
-3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/korea/korea-interim-into-processed.ipynb`
+1. `Rscript codes/data/korea/generate_KOR_interim.R`: Constructs policy data and merges it with health and population data.
+2. `python codes/data/korea/korea-interim-to-processed.py`: Formats this dataset.
 
 ##### United States
-1. `Rscript codes/data/us/download_and_clean_JHU_usa_data.R`: Downloads county- (prior to Mar 9) and state- (Mar 10 onwards) level data from the Johns Hopkins repository. The code aggregates county data to state level. You may run (using `Rscript`) or step through `codes/data/us/check_health_data.R` to detect issues with data quality. 
-2. `python download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data by running (*Note*: run this script from [codes/data/us](/codes/data/us), rather than root).
-3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Run the jupyter notebook and check that detected testing regime changes make sense, discard any false detections (it is in a notebook so that you must manually check the detected changes).
-4. `python merge_policy_and_cases.py`: Run the script to merge all data  (*Note*: run this script from [/codes/data/us](/codes/data/us), rather than root). This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
-5. `python filter-processed-to-end-date.py`: Run the script to filter [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv) to exclude data after 3/18.
+1. `python codes/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
+2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Run the jupyter notebook and check that detected testing regime changes make sense, discard any false detections (it is in a notebook so you should manually check the detected changes, but you may run it directly using our choices).
+3. `python codes/data/usa/merge_policy_and_cases.py`: Run the script to merge all data . This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
+4. `python codes/data/usa/filter-processed-to-end-date.py`: Run the script to filter [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv) to exclude data after 3/18.
+5. (optional) `Rscript codes/data/usa/check_health_data.R`: Confirm known data quality issues have been dealt with.
 
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
@@ -230,16 +220,16 @@ To generate the four figures in the paper, run the following scripts. Figure 1 o
 
 #### Figure 2
 
-`Rscript codes/plotting/fig2.R`: Generates 9 outputs that constitute Figure 2:
-- *A1*: Fig2_nopolicy.pdf: Main figure for Panel A
-- *A2*: Fig2_effectsize_nopolicy.pdf: Effect size values for Panel A
-- *A3*: Fig2_growth_nopolicy.pdf: Effect size as percent growth values for Panel A
-- *B1*: Fig2_comb.pdf: Main figure for Panel B 
-- *B2*: Fig2_effectsize_comb.pdf: Effect size values for Panel B
-- *B3*: Fig2_growth_comb.pdf: Effect size as percent growth values for Panel B
-- *C1*: Fig2_ind.pdf: Main figure for Panel C 
-- *C2*: Fig2_effectsize_ind.pdf: Effect size values for Panel C
-- *C3*: Fig2_growth_ind.pdf: Effect size as percent growth values for Panel C
+`Rscript codes/plotting/fig2.R`: Generates 9 outputs that constitute Figure 2, in `results/figures/fig2`:
+- *A1*: `Fig2_nopolicy.pdf`: Main figure for Panel A
+- *A2*: `Fig2_effectsize_nopolicy.pdf`: Effect size values for Panel A
+- *A3*: `Fig2_growth_nopolicy.pdf`: Effect size as percent growth values for Panel A
+- *B1*: `Fig2_comb.pdf`: Main figure for Panel B 
+- *B2*: `Fig2_effectsize_comb.pdf`: Effect size values for Panel B
+- *B3*: `Fig2_growth_comb.pdf`: Effect size as percent growth values for Panel B
+- *C1*: `Fig2_ind.pdf`: Main figure for Panel C 
+- *C2*: `Fig2_effectsize_ind.pdf`: Effect size values for Panel C
+- *C3*: `Fig2_growth_ind.pdf`: Effect size as percent growth values for Panel C
 
 #### Figure 3
 
@@ -248,13 +238,13 @@ Figure 3 is generated by the regression estimation step (`codes/models/alt_growt
 #### Figure 4
 
 Note that the outputs of [codes/plotting/fig1.R](codes/plotting/fig1.R) are required for Fig 4 as well.
-1. `Rscript codes/plotting/fig1.R`: Generate the cases data (if not already generated)
-2. `python gen_fig4.py`: Generate Figure 4. (*Note*: This must be run from within [codes/plotting](codes/plotting) rather than from root).
-3. `python fig4_analysis.py`: Generate a printout of numerical results from the projections for each country. (*Note*: This must be run from within [codes/plotting](codes/plotting) rather than from root)
+1. (if not already generated) `Rscript codes/plotting/fig1.R)`: Generate the cases data
+2. `python codes/plotting/gen_fig4.py`: Generate Figure 4.
+3. `python codes/plotting/fig4_analysis.py`: Generate a printout of numerical results from the projections for each country.
 
 #### Appendix Table A1
 
-`jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/plotting/count-policies.ipynb`
+`python codes/plotting/count-policies.py`
 
 #### Appendix Figure A1
 
@@ -263,4 +253,4 @@ Figure A1 is generated by the regression estimation step (`codes/models/alt_grow
 #### Appendix Figure A2
 
 1. `Rscript codes/data/korea/make_JHU_comparison_data.R`: Creates [data/interim/korea/KOR_JHU_data_comparison.csv](data/interim/korea/KOR_JHU_data_comparison.csv)
-2. `python codes/plotting/figA2.py`: Generates 2 outputs that constitute Figure A2 (`figures/appendix/figA2-1.pdf` and `figures/appendix/figA2-2.pdf`)
+2. `python codes/plotting/figA2.py`: Generates 2 outputs that constitute Figure A2 (`results/figures/appendix/figA2-1.pdf` and `results/figures/appendix/figA2-2.pdf`)

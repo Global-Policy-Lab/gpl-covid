@@ -9,6 +9,7 @@ gamma = readr::read_csv("models/gamma_est.csv") %>%
   pull(gamma_est) %>% 
   mean()
 
+dir.create("data/post_processing", recursive=TRUE, showWarnings=FALSE)
 source("codes/models/FRA_create_CBs.R")
 source("codes/models/IRN_create_CBs.R")
 source("codes/models/KOR_create_CBs.R")

@@ -1,15 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
+import codes.utils as cutil
 
-
-def read_cases(fn):
-    df_all = pd.read_csv(fn)
-    df_cases = df_all.loc[:,['date','cases']]
-    df_cases.loc[:,'date_str'] =df_cases.loc[:,'date']
-    df_cases.loc[:,'date'] = pd.to_datetime(df_cases.loc[:,'date'])
-    
-    return df_cases
 
 def aggregate_preds_by_country(countries, resampled_dfs_by_country, pred_key, latest_dates):
     for c,country in enumerate(countries):
@@ -42,34 +35,10 @@ def aggregate_preds_by_country(countries, resampled_dfs_by_country, pred_key, la
 def main():
     
     # 1. read cases data
-    iran_cases_data_fn = '../../data/processed/adm0/IRN_cases_deaths.csv'
-    iran_cases = read_cases(iran_cases_data_fn)
-
-    france_cases_data_fn = '../../data/processed/adm0/FRA_cases_deaths.csv'
-    france_cases = read_cases(france_cases_data_fn)
-
-    usa_cases_data_fn = '../../data/processed/adm0/USA_cases_deaths.csv'
-    usa_cases = read_cases(usa_cases_data_fn)
-
-    italy_cases_data_fn = '../../data/processed/adm0/ITA_cases_deaths.csv'
-    italy_cases = read_cases(italy_cases_data_fn)
-
-    china_cases_data_fn = '../../data/processed/adm0/CHN_cases_deaths.csv'
-    china_cases = read_cases(china_cases_data_fn)
-
-    korea_cases_data_fn = '../../data/processed/adm0/KOR_cases_deaths.csv'
-    korea_cases = read_cases(korea_cases_data_fn)
-
-    cases_dict = {
-        'iran': iran_cases,
-        'france': france_cases,
-        'usa': usa_cases,
-        'italy': italy_cases,
-        'china': china_cases,
-        'korea': korea_cases}
+    cases_dict = cutil.load_all_cases_deaths(cases_drop=False)
     
     # 2. read in the central model estimates and the resampled trials
-    data_dir = '../../data/post_processing'
+    data_dir = cutil.DATA / 'post_processing'
     fn_template = os.path.join(data_dir,'{0}_bootstrap_projection.csv')
 
     countries = ['china','korea', 'italy', 'iran', 'france', 'usa']
