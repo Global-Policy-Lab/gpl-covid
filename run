@@ -7,38 +7,38 @@ pip install -e .
 ## data scraping and processing
 
 # Multi-country
-printf "Downloading shape and population info for all countries...\n"
+printf "***Downloading shape and population info for all countries***\n"
 python codes/data/multi_country/get_adm_info.py
 
-printf "Downloading Johns Hopkins U data for all countries...\n"
+printf "***Downloading Johns Hopkins U data for all countries***\n"
 Rscript codes/data/multi_country/download_6_countries_JHU.R
 
 # CHN
-printf "Downloading and processing CHN data...\n"
+printf "***Downloading and processing CHN data***\n"
 python codes/data/china/collate_data.py
 
 # FRA
-printf "Downloading and processing FRA data...\n"
+printf "***Downloading and processing FRA data***\n"
 Rscript codes/data/france/scrape_conf_cases_by_region.R
 stata -b do codes/data/frgiance/format_infected.do
 stata -b do codes/data/france/format_policy.do
 
 # IRN
-printf "Downloading and processing IRN data...\n"
+printf "***Downloading and processing IRN data***\n"
 Rscript codes/data/iran/iran_cleaning.R
 python codes/data/iran/iran-split-interim-into-processed.py
 
 # ITA
-printf "Downloading and processing ITA data...\n"
+printf "***Downloading and processing ITA data***\n"
 python codes/data/italy/italy-download-cases-merge-policies.py
 
 # KOR
-printf "Downloading and processing KOR data...\n"
+printf "***Downloading and processing KOR data***\n"
 Rscript codes/data/korea/generate_KOR_interim.R
 python codes/data/korea/korea-interim-to-processed.py
 
 # USA
-printf "Downloading and processing USA data...\n"
+printf "***Downloading and processing USA data***\n"
 python codes/data/usa/download_latest_covidtrackingdotcom_data.py
 jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb
 python codes/data/usa/merge_policy_and_cases.py
@@ -47,12 +47,12 @@ Rscript codes/data/usa/check_health_data.R
 
 
 ## regression model estimation
-printf "Estimating regression model and creating Figure 3 and A1...\n"
+printf "***Estimating regression model and creating Figure 3 and A1***\n"
 stata -b do codes/models/alt_growth_rates/MASTER_run_all_reg.do
 
 
 ## SIR model projection
-printf "Projecting infections...\n"
+printf "***Projecting infections***\n"
 python codes/models/get_gamma.py
 Rscript codes/models/run_all_CB_simulations.R
 
@@ -60,28 +60,28 @@ Rscript codes/models/run_all_CB_simulations.R
 ## Figures and tables
 
 # Fig 1
-printf "Creating Fig 1...\n"
+printf "***Creating Fig 1***\n"
 Rscript codes/plotting/fig1.R
 
 # Fig 2
-printf "Creating Fig 2...\n"
+printf "***Creating Fig 2***\n"
 Rscript codes/plotting/fig2.R
 
 # Fig 3
 # created by regression model estimation
 
 # Fig 4
-printf "Creating Fig 4...\n"
+printf "***Creating Fig 4***\n"
 python codes/plotting/gen_fig4.py
 python codes/plotting/fig4_analysis.py
 
 # Table A1
-printf "Creating Table A1...\n"
+printf "***Creating Table A1***\n"
 python codes/plotting/count-policies.py
 
 # Figure A1
 # created by regression model estimatoin
 
 # Figure A2
-printf "Creating Fig A2...\n"
+printf "***Creating Fig A2***\n"
 python codes/plotting/figA2.py

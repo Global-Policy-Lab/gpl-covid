@@ -62,6 +62,7 @@ def main():
     # ## Global adm1
 
     # get file
+    print("Downloading and processing global adm1 data...")
     adm1_url = "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces.zip"
     cutil.download_zip(adm1_url, adm1_shp_path, overwrite=False)
 
@@ -100,7 +101,7 @@ def main():
     # ## adm2+
 
     # ### FRA
-
+    print("Downloading and processing FRA population data...")
     # First, download population data and make adm2 to adm1 mapping
 
     xwalk_fra_url = (
@@ -215,6 +216,7 @@ def main():
         }
     }
     for iso3 in isos:
+        print(f"Downloading and processing {iso3} geographical and population data...")
         # download if needed
         if iso3 == "CHN":
             ftype = "shp"
@@ -338,7 +340,7 @@ def main():
     # ## Pop
 
     # ### US
-
+    print("Downloading USA population data from US Census...")
     c = Census(cutil.API_KEYS["census"])
     pop_city = pd.DataFrame(
         c.acs5.state_place(("NAME", "B01003_001E"), Census.ALL, Census.ALL)
@@ -419,7 +421,8 @@ def main():
 
 
     # ### ITA
-
+    
+    print("Downloading and processing ITA population data...")
     url_fmt = "http://demo.istat.it/pop2019/dati/{lvl}.zip"
     ita_pop_dir = cutil.DATA_RAW / "italy" / "population"
     for u in ["province", "regioni", "comuni"]:
@@ -533,6 +536,7 @@ def main():
 
     # ### IRN
 
+    print("Downloading and processing IRN population data...")
     irn_url = r"https://www.citypopulation.de/en/iran/admin/"
     r = requests.get(irn_url)
     data = r.text
@@ -606,8 +610,10 @@ def main():
 
     # There's going to be some challenges in fuzzy merging adm2 level populations, but we're not running analyses on adm2 yet, so I'm holding off on this part.
 
+    
     # ## Area
-
+    
+    print("Formatting and saving administrative unit info datasets...")
     def finishing_touches(df):
         # area
         area_km2_mercator = df[df.geometry.notna()].to_crs("EPSG:3395").geometry.area / 1e6

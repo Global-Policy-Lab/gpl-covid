@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 
 def main():
+    
+    print("Estimating removal rate (gamma) from CHN and KOR timeseries...")
     ## load korea from regression-ready data
     df_kor = pd.read_csv(cutil.REG_DATA / "KOR_reg_data.csv", parse_dates=["date"])
     df_kor["name"] = df_kor.adm0_name + "_" + df_kor.adm1_name
