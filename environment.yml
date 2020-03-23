@@ -18,6 +18,7 @@ dependencies:
     - xlrd
     - r-base
 #     - rstudio
+    - r-data.table
     - r-lfe
     - r-mvtnorm
     - r-lubridate
