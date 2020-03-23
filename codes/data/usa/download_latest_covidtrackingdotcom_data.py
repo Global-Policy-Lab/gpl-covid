@@ -1,5 +1,3 @@
-import json
-import urllib3
 import os
 
 import pandas as pd
@@ -7,18 +5,8 @@ import numpy as np
 
 import codes.utils as cutil
 
-http = urllib3.PoolManager()
-
 states_url = 'https://covidtracking.com/api/states/daily'
 path_to_data = cutil.DATA
-
-def read_covid_tracking_data(this_data_url):
-    r = http.request('GET', this_data_url)
-    json_data = r.data.decode('utf-8')
-
-    df = pd.read_json(json_data)
-
-    return df
 
 # redo the date
 def format_covid_tracking_date(date):
@@ -31,8 +19,8 @@ def format_covid_tracking_date(date):
 
 def download_and_save_data_raw(save_locally=True):
 
-    raw_state_data = read_covid_tracking_data(states_url)
-	
+    raw_state_data = pd.read_json(states_url)
+    
     if save_locally:
         raw_fp = os.path.join(path_to_data,'raw/usa')
         raw_fn = 'US_states_covidtrackingdotcom_raw.csv'

@@ -84,7 +84,7 @@ lab var p_3 "close business + travel ban"
 //------------------main estimates
 
 // output data used for reg
-*outsheet using "models/reg_data/USA_reg_data.csv", comma replace
+outsheet using "models/reg_data/USA_reg_data.csv", comma replace
 
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid

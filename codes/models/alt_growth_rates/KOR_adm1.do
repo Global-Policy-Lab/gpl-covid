@@ -88,7 +88,7 @@ lab var p_4 "emergency declaration"
 //------------------main estimates
 
 // output data used for reg
-*outsheet using "models/reg_data/KOR_reg_data.csv", comma replace
+outsheet using "models/reg_data/KOR_reg_data.csv", comma replace
 
 // main regression model
 reghdfe D_l_active_cases`suffix' testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
