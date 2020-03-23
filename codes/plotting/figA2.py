@@ -8,7 +8,7 @@ import codes.utils as cutil
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['axes.linewidth'] = 2
 
-out_dir = cutil.HOME / 'results' / 'figures' / 'appendix'
+out_dir = cutil.HOME / 'figures' / 'appendix'
 out_dir.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_csv(cutil.DATA_PROCESSED / 'adm2' / 'CHN_processed.csv')
