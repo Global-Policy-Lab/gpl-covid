@@ -575,7 +575,7 @@ color.list <- c("darkgreen",
   
   national <-  read.csv(paste0(data_dir, 
                                "interim/france/france_jhu_cases.csv"), header = T, stringsAsFactors = F) %>% # merge JHU dataset because adm1 has no deaths
-    select(date, cases = cumulative_confirmed_cases, deaths = cumulative_deaths)
+    select(date, cases = cum_confirmed_cases, deaths = cum_deaths)
   national$date <- as.Date(national$date, format='%Y-%m-%d')
   national <- subset(national, date >= "2020-02-27" & date <= "2020-03-18")
 national <- arrange(national, date)
