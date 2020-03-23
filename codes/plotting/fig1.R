@@ -11,7 +11,7 @@ library(magrittr)
 library(ggplot2)
 
 data_dir <- "data/"
-output_dir <- "figures/fig1/"
+output_dir <- "results/figures/fig1/"
 dir.create(output_dir, recursive=TRUE, showWarnings=FALSE)
 
 #################

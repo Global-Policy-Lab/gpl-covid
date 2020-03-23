@@ -4,8 +4,6 @@
 # # Tabulate policies by country and adm-level
 # - Save Google Sheet of policies as Excel file
 # - Calculate number of policies for each country / adm-level
-# - Paste into template at `figures/appendix/table_a1/policy_counts_table.xlsx`
-# - Save output at `figures/appendix/table_a1/policy_counts_table.png`
 
 import pandas as pd
 import codes.utils as cutil
@@ -13,7 +11,7 @@ import codes.utils as cutil
 
 path_data_sources = cutil.HOME / 'references' / 'data_sources_static_20200321.xlsx'
 
-path_out_csv = cutil.HOME / 'figures' / 'appendix' / 'table_a1' / 'policy_counts_table_raw.csv'
+path_out_csv = cutil.HOME / 'results' / 'tables' / 'table_a1' / 'policy_counts_table_raw.csv'
 path_out_csv.parent.mkdir(parents=True, exist_ok=True)
 
 countries = ['china', 'france', 'iran', 'italy', 'korea', 'usa']

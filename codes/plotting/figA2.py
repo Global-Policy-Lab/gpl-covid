@@ -4,10 +4,14 @@ import matplotlib.pyplot as plt
 import matplotlib
 import datetime
 import matplotlib.dates as mdates
+import codes.utils as cutil
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['axes.linewidth'] = 2
 
-df = pd.read_csv('data/processed/adm2/CHN_processed.csv')
+out_dir = cutil.HOME / 'results' / 'figures' / 'appendix'
+out_dir.mkdir(parents=True, exist_ok=True)
+
+df = pd.read_csv(cutil.DATA_PROCESSED / 'adm2' / 'CHN_processed.csv')
 df.loc[:, 'date'] = pd.to_datetime(df['date'])
 
 # Validate with JHU provincial data
@@ -58,10 +62,10 @@ for i, province_viz in enumerate(['Hubei', 'Zhejiang', 'Guangdong', 'Henan']):
     ax_i.set_xticklabels(x_ticklabels)
     ax_i.minorticks_off()
 fig.tight_layout()
-fig.savefig('figures/appendix/figA2-1.pdf')
+fig.savefig(out_dir / 'figA2-1.pdf')
 
 
-df_kor = pd.read_csv('data/interim/korea/KOR_JHU_data_comparison.csv')
+df_kor = pd.read_csv(cutil.DATA_INTERIM / 'korea' / 'KOR_JHU_data_comparison.csv')
 
 df_kor = df_kor.iloc[0:56, :].copy()
 
@@ -95,4 +99,4 @@ ax_i.set_xticks(x_ticks)
 ax_i.set_xticklabels(x_ticklabels)
 ax_i.minorticks_off()
 fig.tight_layout()
-fig.savefig('figures/appendix/figA2-2.pdf')
+fig.savefig(out_dir / 'figA2-2.pdf')

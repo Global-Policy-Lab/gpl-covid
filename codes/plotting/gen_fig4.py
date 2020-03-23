@@ -10,7 +10,7 @@ import codes.utils as cutil
 
 # save the figure here
 save_fig = True
-fig_dir = cutil.HOME / 'figures' / 'fig4'
+fig_dir = cutil.HOME / 'results' / 'figures' / 'fig4'
 fig_dir.mkdir(parents=True, exist_ok=True)
 fig_name = 'fig4.pdf'
 

@@ -117,7 +117,7 @@ hist e, bin(30) tit(South Korea) lcolor(white) fcolor(navy) xsize(5) name(hist_k
 
 qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_kor, replace)
 
-graph combine hist_kor qn_kor, rows(1) xsize(10) saving(figures/appendix/error_dist/error_kor.gph, replace)
+graph combine hist_kor qn_kor, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_kor.gph, replace)
 graph drop hist_kor qn_kor
 
 
@@ -214,4 +214,4 @@ if e(sample), ///
 title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
+saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
