@@ -6,11 +6,13 @@ import matplotlib.dates as mdates
 import datetime
 import os
 import seaborn as sns
+import codes.utils as cutil
 
 # save the figure here
 save_fig = True
-fig_dir = "../../figures/fig4"
-fig_name = 'fig4_v5.pdf'
+fig_dir = cutil.HOME / 'figures' / 'fig4'
+fig_dir.mkdir(parents=True, exist_ok=True)
+fig_name = 'fig4.pdf'
 
 # for nice exporting to illustrator
 matplotlib.rcParams['pdf.fonttype'] = 42
@@ -25,7 +27,7 @@ matplotlib.rcParams['font.family'] = "sans-serif"
 pred_no_pol_key = 'predicted_cum_confirmed_cases_no_policy'
 pred_pol_key = 'predicted_cum_confirmed_cases_true'
 
-data_dir = '../../data/post_processing'
+data_dir = cutil.DATA / 'post_processing'
 fn_template = os.path.join(data_dir,'{0}_bootstrap_projection.csv')
 
 countries_in_order = ['china','korea', 'italy', 'iran', 'france', 'usa']
@@ -182,19 +184,6 @@ def make_quantiles(this_country_df, quantiles):
 
     return dates, quantiles_array_policy, quantiles_array_no_policy
 
-def read_cases(fn):
-    df_all = pd.read_csv(fn)
-    print(fn)
-    # use cases_drop as cases since that's what we're fitting 
-    #(drops instances with <10 observations before summing at country level)
-    df_cases = df_all.loc[:,['date','cases_drop']]
-    #df_cases = df_cases.rename(columns={'cases':'cases_no_drop'})
-    df_cases = df_cases.rename(columns={'cases_drop':'cases'})
-
-    df_cases.loc[:,'date_str'] =df_cases.loc[:,'date']
-    df_cases.loc[:,'date'] = pd.to_datetime(df_cases.loc[:,'date'])
-    
-    return df_cases
 
 def plot_bracket(ax, model_df):
     # most recent case
@@ -258,33 +247,7 @@ def annotate_cases(ax, cases):
     
 def main():
     # read in all the cases data
-    
-    iran_cases_data_fn = '../../data/processed/adm0/IRN_cases_deaths.csv'
-    iran_cases = read_cases(iran_cases_data_fn)
-
-    france_cases_data_fn = '../../data/processed/adm0/FRA_cases_deaths.csv'
-    france_cases = read_cases(france_cases_data_fn)
-
-    usa_cases_data_fn = '../../data/processed/adm0/USA_cases_deaths.csv'
-    usa_cases = read_cases(usa_cases_data_fn)
-
-    italy_cases_data_fn = '../../data/processed/adm0/ITA_cases_deaths.csv'
-    italy_cases = read_cases(italy_cases_data_fn)
-
-    china_cases_data_fn = '../../data/processed/adm0/CHN_cases_deaths.csv'
-    china_cases = read_cases(china_cases_data_fn)
-
-    korea_cases_data_fn = '../../data/processed/adm0/KOR_cases_deaths.csv'
-    korea_cases = read_cases(korea_cases_data_fn)
-
-    cases_dict = {
-        'iran': iran_cases,
-        'france': france_cases,
-        'usa': usa_cases,
-        'italy': italy_cases,
-        'china': china_cases,
-        'korea': korea_cases
-    }
+    cases_dict = cutil.load_all_cases_deaths(cases_drop=True)
     
     # get resampled data
     resampled_dfs_by_country = {}
@@ -400,7 +363,7 @@ def main():
     leg_ax.axis('off')
 
     if save_fig:
-        out_fn = os.path.join(fig_dir,fig_name)
+        out_fn = fig_dir / fig_name
         print("saving fig in {0}".format(out_fn))
         plt.savefig(out_fn,bbox_inches='tight',bbox_extra_artists=(leg,))
         

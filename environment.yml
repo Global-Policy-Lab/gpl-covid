@@ -12,10 +12,9 @@ dependencies:
     - geopandas
     - jupyter
     - lxml
-    - matplotlib
     - pip
-    - pyproj
     - requests
+    - seaborn
     - xlrd
     - r-base
 #     - rstudio
