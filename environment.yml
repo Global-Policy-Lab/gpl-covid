@@ -18,7 +18,7 @@ dependencies:
     - requests
     - xlrd
     - r-base
-    - rstudio
+#     - rstudio
     - r-lfe
     - r-lubridate
     - r-tidyverse
