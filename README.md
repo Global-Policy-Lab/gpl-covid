@@ -18,82 +18,86 @@ conda activate gpl-covid
 pip install -e .
 ```
 
+To run one of the scripts, you will also need an API key for the US Census API, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format:
+
+```json
+{
+    "census": "API_KEY_STRING"
+}
+```
+
 ## Data Documentation
 A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
 
 ## Code Structure
-
 ```text
 codes
 ├── data
-│   ├── china
-│   │   └── collate_data.py
-│   ├── france
-│   │   ├── format_infected.do
-│   │   ├── format_policy.do
-│   │   ├── gen_adm2_to_adm1.do
-│   │   ├── scrape_conf_cases_by_region.R
-│   │   └── set_auto_scrape.R
-│   ├── iran
-│   │   ├── iran-split-interim-into-processed.ipynb
-│   │   ├── iran-split-interim-into-processed.py
-│   │   └── iran_cleaning.R
-│   ├── italy
-│   │   ├── italy-download-cases-merge-policies.ipynb
-│   │   └── italy-download-cases-merge-policies.py
-│   ├── korea
-│   │   ├── download_and_clean_JHU_southkorea_data.R
-│   │   ├── generate_KOR_interim.R
-│   │   ├── korea-interim-to-processed.ipynb
-│   │   └── make_JHU_comparison_data.R
-│   ├── multi_country
-│   │   ├── get_JHU_country_data.R
-│   │   ├── get_adm_info.ipynb
-│   │   └── luna_manual_match.csv
-│   └── us
-│       ├── US_cleaning_school_district_closures.R
-│       ├── add_testing_regimes_to_covidtrackingdotcom_data.ipynb
-│       ├── aggregating_US_policy_to_state_level.R
-│       ├── check_health_data.R
-│       ├── download_and_clean_JHU_usa_data.R
-│       ├── download_latest_covidtrackingdotcom_data.py
-│       ├── filter-processed-to-end-date.ipynb
-│       ├── filter-processed-to-end-date.py
-│       ├── merge_policy_and_cases.py
-│       └── population_data.csv
+│   ├── china
+│   │   ├── collate_data.py
+│   │   └── download_and_clean_JHU_china.R
+│   ├── france
+│   │   ├── download_and_clean_JHU_france.R
+│   │   ├── format_infected.do
+│   │   ├── format_policy.do
+│   │   └── scrape_conf_cases_by_region.R
+│   ├── iran
+│   │   ├── download_and_clean_JHU_iran.R
+│   │   ├── iran-split-interim-into-processed.py
+│   │   └── iran_cleaning.R
+│   ├── italy
+│   │   ├── download_and_clean_JHU_italy.R
+│   │   └── italy-download-cases-merge-policies.py
+│   ├── korea
+│   │   ├── download_and_clean_JHU_korea.R
+│   │   ├── generate_KOR_interim.R
+│   │   ├── korea-interim-to-processed.py
+│   │   └── make_JHU_comparison_data.R
+│   ├── multi_country
+│   │   ├── download_6_countries_JHU.R
+│   │   ├── get_JHU_country_data.R
+│   │   └── get_adm_info.py
+│   └── usa
+│       ├── US_cleaning_school_district_closures.R
+│       ├── add_testing_regimes_to_covidtrackingdotcom_data.ipynb
+│       ├── check_health_data.R
+│       ├── download_and_clean_JHU_usa.R
+│       ├── download_latest_covidtrackingdotcom_data.py
+│       ├── filter-processed-to-end-date.py
+│       └── merge_policy_and_cases.py
 ├── models
-│   ├── CHN_create_CBs.R
-│   ├── CHN_generate_data_and_model_projection.R
-│   ├── FRA_create_CBs.R
-│   ├── FRA_generate_data_and_model_projection.R
-│   ├── IRN_create_CBs.R
-│   ├── IRN_generate_data_and_model_projection.R
-│   ├── ITA_create_CBs.R
-│   ├── ITA_generate_data_and_model_projection.R
-│   ├── KOR_create_CBs.R
-│   ├── KOR_generate_data_and_model_projection.R
-│   ├── USA_create_CBs.R
-│   ├── USA_generate_data_and_model_projection.R
-│   ├── alt_growth_rates
-│   │   ├── CHN_adm2.do
-│   │   ├── FRA_adm1.do
-│   │   ├── IRN_adm1.do
-│   │   ├── ITA_adm2.do
-│   │   ├── KOR_adm1.do
-│   │   ├── MASTER_run_all_reg.do
-│   │   └── USA_adm1.do
-│   ├── get_gamma.py
-│   ├── predict_felm.R
-│   ├── projection_helper_functions.R
-│   └── run_all_CB_simulations.R
+│   ├── CHN_create_CBs.R
+│   ├── CHN_generate_data_and_model_projection.R
+│   ├── FRA_create_CBs.R
+│   ├── FRA_generate_data_and_model_projection.R
+│   ├── IRN_create_CBs.R
+│   ├── IRN_generate_data_and_model_projection.R
+│   ├── ITA_create_CBs.R
+│   ├── ITA_generate_data_and_model_projection.R
+│   ├── KOR_create_CBs.R
+│   ├── KOR_generate_data_and_model_projection.R
+│   ├── USA_create_CBs.R
+│   ├── USA_generate_data_and_model_projection.R
+│   ├── alt_growth_rates
+│   │   ├── CHN_adm2.do
+│   │   ├── FRA_adm1.do
+│   │   ├── IRN_adm1.do
+│   │   ├── ITA_adm2.do
+│   │   ├── KOR_adm1.do
+│   │   ├── MASTER_run_all_reg.do
+│   │   └── USA_adm1.do
+│   ├── get_gamma.py
+│   ├── predict_felm.R
+│   ├── projection_helper_functions.R
+│   └── run_all_CB_simulations.R
 ├── plotting
-│   ├── count-policies.ipynb
-│   ├── examine_lagged_relationship_between_new_deaths_recoveries_and_older_cases.R
-│   ├── fig1.R
-│   ├── fig2.R
-│   ├── fig4_analysis.py
-│   ├── figA2.py
-│   └── gen_fig4.py
+│   ├── count-policies.py
+│   ├── examine_lagged_relationship_between_new_deaths_recoveries_and_older_cases.R
+│   ├── fig1.R
+│   ├── fig2.R
+│   ├── fig4_analysis.py
+│   ├── figA2.py
+│   └── gen_fig4.py
 └── utils.py
 ```
 
@@ -166,13 +170,7 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 Once the manual downloads are complete, execute the following scripts to download the remaining data and process the full set of input data across the six countries.
 
 ##### Multi-country
-1.  `python codes/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations. **Note:** To run this script, you will need a U.S. Census API key, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format:
-
-```json
-{
-    "census": "API_KEY_STRING"
-}
-```
+1.  `python codes/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations. **Note:** To run this script, you will need a U.S. Census API key. See [Setup](##Setup)
 2. `Rscript codes/data/multi_country/download_6_countries_JHU.R`: Downloads 6 countries' data from the Johns Hopkins University Data underlying the dashboard [here](https://coronavirus.jhu.edu/map.html).
 
 ##### China

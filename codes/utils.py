@@ -18,7 +18,7 @@ adm3_dir_fmt = 'gadm36_{iso3}_{datestamp}.zip'
 
 CUM_CASE_MIN_FILTER = 10
 
-with open(CODES / "api_keys.json", "r") as f:
+with open(HOME / "api_keys.json", "r") as f:
     API_KEYS = json.load(f)
     
 def zipify_path(path):
