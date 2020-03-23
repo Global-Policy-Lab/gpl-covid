@@ -26,16 +26,15 @@ python codes/data/iran/iran-split-interim-into-processed.py
 python codes/data/italy/italy-download-cases-merge-policies.py
 
 # KOR
-Rscript codes/data/korea/download_and_clean_JHU_southkorea_data.R
 Rscript codes/data/korea/generate_KOR_interim.R
 python codes/data/korea/korea-interim-to-processed.py
 
 # USA
-Rscript codes/data/usa/download_and_clean_JHU_usa_data.R
 python codes/data/usa/download_latest_covidtrackingdotcom_data.py
 jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb
 python codes/data/usa/merge_policy_and_cases.py
 python codes/data/usa/filter-processed-to-end-date.py
+Rscript codes/data/usa/check_health_data.R
 
 
 ## regression model estimation

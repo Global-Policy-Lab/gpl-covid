@@ -192,16 +192,15 @@ Once the manual downloads are complete, execute the following scripts to downloa
 
 ##### South Korea
 
-1. `Rscript codes/data/korea/download_and_clean_JHU_southkorea_data.R`: Downloads country-level data from the Johns Hopkins repository.
-2. `Rscript codes/data/korea/generate_KOR_interim.R`: Constructs policy data and merges it with health and population data.
-3. `python codes/data/korea/korea-interim-to-processed.py`: Formats this dataset.
+1. `Rscript codes/data/korea/generate_KOR_interim.R`: Constructs policy data and merges it with health and population data.
+2. `python codes/data/korea/korea-interim-to-processed.py`: Formats this dataset.
 
 ##### United States
-1. `Rscript codes/data/usa/download_and_clean_JHU_usa_data.R`: Downloads county- (prior to Mar 9) and state- (Mar 10 onwards) level data from the Johns Hopkins repository. The code aggregates county data to state level. You may run (using `Rscript`) or step through `codes/data/usa/check_health_data.R` to detect issues with data quality. 
-2. `python codes/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
-3. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Run the jupyter notebook and check that detected testing regime changes make sense, discard any false detections (it is in a notebook so you should manually check the detected changes, but you may run it directly using our choices).
-4. `python codes/data/usa/merge_policy_and_cases.py`: Run the script to merge all data . This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
-5. `python codes/data/usa/filter-processed-to-end-date.py`: Run the script to filter [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv) to exclude data after 3/18.
+1. `python codes/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
+2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Run the jupyter notebook and check that detected testing regime changes make sense, discard any false detections (it is in a notebook so you should manually check the detected changes, but you may run it directly using our choices).
+3. `python codes/data/usa/merge_policy_and_cases.py`: Run the script to merge all data . This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
+4. `python codes/data/usa/filter-processed-to-end-date.py`: Run the script to filter [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv) to exclude data after 3/18.
+5. (optional) `Rscript codes/data/usa/check_health_data.R`: Confirm known data quality issues have been dealt with.
 
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
