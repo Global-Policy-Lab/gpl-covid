@@ -13,6 +13,18 @@ from fuzzywuzzy import process
 from codes import utils as cutil
 idx = pd.IndexSlice
 
+if cutil.API_KEYS["census"]=="API_KEY_STRING":
+    raise ValueError(
+        """To run this script, you will need a U.S. Census API key, which can be obtained"""
+        """here: https://api.census.gov/data/key_signup.html. You will need to save this """
+        """key to `api_keys.json` in the root directory of this repo with the following format:"""
+        """
+        
+        {
+            "census": "API_KEY_STRING"
+        }
+        """
+    )
 datestamp = "20200320"
 
 adm1_shp_path = (

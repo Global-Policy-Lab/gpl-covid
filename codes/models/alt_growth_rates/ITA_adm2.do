@@ -110,7 +110,7 @@ hist e, bin(30) tit(Italy) lcolor(white) fcolor(navy) xsize(5) name(hist_ita, re
 
 qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_ita, replace)
 
-graph combine hist_ita qn_ita, rows(1) xsize(10) saving(figures/appendix/error_dist/error_ita.gph, replace)
+graph combine hist_ita qn_ita, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_ita.gph, replace)
 graph drop hist_ita qn_ita
 
 
@@ -208,4 +208,4 @@ if e(sample), ///
 title(Italy, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(figures/fig3/raw/ITA_adm2_conf_cases_growth_rates_fixedx.gph, replace)
+saving(results/figures/fig3/raw/ITA_adm2_conf_cases_growth_rates_fixedx.gph, replace)

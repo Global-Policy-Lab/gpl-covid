@@ -99,7 +99,7 @@ hist e, bin(30) tit(France) lcolor(white) fcolor(navy) xsize(5) name(hist_fra, r
 
 qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_fra, replace)
 
-graph combine hist_fra qn_fra, rows(1) xsize(10) saving(figures/appendix/error_dist/error_fra.gph, replace)
+graph combine hist_fra qn_fra, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_fra.gph, replace)
 graph drop hist_fra qn_fra
 
 
@@ -187,4 +187,4 @@ if e(sample), ///
 title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(figures/fig3/raw/FRA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
+saving(results/figures/fig3/raw/FRA_adm1_conf_cases_growth_rates_fixedx.gph, replace)

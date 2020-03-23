@@ -84,7 +84,7 @@ lab var p_3 "close business + travel ban"
 //------------------main estimates
 
 // output data used for reg
-*outsheet using "models/reg_data/USA_reg_data.csv", comma replace
+outsheet using "models/reg_data/USA_reg_data.csv", comma replace
 
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
@@ -113,7 +113,7 @@ hist e, bin(30) tit("United States") lcolor(white) fcolor(navy) xsize(5) name(hi
 
 qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_usa, replace)
 
-*graph combine hist_usa qn_usa, rows(1) xsize(10) saving(figures/appendix/error_dist/error_usa.gph, replace)
+*graph combine hist_usa qn_usa, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_usa.gph, replace)
 graph drop hist_usa qn_usa
 
 
@@ -208,4 +208,4 @@ if e(sample), ///
 title("United States", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)21993)) xlabel(21930(10)21993, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(figures/fig3/raw/USA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
+saving(results/figures/fig3/raw/USA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
