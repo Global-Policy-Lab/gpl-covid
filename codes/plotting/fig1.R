@@ -380,14 +380,32 @@ dev.off()
 
 ## Cases Map ###
 
+# additional file to match city names
+match_city_names <- read.csv(
+  paste0(data_dir, "raw/china/match_china_city_name_w_adm2.csv"),
+  na.strings=c("", "NA"))
+
 map <- readOGR(paste0(data_dir, "interim/adm/adm2/adm2.shp"))
 map <- map[map$adm0_name == 'CHN', ]
 adm2$date <- as.Date(adm2$date, format='%Y-%m-%d')
 adm2 <- adm2[adm2$date==max(adm2$date),]
 units <- as.data.frame(map[,c("adm1_name", "adm2_name", "longitude", "latitude")])
-adm2 <- merge(adm2, units, by=c("adm1_name", "adm2_name"))
-adm2$date <- as.Date(adm2$date, format='%Y-%m-%d')
-adm2 <- adm2[adm2$date==max(adm2$date),]
+# incorporate manual matching
+adm2 <- merge(adm2, match_city_names,
+              by.x=c("adm1_name", "adm2_name"),
+              by.y=c("epi_adm1", "epi_adm2"),
+              all=TRUE)
+# update col name
+update_col <- is.na(adm2$shp_adm1)
+adm2$shp_adm1 <- as.character(adm2$shp_adm1)
+adm2[update_col, 'shp_adm1'] <- as.character(adm2[update_col, 'adm1_name'])
+update_col <- is.na(adm2$shp_adm2)
+adm2$shp_adm2 <- as.character(adm2$shp_adm2)
+adm2[update_col, 'shp_adm2'] <- as.character(adm2[update_col, 'adm2_name'])
+# merge with lon/lat
+adm2 <- merge(units, adm2,
+              by.x=c("adm1_name", "adm2_name"),
+              by.y=c("shp_adm1", "shp_adm2"))
 
 map <- gSimplify(map, tol = 0.005)
 
