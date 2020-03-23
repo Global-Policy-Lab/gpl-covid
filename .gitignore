@@ -135,6 +135,10 @@ Icon[^M]
 # R
 .Rhistory
 
+# RStudio
+.Rproj.user/
+gpl-covid.Rproj
+
 # other
 api_keys.json
 notebooks/iwb-sandbox.ipynb
