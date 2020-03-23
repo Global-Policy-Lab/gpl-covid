@@ -13,6 +13,10 @@ library(ggplot2)
 data_dir <- "data/"
 output_dir <- "figures/fig1/"
 
+if (!dir.exists(output_dir)){ #make dir if it doesn't exist
+  dir.create(output_dir)
+}
+
 #################
 
 # ITALY
