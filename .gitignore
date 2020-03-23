@@ -143,3 +143,4 @@ gpl-covid.Rproj
 # other
 api_keys.json
 notebooks/iwb-sandbox.ipynb
+.vscode
