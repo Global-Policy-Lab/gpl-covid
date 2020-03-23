@@ -3,11 +3,12 @@ set -e
 
 pip install -e .
 
-## get geography info for all countries and population info for most
-python codes/data/multi_country/get_adm_info.py
-
 
 ## data scraping and processing
+
+# Multi-country
+python codes/data/multi_country/get_adm_info.py
+Rscript codes/data/multi_country/download_6_countries_JHU.R
 
 # CHN
 python codes/data/china/collate_data.py
