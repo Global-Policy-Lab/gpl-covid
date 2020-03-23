@@ -12,7 +12,7 @@ conda env create -f environment.yml
 conda activate gpl-covid
 ```
 
-**Note:** RStudio is commented out of that environment, because it causes dependency clashes in a Windows environment. If you are not in Windows, and would like to use the RStudio app, feel free to uncomment it before creating the environment. Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Execute
+**Note:** RStudio is commented out of that environment, because it causes dependency clashes in a Windows environment. If you are not in Windows, and would like to use the RStudio app, feel free to uncomment it before creating the environment. Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Ensure you are currently located inside the repo root directory (`cd gpl-covid`), then execute
 
 ```bash
 pip install -e .
@@ -24,6 +24,14 @@ To run one of the scripts, you will also need an API key for the US Census API, 
 {
     "census": "API_KEY_STRING"
 }
+```
+
+Finally, to estimate the regression models, you will need several package installed in Stata. To add them, launch Stata and run:
+```
+ssc install reghdfe, replace
+ssc install ftools, replace # the latest version of reghdfe would also require the installation of ftools
+ssc install coefplot, replace
+ssc install filelist, replace
 ```
 
 ## Data Documentation
@@ -203,7 +211,7 @@ Once the manual downloads are complete, execute the following scripts to downloa
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
 
-`stata -b do codes/models/alt_growth_rates/MASTER_run_all.do`
+`stata -b do codes/models/alt_growth_rates/MASTER_run_all_reg.do`
 
 ### SIR model projections
 Once the regression coefficients have been estimated in the above models, run the following code to generate projections of active and cumulative infections using an SIR model:

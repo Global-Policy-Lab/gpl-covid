@@ -5,9 +5,12 @@ clear all
 // optional scheme for graphs
 capture set scheme covid19_fig3 
 
-// create folders for figure output
-capture mkdir "results/figures/fig3/raw" 
-capture mkdir "results/figures/appendix/error_dist" 
+// create folders for figure output 
+capture mkdir "figures/"
+capture mkdir "figures/fig3/" 
+capture mkdir "figures/fig3/raw" 
+capture mkdir "figures/appendix/" 
+capture mkdir "figures/appendix/error_dist" 
 
 // run .do files
 do "codes/models/alt_growth_rates/CHN_adm2.do"
