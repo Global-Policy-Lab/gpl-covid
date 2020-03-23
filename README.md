@@ -23,10 +23,11 @@ One of the web scraping scripts is currently run using the taskscheduleR R packa
 R CMD INSTALL taskscheduleR
 ```
 
-Finally, to estimate the regression models, you will need the `reghdfe` package installed in Stata. To add this package, launch Stata and run:
+Finally, to estimate the regression models, you will need several package installed in Stata. To add them, launch Stata and run:
 ```
-ssc install reghdfe
-ssc install ftools # the latest version of reghdfe would also require the installation of ftools
+ssc install reghdfe, replace
+ssc install ftools, replace # the latest version of reghdfe would also require the installation of ftools
+ssc install coefplot, replace
 ```
 
 ## Data Documentation
