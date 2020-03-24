@@ -560,24 +560,24 @@ color.list <- c("darkgreen",
   adm1$date <- as.Date(as.character(adm1$date), format='%Y-%m-%d')
   
   #load latlon
-  latlon <- read.csv(paste0(data_dir, "interim/adm/adm1/adm1.csv"), stringsAsFactors = F) %>%
-    filter(adm0_name == country)
-  latlon.agg <- aggregate(list(lat = latlon$latitude, lon = latlon$longitude), by = list(latlon$adm1_name), FUN = mean) #find an 'average' point to plot within an adm1
-  
+  latlon.agg <- read.csv(paste0(data_dir, "interim/adm/adm1/adm1.csv"), stringsAsFactors = F) %>%
+    dplyr::filter(adm0_name == country) %>%
+    dplyr::select(adm1_name, lat = latitude, lon = longitude)
+
   if (country=="FRA"){ #clean region names
-    latlon.agg$Group.1[latlon.agg$Group.1 =="Auvergne-Rhône-Alpes" ] <- "AuvergneRhôneAlpes"
-    latlon.agg$Group.1[latlon.agg$Group.1 =="Bourgogne-Franche-Comté" ] <- "BourgogneFrancheComté"
-    latlon.agg$Group.1[latlon.agg$Group.1 =="Centre-Val de Loire"] <- "Centre"
-    latlon.agg$Group.1[latlon.agg$Group.1 =="Grand Est" ] <- "GrandEst"
-    latlon.agg$Group.1[latlon.agg$Group.1 =="Hauts-de-France" ] <- "HautsdeFrance"
-    latlon.agg$Group.1[latlon.agg$Group.1 =="Ile-de-France" ] <- "IledeFrance"
-    latlon.agg$Group.1[latlon.agg$Group.1 =="Nouvelle-Aquitaine" ] <- "NouvelleAquitaine"
-    latlon.agg$Group.1[latlon.agg$Group.1 =="Pays de la Loire"  ] <- "PaysdelaLoire"
-    latlon.agg <- rbind(latlon.agg, c("Corse", "42.0396", "9.0129"))
-  }
+    latlon.agg$adm1_name[latlon.agg$adm1_name =="Auvergne-Rhône-Alpes" ] <- "AuvergneRhôneAlpes"
+    latlon.agg$adm1_name[latlon.agg$adm1_name =="Bourgogne-Franche-Comté" ] <- "BourgogneFrancheComté"
+    latlon.agg$adm1_name[latlon.agg$adm1_name =="Centre-Val de Loire"] <- "Centre"
+    latlon.agg$adm1_name[latlon.agg$adm1_name =="Grand Est" ] <- "GrandEst"
+    latlon.agg$adm1_name[latlon.agg$adm1_name =="Hauts-de-France" ] <- "HautsdeFrance"
+    latlon.agg$adm1_name[latlon.agg$adm1_name =="Île-de-France" ] <- "IledeFrance"
+    latlon.agg$adm1_name[latlon.agg$adm1_name =="Nouvelle-Aquitaine" ] <- "NouvelleAquitaine"
+    latlon.agg$adm1_name[latlon.agg$adm1_name =="Pays de la Loire"  ] <- "PaysdelaLoire"
+    latlon.agg$adm1_name[latlon.agg$adm1_name =="Provence-Alpes-Côte d'Azur"  ] <- "Paca"
+  }  
   
-  # merge latlon
-  adm1 <- left_join(adm1, latlon.agg, by = c("adm1_name" = "Group.1"))
+# merge latlon
+  adm1 <- left_join(adm1, latlon.agg, by = c("adm1_name"))
   adm1$lat <- as.numeric(adm1$lat)
   adm1$lon <- as.numeric(adm1$lon)
 
@@ -718,12 +718,12 @@ adm1 <- read.csv(paste0(data_dir, "processed/adm1/KOR_processed.csv"), stringsAs
 adm1$date <- as.Date(as.character(adm1$date), format='%Y-%m-%d')
 
 #load latlon
-latlon <- read.csv(paste0(data_dir, "interim/adm/adm1/adm1.csv"), stringsAsFactors = F) %>%
-  filter(adm0_name == country)
-latlon.agg <- aggregate(list(lat = latlon$latitude, lon = latlon$longitude), by = list(latlon$adm1_name), FUN = mean) #find an 'average' point to plot within an adm1
+latlon.agg <- read.csv(paste0(data_dir, "interim/adm/adm1/adm1.csv"), stringsAsFactors = F) %>%
+  dplyr::filter(adm0_name == country) %>%
+  dplyr::select(adm1_name, lat = latitude, lon = longitude)
 
 # merge latlon
-adm1 <- left_join(adm1, latlon.agg, by = c("adm1_name" = "Group.1"))
+adm1 <- left_join(adm1, latlon.agg, by = c("adm1_name"))
 adm1$lat <- as.numeric(adm1$lat)
 adm1$lon <- as.numeric(adm1$lon)
 
