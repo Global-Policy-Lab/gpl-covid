@@ -5,8 +5,9 @@ iran_data <- get_jhu_data("Iran") %>%
 
 names_order <- read_csv("data/processed/[country]_processed.csv", 
                         col_types = cols(.default = col_character())) %>% names()
-iran_data_standardised <- iran_data %>% 
+suppressWarnings({
+  iran_data_standardised <- iran_data %>% 
   mutate(adm0_name = "Iran") %>% 
   select(one_of(names_order))
-
+})
 write_csv(iran_data_standardised, path = "data/interim/iran/iran_jhu_cases.csv")
