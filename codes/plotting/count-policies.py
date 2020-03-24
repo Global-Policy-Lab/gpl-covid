@@ -11,7 +11,7 @@ import codes.utils as cutil
 
 path_data_sources = cutil.HOME / 'references' / 'data_sources_static_20200321.xlsx'
 
-path_out_csv = cutil.HOME / 'tables' / 'table_a1' / 'policy_counts_table_raw.csv'
+path_out_csv = cutil.HOME / 'results' / 'tables' / 'table_a1' / 'policy_counts_table_raw.csv'
 path_out_csv.parent.mkdir(parents=True, exist_ok=True)
 
 countries = ['china', 'france', 'iran', 'italy', 'korea', 'usa']
