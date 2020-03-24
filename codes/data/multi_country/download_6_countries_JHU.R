@@ -1,4 +1,4 @@
-library(tidyverse)
+suppressPackageStartupMessages(library(tidyverse))
 for (i in c("china", "france", "iran", "italy", "korea", "usa"))
 {
     dir.create(paste("data/interim/",i, sep=""), recursive=TRUE, showWarnings=FALSE)
