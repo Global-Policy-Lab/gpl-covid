@@ -113,7 +113,7 @@ hist e, bin(30) tit("United States") lcolor(white) fcolor(navy) xsize(5) name(hi
 
 qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_usa, replace)
 
-*graph combine hist_usa qn_usa, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_usa.gph, replace)
+graph combine hist_usa qn_usa, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_usa.gph, replace)
 graph drop hist_usa qn_usa
 
 
