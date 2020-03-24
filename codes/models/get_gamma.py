@@ -5,20 +5,19 @@ from codes import utils as cutil
 import pandas as pd
 import numpy as np
 
+
 def main():
-    
+
     print("Estimating removal rate (gamma) from CHN and KOR timeseries...")
     ## load korea from regression-ready data
     df_kor = pd.read_csv(cutil.REG_DATA / "KOR_reg_data.csv", parse_dates=["date"])
     df_kor["name"] = df_kor.adm0_name + "_" + df_kor.adm1_name
     df_kor = df_kor.set_index(["name", "date"])
 
-
     ## load china from regression-ready data
     df_chn = pd.read_csv(cutil.REG_DATA / "CHN_reg_data.csv", parse_dates=["date"])
     df_chn["name"] = df_chn.adm0_name + "_" + df_chn.adm1_name + "_" + df_chn.adm2_name
     df_chn = df_chn.set_index(["name", "date"])
-
 
     ## combine
     df_in = df_kor.append(df_chn)
@@ -26,7 +25,6 @@ def main():
     df_in = df_in.reset_index("date", drop=False).set_index(
         pd.to_datetime(df_in.index.get_level_values("date")), append=True
     )
-
 
     ## prep dataset
     df = df_in[
@@ -55,7 +53,6 @@ def main():
     gamma_filter = (gammas_bd > 0) & (tstep_bd == 1)
     gammas_bd_filtered = gammas_bd[gamma_filter]
 
-
     # if you want to weight by active cases
     # (decided not to to avoid potential bias in giving longer duration cases more weight)
     # weights = df["active_cases"]
@@ -81,5 +78,6 @@ def main():
         name="gamma_est",
     ).to_csv(cutil.MODELS / "gamma_est.csv", index=True)
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     main()
