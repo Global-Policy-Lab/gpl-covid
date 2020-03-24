@@ -1,8 +1,9 @@
 # Full script to run R code for projection:
+setwd("/mnt/0cb2f39d-ae79-4a02-9b11-3d2617c49708/Dropbox/Dropbox/projects_ac/gpl-covid")
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lfe))
 set.seed(718)
-times = 2
+times = 1000
 # source("codes/models/calculate_gamma_from_china_and_korea.R")
 gamma = readr::read_csv("models/gamma_est.csv",
                         col_types = 
