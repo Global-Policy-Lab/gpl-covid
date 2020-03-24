@@ -30,6 +30,8 @@ Rscript codes/data/korea/generate_KOR_interim.R
 python codes/data/korea/korea-interim-to-processed.py
 
 # USA
+Rscript codes/data/usa/US_cleaning_school_district_closures.R
+Rscript codes/data/usa/US_pop_weight_US_policies.R
 python codes/data/usa/download_latest_covidtrackingdotcom_data.py
 jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb
 python codes/data/usa/merge_policy_and_cases.py
