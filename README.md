@@ -174,6 +174,17 @@ Additional manual steps performed to collect population and/or epidemiological d
 2. There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). 
 This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
 
+<<<<<<< Updated upstream
+=======
+##### United States
+1. There is no automated script to collect the US policy data. Manually collected policy data is located [here](data/raw/usa/US_covid_policies_pre_school_closure_data.xlsx)
+2. To incorporate US policy on school closures due to COVID-19 into the raw policy dataset, download the most up-to-date information on school closures [here](https://www.edweek.org/ew/section/multimedia/map-coronavirus-and-school-closures.html) and save to [here](data/raw/usa/coronavirus-and-school-closures.html)
+3. Rscript `US_cleaning_school_district_closures.R`: This script cleans the downloaded school closures data and prepares it to be merged with the rest of the raw US policy data that was manually collected. The clean school closure data is saved [here](data/interim/usa/US_school_closures_clean.csv).
+4. Rscript `US_pop_weight_US_policies.R`: This script merges the school closure data with the raw US policy data that was manually collected. Also downloads adm3 population data [here](https://simplemaps.com/static/data/us-cities/1.6/basic/simplemaps_uscities_basicv1.6.zip) and loads adm1 and adm2 population data saved [here](data/interim/adm). This script then weights policies by population at the different administrative units and saves an updated population-weighted US-COVID-19 Policy file [here](data/interim/usa/US_COVID-19_policies.csv).
+
+
+
+>>>>>>> Stashed changes
 #### Automated data collection and processing
 Once the manual downloads are complete, execute the following scripts to download the remaining data and process the full set of input data across the six countries.
 

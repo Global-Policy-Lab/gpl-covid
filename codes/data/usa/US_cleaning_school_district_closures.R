@@ -34,6 +34,7 @@ state_xwalk <- city_state_xwalk %>%
   mutate(state_name = tolower(state_name)) %>% 
   distinct()
 
+<<<<<<< Updated upstream
 # read in the adm_pop3 level dataset
 adm3_pop <- read_csv("/Users/ekrasovich/GPL NZ Project Dropbox/Emma Krasovich/GPL_covid/data/interim/usa/adm3_pop.csv") 
  
@@ -55,6 +56,12 @@ school_closures <- readxl::read_xlsx("/Users/ekrasovich/GPL NZ Project Dropbox/E
   rename(district_name = `District Name`,
          state = 'State',
          city_name = 'City',
+=======
+# source the school closures data:
+school_closures <- readxl::read_xlsx("data/raw/usa/coronavirus-school-closures-data.xlsx", skip = 1, sheet = "Districts") %>% 
+  rename(adm1_name = 'State',
+         adm3_name = 'City',
+>>>>>>> Stashed changes
          dates_closed = `Dates Closed`,
          ) %>% 
   dplyr::select(state, city_name, dates_closed) %>% 
@@ -76,6 +83,7 @@ US_schools_intermediate <- US_schools_merged %>%
   mutate(date_closed = ifelse(is.na(date_closed), date_closed3, date_closed)) %>% 
   mutate(date_closed = as.Date(date_closed, format = "%m/%d/%Y")) %>% 
   dplyr::select(-date_closed2, -date_closed3, -dates_closed) %>% 
+<<<<<<< Updated upstream
   rename(city_pop = `pop`) %>% 
   dplyr::select(-place)
 
@@ -259,5 +267,15 @@ write.csv(weights, "/Users/ekrasovich/GPL NZ Project Dropbox/Emma Krasovich/GPL_
 
 
 
+=======
+  mutate(source = "https://www.edweek.org/ew/section/multimedia/map-coronavirus-and-school-closures.html",
+         policy = "school_closure",
+         access_date = file.mtime("data/raw/usa/coronavirus-school-closures-data.xlsx")) %>% 
+  mutate(access_date = as.Date(access_date, format="%Y %m %d"),
+         Optional = "N")
+
+# save population file out to the interim folder, this will be merged w/ the raw policy data
+write_csv(US_school_closures_clean, "data/interim/usa/US_school_closures_clean.csv")
+>>>>>>> Stashed changes
 
 
