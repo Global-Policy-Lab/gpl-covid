@@ -17,12 +17,15 @@ replace adm1_name = "Centre" if adm1_name == "CentreValdeLoire"
 replace adm1_name = "Réunion" if adm1_name == "LaRéunion"
 
 // save admin2 population & ID
+destring adm2, replace force
+drop if adm2 ==.
 save "data/interim/france/departement_info.dta", replace
 
 keep adm2 adm1_name region_id pop
 rename region_id adm1
 collapse adm1 (sum) pop, by(adm1_name)
 rename pop adm1_pop
+replace adm1_name = "IledeFrance" if adm1 == 11
 save "data/interim/france/region_ID.dta", replace
 
 * date of the last update file
