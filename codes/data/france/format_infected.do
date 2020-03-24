@@ -3,6 +3,10 @@
 
 import delim "data/interim/france/adm2_to_adm1.csv", clear 
 
+
+local end_sample = 18 // set last date (paper stops at 18)
+
+
 // Deal with accents and hyphen
 foreach ite of num 1/10 {
 replace region = subinstr(region, "-", "",1)
@@ -10,17 +14,17 @@ replace region = subinstr(region, " ", "",1)
 replace region = subinstr(region, "Ã´", "ô",1)
 replace region = subinstr(region, "Ã©", "é",1)	
 }
+
+
 rename region adm1_name
 rename (num nom) (adm2 departement_name)
 replace adm1_name = "Paca" if adm1_name == "ProvenceAlpesCôted'Azur"
 replace adm1_name = "Centre" if adm1_name == "CentreValdeLoire"
 replace adm1_name = "Réunion" if adm1_name == "LaRéunion"
-
 // save admin2 population & ID
 destring adm2, replace force
-drop if adm2 ==.
+drop if adm2 == .
 save "data/interim/france/departement_info.dta", replace
-
 keep adm2 adm1_name region_id pop
 rename region_id adm1
 collapse adm1 (sum) pop, by(adm1_name)
@@ -56,15 +60,14 @@ g adm0_name = "France"
 rename infected cumulative_confirmed_cases
 
 
-
 preserve
-	foreach day of num 14/18{
+	foreach day of num 14/`end_sample'{
 	import delim "data/raw/france/france_confirmed_cases_by_region_202003`day'.csv", clear
 	tempfile f`day'
 	save `f`day''
 	}
 	drop if _n >0 
-	foreach day of num 14/18{
+	foreach day of num 14/`end_sample'{
 		append using `f`day''
 	}
 	replace cum = . if cum == 0
@@ -85,7 +88,6 @@ preserve
 	g appnd = 1
 	tempfile daily_updates
 	save `daily_updates'
-
 restore
 
 append using `daily_updates'
@@ -124,6 +126,7 @@ foreach adm1 of num `list' {
 
 }
 drop L_conf _*
+
 rename cumulative_f cum_confirmed_cases_imputed
 rename cumulative_confirmed_cases cum_confirmed_cases
 sort adm1 date
