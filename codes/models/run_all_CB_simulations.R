@@ -1,5 +1,4 @@
 # Full script to run R code for projection:
-setwd("/mnt/0cb2f39d-ae79-4a02-9b11-3d2617c49708/Dropbox/Dropbox/projects_ac/gpl-covid")
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lfe))
 set.seed(718)
