@@ -130,7 +130,7 @@ Policy data for all countries was manually collected from a variety of sources a
 - Iran: [data/raw/iran/covid_iran.xlsx](data/raw/iran/covid_iran.xlsx)
 - Italy: [data/raw/italy/italy_policy_static_20200318.csv](data/raw/italy/italy_policy_static_20200318.csv)
 - South Korea: [data/raw/korea/korea_policy_static_20200318.xlsx](data/raw/korea/korea_policy_static_20200318.xlsx)
-- United States: [data/raw/usa/US_COVID-19_policies.csv](data/raw/usa/US_COVID-19_policies.csv)
+- United States: [data/interim/usa/US_COVID-19_policies.csv](data/interim/usa/US_COVID-19_policies.csv)
 
 Additional manual steps performed to collect population and/or epidemiological data, and to merge this with the above policy data, are described for each country below. Our epidemiological and policy data sources for all countries are listed [here](references/data_sources_static_20200321.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
@@ -174,8 +174,7 @@ Additional manual steps performed to collect population and/or epidemiological d
 2. There is no automated script for constructing epidemiological variables (e.g. cumulative confirmed cases) as these were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). 
 This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
 
-<<<<<<< Updated upstream
-=======
+
 ##### United States
 1. There is no automated script to collect the US policy data. Manually collected policy data is located [here](data/raw/usa/US_covid_policies_pre_school_closure_data.xlsx)
 2. To incorporate US policy on school closures due to COVID-19 into the raw policy dataset, download the most up-to-date information on school closures [here](https://www.edweek.org/ew/section/multimedia/map-coronavirus-and-school-closures.html) and save to [here](data/raw/usa/coronavirus-and-school-closures.html)
@@ -184,7 +183,6 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 
 
 
->>>>>>> Stashed changes
 #### Automated data collection and processing
 Once the manual downloads are complete, execute the following scripts to download the remaining data and process the full set of input data across the six countries.
 

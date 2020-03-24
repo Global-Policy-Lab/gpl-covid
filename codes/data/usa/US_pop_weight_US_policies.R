@@ -17,11 +17,13 @@ library(downloader)
 
 
 #read in the raw policy data pre- school closures:
+
 us_policy_data <- readxl::read_xlsx("data/raw/usa/US_covid_policies_pre_school_closure_data.xlsx") %>% 
   rename(adm1_id = "adm1_name")
 
 
 # read in the school closure data:
+
 school_closure_data <- read_csv("data/interim/usa/US_school_closures_clean.csv") %>% 
   mutate(access_date = as.POSIXct.Date(access_date, format = "%Y-%m-%d")) %>% 
   rename(date = 'date_closed') %>% 
@@ -31,12 +33,14 @@ school_closure_data <- read_csv("data/interim/usa/US_school_closures_clean.csv")
 # GET POPULATION DATA FOR WEIGHTING -----------------------------------------
 # read in the administrative data containing population information:
 # read in the adm_pop1 level dataset
+
 adm1_population_data <- read_csv("data/interim/adm/adm1/adm1.csv") %>% 
   filter(adm0_name == 'USA') %>% 
   dplyr::select(adm0_name, adm1_name, population) %>% 
   rename(adm1_pop = 'population')
 
 #read in the adm2_pop level dataset
+
 adm2_population_data <- read_csv("data/interim/adm/adm2/adm2.csv") %>% 
   filter(adm0_name == 'USA') %>% 
   dplyr::select(adm0_name, adm1_name, adm2_name, population) %>% 
@@ -134,12 +138,8 @@ pop_weighted_policy_data <- us_policy_w_adm3_pop %>%
                 Notes, source, access_date) %>% 
   filter(date > "2020-01-01")
 
+#save csv
 write.csv(pop_weighted_policy_data, "data/interim/usa/US_COVID-19_policies.csv")
- 
-
-
-
-
 
 
 
