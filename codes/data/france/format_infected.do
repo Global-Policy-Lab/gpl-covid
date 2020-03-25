@@ -6,7 +6,7 @@
 // Please input last date info
 local y = 2020 
 local m = 3 
-local d = 18
+local d = 25
 
 // generates locals for last date
 local end_date_num = mdy(`m',`d',`y')
