@@ -28,7 +28,7 @@ Rscript codes/data/multi_country/download_6_countries_JHU.R
 #### FRA
 printf "***Downloading FRA epi data***\n"
 Rscript codes/data/france/scrape_conf_cases_by_region.R
-stata -b do codes/data/frgiance/format_infected.do
+stata -b do codes/data/france/format_infected.do
 
 ### Dataset merging
 #### CHN
