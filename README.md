@@ -233,7 +233,7 @@ To generate the four figures in the paper, run the following scripts. Figure 1 o
 
 #### Figure 1
 
-`Rscript codes/plotting/fig1.R`: Generates 12 outputs that constitute Figure 1 (`*_timeseries.pdf`, and `*_map.pdf` for each of the 6 countries).
+`Rscript codes/plotting/fig1.R`: Generates 12 outputs that constitute Figure 1 (`*_timeseries.pdf`, and `*_map.pdf` for each of the 6 countries). **Note:** This script requires [data/raw/china/match_china_city_name_w_adm2.csv](data/raw/china/match_china_city_name_w_adm2.csv), a manually generated crosswalk of Chinese city names.
 
 #### Figure 2
 
