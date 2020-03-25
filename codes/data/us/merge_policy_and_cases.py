@@ -73,6 +73,7 @@ def acc_to_statename(acc):
     return state_acronyms_to_names[acc]
 
 def fix_date(date):
+	
 	month, day, year = date.split("/") 
 
 	return "{y:04d}-{m:02d}-{d:02d}".format(y=2000+int(year), m=int(month), d=int(day))
