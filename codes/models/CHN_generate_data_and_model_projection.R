@@ -47,11 +47,11 @@ formula <- as.formula(
         paste(other_control_variables, collapse = " + "),
         " - 1 | 0 | 0 | date "
   ))
-
-main_model <- felm(data = mydata,
-                   formula = formula,
-                   cmethod = 'reghdfe'); #summary(main_model)
-
+suppressWarnings({
+  main_model <- felm(data = mydata,
+                     formula = formula,
+                     cmethod = 'reghdfe'); #summary(main_model)
+})
 #projection
 
 main_projection <- compute_predicted_cum_cases(full_data = mydata, model = main_model,
