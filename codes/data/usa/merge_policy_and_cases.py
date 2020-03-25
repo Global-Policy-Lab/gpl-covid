@@ -1,12 +1,16 @@
 import pandas as pd
 import numpy as np
 import os
-
+import codes.utils as cutil
 from functools import reduce
 
-raw_data_dir = '../../../data/raw/usa'
-int_data_dir = '../../../data/interim/usa'
-proc_data_dir = '../../../data/processed/adm1'
+raw_data_dir = str(cutil.DATA_RAW / 'usa')
+int_data_dir = str(cutil.DATA_INTERIM / 'usa')
+proc_data_dir = str(cutil.DATA_PROCESSED / 'adm1')
+
+#raw_data_dir = '../../../data/raw/usa'
+#int_data_dir = '../../../data/interim/usa'
+#proc_data_dir = '../../../data/processed/adm1'
 
 # rename the states
 state_acronyms_to_names = \
@@ -310,11 +314,13 @@ def main():
 	        date_this_policy = this_policy['date_to_sort']
 	    
 	        # get idxs back into the original df
+	        # for nonpopweighted keys, max so that value is 1 if any policy relevant enacted at sub-level, 0 otherwise.
 	        affected_case_rows = cases_this_state[cases_this_state['date_to_sort']>= date_this_policy]['index'].values
 	        for policy_key in policy_keys:
 	            cases_data.loc[affected_case_rows,policy_key] = np.maximum(cases_data.loc[affected_case_rows,policy_key].values,
 	                                                                   this_policy[policy_key]) 
 	            
+	        # for popweighted keys, add popweights
 	        for policy_key in policy_keys_popweighted:
 	            frac_summed = cases_data.loc[affected_case_rows,policy_key].values + this_policy[policy_key]
 	            cases_data.loc[affected_case_rows,policy_key] = np.minimum( frac_summed, 1.0)
@@ -360,7 +366,7 @@ def main():
 	pops1 = pd.read_csv(os.path.join(int_data_dir.replace('usa','adm') , 'adm1/adm1.csv'), index_col = [0,1])
 	cases_data_to_publish = cases_data_subset.join(pops1.loc['USA'].population,on='adm1_name', how='left')
 	assert cases_data_to_publish.population.isnull().sum()==0, 'poplation is null'
-	
+
 	# publish
 	print('writing merged policy and cases data to ', os.path.join(proc_data_dir,'USA_processed.csv'))
 	cases_data_to_publish.to_csv(os.path.join(proc_data_dir,'USA_processed.csv'),index=False)
