@@ -24,7 +24,6 @@ get_jhu_data <- function(country = c("US", "Iran", "Korea, South", "Italy", "Chi
                                      "Spain", "Sri Lanka", "Sweden", "Switzerland", "Taiwan*", 
                                      "Thailand", "Togo", "Tunisia", "Turkey", "Ukraine", 
                                      "United Arab Emirates", "United Kingdom", "Vietnam"),
-                         fix_issues = TRUE,
                          province_states_to_include = NULL){
   # This checks that the country is in the above vector
   country <- match.arg(country)

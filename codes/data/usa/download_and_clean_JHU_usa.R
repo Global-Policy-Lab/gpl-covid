@@ -40,6 +40,10 @@ usa_data_county <- usa_data_county %>%
     state_name = state.name,
   ), by = "state_abb")
 
+# JHU stopped tracking county-level on 03/10
+usa_data_county <- usa_data_county %>%
+  filter(date <= "2020-03-09")
+
 suppressWarnings({
   usa_data_county <- usa_data_county %>%
     fix_issues()
@@ -55,10 +59,6 @@ usa_data_county <- usa_data_county %>%
                              "DC", state_abb),
          state_name = if_else(county == "District of Columbia",
                               "District of Columbia", state_name))
-
-# JHU stopped tracking county-level on 03/10
-usa_data_county <- usa_data_county %>%
-  filter(date <= "2020-03-09")
 
 usa_data_state <- usa_data %>% 
   filter(!province_state %in% c("Diamond Princess", "Grand Princess")) %>% 
