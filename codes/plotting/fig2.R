@@ -10,7 +10,7 @@ library(ggplot2)
 
 # set working directory
 dir <- "models/"
-output_dir <- "figures/fig2/"
+output_dir <- "results/figures/fig2/"
 
 if (!dir.exists(output_dir)){ #make dir if it doesn't exist
   dir.create(output_dir)

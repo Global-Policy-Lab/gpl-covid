@@ -11,8 +11,21 @@ from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 from codes import utils as cutil
+
 idx = pd.IndexSlice
 
+if cutil.API_KEYS["census"] == "API_KEY_STRING":
+    raise ValueError(
+        """To run this script, you will need a U.S. Census API key, which can be obtained"""
+        """here: https://api.census.gov/data/key_signup.html. You will need to save this """
+        """key to `api_keys.json` in the root directory of this repo with the following format:"""
+        """
+        
+        {
+            "census": "API_KEY_STRING"
+        }
+        """
+    )
 datestamp = "20200320"
 
 adm1_shp_path = (
@@ -50,13 +63,22 @@ def main():
     # ## Global adm1
 
     # get file
+    print("Downloading and processing global adm1 data...")
     adm1_url = "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces.zip"
     cutil.download_zip(adm1_url, adm1_shp_path, overwrite=False)
 
     # process
     in_gdf = gpd.read_file(cutil.zipify_path(adm1_shp_path))
     adm_gdf = in_gdf[
-        ["adm0_a3", "name", "geometry", "latitude", "longitude", "gadm_level", "name_alt"]
+        [
+            "adm0_a3",
+            "name",
+            "geometry",
+            "latitude",
+            "longitude",
+            "gadm_level",
+            "name_alt",
+        ]
     ]
     adm_gdf = adm_gdf.rename(
         columns={"adm0_a3": "adm0_name", "name": "adm1_name"}
@@ -84,11 +106,10 @@ def main():
     adm3_gdf["adm1_name"] = []
     adm3_gdf = adm3_gdf.set_index(["adm0_name", "adm1_name", "adm2_name", "adm3_name"])
 
-
     # ## adm2+
 
     # ### FRA
-
+    print("Downloading and processing FRA population data...")
     # First, download population data and make adm2 to adm1 mapping
 
     xwalk_fra_url = (
@@ -141,7 +162,6 @@ def main():
     # save b/c will be used by other France code
     pop_fra.to_csv(cutil.DATA_INTERIM / "france" / "adm2_to_adm1.csv")
 
-
     # Next merge this into adm info
 
     adm2_fr = (
@@ -161,7 +181,9 @@ def main():
 
     # merge back in
     adm2_gdf = (
-        adm2_gdf.join(adm2_fr.reset_index('adm1_name', drop=False), on="adm2_name", how="outer")
+        adm2_gdf.join(
+            adm2_fr.reset_index("adm1_name", drop=False), on="adm2_name", how="outer"
+        )
         .reset_index(drop=False)
         .set_index(["adm0_name", "adm1_name", "adm2_name"])
     )
@@ -173,7 +195,6 @@ def main():
     adm1_fr["latitude"] = adm1_fr.geometry.centroid.y
     adm1_fr["longitude"] = adm1_fr.geometry.centroid.x
     adm1_gdf = adm1_gdf.append(adm1_fr)
-
 
     # ### Others
 
@@ -203,6 +224,7 @@ def main():
         }
     }
     for iso3 in isos:
+        print(f"Downloading and processing {iso3} geographical and population data...")
         # download if needed
         if iso3 == "CHN":
             ftype = "shp"
@@ -255,7 +277,6 @@ def main():
         adm1_gdf = adm1_gdf[adm1_gdf.index.get_level_values("adm0_name") != iso3]
         adm1_gdf = adm1_gdf.append(in_gdf)
 
-
     # ## Manual name adjustments
 
     # Some manual adjustments to make this match with the naming of the data produced by country teams
@@ -291,10 +312,11 @@ def main():
     n_prov = len(add_provinces)
     new_prov = pd.DataFrame(
         dict(
-            adm0_name=["ITA"] * n_prov, adm2_name=add_provinces, adm1_name=add_provinces_reg
+            adm0_name=["ITA"] * n_prov,
+            adm2_name=add_provinces,
+            adm1_name=add_provinces_reg,
         )
     ).set_index(["adm0_name", "adm1_name", "adm2_name"])
-
 
     ## update regions for 2 provinces that are treated as
     ## autonomous regions in the italy repo used for ITA_processed
@@ -305,7 +327,6 @@ def main():
         ["adm0_name", "adm1_name", "adm2_name"]
     )
 
-
     ## fix names
     adm1_gdf = adm1_gdf.rename(index=region_dict, level="adm1_name")
     adm2_gdf = adm2_gdf.rename(index=region_dict, level="adm1_name")
@@ -313,20 +334,17 @@ def main():
     adm2_gdf = adm2_gdf.rename(index=province_dict, level="adm2_name")
     adm3_gdf = adm3_gdf.rename(index=province_dict, level="adm2_name")
 
-
     ## split Trentino- into two provinces
     adm1_gdf = adm1_gdf.append(new_reg)
     adm1_gdf = adm1_gdf.drop(index=drop_regions, level="adm1_name")
 
-
     ## add additional province of sardegna
     adm2_gdf = adm2_gdf.append(new_prov)
-
 
     # ## Pop
 
     # ### US
-
+    print("Downloading USA population data from US Census...")
     c = Census(cutil.API_KEYS["census"])
     pop_city = pd.DataFrame(
         c.acs5.state_place(("NAME", "B01003_001E"), Census.ALL, Census.ALL)
@@ -334,7 +352,6 @@ def main():
     pop_cty = pd.DataFrame(
         c.acs5.state_county(("NAME", "B01003_001E"), Census.ALL, Census.ALL)
     )
-
 
     # #### Place-level
 
@@ -348,7 +365,6 @@ def main():
     out_dir = cutil.DATA / "interim" / "usa"
     out_dir.mkdir(parents=True, exist_ok=True)
     pop_city.to_csv(out_dir / "adm3_pop.csv", index=True)
-
 
     # #### County-level
 
@@ -382,7 +398,6 @@ def main():
         }
     ).set_index("hasc")
 
-
     # ##### Merge in us adm2 dataset
 
     us_gdf = in_gdf = gpd.read_file(
@@ -396,23 +411,26 @@ def main():
     us_pops["adm0_name"] = "USA"
     us_pops = us_pops.set_index(["adm0_name", "adm1_name", "adm2_name"])
 
-
     # ##### Merge back into global adm datasets
 
     adm2_gdf = adm2_gdf.fillna(us_pops)
     st_pops = (
-        adm2_gdf.loc[:, "population"].groupby(["adm0_name", "adm1_name"]).sum(min_count=1)
+        adm2_gdf.loc[:, "population"]
+        .groupby(["adm0_name", "adm1_name"])
+        .sum(min_count=1)
     )
     adm1_gdf["population"] = adm1_gdf.population.fillna(st_pops)
 
-
     # ### ITA
 
+    print("Downloading and processing ITA population data...")
     url_fmt = "http://demo.istat.it/pop2019/dati/{lvl}.zip"
     ita_pop_dir = cutil.DATA_RAW / "italy" / "population"
     for u in ["province", "regioni", "comuni"]:
         if not (ita_pop_dir / f"{u}.csv").exists():
-            cutil.download_zip(url_fmt.format(lvl=u), ita_pop_dir / (u+'.zip'), overwrite=False)
+            cutil.download_zip(
+                url_fmt.format(lvl=u), ita_pop_dir / (u + ".zip"), overwrite=False
+            )
 
     replace_provinces = {
         "Bolzano/Bozen": "Bolzano",
@@ -428,7 +446,6 @@ def main():
     }
     replace_munis = {"Vo'": "Vò"}
 
-
     # #### adm1 and 2
 
     df = pd.read_csv(
@@ -437,8 +454,12 @@ def main():
         usecols=["Provincia", "Totale Maschi", "Totale Femmine", "Età"],
     )
     df["adm0_name"] = "ITA"
-    df = df.rename(columns={"Provincia": "adm2_name"}).set_index(["adm0_name", "adm2_name"])
-    pop2 = df.loc[df["Età"] == "Totale", ["Totale Maschi", "Totale Femmine"]].sum(axis=1)
+    df = df.rename(columns={"Provincia": "adm2_name"}).set_index(
+        ["adm0_name", "adm2_name"]
+    )
+    pop2 = df.loc[df["Età"] == "Totale", ["Totale Maschi", "Totale Femmine"]].sum(
+        axis=1
+    )
     pop2 = pop2.rename(index=replace_provinces)
     pop2.name = "population"
 
@@ -460,14 +481,17 @@ def main():
         usecols=["Regione", "Totale Maschi", "Totale Femmine", "Età"],
     )
     df["adm0_name"] = "ITA"
-    df = df.rename(columns={"Regione": "adm1_name"}).set_index(["adm0_name", "adm1_name"])
-    pop1 = df.loc[df["Età"] == "Totale", ["Totale Maschi", "Totale Femmine"]].sum(axis=1)
+    df = df.rename(columns={"Regione": "adm1_name"}).set_index(
+        ["adm0_name", "adm1_name"]
+    )
+    pop1 = df.loc[df["Età"] == "Totale", ["Totale Maschi", "Totale Femmine"]].sum(
+        axis=1
+    )
     pop1 = pop1.rename(index=replace_regions)
     pop1.name = "population"
 
     pop1 = pop1.append(provinces_as_regions)
     adm1_gdf.population = adm1_gdf.population.fillna(pop1)
-
 
     # #### adm3
 
@@ -483,7 +507,6 @@ def main():
     pop3 = df.loc[df["Età"] == 999, ["Totale Maschi", "Totale Femmine"]].sum(axis=1)
     pop3.name = "population"
     pop3 = pop3.rename(index=replace_munis)
-
 
     ## making sure we match the important cities (ones that are used in pop weighting)
     adm3_gdf = adm3_gdf.rename(
@@ -505,10 +528,8 @@ def main():
         ~adm3_gdf.index.get_level_values("adm3_name").isin(["Cavacurta", "Camairago"])
     ].append(castel)
 
-
     ## don't know what to do with same-named cities so we'll just keep those pops as missing
     pop3 = pop3[~pop3.index.duplicated(keep=False)]
-
 
     ## merge
     adm3_gdf = (
@@ -518,9 +539,9 @@ def main():
         .set_index(["adm0_name", "adm1_name", "adm2_name", "adm3_name"])
     )
 
-
     # ### IRN
 
+    print("Downloading and processing IRN population data...")
     irn_url = r"https://www.citypopulation.de/en/iran/admin/"
     r = requests.get(irn_url)
     data = r.text
@@ -571,7 +592,6 @@ def main():
                 ratio_array.append(x[1])
         return names_array, ratio_array
 
-
     # #### adm1
 
     adm1_orig = adm1_irn.index.values
@@ -589,16 +609,19 @@ def main():
     # merge in pops
     adm1_gdf.population = adm1_gdf.population.fillna(adm1_irn.population)
 
-
     # #### adm2
 
     # There's going to be some challenges in fuzzy merging adm2 level populations, but we're not running analyses on adm2 yet, so I'm holding off on this part.
 
     # ## Area
 
+    print("Formatting and saving administrative unit info datasets...")
+
     def finishing_touches(df):
         # area
-        area_km2_mercator = df[df.geometry.notna()].to_crs("EPSG:3395").geometry.area / 1e6
+        area_km2_mercator = (
+            df[df.geometry.notna()].to_crs("EPSG:3395").geometry.area / 1e6
+        )
         if "area_km2" in df.columns:
             df["area_km2"] = df.area_km2.fillna(area_km2_mercator)
         else:
@@ -619,11 +642,9 @@ def main():
         df = df.sort_index()
         return df
 
-
     adm1_gdf = finishing_touches(adm1_gdf)
     adm2_gdf = finishing_touches(adm2_gdf)
     adm3_gdf = finishing_touches(adm3_gdf)
-
 
     # ## Save
 
@@ -634,6 +655,6 @@ def main():
         i.to_file(out_dir / f"{fname}.shp", index=True)
         i.drop(columns="geometry").to_csv(out_dir / f"{fname}.csv", index=True)
 
-    
+
 if __name__ == "__main__":
     main()

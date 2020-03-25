@@ -18,11 +18,8 @@ adm3_dir_fmt = 'gadm36_{iso3}_{datestamp}.zip'
 
 CUM_CASE_MIN_FILTER = 10
 
-try:
-    with open(CODES / "api_keys.json", "r") as f:
-        API_KEYS = json.load(f)
-except FileNotFoundError:
-    API_KEYS = None
+with open(HOME / "api_keys.json", "r") as f:
+    API_KEYS = json.load(f)
     
 def zipify_path(path):
     return 'zip://'+str(path)
@@ -73,3 +70,24 @@ def get_processed_fpath(iso3, adm_lvl):
 def load_processed_data(iso3, adm_lvl):
     index_cols = [f'adm{i}_name' for i in range(adm_lvl+1)] + ['date']
     return pd.read_csv(get_processed_fpath(iso3, adm_lvl), index_col = index_cols, parse_dates=True).sort_index()
+
+
+def read_cases(fn, cases_drop=False):
+    df_all = pd.read_csv(fn)
+    if cases_drop:
+        df_all = df_all.drop(columns='cases')
+        df_all = df_all.rename(columns={'cases_drop':'cases'})
+    df_cases = df_all.loc[:,['date','cases']]
+    df_cases.loc[:,'date_str'] = df_cases.loc[:,'date']
+    df_cases.loc[:,'date'] = pd.to_datetime(df_cases.loc[:,'date'])
+    
+    return df_cases
+
+
+def load_all_cases_deaths(cases_drop=False):
+    cases_dict = {}
+    for i in ISOS:
+        cases_data_fn = DATA_PROCESSED / 'adm0' / f'{i}_cases_deaths.csv'
+        cases = read_cases(cases_data_fn, cases_drop=cases_drop)
+        cases_dict[iso_to_dirname(i)] = cases
+    return cases_dict

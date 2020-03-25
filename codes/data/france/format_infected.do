@@ -1,6 +1,23 @@
 // Author: Sébastien AP
 // Purpose: clean and reshape the raw infected count data
 
+// ---------SET LAST DATE OF SAMPLE ----------- /Default is march 18 2020
+
+// Please input last date info
+local y = 2020 
+local m = 3 
+local d = 18
+
+// generates locals for last date
+local end_date_num = mdy(`m',`d',`y')
+if `m' < 10 {
+	local m = "0`m'"
+}
+local end_sample = "`y'`m'`d'"
+
+// --------------------------------------------
+
+//Load data
 import delim "data/interim/france/adm2_to_adm1.csv", clear 
 
 // Deal with accents and hyphen
@@ -10,59 +27,74 @@ replace region = subinstr(region, " ", "",1)
 replace region = subinstr(region, "Ã´", "ô",1)
 replace region = subinstr(region, "Ã©", "é",1)	
 }
+
 rename region adm1_name
 rename (num nom) (adm2 departement_name)
 replace adm1_name = "Paca" if adm1_name == "ProvenceAlpesCôted'Azur"
 replace adm1_name = "Centre" if adm1_name == "CentreValdeLoire"
 replace adm1_name = "Réunion" if adm1_name == "LaRéunion"
-
 // save admin2 population & ID
+destring adm2, replace force
+drop if adm2 == .
 save "data/interim/france/departement_info.dta", replace
-
 keep adm2 adm1_name region_id pop
 rename region_id adm1
 collapse adm1 (sum) pop, by(adm1_name)
 rename pop adm1_pop
+replace adm1_name = "IledeFrance" if adm1 == 11
 save "data/interim/france/region_ID.dta", replace
 
-* date of the last update file
-local m = "3"
-local M = "`m'"
-if `m' < 10 {
-	local M = "0`m'"
-}
-local d = "13"
-local date_file = "2020`M'`d'"
 
-import excel using "data/raw/france/fr-sars-cov-2-`date_file'.xlsx", clear first ///
+
+
+import excel using "data/raw/france/fr-sars-cov-2-20200312.xlsx", clear first ///
  sheet("Nombre de cas confir par région")
 
-drop Total X-AI
-
-
+drop Total X
 rename * infected*
 rename infectedDate date
+
+drop if date == 21983 | date == 21987 // missing data, added later in script
 // drop duplicate
 drop if infectedFrancemétropolitaine == 191
 
 reshape long infected, i(date) j(adm1_name) string
-g last_date = mdy(`m',`d',2020)
+g last_date = mdy(03,13,2020)
 drop if date > last_date
 g adm0_name = "France"
-
 rename infected cumulative_confirmed_cases
 
-
-
+// merge scraped and manually filled data
 preserve
-	foreach day of num 14/18{
-	import delim "data/raw/france/france_confirmed_cases_by_region_202003`day'.csv", clear
-	tempfile f`day'
-	save `f`day''
+	// data for march 9 found on regional websites
+	import delim "data/raw/france/france_confirmed_cases_by_region_20200309.csv", clear
+	keep adm1 date adm0 cumulative
+	tempfile f0
+	save `f0'
+	//iterate for each day after march 13 until the date set at the beginning
+	local D = mdy(3,13,2020)
+	while `D' <= `end_date_num'{
+		local month_file = month(`D')
+		local day_file = day(`D')
+		if `month_file' < 10 {
+			local month_file = "0`month_file'"
+		}
+		if `day_file' < 10 {
+			local day_file = "0`day_file'"
+		}		
+		import delim "data/raw/france/france_confirmed_cases_by_region_2020`month_file'`day_file'.csv", clear
+		drop if cumulative == .
+		keep adm1 date adm0 cumulative
+		tempfile f`D'
+		save `f`D''
+		local D = `D' + 1
 	}
-	drop if _n >0 
-	foreach day of num 14/18{
-		append using `f`day''
+	
+	use `f0', clear 
+	local D = mdy(3,13,2020)
+	while `D' <= `end_date_num'{
+		append using `f`D''
+		local D = `D' + 1
 	}
 	replace cum = . if cum == 0
 	// deal with accents
@@ -82,7 +114,6 @@ preserve
 	g appnd = 1
 	tempfile daily_updates
 	save `daily_updates'
-
 restore
 
 append using `daily_updates'
@@ -121,6 +152,7 @@ foreach adm1 of num `list' {
 
 }
 drop L_conf _*
+
 rename cumulative_f cum_confirmed_cases_imputed
 rename cumulative_confirmed_cases cum_confirmed_cases
 sort adm1 date

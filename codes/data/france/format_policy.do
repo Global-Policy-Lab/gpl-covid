@@ -61,8 +61,10 @@ destring running_var, replace force
 merge m:1 adm2 using "data/interim/france/departement_info.dta", keep(3) nogen
 tab adm1_name
 *ad hoc for corse
+
 replace pop = 327283 if adm1 == 94 & adm2 == 2
-drop departement_name cheflieu superficie densite region_id
+
+drop departement_name  region_id
 sort adm1 date
 
 collapse (sum) running_var pop, by(date adm0 adm1 adm1_name policy_cat)
@@ -150,4 +152,5 @@ drop if adm1 < 10
 format date %tdCCYY-NN-DD
 rename adm1_pop population
 outsheet * using "data/processed/adm1/FRA_processed.csv", replace comma
+
 
