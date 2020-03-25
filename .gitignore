@@ -144,3 +144,6 @@ gpl-covid.Rproj
 notebooks/iwb-sandbox.ipynb
 .vscode
 api_keys.json
+
+# Results folder
+results/
