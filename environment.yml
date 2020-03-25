@@ -5,7 +5,7 @@ channels:
     - defaults
     - bolliger32
 dependencies:
-    - python=3
+    - python=3.8
     - beautifulsoup4=4.8
     - census=0.8
     - fuzzywuzzy=0.17
