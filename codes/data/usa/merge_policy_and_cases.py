@@ -8,80 +8,6 @@ raw_data_dir = str(cutil.DATA_RAW / 'usa')
 int_data_dir = str(cutil.DATA_INTERIM / 'usa')
 proc_data_dir = str(cutil.DATA_PROCESSED / 'adm1')
 
-#raw_data_dir = '../../../data/raw/usa'
-#int_data_dir = '../../../data/interim/usa'
-#proc_data_dir = '../../../data/processed/adm1'
-
-# rename the states
-state_acronyms_to_names = \
-{"all":"all",
- "AL":"Alabama",
- "AK":"Alaska",
- "AZ":"Arizona",
- "AR":"Arkansas",
- "AS":"American Samoa",
- "CA":"California",
- "CO":"Colorado",
- "CT":"Connecticut",
- "DE":"Delaware",
- "DC":"District of Columbia",
- "FL":"Florida",
- "GA":"Georgia",
- "GU":"Guam",
- "HI": "Hawaii",
- "ID":"Idaho",
- "IL":"Illinois",             
- "IN":"Indiana",              
- "IA":"Iowa",                 
- "KS":"Kansas" ,
- "KY":"Kentucky",
- "LA":"Louisiana",
- "ME":"Maine",
- "MD":"Maryland",
- "MA":"Massachusetts",
- "MI":"Michigan",
- "MN":"Minnesota",
- "MP":"Northern Marianas",
- "MS":"Mississippi",
- "MO":"Missouri",
- "MT":"Montana",
- "NE":"Nebraska",
- "NV":"Nevada"  ,            
- "NH":"New Hampshire",
- "NJ":"New Jersey"     ,
- "NM":"New Mexico",
- "NY":"New York",
- "NC":"North Carolina",
- "ND":"North Dakota",
- "OH":"Ohio",
- "OK":"Oklahoma",             
- "OR":"Oregon",
- "PA":"Pennsylvania",
- "PR": "Puerto Rico",
- "RI":"Rhode Island" ,
- "SC":"South Carolina",
- "SD":"South Dakota",
- "TN":"Tennessee",
- "TX":"Texas",
- "UT":"Utah",
- "VT":"Vermont",
- "VA":"Virginia",
- "VI":"Virgin Islands",
- "WA":"Washington",          
- "WV":"West Virginia",
- "WI":"Wisconsin",
- "WY":"Wyoming"   
-}
-
-def acc_to_statename(acc):
-    return state_acronyms_to_names[acc]
-
-def fix_date(date):
-
-	month, day, year = date.split("/") 
-
-	return "{y:04d}-{m:02d}-{d:02d}".format(y=2000+int(year), m=int(month), d=int(day))
-
 def general_union(x):
     candidates =  reduce(np.union1d, x)
     
@@ -111,11 +37,6 @@ def download_and_process_policy_csv():
 	# get the unchanged vars
 	policy_data = policy_data_raw.loc[:,['date', 'adm0_name', 'adm1_name', 'adm2_name']]
 	
-	# dates formatted as YYYY-MM-DD so no need to do this anymore
-	#policy_data.loc[:,'date'] = policy_data.loc[:,'date'].apply(fix_date)
-
-	# state names formated as e.g. "Alaska" so no need to do this anymore
-	#policy_data.loc[:,'adm1_name'] = policy_data['adm1_name'].apply(acc_to_statename)
 
 	# Code all policies as 0/1
 	policy_mandatory = policy_data_raw.loc[:,'Optional'] == 'N'
@@ -330,8 +251,7 @@ def main():
 	cases_data.loc[:,'testing_regime'] = float("NaN")
 
 	testing_regimes = testing_regimes[['date', 'adm1_name', 'testing_regime']].sort_values('date')
-	# still need to do this for testing regimes data
-	testing_regimes.loc[:,'adm1_name'] = testing_regimes['adm1_name'].apply(acc_to_statename)
+	
 	testing_regimes_by_state = testing_regimes.groupby('adm1_name')
 
 	for state in cases_data_by_state.groups.keys():
