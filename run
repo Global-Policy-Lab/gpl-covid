@@ -6,43 +6,55 @@ pip install -e .
 
 ## data scraping and processing
 
-# Multi-country
+
+### Geography/population
 printf "***Downloading shape and population info for all countries***\n"
 python codes/data/multi_country/get_adm_info.py
 
-printf "***Downloading Johns Hopkins U data for all countries***\n"
-Rscript codes/data/multi_country/download_6_countries_JHU.R
 
-# CHN
-printf "***Downloading and processing CHN data***\n"
-python codes/data/china/collate_data.py
-
-# FRA
-printf "***Downloading and processing FRA data***\n"
-Rscript codes/data/france/scrape_conf_cases_by_region.R
-stata -b do codes/data/frgiance/format_infected.do
-stata -b do codes/data/france/format_policy.do
-
-# IRN
-printf "***Downloading and processing IRN data***\n"
-Rscript codes/data/iran/iran_cleaning.R
-python codes/data/iran/iran-split-interim-into-processed.py
-
-# ITA
-printf "***Downloading and processing ITA data***\n"
-python codes/data/italy/italy-download-cases-merge-policies.py
-
-# KOR
-printf "***Downloading and processing KOR data***\n"
-Rscript codes/data/korea/generate_KOR_interim.R
-python codes/data/korea/korea-interim-to-processed.py
-
-# USA
-printf "***Downloading and processing USA data***\n"
+### Policy
+printf "***Downloading USA policy and testing data***\n"
 Rscript codes/data/usa/US_cleaning_school_district_closures.R
 Rscript codes/data/usa/US_pop_weight_US_policies.R
 python codes/data/usa/download_latest_covidtrackingdotcom_data.py
 jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb
+
+
+### Epi
+#### Multi-country
+printf "***Downloading Johns Hopkins U data for all countries***\n"
+Rscript codes/data/multi_country/download_6_countries_JHU.R
+
+#### FRA
+printf "***Downloading FRA epi data***\n"
+Rscript codes/data/france/scrape_conf_cases_by_region.R
+stata -b do codes/data/frgiance/format_infected.do
+
+### Dataset merging
+#### CHN
+printf "***Processing CHN data***\n"
+python codes/data/china/collate_data.py
+
+#### FRA
+printf "***Processing FRA data***\n"
+stata -b do codes/data/france/format_policy.do
+
+# IRN
+printf "***Processing IRN data***\n"
+Rscript codes/data/iran/iran_cleaning.R
+python codes/data/iran/iran-split-interim-into-processed.py
+
+# ITA
+printf "***Processing ITA data***\n"
+python codes/data/italy/italy-download-cases-merge-policies.py
+
+# KOR
+printf "***Processing KOR data***\n"
+Rscript codes/data/korea/generate_KOR_interim.R
+python codes/data/korea/korea-interim-to-processed.py
+
+# USA
+printf "***Processing USA data***\n"
 python codes/data/usa/merge_policy_and_cases.py
 python codes/data/usa/filter-processed-to-end-date.py
 Rscript codes/data/usa/check_health_data.R
