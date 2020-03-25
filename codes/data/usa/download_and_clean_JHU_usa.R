@@ -138,3 +138,4 @@ usa_data_state_standardised <- usa_data_state_standardised %>%
   arrange(adm1_name, date)
 # write_csv(usa_data_county_standardised, path = "data/interim/usa/usa_jhu_cases_county.csv")
 write_csv(usa_data_state_standardised, path = "data/interim/usa/usa_jhu_cases_state.csv")
+
