@@ -410,10 +410,16 @@ def main():
     us_pops = us_pops.rename(columns={"NAME_1": "adm1_name", "NAME_2": "adm2_name"})
     us_pops["adm0_name"] = "USA"
     us_pops = us_pops.set_index(["adm0_name", "adm1_name", "adm2_name"])
-
+    
+    # save fips xwalk
+    us_pops.reset_index(level="adm0_name", drop=True).to_csv(
+        cutil.DATA_INTERIM / "usa" / "adm2_pop_fips.csv", index=True
+    )
+    
+    
     # ##### Merge back into global adm datasets
-
     adm2_gdf = adm2_gdf.fillna(us_pops)
+
     st_pops = (
         adm2_gdf.loc[:, "population"]
         .groupby(["adm0_name", "adm1_name"])
