@@ -21,6 +21,7 @@ policies_date = "20200318"
 adm_dir = cutil.DATA_INTERIM / 'adm'
 path_adm1 = adm_dir / 'adm1' / 'adm1.csv'
 path_adm2 = adm_dir / 'adm2' / 'adm2.csv'
+path_adm3 = adm_dir / 'adm3' / 'adm3.csv'
 
 # Template for processed dataset (output of this notebook)
 path_template = cutil.DATA_PROCESSED / '[country]_processed.csv'
@@ -45,7 +46,6 @@ path_italy_interim_region = dir_italy_interim / 'italy-cases-by-region.csv'
 path_processed_region = cutil.DATA_PROCESSED / 'adm1' / 'ITA_processed.csv'
 path_processed_province = cutil.DATA_PROCESSED / 'adm2' / 'ITA_processed.csv'
 
-
 # ## Download and read raw data from Github
 
 # #### Read inputs
@@ -53,6 +53,7 @@ path_processed_province = cutil.DATA_PROCESSED / 'adm2' / 'ITA_processed.csv'
 # Administrative unit names
 adm1_df = pd.read_csv(path_adm1)
 adm2_df = pd.read_csv(path_adm2)
+adm3_df = pd.read_csv(path_adm3)
 
 # Columns in template (i.e. columns allowed in output)
 template_cols = set(pd.read_csv(path_template).columns)
@@ -128,15 +129,12 @@ assert adm1_cases['lon'].isnull().sum() == 0
 adm2_cases['adm2_name'] = adm2_cases['adm2_name'].replace(
     'In fase di definizione/aggiornamento', 'Unknown')
 
-
 # Drop unnecessary column
 
 # In[ ]:
 
-
 adm1_cases = adm1_cases.drop(columns=[col for col in adm1_cases.columns if col not in replace_dict.values()])
 adm2_cases = adm2_cases.drop(columns=[col for col in adm2_cases.columns if col not in replace_dict.values()])
-
 
 # Impute cumulative confirmed cases at `adm2` level on the first day of the dataset (2/24/2020) from `adm1`
 
@@ -375,6 +373,64 @@ policies_full['adm1_affected'] = policies_full['adm1_affected'].fillna('All')
 policies_full['adm2_affected'] = policies_full['adm2_affected'].fillna('All')
 policies_full['adm3_affected'] = policies_full['adm3_affected'].fillna('All')
 
+# Map some regions/provinces in policy dataset to corresponding names in health data
+replace_dict = {
+    'Lombardy':'Lombardia',
+    'Piedmont':'Piemonte',
+    'Emilia-Romagna':'Emilia Romagna',
+    'Padua':'Padova',
+    'Venice':'Venezia',
+    'Pesaro and Urbino':'Pesaro e Urbino',
+    'Apulia':'Puglia', 
+    "Vo'Eugane":'Vò',
+}
+
+# Standardize naming between policy and health data
+policies_full['adm1_affected'] = policies_full['adm1_affected'].replace(replace_dict)
+policies_full['adm2_affected'] = policies_full['adm2_affected'].replace(replace_dict)
+policies_full['adm3_affected'] = policies_full['adm3_affected'].replace(replace_dict)
+
+def get_adm_fields(adm_level, field_name='name'):
+    return [f'adm{i}_' + field_name for i in range(1, adm_level + 1)]
+
+def get_pop_df(adm_df, adm_level):
+    indices = get_adm_fields(adm_level)
+    return (adm_df[adm_df['adm0_name'] == 'ITA']
+        .set_index(indices)[['population']]
+        .rename(columns={
+            'population':f'adm{adm_level}_pop'
+        }))
+
+adm1_pop = get_pop_df(adm1_df, 1)
+adm2_pop = get_pop_df(adm2_df, 2)
+adm3_pop = get_pop_df(adm3_df, 3)
+
+for adm_pop, adm_level in [(adm1_pop, 1), (adm2_pop, 2), (adm3_pop, 3)]:
+    policies_full = pd.merge(
+        policies_full, 
+        adm_pop, 
+        how='left', 
+        left_on=get_adm_fields(adm_level, 'affected'), 
+        right_index=True,
+        
+    )    
+
+assert len(policies_full[policies_full['adm3_pop'].isnull()]['adm3_affected'].unique()) == 1
+assert len(policies_full[policies_full['adm2_pop'].isnull()]['adm2_affected'].unique()) == 1
+assert len(policies_full[policies_full['adm1_pop'].isnull()]['adm1_affected'].unique()) == 1
+
+policies_full.loc[policies_full['adm3_pop'].notnull(), 'adm2_pop_weight_perc_affected'] = (
+    policies_full['adm3_pop'] / policies_full['adm2_pop']
+)
+
+policies_full.loc[policies_full['adm3_pop'].isnull(), 'adm2_pop_weight_perc_affected'] = 1
+
+policies_full.loc[policies_full['adm2_pop'].notnull(), 'adm1_pop_weight_perc_affected'] = (
+    policies_full['adm2_pop_weight_perc_affected'] * policies_full['adm2_pop'] / policies_full['adm1_pop']
+)
+
+policies_full.loc[policies_full['adm2_pop'].isnull(), 'adm1_pop_weight_perc_affected'] = 1
+
 # Check that population weights are all there
 assert len(policies_full[policies_full['adm1_pop_weight_perc_affected'].isnull()]) == 0
 assert len(policies_full[policies_full['adm2_pop_weight_perc_affected'].isnull()]) == 0
@@ -395,19 +451,6 @@ policies = policies_full[
 assert policies.groupby('Policy')['Policy'].count()['testing_regime'] == 1
 
 
-# Define `home_isolation_partial` as `home_isolation` with a relative weight of 0.5
-
-# In[ ]:
-
-
-policies['home_isolation_partial'] = False
-policies.loc[policies['Policy'] == 'home_isolation_partial', 'home_isolation_partial'] = True
-
-policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm2_pop_weight_perc_affected'] = policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm2_pop_weight_perc_affected'] * 0.5
-policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm1_pop_weight_perc_affected'] = policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm1_pop_weight_perc_affected'] * 0.5
-policies['Policy'] = policies['Policy'].replace('home_isolation_partial', 'home_isolation')
-
-
 # Replace optional policies with `policy_name` to `policy_name_opt`
 
 # In[ ]:
@@ -419,22 +462,6 @@ policies.loc[policies['Opt'] == 1, 'Policy'] = policies.loc[policies['Opt'] == 1
 # Ensure all policies listed have corresponding adm-units in health data
 
 # In[ ]:
-
-
-# Map some regions/provinces in policy dataset to corresponding names in health data
-replace_dict = {
-    'Lombardy':'Lombardia',
-    'Piedmont':'Piemonte',
-    'Emilia-Romagna':'Emilia Romagna',
-    'Padua':'Padova',
-    'Venice':'Venezia',
-    'Pesaro and Urbino':'Pesaro e Urbino',
-    'Apulia':'Puglia', 
-}
-
-# Standardize naming between policy and health data
-policies['adm1_affected'] = policies['adm1_affected'].replace(replace_dict)
-policies['adm2_affected'] = policies['adm2_affected'].replace(replace_dict)
 
 adm1_not_found = set(policies['adm1_affected'].unique()) - set(adm1_cases['adm1_name'].unique()) - set(['All'])
 adm2_not_found = set(policies['adm2_affected'].unique()) - set(adm2_cases['adm2_name'].unique()) - set(['All'])
@@ -483,11 +510,41 @@ adm2_cases['population'] = adm2_cases['adm2_name'].apply(
 assert set(adm2_cases.loc[adm2_cases['population'].isnull(), 'adm2_name']) == set(['Unknown'])
 assert adm1_cases['population'].isnull().sum() == 0
 
+## Calculate cumulative population weights by adm-policy
 
-# Interpret `home_isolation_partial` as `home_isolation` with a 1/2 multiplier
+for adm in ['1', '2']:
+    sum_each_day = policies.sort_values('Date').groupby(['Date', 'Policy', 'adm' + adm + '_affected'])['adm' + adm + '_pop_weight_perc_affected'].sum().reset_index()
+
+    sum_cumulative = sum_each_day.groupby(['adm' + adm + '_affected', 'Policy'])['adm' + adm + '_pop_weight_perc_affected'].cumsum()
+    sum_cumulative.name = 'cum_adm' + adm + '_pop_weight_perc_affected'
+    sum_cumulative.loc[sum_cumulative > 1] = 1
+
+    sum_cumulative = sum_each_day.join(sum_cumulative)
+
+    sum_cumulative = sum_cumulative.set_index(['Date', 'Policy', 'adm' + adm + '_affected'])['cum_adm' + adm + '_pop_weight_perc_affected']
+    sum_cumulative.name = 'cum_adm' + adm + '_pop_weight_perc_affected'
+    policies = pd.merge(policies, sum_cumulative, how='left', left_on=['Date', 'Policy', 'adm' + adm + '_affected'], right_index=True)
+
+policies['adm1_pop_weight_perc_affected'] = policies['cum_adm1_pop_weight_perc_affected']
+policies['adm2_pop_weight_perc_affected'] = policies['cum_adm2_pop_weight_perc_affected']
+policies = policies.drop(columns=[
+    'cum_adm1_pop_weight_perc_affected', 'cum_adm2_pop_weight_perc_affected'
+])
+
+# Define `home_isolation_partial` as `home_isolation` with a relative weight of 0.5
 
 # In[ ]:
 
+
+policies['home_isolation_partial'] = False
+policies.loc[policies['Policy'] == 'home_isolation_partial', 'home_isolation_partial'] = True
+
+policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm2_pop_weight_perc_affected'] = policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm2_pop_weight_perc_affected'] * 0.5
+policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm1_pop_weight_perc_affected'] = policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm1_pop_weight_perc_affected'] * 0.5
+policies['Policy'] = policies['Policy'].replace('home_isolation_partial', 'home_isolation')
+
+adm1_policies = policies[['Date', 'adm1_affected', 'Policy', 'Opt', 'home_isolation_partial', 'adm1_pop_weight_perc_affected']].drop_duplicates()
+adm2_policies = policies[['Date', 'adm1_affected', 'adm2_affected', 'Policy', 'Opt', 'home_isolation_partial', 'adm2_pop_weight_perc_affected']].drop_duplicates()
 
 adm1_policies = pd.DataFrame(policies.groupby(['Date', 'adm1_affected', 'Policy', 'Opt', 'home_isolation_partial'])['adm1_pop_weight_perc_affected'].sum()).reset_index()
 adm2_policies = pd.DataFrame(policies.groupby(['Date', 'adm1_affected', 'adm2_affected', 'Policy', 'Opt', 'home_isolation_partial'])['adm2_pop_weight_perc_affected'].sum()).reset_index()
@@ -595,15 +652,6 @@ missing_from_template = (set(adm1_cases.columns) | set(adm2_cases.columns)) - se
 assert len(missing_from_template) == 0
 
 
-# Filter dataset to rows on or before cutoff date
-
-# In[ ]:
-
-
-adm1_cases = adm1_cases[adm1_cases['date'] <= end_of_analysis_date]
-adm2_cases = adm2_cases[adm2_cases['date'] <= end_of_analysis_date]
-
-
 # Filter out rows where adm1 is known but adm2 is unknown
 
 # In[ ]:
@@ -616,7 +664,5 @@ adm2_cases = adm2_cases[adm2_cases['adm2_name'] != 'Unknown']
 
 # In[ ]:
 
-
 adm1_cases.to_csv(path_processed_region, index=False)
 adm2_cases.to_csv(path_processed_province, index=False)
-
