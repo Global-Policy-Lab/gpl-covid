@@ -1,13 +1,12 @@
 import pandas as pd
 import numpy as np
 import os
-import codes.utils as cutil
 
 from functools import reduce
 
-raw_data_dir = cutil.DATA_RAW / 'usa'
-int_data_dir = cutil.DATA_INTERIM / 'usa'
-proc_data_dir = cutil.DATA_PROCESSED / 'adm1'
+raw_data_dir = '../../../data/raw/usa'
+int_data_dir = '../../../data/interim/usa'
+proc_data_dir = '../../../data/processed/adm1'
 
 # rename the states
 state_acronyms_to_names = \
@@ -74,7 +73,7 @@ def acc_to_statename(acc):
     return state_acronyms_to_names[acc]
 
 def fix_date(date):
-	
+
 	month, day, year = date.split("/") 
 
 	return "{y:04d}-{m:02d}-{d:02d}".format(y=2000+int(year), m=int(month), d=int(day))
@@ -102,16 +101,17 @@ def min_no_nans(x):
 
 def download_and_process_policy_csv():
 
-	policy_data_raw = pd.read_csv(os.path.join(raw_data_dir,"US_COVID-19_policies.csv"),encoding='latin')
+	policy_data_raw = pd.read_csv(os.path.join(int_data_dir,"US_COVID-19_policies.csv"),encoding='latin')
 
 	# A. wrangle polices -> binary variables
 	# get the unchanged vars
 	policy_data = policy_data_raw.loc[:,['date', 'adm0_name', 'adm1_name', 'adm2_name']]
 	
-	policy_data.loc[:,'date'] = policy_data.loc[:,'date'].apply(fix_date)
+	# dates formatted as YYYY-MM-DD so no need to do this anymore
+	#policy_data.loc[:,'date'] = policy_data.loc[:,'date'].apply(fix_date)
 
-	# fix the state names
-	policy_data.loc[:,'adm1_name'] = policy_data['adm1_name'].apply(acc_to_statename)
+	# state names formated as e.g. "Alaska" so no need to do this anymore
+	#policy_data.loc[:,'adm1_name'] = policy_data['adm1_name'].apply(acc_to_statename)
 
 	# Code all policies as 0/1
 	policy_mandatory = policy_data_raw.loc[:,'Optional'] == 'N'
@@ -224,6 +224,7 @@ def download_and_process_policy_csv():
 	formated_policy_data = df_rows_merged.sort_values(['date_to_sort','adm0_name','adm1_name']).drop(['date_to_sort'],axis=1)
 
 	# save intermediate version
+	print('writing intermediate policy file to ', os.path.join(int_data_dir,"US_COVID-19_policies_reformatted.csv"))
 	formated_policy_data.to_csv(os.path.join(int_data_dir,"US_COVID-19_policies_reformatted.csv"),index=False)
 
 	return df_rows_merged , policy_keys
@@ -323,6 +324,7 @@ def main():
 	cases_data.loc[:,'testing_regime'] = float("NaN")
 
 	testing_regimes = testing_regimes[['date', 'adm1_name', 'testing_regime']].sort_values('date')
+	# still need to do this for testing regimes data
 	testing_regimes.loc[:,'adm1_name'] = testing_regimes['adm1_name'].apply(acc_to_statename)
 	testing_regimes_by_state = testing_regimes.groupby('adm1_name')
 
@@ -355,11 +357,12 @@ def main():
 			cases_data_subset.drop([key], axis=1).reset_index(drop=True)
 
 	# add in population 
-	pops1 = pd.read_csv(os.path.join(str(int_data_dir).replace('usa','adm') , 'adm1/adm1.csv'), index_col = [0,1])
+	pops1 = pd.read_csv(os.path.join(int_data_dir.replace('usa','adm') , 'adm1/adm1.csv'), index_col = [0,1])
 	cases_data_to_publish = cases_data_subset.join(pops1.loc['USA'].population,on='adm1_name', how='left')
 	assert cases_data_to_publish.population.isnull().sum()==0, 'poplation is null'
-    
-    # publish
+	
+	# publish
+	print('writing merged policy and cases data to ', os.path.join(proc_data_dir,'USA_processed.csv'))
 	cases_data_to_publish.to_csv(os.path.join(proc_data_dir,'USA_processed.csv'),index=False)
 
 
