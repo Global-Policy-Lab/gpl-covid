@@ -72,7 +72,6 @@ codes
 │       ├── check_health_data.R
 │       ├── download_and_clean_JHU_usa.R
 │       ├── download_latest_covidtrackingdotcom_data.py
-│       ├── filter-processed-to-end-date.py
 │       └── merge_policy_and_cases.py
 ├── models
 │   ├── CHN_create_CBs.R
@@ -214,8 +213,7 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 
 ##### United States
 1. `python codes/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
-2. (optional) `python codes/data/usa/filter-processed-to-end-date.py`: Run the script to filter [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv) to exclude data after 3/18, if you want to replicate our original dataset.
-3. (optional) `Rscript codes/data/usa/check_health_data.R`: Confirm that known data quality issues have been dealt with.
+2. (optional) `Rscript codes/data/usa/check_health_data.R`: Confirm that known data quality issues have been dealt with.
 
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
