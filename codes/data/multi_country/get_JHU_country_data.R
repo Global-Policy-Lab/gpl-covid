@@ -131,13 +131,12 @@ fix_issues <- function(data){
           mutate({{variable}} := new_variable)
       }
     } else if (all(first_issue$cum_confirmed_cases[3] == 0, first_issue$cum_deaths[3] == 0, first_issue$cum_recoveries[3] == 0)) {
-      # This case is one where all the variables just go to zero and usually stay there - just delete these rows
-      all_are_zero <- data %>% 
+      # This case is one where all the variables just go to zero and usually stay there (last one might be NA) - 
+      # just delete these rows
+      tmp <- data %>% 
         filter(date >= first_issue$date[3] & tmp_id == first_issue$tmp_id[3]) %>% 
-        pull({{variable}}) %>% 
-        magrittr::equals(0) %>% 
-        all()
-      if(all_are_zero){
+        pull({{variable}})
+      if(all(tmp == 0 | is.na(tmp))){
         data <- data %>% 
           filter(!(date >= first_issue$date[3] & tmp_id == first_issue$tmp_id[3]))
       }

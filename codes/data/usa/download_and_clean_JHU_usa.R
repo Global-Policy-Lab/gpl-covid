@@ -1,5 +1,5 @@
-library(tidyverse)
-library(magrittr)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(magrittr))
 source("codes/data/multi_country/get_JHU_country_data.R")
 adm_data <- read_csv("data/interim/adm/adm1/adm1.csv",
                      col_types = cols(
@@ -40,8 +40,10 @@ usa_data_county <- usa_data_county %>%
     state_name = state.name,
   ), by = "state_abb")
 
-usa_data_county <- usa_data_county %>%
-  fix_issues()
+suppressWarnings({
+  usa_data_county <- usa_data_county %>%
+    fix_issues()
+  })
 
 usa_data_county <- usa_data_county %>%
   select(county, state_abb, state_name, date,
@@ -80,8 +82,10 @@ if(usa_data_state %>%
 #   unite(tmp_id, province_state, country_region) %>% 
 #   examine_issues(cum_confirmed_cases)
 
-usa_data_state <- usa_data_state %>% 
-  fix_issues()
+suppressWarnings({
+  usa_data_state <- usa_data_state %>% 
+    fix_issues()
+})
 
 usa_data_state <- usa_data_state %>% 
   rename(state_name = province_state) %>% 
@@ -95,7 +99,8 @@ usa_data_state <- usa_data_state %>%
 
 names_order <- read_csv("data/processed/[country]_processed.csv", 
                         col_types = cols(.default = col_character())) %>% names()
-usa_data_county_standardised <- usa_data_county %>%
+suppressWarnings({
+  usa_data_county_standardised <- usa_data_county %>%
   # DC + Washington DC are both in there. Just a couple cases on two days so dropping.
   filter(!county %in% c("Guam", "Puerto Rico", "Virgin Islands", "District of Columbia")) %>%
   filter(!(county == "Washington" & is.na(state_name))) %>%
@@ -105,7 +110,7 @@ usa_data_county_standardised <- usa_data_county %>%
          adm1_name = state_name) %>%
   mutate(adm0_name = "USA") %>%
   select(one_of(names_order))
-
+})
 usa_data_county_standardised_collapse_to_state_day <- 
   usa_data_county_standardised %>% 
   group_by(adm0_name, adm1_name, date) %>% 
@@ -117,13 +122,14 @@ if(length(intersect(usa_data_county_standardised_collapse_to_state_day$date, usa
   stop("county and state data overlap")
 }
 
-usa_data_state_standardised <- usa_data_state %>% 
+suppressWarnings({
+  usa_data_state_standardised <- usa_data_state %>% 
   rename(adm1_name = state_name) %>% 
   mutate(adm0_name = "USA") %>% 
   select(one_of(names_order)) %>% 
   bind_rows(usa_data_county_standardised_collapse_to_state_day) %>% 
   arrange(adm1_name, date)
-
+})
 # Check if there are any unmatched
 # usa_data_state_standardised %>%
 #   anti_join(usa_adm_data %>% group_by(adm1_name) %>% slice(1) %>% mutate(adm2_name = NA_character_), by = c("adm1_name"))
@@ -132,3 +138,4 @@ usa_data_state_standardised <- usa_data_state_standardised %>%
   arrange(adm1_name, date)
 # write_csv(usa_data_county_standardised, path = "data/interim/usa/usa_jhu_cases_county.csv")
 write_csv(usa_data_state_standardised, path = "data/interim/usa/usa_jhu_cases_state.csv")
+

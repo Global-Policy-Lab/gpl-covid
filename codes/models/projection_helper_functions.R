@@ -12,11 +12,13 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
           " - 1 | 0 | 0 | date "
     ))
   if("no_variation_for_unit" %in% names(full_data)){
-    main_model <- felm(data = full_data %>% 
-                         filter(!no_variation_for_unit) %>% 
-                         mutate(tmp_id = droplevels(tmp_id)),
-                       formula = formula,
-                       cmethod = "reghdfe"); # summary(main_model)
+    suppressWarnings({
+      main_model <- felm(data = full_data %>% 
+                           filter(!no_variation_for_unit) %>% 
+                           mutate(tmp_id = droplevels(tmp_id)),
+                         formula = formula,
+                         cmethod = "reghdfe"); # summary(main_model)
+    })
     if(length(nan_variable <- rownames(main_model$coefficients)[which(is.nan(main_model$coefficients))]) > 0){
       return(nan_variable)
     }
@@ -31,7 +33,7 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
   ev <- eigen(main_model$clustervcv)
   badev <- Im(ev$values) != 0 | Re(ev$values) < 0
   if(any(badev)) {
-    warning('Negative eigenvalues set to zero in clustered variance matrix. See felm(...,psdef=FALSE)')
+    # warning('Negative eigenvalues set to zero in clustered variance matrix. See felm(...,psdef=FALSE)')
     ev$values[badev] <- 0
     main_model$clustervcv[] <- Re(ev$vectors %*% diag(ev$values) %*% t(ev$vectors))
   }
