@@ -12,7 +12,6 @@ import pandas as pd
 import numpy as np
 from codes import utils as cutil
 
-end_of_analysis_date = '2020-03-18'
 policies_date = "20200318"
 
 # #### Define paths
@@ -548,10 +547,6 @@ policies['policy'] = policies['policy'].replace('home_isolation_partial', 'home_
 adm1_policies = policies[['date_start', 'adm1_name', 'policy', 'optional', 'home_isolation_partial', 'adm1_pop_weight_perc_name']].drop_duplicates()
 adm2_policies = policies[['date_start', 'adm1_name', 'adm2_name', 'policy', 'optional', 'home_isolation_partial', 'adm2_pop_weight_perc_name']].drop_duplicates()
 
-adm1_policies = pd.DataFrame(policies.groupby(['date_start', 'adm1_name', 'policy', 'optional', 'home_isolation_partial'])['adm1_pop_weight_perc_name'].sum()).reset_index()
-adm2_policies = pd.DataFrame(policies.groupby(['date_start', 'adm1_name', 'adm2_name', 'policy', 'optional', 'home_isolation_partial'])['adm2_pop_weight_perc_name'].sum()).reset_index()
-
-
 # Assign policy indicators
 
 # In[ ]:
@@ -580,6 +575,7 @@ def assign_policy_variables(adm_cases, policy_on_mask, policy, partial, perc_nam
     
     return adm_cases
         
+
 for date, policy, optional, adm, perc_name, partial in adm1_policies[
     ['date_start', 'policy', 'optional', 'adm1_name', 'adm1_pop_weight_perc_name', 'home_isolation_partial']
 ].to_numpy():
