@@ -440,7 +440,7 @@ assert len(policies_full[policies_full['adm2_pop_weight_perc_name'].isnull()]) =
 policies = policies_full[
     ['adm3_name','adm2_pop_weight_perc_name','adm2_name', 
      'adm1_pop_weight_perc_name','adm1_name','adm0_name',
-     'date_start','policy','optional']
+     'date_start','policy','policy_intensity', 'optional']
 ].drop_duplicates()
 
 
@@ -536,16 +536,8 @@ policies = policies.drop(columns=[
 
 # In[ ]:
 
-
-policies['home_isolation_partial'] = False
-policies.loc[policies['policy'] == 'home_isolation_partial', 'home_isolation_partial'] = True
-
-policies.loc[policies['policy'] == 'home_isolation_partial', 'adm2_pop_weight_perc_name'] = policies.loc[policies['policy'] == 'home_isolation_partial', 'adm2_pop_weight_perc_name'] * 0.5
-policies.loc[policies['policy'] == 'home_isolation_partial', 'adm1_pop_weight_perc_name'] = policies.loc[policies['policy'] == 'home_isolation_partial', 'adm1_pop_weight_perc_name'] * 0.5
-policies['policy'] = policies['policy'].replace('home_isolation_partial', 'home_isolation')
-
-adm1_policies = policies[['date_start', 'adm1_name', 'policy', 'optional', 'home_isolation_partial', 'adm1_pop_weight_perc_name']].drop_duplicates()
-adm2_policies = policies[['date_start', 'adm1_name', 'adm2_name', 'policy', 'optional', 'home_isolation_partial', 'adm2_pop_weight_perc_name']].drop_duplicates()
+adm1_policies = policies[['date_start', 'adm1_name', 'policy', 'optional', 'policy_intensity', 'adm1_pop_weight_perc_name']].drop_duplicates()
+adm2_policies = policies[['date_start', 'adm1_name', 'adm2_name', 'policy', 'optional', 'policy_intensity', 'adm2_pop_weight_perc_name']].drop_duplicates()
 
 # Assign policy indicators
 
@@ -564,20 +556,19 @@ for policy_name in policies['policy'].unique():
         adm1_cases[policy_name + popweighted_suffix] = 0
         adm2_cases[policy_name + popweighted_suffix] = 0
 
-def assign_policy_variables(adm_cases, policy_on_mask, policy, partial, perc_name):
-    # Policies originally coded as 'home_isolation_partial' get 0.5 weight as 'home_isolation'
-    policy_on_value = 1 if not (policy == 'home_isolation' and partial == True) else 0.5
+def assign_policy_variables(adm_cases, policy_on_mask, policy, intensity, perc_name):
+    policy_on_value = 1
     
-    adm_cases.loc[policy_on_mask, policy] = policy_on_value
+    adm_cases.loc[policy_on_mask, policy] = policy_on_value * intensity
     
     if policy not in exclude_from_popweights:
-        adm_cases.loc[policy_on_mask, policy + popweighted_suffix] = perc_name
+        adm_cases.loc[policy_on_mask, policy + popweighted_suffix] = perc_name * intensity
     
     return adm_cases
         
 
-for date, policy, optional, adm, perc_name, partial in adm1_policies[
-    ['date_start', 'policy', 'optional', 'adm1_name', 'adm1_pop_weight_perc_name', 'home_isolation_partial']
+for date, policy, optional, adm, perc_name, intensity in adm1_policies[
+    ['date_start', 'policy', 'optional', 'adm1_name', 'adm1_pop_weight_perc_name', 'policy_intensity']
 ].to_numpy():
     
     # All policies on or after policy was enacted, where one of these conditions applies:
@@ -590,10 +581,10 @@ for date, policy, optional, adm, perc_name, partial in adm1_policies[
         )
     )
     
-    adm1_cases = assign_policy_variables(adm1_cases, policy_on_mask, policy, partial, perc_name)
+    adm1_cases = assign_policy_variables(adm1_cases, policy_on_mask, policy, intensity, perc_name)
     
-for date, policy, optional, adm1, adm2, perc_name, partial in adm2_policies[
-    ['date_start', 'policy', 'optional', 'adm1_name', 'adm2_name', 'adm2_pop_weight_perc_name', 'home_isolation_partial']
+for date, policy, optional, adm1, adm2, perc_name, intensity in adm2_policies[
+    ['date_start', 'policy', 'optional', 'adm1_name', 'adm2_name', 'adm2_pop_weight_perc_name', 'policy_intensity']
 ].to_numpy():
     
     # All policies on or after policy was enacted, where one of these conditions applies:
@@ -611,7 +602,7 @@ for date, policy, optional, adm1, adm2, perc_name, partial in adm2_policies[
         )
     )
 
-    adm2_cases = assign_policy_variables(adm2_cases, policy_on_mask, policy, partial, perc_name)
+    adm2_cases = assign_policy_variables(adm2_cases, policy_on_mask, policy, intensity, perc_name)
 
 
 # Count number of policies in each health-policy dataset
