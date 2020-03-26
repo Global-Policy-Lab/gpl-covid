@@ -39,7 +39,7 @@ gen l_cum_confirmed_cases`suffix' = log(cum_confirmed_cases`suffix')
 lab var l_cum_confirmed_cases`suffix' "log(cum_confirmed_cases`suffix')"
 
 gen D_l_cum_confirmed_cases`suffix' = D.l_cum_confirmed_cases`suffix' 
-lab var D_l_cum_confirmed_cases`suffix' "change in log(cum_confirmed_cases`suffix')"
+lab var D_l_cum_confirmed_cases`suffix' "change in log(cum. confirmed cases`suffix')"
 
 //quality control
 replace D_l_cum_confirmed_cases`suffix' = . if D_l_cum_confirmed_cases`suffix' < 0 // cannot have negative changes in cumulative values
@@ -65,11 +65,16 @@ tw (sc D_l_cum_confirmed_cases`suffix' t, msize(tiny))(line sample_avg t)(sc day
 
 //------------------main estimates
 g testing_regime = t == mdy(3,15,2020) // start of stade 3, none systematic testing
-
+lab var testing_regime "Testing Regime Change"
 // generate policy packages
 replace social_distance = (event_cancel + no_gathering + social_distance) / 3
+lab var social_distance "social distance"
 g national_lockdown = (school_closure_national + business_closure + home_isolation) / 3 // big national lockdown policy
+lab var national_lockdown "Lockdown"
 g national_no_gathering = (no_gathering_national_100 + no_gathering_national_1000) / 2 // national no gathering measure
+lab var national_no_gathering "No gathering (national)"
+lab var school_closure_regional "School closure (regional)"
+
 
 // output data used for reg
 outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
@@ -77,7 +82,10 @@ outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 // main regression model
 
 reghdfe D_l_cum_confirmed_cases`suffix' testing national_lockdown school_closure_regional ///
- social_distance national_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+ social_distance national_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+ 
+ outreg2 using "models/tables/FRA_estimates_table", word replace label ///
+  addtext(Region FE, "YES", Day-of-Week FE, "YES") title("Regression output: France")
 
 //saving coefs
 tempfile results_file

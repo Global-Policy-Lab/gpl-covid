@@ -1,0 +1,23 @@
+Regression output: France		
+		(1)
+VARIABLES	LABELS	change in log(cum. confirmed cases_imputed)
+		
+testing_regime	Testing Regime Change	-0.0372**
+		(0.0167)
+national_lockdown	Lockdown	-0.0572**
+		(0.0217)
+school_closure_regional	School closure (regional)	-0.118
+		(0.0708)
+social_distance	social distance	-0.141
+		(0.238)
+national_no_gathering	No gathering (national)	-0.0962***
+		(0.0325)
+Constant	Constant	0.363***
+		(0.0489)
+		
+Observations		278
+R-squared		0.331
+Region FE		YES
+Day-of-Week FE		YES
+Robust standard errors in parentheses		
+*** p<0.01, ** p<0.05, * p<0.1		
