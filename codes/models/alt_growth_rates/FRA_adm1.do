@@ -10,6 +10,8 @@ cap set scheme covid19_fig3 // optional scheme for graphs
  
 // set up time variables
 gen t = date(date, "YMD")
+keep if t <= date("20200325","YMD")
+
 lab var t "date"
 gen dow = dow(t)
 gen month = month(t)
@@ -64,6 +66,7 @@ tw (sc D_l_cum_confirmed_cases`suffix' t, msize(tiny))(line sample_avg t)(sc day
 //------------------main estimates
 
 // generate policy packages
+replace home_isolation = (home_isolation + curfew + public_space_closure) / 3
 g national_lockdown = (school_closure_national + business_closure + home_isolation) / 3 // big national lockdown policy
 g national_no_gathering = (no_gathering_national_100 + no_gathering_national_1000) / 2 // national no gathering measure
 
@@ -88,8 +91,7 @@ lincom event_cancel + national_lockdown + school_closure_regional + social_dista
 post results ("FRA") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 //looking at different policies
-coefplot,  keep(national_lockdown national_no_gathering event_cancel school_closure_regional  social_distance) 
-
+coefplot, keep(national_lockdown national_no_gathering event_cancel school_closure_regional  social_distance) 
 
 //------------- checking error structure (make fig for appendix)
 
@@ -188,3 +190,4 @@ title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log pe
 xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/FRA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
+
