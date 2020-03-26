@@ -1,18 +1,19 @@
 get_usafacts_data <- function(){
   urls <- c(
-    "https://static.usafacts.org/public/data/covid-19/covid_confirmed_usafacts.csv",
+    "https://static.usafacts.org/public/data/covid-19/covid_confirmed_usafacts.csv?_ga=2.7547058.1667915927.1585092333-871067523.1585092333",
     "https://static.usafacts.org/public/data/covid-19/covid_deaths_usafacts.csv"
   )
+
   # Download the 3 csvs direct from the urls into tibbles
   usa_facts_covid_cases <- urls %>% map(read_csv,
                                         col_types = cols(
-                                          .default = col_double(),
+                                          .default = col_number(),
                                           countyFIPS = col_character(),
                                           stateFIPS = col_character(),
                                           `County Name` = col_character(),
                                           State = col_character()
                                         ))
-  
+
   # add the variable types as a column to each tibble
   usa_facts_covid_cases <- list(usa_facts_covid_cases, c("cum_confirmed_cases",
                                              "cum_deaths")) %>% 
