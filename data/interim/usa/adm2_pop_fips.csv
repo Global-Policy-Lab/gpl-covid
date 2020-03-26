@@ -642,6 +642,7 @@ Illinois,Knox,17095,52919.0,1855.0,Galesburg
 Illinois,La Salle,17099,113924.0,2940.0,Ottawa
 Illinois,Lake,17097,703462.0,1149.0,Waukegan
 Illinois,Lake Michigan,17185,11947.0,578.0,Mount Carmel
+Illinois,Wabash,17185,11947.0,578.0,Mount Carmel
 Illinois,Lawrence,17101,16833.0,964.0,Lawrenceville
 Illinois,Lee,17103,36031.0,1877.0,Dixon
 Illinois,Livingston,17105,38950.0,2705.0,Pontiac
@@ -684,7 +685,6 @@ Illinois,Stephenson,17177,47711.0,1462.0,Freeport
 Illinois,Tazewell,17179,135394.0,1681.0,Pekin
 Illinois,Union,17181,17808.0,1071.0,Jonesboro
 Illinois,Vermilion,17183,81625.0,2327.0,Danville
-Illinois,Wabash,17185,11947.0,578.0,Mount Carmel
 Illinois,Warren,17187,17707.0,1405.0,Monmouth
 Illinois,Washington,17189,14716.0,1457.0,Nashville
 Illinois,Wayne,17191,16760.0,1849.0,Fairfield
@@ -740,6 +740,7 @@ Indiana,Kosciusko,18085,77358.0,1376.0,Warsaw
 Indiana,LaGrange,18087,37128.0,983.0,Lagrange
 Indiana,Lake,18089,496005.0,1292.0,Crown Point
 Indiana,Lake Michigan,18169,32888.0,1068.0,Wabash
+Indiana,Wabash,18169,32888.0,1068.0,Wabash
 Indiana,LaPorte,18091,111467.0,1550.0,La Porte
 Indiana,Lawrence,18093,46134.0,1163.0,Bedford
 Indiana,Madison,18095,131636.0,1170.0,Anderson
@@ -779,7 +780,6 @@ Indiana,Union,18161,7516.0,418.0,Liberty
 Indiana,Vanderburgh,18163,179703.0,605.0,Evansville
 Indiana,Vermillion,18165,16212.0,665.0,Newport
 Indiana,Vigo,18167,107848.0,1045.0,Terre Haute
-Indiana,Wabash,18169,32888.0,1068.0,Wabash
 Indiana,Warren,18171,8508.0,945.0,Williamsport
 Indiana,Warrick,18173,59689.0,997.0,Boonville
 Indiana,Washington,18175,28262.0,1331.0,Salem
@@ -1355,6 +1355,7 @@ Minnesota,Lac qui Parle,27073,7259.0,1981.0,Madison
 Minnesota,Lake,27075,10866.0,5463.0,Two Harbors
 Minnesota,Lake of the Woods,27077,4045.0,3361.0,Baudette
 Minnesota,Lake Superior,27157,21676.0,1355.0,Wabasha
+Minnesota,Wabasha,27157,21676.0,1355.0,Wabasha
 Minnesota,Le Sueur,27079,27703.0,1162.0,Le Center
 Minnesota,Lincoln,27081,5896.0,1390.0,Ivanhoe
 Minnesota,Lyon,27083,25857.0,1851.0,Marshall
@@ -1394,7 +1395,6 @@ Minnesota,Stevens,27149,9726.0,1460.0,Morris
 Minnesota,Swift,27151,9783.0,1922.0,Benson
 Minnesota,Todd,27153,24895.0,2447.0,Long Prairie
 Minnesota,Traverse,27155,3558.0,1486.0,Wheaton
-Minnesota,Wabasha,27157,21676.0,1355.0,Wabasha
 Minnesota,Wadena,27159,13843.0,1389.0,Wadena
 Minnesota,Waseca,27161,19136.0,1096.0,Waseca
 Minnesota,Washington,27163,238136.0,995.0,Stillwater
@@ -3146,3 +3146,17 @@ Wyoming,Teton,56039,21294.0,10348.0,Jackson
 Wyoming,Uinta,56041,21118.0,5390.0,Evanston
 Wyoming,Washakie,56043,8533.0,5798.0,Worland
 Wyoming,Weston,56045,7208.0,6211.0,Newcastle
+Maryland,Baltimore County,24005,805029.0,1550.0,Towson
+Virginia,Bedford County,51019,74898.0,1968.0,Bedford
+Virginia,Fairfax County,51059,1081726.0,1013.0,Fairfax
+Virginia,Franklin City,51620,8582.0,21.0,Franklin
+Alaska,Hoonah-Angoon Census Area,02105,2150.0,19489.0,Hoonah
+Alaska,Ketchikan Gateway Borough,02130,13477.0,12583.0,Ketchikan
+Alaska,Petersburg Borough,02195,3815.0,8500.0,Petersburg
+Alaska,Prince of Wales-Hyder Census Area,02198,5559.0,10160.0,Craig
+Virginia,Richmond County,51159,9254.0,496.0,Warsaw
+Virginia,Roanoke County,51161,92376.0,649.0,Salem
+Missouri,City of St. Louis,29510,319294.0,160.0,Saint Louis
+Alaska,Skagway Municipality,02230,968.0,1172.0,Skagway
+Alaska,Wrangell City and Borough,02275,2369.0,6582.0,Wrangell
+Alaska,Yakutat City and Borough,02282,662.0,19812.0,Yakutat
