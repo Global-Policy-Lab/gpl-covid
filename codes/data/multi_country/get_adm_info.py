@@ -470,7 +470,6 @@ def main():
     pop2.name = "population"
 
     provinces_as_regions = pop2.loc[idx[:, ["Bolzano", "Trento"]]]
-    pop2 = pop2.drop(index=["Bolzano", "Trento"], level="adm2_name")
     provinces_as_regions.index = provinces_as_regions.index.set_names(
         "adm1_name", level="adm2_name"
     )
@@ -645,6 +644,8 @@ def main():
         df.longitude = df.longitude.fillna(df.geometry.centroid.x)
         df.latitude = df.latitude.fillna(df.geometry.centroid.y)
 
+        # simplify
+        df.geometry = df.geometry.simplify()
         df = df.sort_index()
         return df
 
