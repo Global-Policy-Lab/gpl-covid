@@ -163,10 +163,20 @@ fix_issues <- function(data){
     }) %>% 
     ungroup()
   
-  data <- data %>% 
-    mutate(cum_recoveries_imputed = cum_recoveries, 
-           cum_confirmed_cases_imputed = cum_confirmed_cases, 
-           cum_deaths_imputed = cum_deaths)
+  if(!"cum_confirmed_cases_imputed" %in% names(data)){
+    data <- data %>% 
+      mutate(cum_confirmed_cases_imputed = cum_confirmed_cases)
+  }
+  
+  if(!"cum_recoveries_imputed" %in% names(data)){
+    data <- data %>% 
+      mutate(cum_recoveries_imputed = cum_recoveries)
+  }
+  
+  if(!"cum_deaths_imputed" %in% names(data)){
+    data <- data %>% 
+      mutate(cum_deaths_imputed = cum_deaths)
+  }
   
   while(do_issues_exist(data, cum_confirmed_cases_imputed)){
     warning("Fixing an issue with cum_confirmed_cases")

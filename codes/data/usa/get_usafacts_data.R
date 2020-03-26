@@ -31,7 +31,7 @@ get_usafacts_data <- function(){
            state_fips = `stateFIPS`,
            adm2_name = `County Name`,
            adm1_name = `State`) 
-  
+
   # check for duplicates
   duplicates <- usa_facts_covid_cases %>% 
     group_by(county_fips, state_fips, adm2_name, adm1_name, date, variable) %>% 
@@ -50,7 +50,8 @@ get_usafacts_data <- function(){
     pivot_wider(id_cols = c("county_fips", "state_fips", "adm2_name", "adm1_name", "date"),
                 names_from = variable,
                 values_from = value) %>% 
-    mutate(date = as.Date(date, format = "%m/%d/%y")) 
+    mutate(date = as.Date(date, format = "%m/%d/%y")) %>% 
+    arrange(county_fips, state_fips, adm2_name, adm1_name, date)
 }
 
 examine_issues <- function(data, variable){
@@ -66,51 +67,34 @@ fix_issues <- function(data){
   # impute is an indicator of whether to impute variables or set them to missing
   fix_first_issue <- function(data, variable, impute = FALSE){
     first_issue <- data %>% 
+      filter(cum_confirmed_cases >= 10 | lead(cum_confirmed_cases) >= 10) %>% 
       arrange(tmp_id, date) %>% 
       group_by(tmp_id) %>% 
       filter({{variable}} < lag({{variable}}) | {{variable}} > lead({{variable}}) | lead({{variable}}) > lead({{variable}}, 2)) %>% 
       ungroup() %>% 
       slice(1:3)
-    if((first_issue$tmp_id %>% unique() %>% length()) > 1){
-      # If the tmp_id is nonunique then we have case of a decline after the first value probably.
-      if(first_issue$tmp_id[1] == first_issue$tmp_id[2]){
-        # So this is a length 2 issue and we just need to set the first one to missing.
+    if(all((first_issue %>% pull({{variable}}) %>% .[1]) == 0, (first_issue %>% pull({{variable}}) %>% .[3]) == 0)){
+      if(impute){
         data <- data %>% 
-          mutate({{variable}} := if_else(tmp_id == first_issue$tmp_id[1] & date == first_issue$date[1], NA_real_,
+          mutate({{variable}} := if_else(tmp_id == first_issue$tmp_id[2] & date == first_issue$date[2], 0,
+                                         {{variable}}))
+      } else {
+        data <- data %>% 
+          mutate({{variable}} := if_else(tmp_id == first_issue$tmp_id[2] & date == first_issue$date[2], NA_real_,
                                          {{variable}}))
       }
-    }
-    if(all((first_issue %>% pull({{variable}}) %>% .[1]) == 0, (first_issue %>% pull({{variable}}) %>% .[3]) == 0)){
-      data <- data %>% 
-        mutate({{variable}} := if_else(tmp_id == first_issue$tmp_id[2] & date == first_issue$date[2], 0,
-                                       {{variable}}))
     } else if((first_issue %>% pull({{variable}}) %>% .[1]) <= (first_issue %>% pull({{variable}}) %>% .[3])){
-      # If the first and last go up then log interpolate the second
-      data <- data %>% 
-        mutate({{variable}} := if_else(tmp_id == first_issue$tmp_id[2] & date == first_issue$date[2],
-                                       round(exp((log(lead({{variable}})) + log(lag({{variable}})))/2)),
-                                       {{variable}}))
-    } else if ((first_issue %>% pull({{variable}}) %>% .[1]) == 135 & (first_issue %>% pull({{variable}}) %>% .[3]) == 118) {
-      # This is a weird case in S Korea recoveries with a pattern of 41 135 135 118 118 247 - just log interpolate all 4 in the middle
-      sequence <- data %>% 
-        filter(tmp_id == first_issue$tmp_id[2] & date %in% seq.Date(first_issue$date[1] - 1, first_issue$date[1] + 4, by = "days"))
-      if(identical(sequence %>% pull({{variable}}), c(41, 135, 135, 118, 118, 247))){
-        new_values_for_chunk <- round(exp(zoo::na.approx(c(log(41), NA_real_, NA_real_, NA_real_, NA_real_, log(247)))))
-        new_variable <- data %>% 
-          pull({{variable}})
-        new_variable[data$tmp_id == first_issue$tmp_id[1] & data$date %in% sequence$date] <- new_values_for_chunk
+      if(impute){
+        # If the first and last go up then log interpolate the second
         data <- data %>% 
-          mutate({{variable}} := new_variable)
-      }
-    } else if (all(first_issue$cum_confirmed_cases[3] == 0, first_issue$cum_deaths[3] == 0, first_issue$cum_recoveries[3] == 0)) {
-      # This case is one where all the variables just go to zero and usually stay there (last one might be NA) - 
-      # just delete these rows
-      tmp <- data %>% 
-        filter(date >= first_issue$date[3] & tmp_id == first_issue$tmp_id[3]) %>% 
-        pull({{variable}})
-      if(all(tmp == 0 | is.na(tmp))){
+          mutate({{variable}} := if_else(tmp_id == first_issue$tmp_id[2] & date == first_issue$date[2],
+                                         round(exp((log(lead({{variable}})) + log(lag({{variable}})))/2)),
+                                         {{variable}}))
+      } else {
         data <- data %>% 
-          filter(!(date >= first_issue$date[3] & tmp_id == first_issue$tmp_id[3]))
+          mutate({{variable}} := if_else(tmp_id == first_issue$tmp_id[2] & date == first_issue$date[2],
+                                         NA_real_,
+                                         {{variable}}))
       }
     } else {
       # stop("Need to deal with an edge case of cumulative cases declining in the data. Comment out this error then run again and you will be debugging in the right place.")
@@ -133,12 +117,22 @@ fix_issues <- function(data){
     }) %>% 
     ungroup()
   
-  data <- data %>% 
-    mutate(cum_recoveries_imputed = cum_recoveries, 
-           cum_confirmed_cases_imputed = cum_confirmed_cases, 
-           cum_deaths_imputed = cum_deaths)
+  if(!"cum_confirmed_cases_imputed" %in% names(data)){
+    data <- data %>% 
+      mutate(cum_confirmed_cases_imputed = cum_confirmed_cases)
+  }
   
-  while(do_issues_exist(data, cum_confirmed_cases_imputed)){
+  if(!"cum_recoveries_imputed" %in% names(data)){
+    data <- data %>% 
+      mutate(cum_recoveries_imputed = cum_recoveries)
+  }
+  
+  if(!"cum_deaths_imputed" %in% names(data)){
+    data <- data %>% 
+      mutate(cum_deaths_imputed = cum_deaths)
+  }
+  
+  while(do_issues_exist(data %>% filter(cum_confirmed_cases >= 10), cum_confirmed_cases_imputed)){
     warning("Fixing an issue with cum_confirmed_cases")
     data <- fix_first_issue(data, cum_confirmed_cases_imputed, impute = TRUE)
     data <- fix_first_issue(data, cum_confirmed_cases, impute = FALSE)
