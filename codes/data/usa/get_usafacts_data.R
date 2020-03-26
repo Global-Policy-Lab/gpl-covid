@@ -1,6 +1,6 @@
 get_usafacts_data <- function(){
   urls <- c(
-    "https://static.usafacts.org/public/data/covid-19/covid_confirmed_usafacts.csv?_ga=2.7547058.1667915927.1585092333-871067523.1585092333",
+    "https://static.usafacts.org/public/data/covid-19/covid_confirmed_usafacts.csv",
     "https://static.usafacts.org/public/data/covid-19/covid_deaths_usafacts.csv"
   )
 
@@ -23,6 +23,8 @@ get_usafacts_data <- function(){
     }) %>% 
     bind_rows()
   
+  usa_facts_covid_cases <- usa_facts_covid_cases %>% 
+    select(-matches("X[0-9]+"))
   
   usa_facts_covid_cases <- usa_facts_covid_cases %>% 
     pivot_longer(cols = matches("[0-9]+/[0-9]+/[0-9]+"),
@@ -52,7 +54,18 @@ get_usafacts_data <- function(){
                 names_from = variable,
                 values_from = value) %>% 
     mutate(date = as.Date(date, format = "%m/%d/%y")) %>% 
-    arrange(county_fips, state_fips, adm2_name, adm1_name, date)
+    arrange(county_fips, state_fips, adm2_name, adm1_name, date) %>% 
+    mutate(county_fips = county_fips %>% str_pad(5, pad = 0)) %>% 
+    mutate(state_fips = state_fips %>% str_pad(2, pad = 0))
+}
+
+do_issues_exist <- function(data, variable){
+  data %>% 
+    arrange(tmp_id, date) %>% 
+    group_by(tmp_id) %>% 
+    filter({{variable}} < lag({{variable}})) %>% 
+    nrow() %>% 
+    magrittr::is_greater_than(0)
 }
 
 examine_issues <- function(data, variable){
