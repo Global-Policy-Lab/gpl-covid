@@ -92,7 +92,6 @@ replace_dict = {
     'denominazione_provincia':'adm2_name',
     'codice_regione':'adm1_id',
     'codice_provincia':'adm2_id',
-    'sigla_provincia':'province_abbrev',
     'totale_attualmente_positivi':'active_cases',
     'nuovi_attualmente_positivi':'active_cases_new',
     'totale_casi':cumulative_prefix + 'confirmed_cases',
@@ -135,7 +134,8 @@ adm2_cases['adm2_name'] = adm2_cases['adm2_name'].replace(
 # In[ ]:
 
 
-adm2_cases = adm2_cases.drop(columns=['province_abbrev'])
+adm1_cases = adm1_cases.drop(columns=[col for col in adm1_cases.columns if col not in replace_dict.values()])
+adm2_cases = adm2_cases.drop(columns=[col for col in adm2_cases.columns if col not in replace_dict.values()])
 
 
 # Impute cumulative confirmed cases at `adm2` level on the first day of the dataset (2/24/2020) from `adm1`
