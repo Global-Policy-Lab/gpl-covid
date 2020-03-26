@@ -1,18 +1,6 @@
 // Author: Sébastien AP
 // Purpose: clean and reshape the raw infected count data
 
-// ---------SET LAST DATE OF SAMPLE ----------- /Default is march 18 2020
-/*
-// Please input last date info
-local y = 2020 
-local m = 3 
-local d = 25
-
-// generates locals for last date
-local end_date_num = mdy(`m',`d',`y')
-*/
-// --------------------------------------------
-
 //Load data
 import delim "data/interim/france/adm2_to_adm1.csv", clear 
 
@@ -67,8 +55,7 @@ preserve
 	keep adm1 date adm0 cumulative
 	tempfile f0
 	save `f0'
-	//iterate for each day after march 13 until the date set at the beginning
-	local D = mdy(3,13,2020)
+	//iterate for each day after march 13 until last available date
 	while `D' <= 10e5 {
 		local month_file = month(`D')
 		local day_file = day(`D')
