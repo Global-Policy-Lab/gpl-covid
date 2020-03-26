@@ -64,9 +64,10 @@ tw (sc D_l_cum_confirmed_cases`suffix' t, msize(tiny))(line sample_avg t)(sc day
 
 
 //------------------main estimates
+g testing_regime = t == mdy(3,15,2020) // start of stade 3, none systematic testing
 
 // generate policy packages
-replace home_isolation = (home_isolation + curfew + public_space_closure) / 3
+replace social_distance = (event_cancel + no_gathering + social_distance) / 3
 g national_lockdown = (school_closure_national + business_closure + home_isolation) / 3 // big national lockdown policy
 g national_no_gathering = (no_gathering_national_100 + no_gathering_national_1000) / 2 // national no gathering measure
 
@@ -75,24 +76,24 @@ outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
 // main regression model
 
-reghdfe D_l_cum_confirmed_cases`suffix' national_lockdown event_cancel school_closure_regional ///
+reghdfe D_l_cum_confirmed_cases`suffix' testing national_lockdown school_closure_regional ///
  social_distance national_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
 //saving coefs
 tempfile results_file
 postfile results str18 adm0 str18 policy str18 suffix beta se using `results_file', replace
-foreach var in "event_cancel" "school_closure_regional" "social_distance" "national_no_gathering" "national_lockdown" {
+foreach var in "school_closure_regional" "social_distance" "national_no_gathering" "national_lockdown" {
 	post results ("FRA") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 
 // effect of package of policies
-lincom event_cancel + national_lockdown + school_closure_regional + social_distance + national_no_gathering
+lincom national_lockdown + school_closure_regional + social_distance + national_no_gathering
+
 post results ("FRA") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 //looking at different policies
-coefplot, keep(national_lockdown national_no_gathering event_cancel school_closure_regional  social_distance) 
-
+coefplot, xline(0) keep(national_lockdown national_no_gathering school_closure_regional social_distance) 
 //------------- checking error structure (make fig for appendix)
 
 predict e if e(sample), resid
@@ -109,25 +110,27 @@ graph drop hist_fra qn_fra
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = event_cancel * _b[event_cancel] + school_closure_regional * _b[school_closure_regional] ///
+predictnl y_actual = school_closure_regional * _b[school_closure_regional] ///
 + social_distance * _b[social_distance]+ national_no_gathering*_b[national_no_gathering] ///
-+ national_lockdown* _b[national_lockdown] + _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
++ testing_regime * _b[testing_regime] + national_lockdown* _b[national_lockdown] ///
++ _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
-gen treatment = event_cancel * _b[event_cancel] + school_closure_regional * _b[school_closure_regional] ///
+gen treatment = school_closure_regional * _b[school_closure_regional] ///
 + social_distance * _b[social_distance]+ national_no_gathering*_b[national_no_gathering] ///
 + national_lockdown* _b[national_lockdown] ///
 if e(sample)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter =  testing_regime * _b[testing_regime] + _b[_cons] ///
+ + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // get ATE
 preserve
 	keep if e(sample) == 1
-	collapse  D_l_cum_confirmed_cases_imputed   event_cancel school_closure_regional social_distance national_no_gathering national_lockdown
-	predictnl ATE = event_cancel * _b[event_cancel] + school_closure_regional * _b[school_closure_regional] ///
+	collapse  D_l_cum_confirmed_cases_imputed school_closure_regional social_distance national_no_gathering national_lockdown
+	predictnl ATE = school_closure_regional * _b[school_closure_regional] ///
 	+ social_distance * _b[social_distance]+ national_no_gathering*_b[national_no_gathering] ///
 	+ national_lockdown* _b[national_lockdown], ci(LB UB) se(sd) p(pval)
 	g adm0 = "FRA"
