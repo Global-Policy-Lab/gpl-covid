@@ -34,9 +34,6 @@ ssc install coefplot, replace
 ssc install filelist, replace
 ```
 
-## Data Documentation
-A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
-
 ## Code Structure
 ```text
 codes
@@ -110,6 +107,9 @@ codes
 └── utils.py
 ```
 
+## Data Documentation
+A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
+
 ## Replication Steps
 
 There are four stages to our analysis:
@@ -165,7 +165,7 @@ For the United States, pieces of this policy/testing regime data collection pipe
 #### Epidemiological data
 
 ##### Multi-country
-1. `Rscript codes/data/multi_country/download_6_countries_JHU.R`: Downloads 6 countries' data from the Johns Hopkins University Data underlying the dashboard [here](https://coronavirus.jhu.edu/map.html).
+1. `Rscript codes/data/multi_country/download_6_countries_JHU.R`: Downloads 6 countries' data from the Johns Hopkins University Data underlying [their dashboard](https://coronavirus.jhu.edu/map.html). **Note:** The JHU dataset format has been changing frequently, so it is possible that this script will need to be modified.
 
 ##### China
 1. For data from January 24, 2020 onwards, we relied on [an open source GitHub project](https://github.com/BlankerL/DXY-COVID-19-Data). Download the data and save it to [data/raw/china/DXYArea.csv](data/raw/china/DXYArea.csv).

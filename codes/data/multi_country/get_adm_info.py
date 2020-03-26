@@ -14,7 +14,7 @@ from codes import utils as cutil
 
 idx = pd.IndexSlice
 
-if cutil.API_KEYS["census"] == "API_KEY_STRING":
+if cutil.API_KEYS["census"] == "YOUR_API_KEY":
     raise ValueError(
         """To run this script, you will need a U.S. Census API key, which can be obtained"""
         """here: https://api.census.gov/data/key_signup.html. You will need to save this """
