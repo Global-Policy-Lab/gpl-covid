@@ -138,7 +138,7 @@ format date %tdCCYY-NN-DD
 rename (adm1_pop adm1) (population adm1_id)	
 rename *_popw *_popwt
 
-* ------------- Subject to change
+* Policy variable harmonization across country
 replace social_distance = (event_cancel + no_gathering + social_distance) /3 
 lab var social_distance "Social Distance & Event Cancel" 
 drop event_cancel* social_distance_popwt social_distance_national 
