@@ -62,8 +62,19 @@ replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0
 
 //--------------testing regime changes
 
-gen testing_regime_change_feb26 = (t==mdy(2,26,2020))
+*gen testing_regime_change_feb26 = (t==mdy(2,26,2020))
 
+// grab each date of any testing regime change
+preserve
+	collapse (min) t if testing_regime>0, by(testing_regime)
+	levelsof t, local(testing_change_dates)
+restore
+
+// create a dummy for each testing regime change date
+foreach t_chg of local testing_change_dates{
+	local t_str = string(`t_chg', "%td")
+	gen testing_regime_change_`t_str' = t==`t_chg'
+}
 
 //------------------diagnostic
 
