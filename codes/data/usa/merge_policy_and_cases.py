@@ -73,11 +73,6 @@ state_acronyms_to_names = \
 def acc_to_statename(acc):
     return state_acronyms_to_names[acc]
 
-def fix_date(date):
-	month, day, year = date.split("/") 
-
-	return "{y:04d}-{m:02d}-{d:02d}".format(y=2000+int(year), m=int(month), d=int(day))
-
 def general_union(x):
     candidates =  reduce(np.union1d, x)
     
@@ -101,16 +96,11 @@ def min_no_nans(x):
 
 def download_and_process_policy_csv():
 
-	policy_data_raw = pd.read_csv(os.path.join(raw_data_dir,"US_COVID-19_policies.csv"),encoding='latin')
+	policy_data_raw = pd.read_csv(os.path.join(int_data_dir,"US_COVID-19_policies.csv"),encoding='latin')
 
 	# A. wrangle polices -> binary variables
 	# get the unchanged vars
 	policy_data = policy_data_raw.loc[:,['date', 'adm0_name', 'adm1_name', 'adm2_name']]
-	
-	policy_data.loc[:,'date'] = policy_data.loc[:,'date'].apply(fix_date)
-
-	# fix the state names
-	policy_data.loc[:,'adm1_name'] = policy_data['adm1_name'].apply(acc_to_statename)
 
 	# Code all policies as 0/1
 	policy_mandatory = policy_data_raw.loc[:,'Optional'] == 'N'
@@ -350,7 +340,7 @@ def main():
 	for key in cases_data_subset.keys():
 		if key == 'adm0_name':
 			continue
-		if len(np.unique(cases_data_subset[key])) == 1:
+		if len(cases_data_subset[key].unique()) == 1:
 			cases_data_subset.drop([key], axis=1).reset_index(drop=True)
 
 	# add in population 
