@@ -35,6 +35,7 @@ save `national'
 restore
 *remove national pol
 drop if adm1 == .
+drop if size == . & policy == "no_gathering" // very noisy policy measure if size < 50
 drop size
 
 g school_closure_regional = policy == "school_closure_all"
@@ -71,7 +72,6 @@ replace running_var = policy_int if pol != "school_closure"
 drop policy_int
 
 reshape wide running_var pop, i(adm0 adm1 date) j(pol) string
-
 rename running_var* *_size
 rename population* *_popw
 merge m:1 adm1 using "data/interim/france/region_ID.dta", nogen keep(1 3)
@@ -85,7 +85,6 @@ foreach var in "event_cancel" "no_gathering" "school_closure" "social_distance" 
 	replace `var'_popw = `var'_popw / adm1_pop
 }
 
-*drop if no_gathering_size == 1
 rename *_size *
 replace school_closure = 1 if school_closure > 1
 tempfile Local
@@ -136,7 +135,23 @@ foreach var in "event_cancel" "event_cancel_popw" "business_closure" "home_isola
 drop if adm1 < 10
 *save
 format date %tdCCYY-NN-DD
-rename adm1_pop population
+rename (adm1_pop adm1) (population adm1_id)	
+rename *_popw *_popwt
+
+* ------------- Subject to change
+replace social_distance = (event_cancel + no_gathering + social_distance) /3 
+lab var social_distance "Social Distance & Event Cancel" 
+drop event_cancel* social_distance_popwt social_distance_national 
+replace no_gathering = (no_gathering_national_1000 + no_gathering_national_100) / 2
+lab var no_gathering "No Gathering Outside"
+drop no_gathering_*
+
+g school_closure_local_popwt = school_closure_popwt + school_closure_regional
+replace school_closure_local_popwt = 1 if school_closure_local_popwt > 1
+rename school_closure_regional school_closure_local 
+drop  school_closure school_closure_popwt
+lab var school_closure_local "school_closure_local"
+
 outsheet * using "data/processed/adm1/FRA_processed.csv", replace comma
 
 

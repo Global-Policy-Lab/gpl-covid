@@ -19,7 +19,7 @@ gen year = year(t)
 gen day = day(t)
 
 //clean up
-drop adm1
+drop adm1_id
 ren  adm1_name adm1
 replace adm1 = "AuvergneRhoneAlpes" if adm1 == "AuvergneRhôneAlpes"
 
@@ -67,22 +67,16 @@ tw (sc D_l_cum_confirmed_cases`suffix' t, msize(tiny))(line sample_avg t)(sc day
 g testing_regime = t == mdy(3,15,2020) // start of stade 3, none systematic testing
 lab var testing_regime "Testing Regime Change"
 // generate policy packages
-replace social_distance = (event_cancel + no_gathering + social_distance) / 3
-lab var social_distance "social distance"
-g national_lockdown = (school_closure_national + business_closure + home_isolation) / 3 // big national lockdown policy
+g national_lockdown = (business_closure + home_isolation + school_closure_national) / 3 // big national lockdown policy
 lab var national_lockdown "Lockdown"
-g national_no_gathering = (no_gathering_national_100 + no_gathering_national_1000) / 2 // national no gathering measure
-lab var national_no_gathering "No gathering (national)"
-lab var school_closure_regional "School closure (regional)"
-
 
 // output data used for reg
 outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
 // main regression model
 
-reghdfe D_l_cum_confirmed_cases`suffix' testing national_lockdown school_closure_regional ///
- social_distance national_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+reghdfe D_l_cum_confirmed_cases`suffix' testing national_lockdown school_closure_local ///
+ social_distance no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
  
 outreg2 using "models/tables/FRA_estimates_table", word replace label ///
  addtext(Region FE, "YES", Day-of-Week FE, "YES") title("Regression output: France")
@@ -91,18 +85,18 @@ cap erase "models/tables/FRA_estimates_table.txt"
 //saving coefs
 tempfile results_file
 postfile results str18 adm0 str18 policy str18 suffix beta se using `results_file', replace
-foreach var in "school_closure_regional" "social_distance" "national_no_gathering" "national_lockdown" {
+foreach var in "national_lockdown" "school_closure_local" "social_distance" "no_gathering" {
 	post results ("FRA") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 
 // effect of package of policies
-lincom national_lockdown + school_closure_regional + social_distance + national_no_gathering
+lincom national_lockdown + school_closure_local + social_distance + no_gathering
 
 post results ("FRA") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 //looking at different policies
-coefplot, xline(0) keep(national_lockdown national_no_gathering school_closure_regional social_distance) 
+coefplot, keep(national_lockdown school_closure_local social_distance no_gathering) 
 //------------- checking error structure (make fig for appendix)
 
 predict e if e(sample), resid
