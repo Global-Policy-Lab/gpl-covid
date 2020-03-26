@@ -12,15 +12,7 @@ import pandas as pd
 import numpy as np
 from codes import utils as cutil
 
-policies_date = "20200318"
-
 # #### Define paths
-
-# Administrative unit names
-adm_dir = cutil.DATA_INTERIM / 'adm'
-path_adm1 = adm_dir / 'adm1' / 'adm1.csv'
-path_adm2 = adm_dir / 'adm2' / 'adm2.csv'
-path_adm3 = adm_dir / 'adm3' / 'adm3.csv'
 
 # Template for processed dataset (output of this notebook)
 path_template = cutil.DATA_PROCESSED / '[country]_processed.csv'
@@ -48,11 +40,6 @@ path_processed_province = cutil.DATA_PROCESSED / 'adm2' / 'ITA_processed.csv'
 # ## Download and read raw data from Github
 
 # #### Read inputs
-
-# Administrative unit names
-adm1_df = pd.read_csv(path_adm1)
-adm2_df = pd.read_csv(path_adm2)
-adm3_df = pd.read_csv(path_adm3)
 
 # Columns in template (i.e. columns allowed in output)
 template_cols = set(pd.read_csv(path_template).columns)
@@ -391,55 +378,9 @@ policies_full['adm1_name'] = policies_full['adm1_name'].replace(replace_dict)
 policies_full['adm2_name'] = policies_full['adm2_name'].replace(replace_dict)
 policies_full['adm3_name'] = policies_full['adm3_name'].replace(replace_dict)
 
-def get_adm_fields(adm_level, field_name='name'):
-    return [f'adm{i}_' + field_name for i in range(1, adm_level + 1)]
-
-def get_pop_df(adm_df, adm_level):
-    indices = get_adm_fields(adm_level)
-    return (adm_df[adm_df['adm0_name'] == 'ITA']
-        .set_index(indices)[['population']]
-        .rename(columns={
-            'population':f'adm{adm_level}_pop'
-        }))
-
-adm1_pop = get_pop_df(adm1_df, 1)
-adm2_pop = get_pop_df(adm2_df, 2)
-adm3_pop = get_pop_df(adm3_df, 3)
-
-for adm_pop, adm_level in [(adm1_pop, 1), (adm2_pop, 2), (adm3_pop, 3)]:
-    policies_full = pd.merge(
-        policies_full, 
-        adm_pop, 
-        how='left', 
-        left_on=get_adm_fields(adm_level), 
-        right_index=True,
-        
-    )    
-
-assert len(policies_full[policies_full['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
-assert len(policies_full[policies_full['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
-assert len(policies_full[policies_full['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
-
-policies_full.loc[policies_full['adm3_pop'].notnull(), 'adm2_pop_weight_perc_name'] = (
-    policies_full['adm3_pop'] / policies_full['adm2_pop']
-)
-
-policies_full.loc[policies_full['adm3_pop'].isnull(), 'adm2_pop_weight_perc_name'] = 1
-
-policies_full.loc[policies_full['adm2_pop'].notnull(), 'adm1_pop_weight_perc_name'] = (
-    policies_full['adm2_pop_weight_perc_name'] * policies_full['adm2_pop'] / policies_full['adm1_pop']
-)
-
-policies_full.loc[policies_full['adm2_pop'].isnull(), 'adm1_pop_weight_perc_name'] = 1
-
-# Check that population weights are all there
-assert len(policies_full[policies_full['adm1_pop_weight_perc_name'].isnull()]) == 0
-assert len(policies_full[policies_full['adm2_pop_weight_perc_name'].isnull()]) == 0
-
 # Remove any duplicates, grouping on relevant columns
 policies = policies_full[
-    ['adm3_name','adm2_pop_weight_perc_name','adm2_name', 
-     'adm1_pop_weight_perc_name','adm1_name','adm0_name',
+    ['adm3_name','adm2_name','adm1_name','adm0_name',
      'date_start','policy','policy_intensity', 'optional']
 ].drop_duplicates()
 
@@ -470,69 +411,180 @@ adm2_not_found = set(policies['adm2_name'].unique()) - set(adm2_cases['adm2_name
 assert len(adm1_not_found) == 0
 assert len(adm2_not_found) == 0
 
+## Merge Policies and Cases with Population, calculate pop-weights
 
-# Get population of autonomous provinces, coded as regions and provinces in health data, from region data
+def get_adm_fields(adm_level, field_name='name'):
+    """Get list of adm-fields from `adm_level` up to the adm1 level"""
+    return [f'adm{i}_' + field_name for i in range(1, adm_level + 1)]
 
-# In[ ]:
+def get_adm_pops(adm_level, country_code):
+    """Get all populations at an adm-level within a country
 
+    Args:
+        adm_level (int): Adm-level of requested populations.
+        country_code (str): Three-letter country code of requested populations
 
-# Bolzano appears in the regions and provinces datasets
-adm2_df.loc[adm2_df['adm1_name'] == 'P.A. Bolzano', 'population'] = (
-    adm1_df.loc[adm1_df['adm1_name'] == 'P.A. Bolzano', 'population'].to_numpy()[0]
-)
+    Returns:
+        pandas.DataFrame: List of populations at `adm_level` within country corresponding to `country_code`.
+            Indexed by all levels from "adm1" (first level) up to "adm{`adm_level`}"" (last level)
 
-# Trento appears in the regions and provinces datasets
-adm2_df.loc[adm2_df['adm1_name'] == 'P.A. Trento', 'population'] = (
-    adm1_df.loc[adm1_df['adm1_name'] == 'P.A. Trento', 'population'].to_numpy()[0]
-)
+    """
+    path_adm = cutil.DATA_INTERIM / 'adm' / f'adm{adm_level}' / f'adm{adm_level}.csv'
+    adm_df = pd.read_csv(path_adm)
+    indices = get_adm_fields(adm_level)
+    return (adm_df.loc[adm_df['adm0_name'] == country_code]
+            .set_index(indices)[['population']]
+            .rename(columns={
+                'population':f'adm{adm_level}_pop'
+            }))
 
-# Trentino-Alto Adige is redundant here since Bolzano + Trento == Trentino-Alto Adige
-adm1_df = adm1_df.loc[adm1_df['adm1_name'] != 'Trentino-Alto Adige']
-adm2_df = adm2_df.loc[adm2_df['adm1_name'] != 'Trentino-Alto Adige']
+def merge_policies_with_population_on_level(policies, adm_level, country_code):
+    """Assign all populations at an adm-level to DataFrame of policies
 
+    Args:
+        policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```
+        adm_level (int): Adm-level of requested populations.
+        country_code (str): Three-letter country code of requested populations
 
-# Assign populations by adm-unit
+    Returns:
+        pandas.DataFrame: `policies` with a new column, "adm_{`adm_level`}_pop"
 
-# In[ ]:
+    """
+    adm_pop = get_adm_pops(adm_level, country_code)
+    policies = pd.merge(
+        policies, 
+        adm_pop, 
+        how='left', 
+        left_on=get_adm_fields(adm_level), 
+        right_index=True,   
+    )
+    return policies
 
+def merge_policies_with_population(policies, country_code, max_adm_level):
+    """Assign all populations at all adm-levels to DataFrame of policies
 
-adm1_pops = adm1_df.loc[adm1_df['adm0_name'] == 'ITA'].set_index('adm1_name')['population']
+    Args:
+        policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```
+        country_code (str): Three-letter country code of requested populations
+        max_adm_level (int): Adm-level at and below which populations should be assigned, down to adm1
+            e.g. `max_adm_level` == 3 would assign populations at adm-levels 1, 2, and 3
 
-adm2_pops = adm2_df.loc[adm2_df['adm0_name'] == 'ITA'].set_index('adm2_name')['population']
+    Returns:
+        pandas.DataFrame: `policies` with new columns, "adm_{`adm_level`}_pop" for each `adm_level` from 1 to `max_adm_level`
 
-adm1_cases['population'] = adm1_cases['adm1_name'].apply(
-    lambda adm1: adm1_pops.loc[adm1] if adm1 in adm1_pops else np.nan
-)
+    """
+    for adm_level in range(1, max_adm_level + 1):
+        policies = merge_policies_with_population_on_level(policies, adm_level, country_code)
+    return policies
 
-adm2_cases['population'] = adm2_cases['adm2_name'].apply(
-    lambda adm2: adm2_pops.loc[adm2] if adm2 in adm2_pops else np.nan
-)
+def merge_cases_with_population_on_level(epi_df, adm_level, country_code):
+    """Assign all populations at a given adm-level to DataFrame of epidemiological (cases) data
 
-assert set(adm2_cases.loc[adm2_cases['population'].isnull(), 'adm2_name']) == set(['Unknown'])
-assert adm1_cases['population'].isnull().sum() == 0
+    Args:
+        epi_df (pandas.DataFrame): List of cases as formatted in ```data/processed/{`adm_level`}/{`country_code`}_processed.csv```
+        adm_level (int): Adm-level of requested populations.
+        country_code (str): Three-letter country code of requested populations
+    Returns:
+        pandas.DataFrame: `epi_df` with a new column, "population"
 
-## Calculate cumulative population weights by adm-policy
+    """
+    adm_pops = get_adm_pops(adm_level, country_code)
+    return pd.merge(
+        epi_df, 
+        adm_pops, 
+        right_index=True, 
+        left_on=get_adm_fields(adm_level)
+    ).rename(
+        columns={f'adm{adm_level}_pop':'population'}
+    )
 
-for adm in ['1', '2']:
-    sum_each_day = policies.sort_values('date_start').groupby(['date_start', 'policy', 'adm' + adm + '_name'])['adm' + adm + '_pop_weight_perc_name'].sum().reset_index()
+def calculate_policy_popweights_each_day(policies, max_adm_level):
+    """Assign sum of population weights *added on a given day* to DataFrame of policy data
 
-    sum_cumulative = sum_each_day.groupby(['adm' + adm + '_name', 'policy'])['adm' + adm + '_pop_weight_perc_name'].cumsum()
-    sum_cumulative.name = 'cum_adm' + adm + '_pop_weight_perc_name'
+    Args:
+        policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```,
+            with "_pop" columns already assigned.
+        max_adm_level (int): Adm-level at and below which population weights should be assigned, down to adm1
+            e.g. `max_adm_level` == 3 would assign population weights at adm-levels 1, 2, and 3
+    Returns:
+        pandas.DataFrame: `policies` with a new column for each level up to `max_adm_level`
+            i.e. "adm_{`adm_level`}_pop_weight_perc_newtoday" for each `adm_level` from 1 to `max_adm_level`
+
+    """
+    for adm_level in range(max_adm_level, 0, -1):
+        lower_level = f'adm{adm_level + 1}_pop'
+        this_level = f'adm{adm_level}_pop'
+        lower_level_weight = f'adm{adm_level + 1}_pop_weight_perc_newtoday'
+        this_level_weight = f'adm{adm_level}_pop_weight_perc_newtoday'
+        policies[this_level_weight] = np.nan
+        
+        multiplier = policies[lower_level_weight] if lower_level_weight in policies.columns else 1
+        
+        policies.loc[
+            policies[lower_level].notnull(),
+            this_level_weight
+        ] = (
+            multiplier * policies[lower_level] / policies[this_level]
+        )
+
+        policies.loc[policies[lower_level].isnull(), this_level_weight] = 1
+
+    return policies
+
+def aggregate_policy_popweights(policies, adm_level, country_code):
+    """Assign all population weights to DataFrame of policy data
+
+    Args:
+        policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```,
+            with "_pop" columns and "_pop_weight_perc_newtoday" already assigned.
+        max_adm_level (int): Adm-level at and below which population weights should be assigned, down to adm1
+            e.g. `max_adm_level` == 3 would assign population weights at adm-levels 1, 2, and 3
+    Returns:
+        pandas.DataFrame: `policies` with 
+            1. a new column for each level up to `max_adm_level`
+                i.e. "adm_{`adm_level`}_pop_weight_perc" for each `adm_level` from 1 to `max_adm_level`
+            2. temporary column dropped "adm_{`adm_level`}_pop_weight_perc_newtoday"
+
+    """
+    sum_each_day = policies.sort_values('date_start').groupby(['date_start', 'policy', f'adm{adm_level}_name'])[f'adm{adm_level}_pop_weight_perc_newtoday'].sum().reset_index()
+
+    sum_cumulative = sum_each_day.groupby([f'adm{adm_level}_name', 'policy'])[f'adm{adm_level}_pop_weight_perc_newtoday'].cumsum()
+    sum_cumulative.name = f'cum_adm{adm_level}_pop_weight_perc'
     sum_cumulative.loc[sum_cumulative > 1] = 1
 
     sum_cumulative = sum_each_day.join(sum_cumulative)
 
-    sum_cumulative = sum_cumulative.set_index(['date_start', 'policy', 'adm' + adm + '_name'])['cum_adm' + adm + '_pop_weight_perc_name']
-    sum_cumulative.name = 'cum_adm' + adm + '_pop_weight_perc_name'
-    policies = pd.merge(policies, sum_cumulative, how='left', left_on=['date_start', 'policy', 'adm' + adm + '_name'], right_index=True)
+    sum_cumulative = sum_cumulative.set_index(['date_start', 'policy', f'adm{adm_level}_name'])[f'cum_adm{adm_level}_pop_weight_perc']
+    sum_cumulative.name = f'cum_adm{adm_level}_pop_weight_perc'
+    policies = pd.merge(policies, sum_cumulative, how='left', left_on=['date_start', 'policy', f'adm{adm_level}_name'], right_index=True)
 
-policies['adm1_pop_weight_perc_name'] = policies['cum_adm1_pop_weight_perc_name']
-policies['adm2_pop_weight_perc_name'] = policies['cum_adm2_pop_weight_perc_name']
-policies = policies.drop(columns=[
-    'cum_adm1_pop_weight_perc_name', 'cum_adm2_pop_weight_perc_name'
-])
+    policies[f'adm{adm_level}_pop_weight_perc'] = policies[f'cum_adm{adm_level}_pop_weight_perc']
+    policies = policies.drop(columns=[
+        f'cum_adm{adm_level}_pop_weight_perc', f'adm{adm_level}_pop_weight_perc_newtoday'
+    ])
+    return policies
 
-# Define `home_isolation_partial` as `home_isolation` with a relative weight of 0.5
+country_code = 'ITA'
+max_adm_level = 3
+
+# Assign "population" column to each DataFrame that has a corresponding `_processed.csv` file
+adm1_cases = merge_cases_with_population_on_level(adm1_cases, 1, country_code)
+adm2_cases = merge_cases_with_population_on_level(adm2_cases, 2, country_code)
+
+policies = merge_policies_with_population(policies, country_code, max_adm_level)
+policies = calculate_policy_popweights_each_day(policies, 2)
+policies = aggregate_policy_popweights(policies, 1, country_code)
+policies = aggregate_policy_popweights(policies, 2, country_code)
+# End of population assignment
+
+# Check that population weights are all there
+assert len(policies[policies['adm1_pop_weight_perc'].isnull()]) == 0
+assert len(policies[policies['adm2_pop_weight_perc'].isnull()]) == 0
+assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
+assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
+assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
+assert adm1_cases['population'].isnull().sum() == 0
+assert adm2_cases['population'].isnull().sum() == 0
 
 # In[ ]:
 
@@ -556,7 +608,7 @@ for policy_name in policies['policy'].unique():
         adm1_cases[policy_name + popweighted_suffix] = 0
         adm2_cases[policy_name + popweighted_suffix] = 0
 
-def assign_policy_variables(adm_cases, policy_on_mask, policy, intensity, perc_name):
+def assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensity, perc_name):
     policy_on_value = 1
     
     adm_cases.loc[policy_on_mask, policy] = policy_on_value * intensity
@@ -566,44 +618,53 @@ def assign_policy_variables(adm_cases, policy_on_mask, policy, intensity, perc_n
     
     return adm_cases
         
+def assign_adm1_policy_variables(adm1_cases, adm1_policies):    
+    
+    for date, policy, optional, adm, perc_name, intensity in adm1_policies[
+        ['date_start', 'policy', 'optional', 'adm1_name', 'adm1_pop_weight_perc_name', 'policy_intensity']
+    ].to_numpy():
 
-for date, policy, optional, adm, perc_name, intensity in adm1_policies[
-    ['date_start', 'policy', 'optional', 'adm1_name', 'adm1_pop_weight_perc_name', 'policy_intensity']
-].to_numpy():
-    
-    # All policies on or after policy was enacted, where one of these conditions applies:
-        # The policy applies to all Adm1
-        # This Adm1 is named explicitly
-    policy_on_mask = (
-        (adm1_cases['date'] >= date) &
-        (
-            (adm1_cases['adm1_name'] == adm) | (adm == 'All')
-        )
-    )
-    
-    adm1_cases = assign_policy_variables(adm1_cases, policy_on_mask, policy, intensity, perc_name)
-    
-for date, policy, optional, adm1, adm2, perc_name, intensity in adm2_policies[
-    ['date_start', 'policy', 'optional', 'adm1_name', 'adm2_name', 'adm2_pop_weight_perc_name', 'policy_intensity']
-].to_numpy():
-    
-    # All policies on or after policy was enacted, where one of these conditions applies:
-        # The policy applies to all Adm1
-        # This Adm2 is named explicitly
-        # This Adm2's Adm1 is named explicitly, and Adm2 is listed as "All" (i.e. all under that Adm1)
-    policy_on_mask = (
-        (adm2_cases['date'] >= date) &
-        (
-            (adm2_cases['adm2_name'] == adm2) | 
-            (adm1 == 'All') | 
+        # All policies on or after policy was enacted, where one of these conditions applies:
+            # The policy applies to all Adm1
+            # This Adm1 is named explicitly
+        policy_on_mask = (
+            (adm1_cases['date'] >= date) &
             (
-                (adm2 == 'All') & (adm1 == adm2_cases['adm1_name'])
+                (adm1_cases['adm1_name'] == adm) | (adm == 'All')
             )
         )
-    )
 
-    adm2_cases = assign_policy_variables(adm2_cases, policy_on_mask, policy, intensity, perc_name)
+        adm1_cases = assign_policy_variable_from_mask(adm1_cases, policy_on_mask, policy, intensity, perc_name)
+    
+    return adm1_cases
 
+def assign_adm2_policy_variables(adm2_cases, adm2_policies):
+
+    for date, policy, optional, adm1, adm2, perc_name, intensity in adm2_policies[
+        ['date_start', 'policy', 'optional', 'adm1_name', 'adm2_name', 'adm2_pop_weight_perc_name', 'policy_intensity']
+    ].to_numpy():
+
+        # All policies on or after policy was enacted, where one of these conditions applies:
+            # The policy applies to all Adm1
+            # This Adm2 is named explicitly
+            # This Adm2's Adm1 is named explicitly, and Adm2 is listed as "All" (i.e. all under that Adm1)
+        policy_on_mask = (
+            (adm2_cases['date'] >= date) &
+            (
+                (adm2_cases['adm2_name'] == adm2) | 
+                (adm1 == 'All') | 
+                (
+                    (adm2 == 'All') & (adm1 == adm2_cases['adm1_name'])
+                )
+            )
+        )
+
+        adm2_cases = assign_policy_variables(adm2_cases, policy_on_mask, policy, intensity, perc_name)
+        
+    return adm2_cases
+
+adm1_cases = assign_adm1_policy_variables(adm1_cases, adm1_policies)
+adm2_cases = assign_adm2_policy_variables(adm2_cases, adm2_policies)
 
 # Count number of policies in each health-policy dataset
 
@@ -652,6 +713,9 @@ adm2_cases = adm2_cases[adm2_cases['adm2_name'] != 'Unknown']
 # Save to `ITA_processed.csv`'s
 
 # In[ ]:
+
+adm1_cases = adm1_cases.sort_values(['date', 'adm1_name'], ascending=True)
+adm2_cases = adm2_cases.sort_values(['date', 'adm2_name'], ascending=True)
 
 adm1_cases.to_csv(path_processed_region, index=False)
 adm2_cases.to_csv(path_processed_province, index=False)
