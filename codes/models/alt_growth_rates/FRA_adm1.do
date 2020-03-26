@@ -84,8 +84,9 @@ outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 reghdfe D_l_cum_confirmed_cases`suffix' testing national_lockdown school_closure_regional ///
  social_distance national_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
  
- outreg2 using "models/tables/FRA_estimates_table", word replace label ///
-  addtext(Region FE, "YES", Day-of-Week FE, "YES") title("Regression output: France")
+outreg2 using "models/tables/FRA_estimates_table", word replace label ///
+ addtext(Region FE, "YES", Day-of-Week FE, "YES") title("Regression output: France")
+cap erase "models/tables/FRA_estimates_table.txt"
 
 //saving coefs
 tempfile results_file
