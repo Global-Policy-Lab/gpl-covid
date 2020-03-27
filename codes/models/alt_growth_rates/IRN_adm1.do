@@ -27,6 +27,22 @@ tsset adm1_id t, daily
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 drop if t <= mdy(2,26,2020) // DATA QUALITY CUTOFF DATE
 
+// flag which admin unit has longest series
+tab adm1_name if cum_confirmed_cases!=., sort 
+bysort adm1_name: egen adm1_obs_ct = count(cum_confirmed_cases)
+
+// if multiple admin units have max number of days w/ confirmed cases, 
+// choose the admin unit with the max number of confirmed cases 
+bysort adm1_name: egen adm1_max_cases = max(cum_confirmed_cases)
+egen max_obs_ct = max(adm1_obs_ct)
+bysort adm1_obs_ct: egen max_obs_ct_max_cases = max(adm1_max_cases) 
+
+gen longest_series = adm1_obs_ct==max_obs_ct & adm1_max_cases==max_obs_ct_max_cases
+drop adm1_obs_ct adm1_max_cases max_obs_ct max_obs_ct_max_cases
+
+sort adm1_id t
+tab adm1_name if longest_series==1 & cum_confirmed_cases!=.
+
 //construct dep vars
 lab var cum_confirmed_cases "cumulative confirmed cases"
 
@@ -57,10 +73,10 @@ gen testing_regime_mar13 = t==mdy(3,13,2020)
 // diagnostic plot of trends with sample avg as line
 reg D_l_cum_confirmed_cases
 gen sample_avg = _b[_cons]
-replace sample_avg = . if adm1_name ~= "Qom" & e(sample) == 1
+replace sample_avg = . if longest_series==0 & e(sample) == 1
 
 reg D_l_cum_confirmed_cases i.t
-predict day_avg if adm1_name  == "Qom" & e(sample) == 1
+predict day_avg if longest_series==1 & e(sample) == 1
 lab var day_avg "Observed avg. change in log cases"
 
 tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
@@ -179,10 +195,10 @@ sum treatment
 
 // computing daily avgs in sample, store with a single panel unit (longest time series)
 reg y_actual i.t
-predict m_y_actual if adm1_name=="Qom"
+predict m_y_actual if longest_series==1
 
 reg y_counter i.t
-predict m_y_counter if adm1_name=="Qom"
+predict m_y_counter if longest_series==1
 
 
 // add random noise to time var to create jittered error bars
