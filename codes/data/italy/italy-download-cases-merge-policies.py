@@ -498,7 +498,7 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code):
         columns={f'adm{adm_level}_pop':'population'}
     )
 
-def calculate_policy_popweights_each_day(policies, max_adm_level):
+def calculate_policy_popweights_each_row(policies, max_adm_level):
     """Assign sum of population weights *added on a given day* to DataFrame of policy data
 
     Args:
@@ -572,7 +572,7 @@ adm1_cases = merge_cases_with_population_on_level(adm1_cases, 1, country_code)
 adm2_cases = merge_cases_with_population_on_level(adm2_cases, 2, country_code)
 
 policies = merge_policies_with_population(policies, country_code, max_adm_level)
-policies = calculate_policy_popweights_each_day(policies, 2)
+policies = calculate_policy_popweights_each_row(policies, 2)
 policies = aggregate_policy_popweights(policies, 1, country_code)
 policies = aggregate_policy_popweights(policies, 2, country_code)
 # End of population assignment
@@ -588,8 +588,8 @@ assert adm2_cases['population'].isnull().sum() == 0
 
 # In[ ]:
 
-adm1_policies = policies[['date_start', 'adm1_name', 'policy', 'optional', 'policy_intensity', 'adm1_pop_weight_perc_name']].drop_duplicates()
-adm2_policies = policies[['date_start', 'adm1_name', 'adm2_name', 'policy', 'optional', 'policy_intensity', 'adm2_pop_weight_perc_name']].drop_duplicates()
+adm1_policies = policies[['date_start', 'adm1_name', 'policy', 'optional', 'policy_intensity', 'adm1_pop_weight_perc']].drop_duplicates()
+adm2_policies = policies[['date_start', 'adm1_name', 'adm2_name', 'policy', 'optional', 'policy_intensity', 'adm2_pop_weight_perc']].drop_duplicates()
 
 # Assign policy indicators
 
@@ -621,7 +621,7 @@ def assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensit
 def assign_adm1_policy_variables(adm1_cases, adm1_policies):    
     
     for date, policy, optional, adm, perc_name, intensity in adm1_policies[
-        ['date_start', 'policy', 'optional', 'adm1_name', 'adm1_pop_weight_perc_name', 'policy_intensity']
+        ['date_start', 'policy', 'optional', 'adm1_name', 'adm1_pop_weight_perc', 'policy_intensity']
     ].to_numpy():
 
         # All policies on or after policy was enacted, where one of these conditions applies:
@@ -641,7 +641,7 @@ def assign_adm1_policy_variables(adm1_cases, adm1_policies):
 def assign_adm2_policy_variables(adm2_cases, adm2_policies):
 
     for date, policy, optional, adm1, adm2, perc_name, intensity in adm2_policies[
-        ['date_start', 'policy', 'optional', 'adm1_name', 'adm2_name', 'adm2_pop_weight_perc_name', 'policy_intensity']
+        ['date_start', 'policy', 'optional', 'adm1_name', 'adm2_name', 'adm2_pop_weight_perc', 'policy_intensity']
     ].to_numpy():
 
         # All policies on or after policy was enacted, where one of these conditions applies:
@@ -659,7 +659,7 @@ def assign_adm2_policy_variables(adm2_cases, adm2_policies):
             )
         )
 
-        adm2_cases = assign_policy_variables(adm2_cases, policy_on_mask, policy, intensity, perc_name)
+        adm2_cases = assign_policy_variable_from_mask(adm2_cases, policy_on_mask, policy, intensity, perc_name)
         
     return adm2_cases
 
