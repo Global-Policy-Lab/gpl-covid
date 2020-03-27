@@ -1,4 +1,4 @@
-adm1_name,date,adm0_name,cumulative_confirmed_cases,cumulative_deaths,cumulative_recoveries,cumulative_active_cases
+adm1_name,date,adm0_name,cum_confirmed_cases,cum_deaths,cum_recoveries,active_cases
 Busan,1/20/20,KOR,0,0,0,0
 Busan,1/21/20,KOR,0,0,0,0
 Busan,1/22/20,KOR,0,0,0,0
