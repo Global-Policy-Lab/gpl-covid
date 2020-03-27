@@ -14,7 +14,7 @@ from codes import utils as cutil
 
 idx = pd.IndexSlice
 
-if cutil.API_KEYS["census"] == "API_KEY_STRING":
+if cutil.API_KEYS["census"] == "YOUR_API_KEY":
     raise ValueError(
         """To run this script, you will need a U.S. Census API key, which can be obtained"""
         """here: https://api.census.gov/data/key_signup.html. You will need to save this """
@@ -405,10 +405,31 @@ def main():
     )
     us_gdf = us_gdf[us_gdf.HASC_2.notnull()]
 
-    us_pops = us_gdf.join(us_county_df, on="HASC_2", how="left")
+    us_pops = us_gdf.join(us_county_df, on="HASC_2", how="outer")
     us_pops = us_pops[["NAME_1", "NAME_2", "fips", "population", "area_km2", "capital"]]
     us_pops = us_pops.rename(columns={"NAME_1": "adm1_name", "NAME_2": "adm2_name"})
     us_pops["adm0_name"] = "USA"
+
+    # Manual addition of names that are in the statoids dataset but not the gadm shapes
+    manual_names = {
+        "24005": ("Maryland", "Baltimore County"),
+        "02130": ("Alaska", "Ketchikan Gateway Borough"),
+        "29510": ("Missouri", "City of St. Louis"),
+        "51019": ("Virginia", "Bedford County"),
+        "51059": ("Virginia", "Fairfax County"),
+        "51161": ("Virginia", "Roanoke County"),
+        "51620": ("Virginia", "Franklin City"),
+        "02105": ("Alaska", "Hoonah-Angoon Census Area"),
+        "02195": ("Alaska", "Petersburg Borough"),
+        "02198": ("Alaska", "Prince of Wales-Hyder Census Area"),
+        "51159": ("Virginia", "Richmond County"),
+        "02230": ("Alaska", "Skagway Municipality"),
+        "02275": ("Alaska", "Wrangell City and Borough"),
+        "02282": ("Alaska", "Yakutat City and Borough")
+    }
+
+    for k,v in manual_names.items():
+        us_pops.loc[us_pops.fips==k,['adm1_name','adm2_name']] = v
     us_pops = us_pops.set_index(["adm0_name", "adm1_name", "adm2_name"])
     
     # save fips xwalk
@@ -418,7 +439,9 @@ def main():
     
     
     # ##### Merge back into global adm datasets
-    adm2_gdf = adm2_gdf.fillna(us_pops)
+    adm2_gdf = adm2_gdf.join(us_pops.population, rsuffix='_r', how="outer")
+    adm2_gdf['population'] = adm2_gdf.population.fillna(adm2_gdf.population_r)
+    adm2_gdf = adm2_gdf.drop(columns='population_r')
 
     st_pops = (
         adm2_gdf.loc[:, "population"]
@@ -470,7 +493,6 @@ def main():
     pop2.name = "population"
 
     provinces_as_regions = pop2.loc[idx[:, ["Bolzano", "Trento"]]]
-    pop2 = pop2.drop(index=["Bolzano", "Trento"], level="adm2_name")
     provinces_as_regions.index = provinces_as_regions.index.set_names(
         "adm1_name", level="adm2_name"
     )

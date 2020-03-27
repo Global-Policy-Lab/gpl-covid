@@ -143,15 +143,6 @@ def download_and_process_policy_csv():
 
 	df_rows_merged = policy_data_adm1_only.groupby(['date','adm0_name','adm1_name'], as_index=False).agg(aggregation_styles)
 	
-	# fix the travel ban countries list
-	#df_rows_merged['travel_ban_intl_out_country_list'].map(lambda x: [i for i in x if not np.isnan(i)])
-
-	formated_policy_data = df_rows_merged.sort_values(['date_to_sort','adm0_name','adm1_name']).drop(['date_to_sort'],axis=1)
-
-	# save intermediate version
-	print('writing intermediate policy file to ', os.path.join(int_data_dir,"US_COVID-19_policies_reformatted.csv"))
-	formated_policy_data.to_csv(os.path.join(int_data_dir,"US_COVID-19_policies_reformatted.csv"),index=False)
-
 	return df_rows_merged , policy_keys
 
 
