@@ -8,7 +8,7 @@ import numpy as np
 path_cutoff_dates = cutil.HOME / 'codes' / 'data' / 'cutoff_dates.csv'
 cutoff_dates = pd.read_csv(path_cutoff_dates)
 cutoff = pd.to_datetime(
-    str(cutoff_dates.set_index('tag').loc['default', ' end_date'])
+    str(cutoff_dates.set_index('tag').loc['default', 'end_date'])
 )
 use_cutoff = True
 
@@ -101,7 +101,7 @@ for country in full:
         message = "Column contains nulls: " + col
         test_condition(nulls_not_found, country, message)
     
-    # Check that all columns are in template
+    # Check that all columns are in templateJM
     missing_from_template = set(df.columns) - set(template.columns)
     template_mismatch = len(missing_from_template) == 0
     message = "Columns missing from template ([country]_processed.csv): " + str(sorted(missing_from_template))
