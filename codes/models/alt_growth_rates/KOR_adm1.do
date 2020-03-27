@@ -29,6 +29,22 @@ tsset adm1_id t, daily
 replace active_cases = . if cum_confirmed_cases < 10 
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 
+// flag which admin unit has longest series
+tab adm1_name if active_cases!=., sort 
+bysort adm1_name: egen adm1_obs_ct = count(active_cases)
+
+// if multiple admin units have max number of days w/ confirmed cases, 
+// choose the admin unit with the max number of confirmed cases 
+bysort adm1_name: egen adm1_max_cases = max(active_cases)
+egen max_obs_ct = max(adm1_obs_ct)
+bysort adm1_obs_ct: egen max_obs_ct_max_cases = max(adm1_max_cases) 
+
+gen longest_series = adm1_obs_ct==max_obs_ct & adm1_max_cases==max_obs_ct_max_cases
+drop adm1_obs_ct adm1_max_cases max_obs_ct max_obs_ct_max_cases
+
+sort adm1_id t
+tab adm1_name if longest_series==1 & active_cases!=.
+
 //construct dep vars
 lab var active_cases "active cases"
 
@@ -54,19 +70,37 @@ replace D_l_active_cases = transmissionrate if D_l_active_cases_raw < 0.04
 
 //------------------------------------------------------------------------ ACTIVE CASES ADJUSTMENT: END
 
+
 //quality control
 replace D_l_active_cases = . if D_l_active_cases < 0 // trying to not model recoveries
-gen testing_regime_change_feb29 = (t==21974) // change in testing regime
+
+
+//------------------testing regime changes
+
+// grab each date of any testing regime change
+preserve
+	collapse (min) t, by(testing_regime)
+	sort t //should already be sorted but just in case
+	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
+	levelsof t, local(testing_change_dates)
+restore
+
+// create a dummy for each testing regime change date
+foreach t_chg of local testing_change_dates{
+	local t_str = string(`t_chg', "%td")
+	gen testing_regime_change_`t_str' = t==`t_chg'
+}
+
 
 //------------------diagnostic
 
 // diagnostic plot of trends with sample avg as line
 reg D_l_active_cases
 gen sample_avg = _b[_cons]
-replace sample_avg = . if adm1_name ~= "Seoul" & e(sample) == 1
+replace sample_avg = . if longest_series==0 & e(sample) == 1
 
 reg D_l_active_cases i.t
-predict day_avg if adm1_name  == "Seoul" & e(sample) == 1
+predict day_avg if longest_series==1 & e(sample) == 1
 lab var day_avg "Observed avg. change in log cases"
 
 tw (sc D_l_active_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
@@ -183,10 +217,10 @@ sum treatment
 
 // computing daily avgs in sample, store with a single panel unit (longest time series)
 reg y_actual i.t
-predict m_y_actual if adm1_name=="Seoul"
+predict m_y_actual if longest_series==1
 
 reg y_counter i.t
-predict m_y_counter if adm1_name=="Seoul"
+predict m_y_counter if longest_series==1
 
 
 postclose results

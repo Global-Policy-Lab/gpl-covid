@@ -65,7 +65,9 @@ replace cum_confirmed_cases = . if t == 21976 | t == 21977
 
 // grab each date of any testing regime change
 preserve
-	collapse (min) t if testing_regime>0, by(testing_regime)
+	collapse (min) t, by(testing_regime)
+	sort t //should already be sorted but just in case
+	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
 	levelsof t, local(testing_change_dates)
 restore
 
