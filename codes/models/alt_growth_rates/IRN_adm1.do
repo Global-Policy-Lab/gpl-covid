@@ -223,9 +223,9 @@ g t_random2 = t + rnormal(0,1)/10
 
 // Graph of predicted growth rates (FOR FIG3)
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+|| (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
 (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
@@ -269,16 +269,16 @@ predict day_avg_thr if adm1_name  == "Tehran" & e(sample) == 1
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
-tw (rspike ub_y_actual_thr lb_y_actual_thr t,  lwidth(vthin) color(blue*.5)) ///
+tw (rspike ub_y_actual_thr lb_y_actual_thr t, lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter_thr lb_counter_thr t, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual_thr t,  msize(tiny) color(blue*.5) ) ///
+|| (scatter y_actual_thr t, msize(tiny) color(blue*.5) ) ///
 (scatter y_counter_thr t, msize(tiny) color(red*.5)) ///
 (connect y_actual_thr t, color(blue) m(square) lpattern(solid)) ///
 (connect y_counter_thr t, color(red) lpattern(dash) m(Oh)) ///
 (sc day_avg_thr t, color(black)) ///
 if e(sample), ///
-title("Tehran, Iran", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
+title("Tehran, Iran", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
 xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/sub_natl_growth_rates/Tehran_adm1_conf_cases_growth_rates_fixedx.gph, replace)
+saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
 
