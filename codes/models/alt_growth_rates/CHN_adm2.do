@@ -152,6 +152,8 @@ gen x2 = travel_ban_local_L0_to_L7+ travel_ban_local_L8_to_L14 +travel_ban_local
 tab t x1
 tab t x2
 
+//------------------main estimates
+
 // output data used for reg
 outsheet using "models/reg_data/CHN_reg_data.csv", comma replace
 
@@ -263,10 +265,9 @@ replace y_actual = 0 if y_actual < 0
 replace y_counter = 0 if y_counter < 0
 
 // fix so there are no negative growth rates in error bars
-gen lb_y_actual_pos = lb_y_actual 
-replace lb_y_actual_pos = 0 if lb_y_actual<0 & lb_y_actual!=.
-gen ub_y_actual_pos = ub_y_actual 
-replace ub_y_actual_pos = 0 if ub_y_actual<0 & ub_y_actual!=.
+foreach var of varlist lb_y_actual ub_y_actual lb_counter ub_counter{
+	replace `var' = 0 if `var'<0 & `var'!=.
+}
 
 // the mean here is the avg "biological" rate of initial spread (FOR Fig2)
 sum y_counter
@@ -299,7 +300,7 @@ g t_random2 = t + rnormal(0,1)/10
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
-tw (rspike ub_y_actual_pos lb_y_actual_pos t_random,  lwidth(vthin) color(blue*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
@@ -313,7 +314,7 @@ yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph, replace)
 
 // for legend
-tw (rspike ub_y_actual_pos lb_y_actual_pos t_random,  lwidth(vthin) color(blue*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
@@ -360,8 +361,9 @@ predictnl y_counter_wh =  _b[_cons] if e(sample), ci(lb_counter_wh ub_counter_wh
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars
-gen lb_y_actual_wh_pos = lb_y_actual_wh 
-replace lb_y_actual_wh_pos = 0 if lb_y_actual_wh<0 & lb_y_actual_wh!=.
+foreach var of varlist y_actual_wh y_counter_wh lb_y_actual_wh ub_y_actual_wh lb_counter_wh ub_counter_wh {
+	replace `var' = 0 if `var'<0 & `var'!=.
+}
 
 // Observed avg change in log cases
 reg D_l_active_cases i.t if adm2_name  == "Wuhan"
@@ -369,7 +371,7 @@ predict day_avg_wh if adm2_name  == "Wuhan" & e(sample) == 1
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
-tw (rspike ub_y_actual_wh lb_y_actual_wh_pos t,  lwidth(vthin) color(blue*.5)) ///
+tw (rspike ub_y_actual_wh lb_y_actual_wh t,  lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter_wh lb_counter_wh t, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual_wh t,  msize(tiny) color(blue*.5) ) ///
 (scatter y_counter_wh t, msize(tiny) color(red*.5)) ///
