@@ -36,7 +36,7 @@ def merge_policies_with_population_on_level(policies, adm_level, country_code, e
         adm_level (int): Adm-level of requested populations.
         country_code (str): Three-letter country code of requested populations
     Kwargs:
-       errors (str): Error-handling behavior. Options are "raise", "ignore", "warn", and "error" (default)
+       errors (str): Error-handling behavior. Options are "raise" (default), "ignore", and "warn"
 
     Returns:
         pandas.DataFrame: `policies` with a new column, "adm_{`adm_level`}_pop"
