@@ -1,6 +1,7 @@
 import codes.utils as cutil
 import pandas as pd
 import numpy as np
+import warnings
 
 def get_adm_fields(adm_level, field_name='name'):
     """Get list of adm-fields from `adm_level` up to the adm1 level"""
@@ -27,7 +28,7 @@ def get_adm_pops(adm_level, country_code):
                 'population':f'adm{adm_level}_pop'
             }))
 
-def merge_policies_with_population_on_level(policies, adm_level, country_code):
+def merge_policies_with_population_on_level(policies, adm_level, country_code, errors='raise'):
     """Assign all populations at an adm-level to DataFrame of policies
 
     Args:
@@ -47,9 +48,24 @@ def merge_policies_with_population_on_level(policies, adm_level, country_code):
         left_on=get_adm_fields(adm_level), 
         right_index=True,   
     )
+
+    # Check that all non-"All" populations are assigned
+    condition = policies.loc[policies[f"adm{adm_level}_name"] != "All", f"adm{adm_level}_pop"].isnull().sum() == 0
+    if errors=="raise":
+        assert condition            
+    elif errors=="ignore":
+        pass
+    elif not condition:
+        null_adm = sorted(set(policies.loc[policies[f"adm{adm_level}_pop"].isnull(), f'adm{adm_level}_name']) - set(['All']))
+        message = f"Population not found for adm{adm_level}_name: {null_adm}"
+        if errors=="warn":
+            warnings.warn(message)
+        else:
+            raise ValueError(message)
+
     return policies
 
-def merge_policies_with_population(policies, country_code, max_adm_level):
+def merge_policies_with_population(policies, country_code, max_adm_level, errors='raise'):
     """Assign all populations at all adm-levels to DataFrame of policies
 
     Args:
@@ -63,10 +79,25 @@ def merge_policies_with_population(policies, country_code, max_adm_level):
 
     """
     for adm_level in range(1, max_adm_level + 1):
-        policies = merge_policies_with_population_on_level(policies, adm_level, country_code)
+        policies = merge_policies_with_population_on_level(policies, adm_level, country_code, errors)
+
+        # Check that all non-"All" populations are assigned
+        condition = policies.loc[policies[f"adm{adm_level}_name"] != "All", f"adm{adm_level}_pop"].isnull().sum() == 0
+        if errors=="raise":
+            assert condition
+        elif errors=="ignore":
+            pass
+        elif not condition:
+            null_adm = sorted(set(policies.loc[policies[f"adm{adm_level}_pop"].isnull(), f'adm{adm_level}_name']) - set(['All']))
+            message = f"Population not found for adm{adm_level}_name: {null_adm}"
+            if errors=="warn":
+                warnings.warn(message)
+            else:
+                raise ValueError(message)
+
     return policies
 
-def merge_cases_with_population_on_level(epi_df, adm_level, country_code):
+def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors='raise'):
     """Assign all populations at a given adm-level to DataFrame of epidemiological (cases) data
 
     Args:
@@ -78,14 +109,31 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code):
 
     """
     adm_pops = get_adm_pops(adm_level, country_code)
-    return pd.merge(
+    result = pd.merge(
         epi_df, 
         adm_pops, 
+        how='left',
         right_index=True, 
         left_on=get_adm_fields(adm_level)
     ).rename(
         columns={f'adm{adm_level}_pop':'population'}
     )
+
+    # Check that all non-"All" populations are assigned
+    condition = result.loc[result[f'adm{adm_level}_name'] != 'All', 'population'].isnull().sum() == 0
+    if errors=="raise":
+        assert condition            
+    elif errors=="ignore":
+        pass
+    elif not condition:
+        null_adm = sorted(set(result.loc[result['population'].isnull(), f'adm{adm_level}_name']) - set(['All']))
+        message = f"Population not found for adm{adm_level}_name: {null_adm}"
+        if errors=="warn":
+            warnings.warn(message)
+        else:
+            raise ValueError(message)
+
+    return result
 
 def calculate_policy_popweights_each_row(policies, max_adm_level):
     """Assign population weights of a single policy row to DataFrame of policy data
@@ -144,7 +192,7 @@ def aggregate_policy_popweights(policies, adm_level, country_code):
     sum_cumulative = sum_each_day.join(sum_cumulative)
 
     sum_cumulative = sum_cumulative.set_index(['date_start', 'policy', f'adm{adm_level}_name'])[[f'cum_adm{adm_level}_pop_weight_perc']]
-    sum_cumulative.name = f'cum_adm{adm_level}_pop_weight_perc'
+
     policies = pd.merge(policies, sum_cumulative, how='left', left_on=['date_start', 'policy', f'adm{adm_level}_name'], right_index=True)
 
     policies[f'adm{adm_level}_pop_weight_perc'] = policies[f'cum_adm{adm_level}_pop_weight_perc']

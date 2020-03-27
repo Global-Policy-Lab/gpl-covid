@@ -343,6 +343,14 @@ path_italy_interim_province.parent.mkdir(parents=True, exist_ok=True)
 adm2_cases.to_csv(path_italy_interim_province, index=False)
 adm1_cases.to_csv(path_italy_interim_region, index=False)
 
+# Filter out rows where adm1 is known but adm2 is unknown
+
+# In[ ]:
+
+
+adm2_cases = adm2_cases[adm2_cases['adm2_name'] != 'Unknown']
+
+
 # ## Merge Health with Policies
 
 # If this changes, need to update implementation
@@ -550,14 +558,6 @@ template = pd.read_csv(path_template)
 
 missing_from_template = (set(adm1_cases.columns) | set(adm2_cases.columns)) - set(template.columns)
 assert len(missing_from_template) == 0
-
-
-# Filter out rows where adm1 is known but adm2 is unknown
-
-# In[ ]:
-
-
-adm2_cases = adm2_cases[adm2_cases['adm2_name'] != 'Unknown']
 
 
 # Save to `ITA_processed.csv`'s
