@@ -10,6 +10,8 @@ cap set scheme covid19_fig3 // optional scheme for graphs
  
 // set up time variables
 gen t = date(date, "YMD")
+keep if t <= date("20200325","YMD") // merge with outside file
+
 lab var t "date"
 gen dow = dow(t)
 gen month = month(t)
@@ -17,18 +19,19 @@ gen year = year(t)
 gen day = day(t)
 
 //clean up
-drop adm1
+drop adm1_id
 ren  adm1_name adm1
 replace adm1 = "AuvergneRhoneAlpes" if adm1 == "AuvergneRhôneAlpes"
 
 encode adm1, gen(adm1_id)
 
 //set up panel
-tsset adm1_id t, daily
+xtset adm1_id t
 
 // quality control
-local suffix = "_imputed" // either "_imputed" for imputed time serie or "" for regular time serie 
+*local suffix = "_imputed" // either "_imputed" for imputed time serie or "" for regular time serie 
 drop if cum_confirmed_cases`suffix' < 10  
+keep if t >= date("20200229","YMD") // Non stable growth before that point & missing data, only one region with +10 but no growth
 
 //construct dep vars
 lab var cum_confirmed_cases`suffix' "cumulative confirmed cases"
@@ -37,10 +40,11 @@ gen l_cum_confirmed_cases`suffix' = log(cum_confirmed_cases`suffix')
 lab var l_cum_confirmed_cases`suffix' "log(cum_confirmed_cases`suffix')"
 
 gen D_l_cum_confirmed_cases`suffix' = D.l_cum_confirmed_cases`suffix' 
-lab var D_l_cum_confirmed_cases`suffix' "change in log(cum_confirmed_cases`suffix')"
+lab var D_l_cum_confirmed_cases`suffix' "change in log(cum. confirmed cases`suffix')"
 
 //quality control
 replace D_l_cum_confirmed_cases`suffix' = . if D_l_cum_confirmed_cases`suffix' < 0 // cannot have negative changes in cumulative values
+
 //0 negative changes for France
 
 // check which admin unit has longest series
@@ -62,34 +66,46 @@ tw (sc D_l_cum_confirmed_cases`suffix' t, msize(tiny))(line sample_avg t)(sc day
 
 
 //------------------main estimates
-
+g testing_regime = t == mdy(3,15,2020) // start of stade 3, none systematic testing
+lab var testing_regime "Testing Regime Change"
 // generate policy packages
-g national_lockdown = (school_closure_national + business_closure + home_isolation) / 3 // big national lockdown policy
-g national_no_gathering = (no_gathering_national_100 + no_gathering_national_1000) / 2 // national no gathering measure
+g national_lockdown = (business_closure + home_isolation + school_closure_national) / 3 // big national lockdown policy
+lab var national_lockdown "Lockdown"
+
+g no_gathering_5000 = no_gathering_size <= 5000
+g no_gathering_1000 = no_gathering_size <= 1000
+g no_gathering_100 = no_gathering_size <= 100
+g pck_no_gathering = (no_gathering_1000 + no_gathering_100 + event_cancel + no_gathering_inside) / 4
+
+
 
 // output data used for reg
 outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
 // main regression model
 
-reghdfe D_l_cum_confirmed_cases`suffix' national_lockdown event_cancel school_closure_regional ///
- social_distance national_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+reghdfe D_l_cum_confirmed_cases`suffix' testing national_lockdown school_closure_regional ///
+ social_distance pck_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+ 
+outreg2 using "models/tables/FRA_estimates_table", word replace label ///
+ addtext(Region FE, "YES", Day-of-Week FE, "YES") title("Regression output: France")
+cap erase "models/tables/FRA_estimates_table.txt"
 
 //saving coefs
 tempfile results_file
 postfile results str18 adm0 str18 policy str18 suffix beta se using `results_file', replace
-foreach var in "event_cancel" "school_closure_regional" "social_distance" "national_no_gathering" "national_lockdown" {
+foreach var in "national_lockdown" "school_closure_regional" "social_distance" "pck_no_gathering" {
 	post results ("FRA") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 
 // effect of package of policies
-lincom event_cancel + national_lockdown + school_closure_regional + social_distance + national_no_gathering
+lincom national_lockdown + school_closure_regional + social_distance + pck_no_gathering 
+
 post results ("FRA") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 //looking at different policies
-coefplot,  keep(national_lockdown national_no_gathering event_cancel school_closure_regional  social_distance) 
-
+coefplot, xline(0) keep(national_lockdown school_closure_regional social_distance pck_no_gathering ) 
 
 //------------- checking error structure (make fig for appendix)
 
@@ -107,26 +123,28 @@ graph drop hist_fra qn_fra
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = event_cancel * _b[event_cancel] + school_closure_regional * _b[school_closure_regional] ///
-+ social_distance * _b[social_distance]+ national_no_gathering*_b[national_no_gathering] ///
-+ national_lockdown* _b[national_lockdown] + _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
+predictnl y_actual = school_closure_regional * _b[school_closure_regional] ///
++ social_distance * _b[social_distance]+ pck_no_gathering*_b[pck_no_gathering] ///
++ testing_regime * _b[testing_regime] + national_lockdown* _b[national_lockdown] ///
++ _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
-gen treatment = event_cancel * _b[event_cancel] + school_closure_regional * _b[school_closure_regional] ///
-+ social_distance * _b[social_distance]+ national_no_gathering*_b[national_no_gathering] ///
+gen treatment = school_closure_regional * _b[school_closure_regional] ///
++ social_distance * _b[social_distance]+ pck_no_gathering*_b[pck_no_gathering] ///
 + national_lockdown* _b[national_lockdown] ///
 if e(sample)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter =  testing_regime * _b[testing_regime] + _b[_cons] ///
+ + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // get ATE
 preserve
 	keep if e(sample) == 1
-	collapse  D_l_cum_confirmed_cases_imputed   event_cancel school_closure_regional social_distance national_no_gathering national_lockdown
-	predictnl ATE = event_cancel * _b[event_cancel] + school_closure_regional * _b[school_closure_regional] ///
-	+ social_distance * _b[social_distance]+ national_no_gathering*_b[national_no_gathering] ///
+	collapse  D_l_cum_confirmed_cases`suffix' school_closure_regional social_distance pck_no_gathering national_lockdown
+	predictnl ATE = school_closure_regional * _b[school_closure_regional] ///
+	+ social_distance * _b[social_distance]+ pck_no_gathering*_b[pck_no_gathering] ///
 	+ national_lockdown* _b[national_lockdown], ci(LB UB) se(sd) p(pval)
 	g adm0 = "FRA"
 	outsheet * using "models/FRA_ATE.csv", comma replace 
@@ -188,3 +206,4 @@ title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log pe
 xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/FRA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
+
