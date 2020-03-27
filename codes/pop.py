@@ -3,13 +3,14 @@ import pandas as pd
 import numpy as np
 import warnings
 
-def population_col_is_filled(df, adm_col, pop_col):
+def check_population_col_is_filled(df, adm_col, pop_col, errors="raise"):
     """Check if population column is filled
     
     Args:
         df (pandas.DataFrame): DataFrame containing population column and adm-unit column
         adm_col (str): Name of adm-unit column in `df`
         pop_col (str): Name of population column in `df`
+        errors (str): Error-handling behavior. Options are "raise" (default), "ignore", and "warn"
 
     Returns:
         tuple of (bool, list):
@@ -19,8 +20,16 @@ def population_col_is_filled(df, adm_col, pop_col):
     """
     df_without_pop = df.loc[(df[adm_col] != 'All') & (df[pop_col].isnull())]
     col_is_valid = len(df_without_pop) == 0
-    null_adm = sorted(set(df_without_pop[adm_col]))
-    return col_is_valid, null_adm
+
+    if not (col_is_valid or errors=="ignore"):
+        null_adm = sorted(set(df_without_pop[adm_col]))
+        message = f"Population not found for {adm_col}: {null_adm}"
+        if errors=="warn":
+            warnings.warn(message)
+        elif errors=="raise":
+            raise ValueError(message)
+        else:
+            raise ValueError("Choice of value for ``errors'' is not valid.")
 
 def get_adm_fields(adm_level, field_name='name'):
     """Get list of adm-fields from `adm_level` up to the adm1 level"""
@@ -71,15 +80,7 @@ def merge_policies_with_population_on_level(policies, adm_level, country_code, e
     )
 
     # Check that all non-"All" populations are assigned
-    condition, null_adm = population_col_is_filled(policies, f"adm{adm_level}_name", f"adm{adm_level}_pop")
-    if not (condition or errors=="ignore"):
-        message = f"Population not found for adm{adm_level}_name: {null_adm}"
-        if errors=="warn":
-            warnings.warn(message)
-        elif errors=="raise":
-            raise ValueError(message)
-        else:
-            raise ValueError("Choice of value for ``errors'' is not valid.")
+    check_population_col_is_filled(policies, f"adm{adm_level}_name", f"adm{adm_level}_pop", errors)
 
     return policies
 
@@ -129,15 +130,7 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors
     )
 
     # Check that all non-"All" populations are assigned
-    condition, null_adm = population_col_is_filled(result, f'adm{adm_level}_name', 'population')
-    if not (condition or errors=="ignore"):
-        message = f"Population not found for adm{adm_level}_name: {null_adm}"
-        if errors=="warn":
-            warnings.warn(message)
-        elif errors=="raise":
-            raise ValueError(message)
-        else:
-            raise ValueError("Choice of value for ``errors'' is not valid.")
+    check_population_col_is_filled(result, f'adm{adm_level}_name', 'population', errors)
 
     return result
 
