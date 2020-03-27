@@ -5,7 +5,11 @@ import numpy as np
 
 #### Settings
 
-cutoff = pd.to_datetime('2020-03-18')
+path_cutoff_dates = cutil.HOME / 'codes' / 'data' / 'cutoff_dates.csv'
+cutoff_dates = pd.read_csv(path_cutoff_dates)
+cutoff = pd.to_datetime(
+    str(cutoff_dates.set_index('tag').loc['default', ' end_date'])
+)
 use_cutoff = True
 
 path_template = cutil.DATA_PROCESSED / '[country]_processed.csv'
@@ -40,7 +44,7 @@ def test_condition(condition, country, message="", handle_setting="warning"):
 
 for country in full:
     df = full[country]
-    
+    print(country)
     adm = country_codes[country]
     adm_name = f'adm{adm}_name'
     df = df.sort_values(['date', adm_name])
@@ -97,6 +101,7 @@ for country in full:
         message = "Column contains nulls: " + col
         test_condition(nulls_not_found, country, message)
     
+    # Check that all columns are in template
     missing_from_template = set(df.columns) - set(template.columns)
     template_mismatch = len(missing_from_template) == 0
     message = "Columns missing from template ([country]_processed.csv): " + str(sorted(missing_from_template))
