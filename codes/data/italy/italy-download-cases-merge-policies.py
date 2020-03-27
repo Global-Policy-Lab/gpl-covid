@@ -11,16 +11,9 @@
 import pandas as pd
 import numpy as np
 from codes import utils as cutil
-
-end_of_analysis_date = '2020-03-18'
-policies_date = "20200318"
+from codes import pop as cpop
 
 # #### Define paths
-
-# Administrative unit names
-adm_dir = cutil.DATA_INTERIM / 'adm'
-path_adm1 = adm_dir / 'adm1' / 'adm1.csv'
-path_adm2 = adm_dir / 'adm2' / 'adm2.csv'
 
 # Template for processed dataset (output of this notebook)
 path_template = cutil.DATA_PROCESSED / '[country]_processed.csv'
@@ -30,7 +23,7 @@ dir_italy_interim = cutil.DATA_INTERIM / 'italy'
 
 # Inputs
 # CSV form of policies Google sheet
-path_italy_policies = dir_italy_raw / f'italy_policy_static_{policies_date}.csv'
+path_italy_policies = dir_italy_raw / 'ITA_policy_data_sources.csv'
 url_adm2_cases = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province.csv"
 url_adm1_cases = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
 
@@ -45,14 +38,9 @@ path_italy_interim_region = dir_italy_interim / 'italy-cases-by-region.csv'
 path_processed_region = cutil.DATA_PROCESSED / 'adm1' / 'ITA_processed.csv'
 path_processed_province = cutil.DATA_PROCESSED / 'adm2' / 'ITA_processed.csv'
 
-
 # ## Download and read raw data from Github
 
 # #### Read inputs
-
-# Administrative unit names
-adm1_df = pd.read_csv(path_adm1)
-adm2_df = pd.read_csv(path_adm2)
 
 # Columns in template (i.e. columns allowed in output)
 template_cols = set(pd.read_csv(path_template).columns)
@@ -128,15 +116,12 @@ assert adm1_cases['lon'].isnull().sum() == 0
 adm2_cases['adm2_name'] = adm2_cases['adm2_name'].replace(
     'In fase di definizione/aggiornamento', 'Unknown')
 
-
 # Drop unnecessary column
 
 # In[ ]:
 
-
 adm1_cases = adm1_cases.drop(columns=[col for col in adm1_cases.columns if col not in replace_dict.values()])
 adm2_cases = adm2_cases.drop(columns=[col for col in adm2_cases.columns if col not in replace_dict.values()])
-
 
 # Impute cumulative confirmed cases at `adm2` level on the first day of the dataset (2/24/2020) from `adm1`
 
@@ -358,68 +343,32 @@ path_italy_interim_province.parent.mkdir(parents=True, exist_ok=True)
 adm2_cases.to_csv(path_italy_interim_province, index=False)
 adm1_cases.to_csv(path_italy_interim_region, index=False)
 
+# Filter out rows where adm1 is known but adm2 is unknown
+
+# In[ ]:
+
+
+adm2_cases = adm2_cases[adm2_cases['adm2_name'] != 'Unknown']
+
 
 # ## Merge Health with Policies
 
-# Clean data
-policies_full['Date'] = pd.to_datetime(policies_full['Date'])
-policies_full['Policy'] = policies_full['Policy'].str.strip()
+# If this changes, need to update implementation
+assert policies_full['date_end'].notnull().sum() == 0
 
-# Convert 'Opt' to indicator variable
-policies_full['Opt'] = policies_full['Opt'].replace({"Y":1, "N":0})
-policies_full['Opt'] = policies_full['Opt'].fillna(0)
+# Clean data
+policies_full['date_start'] = pd.to_datetime(policies_full['date_start'])
+policies_full['policy'] = policies_full['policy'].str.strip()
+
+# Convert 'optional' to indicator variable
+policies_full['optional'] = policies_full['optional'].replace({"Y":1, "N":0})
+policies_full['optional'] = policies_full['optional'].fillna(0)
 
 # Set default values for null fields
 policies_full['adm0_name'] = policies_full['adm0_name'].fillna('Italy')
-policies_full['adm1_affected'] = policies_full['adm1_affected'].fillna('All')
-policies_full['adm2_affected'] = policies_full['adm2_affected'].fillna('All')
-policies_full['adm3_affected'] = policies_full['adm3_affected'].fillna('All')
-
-# Check that population weights are all there
-assert len(policies_full[policies_full['adm1_pop_weight_perc_affected'].isnull()]) == 0
-assert len(policies_full[policies_full['adm2_pop_weight_perc_affected'].isnull()]) == 0
-
-# Remove any duplicates, grouping on relevant columns
-policies = policies_full[
-    ['adm3_affected','adm2_pop_weight_perc_affected','adm2_affected', 
-     'adm1_pop_weight_perc_affected','adm1_affected','adm0_name',
-     'Date','Policy','Opt']
-].drop_duplicates()
-
-
-# In[ ]:
-
-
-# If this fails, have to implement `testing_regime` as categorical variable
-# This works right now because only one change in "testing_regime", a categorical variable
-assert policies.groupby('Policy')['Policy'].count()['testing_regime'] == 1
-
-
-# Define `home_isolation_partial` as `home_isolation` with a relative weight of 0.5
-
-# In[ ]:
-
-
-policies['home_isolation_partial'] = False
-policies.loc[policies['Policy'] == 'home_isolation_partial', 'home_isolation_partial'] = True
-
-policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm2_pop_weight_perc_affected'] = policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm2_pop_weight_perc_affected'] * 0.5
-policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm1_pop_weight_perc_affected'] = policies.loc[policies['Policy'] == 'home_isolation_partial', 'adm1_pop_weight_perc_affected'] * 0.5
-policies['Policy'] = policies['Policy'].replace('home_isolation_partial', 'home_isolation')
-
-
-# Replace optional policies with `policy_name` to `policy_name_opt`
-
-# In[ ]:
-
-
-policies.loc[policies['Opt'] == 1, 'Policy'] = policies.loc[policies['Opt'] == 1, 'Policy'] + optional_suffix
-
-
-# Ensure all policies listed have corresponding adm-units in health data
-
-# In[ ]:
-
+policies_full['adm1_name'] = policies_full['adm1_name'].fillna('All')
+policies_full['adm2_name'] = policies_full['adm2_name'].fillna('All')
+policies_full['adm3_name'] = policies_full['adm3_name'].fillna('All')
 
 # Map some regions/provinces in policy dataset to corresponding names in health data
 replace_dict = {
@@ -430,68 +379,75 @@ replace_dict = {
     'Venice':'Venezia',
     'Pesaro and Urbino':'Pesaro e Urbino',
     'Apulia':'Puglia', 
+    "Vo'Eugane":'Vò',
 }
 
 # Standardize naming between policy and health data
-policies['adm1_affected'] = policies['adm1_affected'].replace(replace_dict)
-policies['adm2_affected'] = policies['adm2_affected'].replace(replace_dict)
+policies_full['adm1_name'] = policies_full['adm1_name'].replace(replace_dict)
+policies_full['adm2_name'] = policies_full['adm2_name'].replace(replace_dict)
+policies_full['adm3_name'] = policies_full['adm3_name'].replace(replace_dict)
 
-adm1_not_found = set(policies['adm1_affected'].unique()) - set(adm1_cases['adm1_name'].unique()) - set(['All'])
-adm2_not_found = set(policies['adm2_affected'].unique()) - set(adm2_cases['adm2_name'].unique()) - set(['All'])
+# Remove any duplicates, grouping on relevant columns
+policies = policies_full[
+    ['adm3_name','adm2_name','adm1_name','adm0_name',
+     'date_start','policy','policy_intensity', 'optional']
+].drop_duplicates()
+
+
+# In[ ]:
+
+
+# If this fails, have to implement `testing_regime` as categorical variable
+# This works right now because only one change in "testing_regime", a categorical variable
+assert policies.groupby('policy')['policy'].count()['testing_regime'] == 1
+
+
+# Replace optional policies with `policy_name` to `policy_name_opt`
+
+# In[ ]:
+
+
+policies.loc[policies['optional'] == 1, 'policy'] = policies.loc[policies['optional'] == 1, 'policy'] + optional_suffix
+
+
+# Ensure all policies listed have corresponding adm-units in health data
+
+# In[ ]:
+
+adm1_not_found = set(policies['adm1_name'].unique()) - set(adm1_cases['adm1_name'].unique()) - set(['All'])
+adm2_not_found = set(policies['adm2_name'].unique()) - set(adm2_cases['adm2_name'].unique()) - set(['All'])
 
 assert len(adm1_not_found) == 0
 assert len(adm2_not_found) == 0
 
+## Merge Policies and Cases with Population, calculate pop-weights
 
-# Get population of autonomous provinces, coded as regions and provinces in health data, from region data
+country_code = 'ITA'
+max_adm_level = 3
 
-# In[ ]:
+# Assign "population" column to each DataFrame that has a corresponding `_processed.csv` file
+adm1_cases = cpop.merge_cases_with_population_on_level(adm1_cases, 1, country_code)
+adm2_cases = cpop.merge_cases_with_population_on_level(adm2_cases, 2, country_code)
 
+policies = cpop.merge_policies_with_population(policies, country_code, max_adm_level)
+policies = cpop.calculate_policy_popweights_each_row(policies, 2)
+policies = cpop.aggregate_policy_popweights(policies, 1, country_code)
+policies = cpop.aggregate_policy_popweights(policies, 2, country_code)
+# End of population assignment
 
-# Bolzano appears in the regions and provinces datasets
-adm2_df.loc[adm2_df['adm1_name'] == 'P.A. Bolzano', 'population'] = (
-    adm1_df.loc[adm1_df['adm1_name'] == 'P.A. Bolzano', 'population'].to_numpy()[0]
-)
-
-# Trento appears in the regions and provinces datasets
-adm2_df.loc[adm2_df['adm1_name'] == 'P.A. Trento', 'population'] = (
-    adm1_df.loc[adm1_df['adm1_name'] == 'P.A. Trento', 'population'].to_numpy()[0]
-)
-
-# Trentino-Alto Adige is redundant here since Bolzano + Trento == Trentino-Alto Adige
-adm1_df = adm1_df.loc[adm1_df['adm1_name'] != 'Trentino-Alto Adige']
-adm2_df = adm2_df.loc[adm2_df['adm1_name'] != 'Trentino-Alto Adige']
-
-
-# Assign populations by adm-unit
-
-# In[ ]:
-
-
-adm1_pops = adm1_df.loc[adm1_df['adm0_name'] == 'ITA'].set_index('adm1_name')['population']
-
-adm2_pops = adm2_df.loc[adm2_df['adm0_name'] == 'ITA'].set_index('adm2_name')['population']
-
-adm1_cases['population'] = adm1_cases['adm1_name'].apply(
-    lambda adm1: adm1_pops.loc[adm1] if adm1 in adm1_pops else np.nan
-)
-
-adm2_cases['population'] = adm2_cases['adm2_name'].apply(
-    lambda adm2: adm2_pops.loc[adm2] if adm2 in adm2_pops else np.nan
-)
-
-assert set(adm2_cases.loc[adm2_cases['population'].isnull(), 'adm2_name']) == set(['Unknown'])
+# Check that population weights are all there
+assert len(policies[policies['adm1_pop_weight_perc'].isnull()]) == 0
+assert len(policies[policies['adm2_pop_weight_perc'].isnull()]) == 0
+assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
+assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
+assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
 assert adm1_cases['population'].isnull().sum() == 0
-
-
-# Interpret `home_isolation_partial` as `home_isolation` with a 1/2 multiplier
+assert adm2_cases['population'].isnull().sum() == 0
 
 # In[ ]:
 
-
-adm1_policies = pd.DataFrame(policies.groupby(['Date', 'adm1_affected', 'Policy', 'Opt', 'home_isolation_partial'])['adm1_pop_weight_perc_affected'].sum()).reset_index()
-adm2_policies = pd.DataFrame(policies.groupby(['Date', 'adm1_affected', 'adm2_affected', 'Policy', 'Opt', 'home_isolation_partial'])['adm2_pop_weight_perc_affected'].sum()).reset_index()
-
+adm1_policies = policies[['date_start', 'adm1_name', 'policy', 'optional', 'policy_intensity', 'adm1_pop_weight_perc']].drop_duplicates()
+adm2_policies = policies[['date_start', 'adm1_name', 'adm2_name', 'policy', 'optional', 'policy_intensity', 'adm2_pop_weight_perc']].drop_duplicates()
 
 # Assign policy indicators
 
@@ -501,7 +457,7 @@ adm2_policies = pd.DataFrame(policies.groupby(['Date', 'adm1_affected', 'adm2_af
 exclude_from_popweights = ['testing_regime', 'travel_ban_intl_in', 'travel_ban_intl_out']
 
 # Initialize policy columns in health data
-for policy_name in policies['Policy'].unique():
+for policy_name in policies['policy'].unique():
     adm1_cases[policy_name] = 0
     adm2_cases[policy_name] = 0
     
@@ -510,54 +466,63 @@ for policy_name in policies['Policy'].unique():
         adm1_cases[policy_name + popweighted_suffix] = 0
         adm2_cases[policy_name + popweighted_suffix] = 0
 
-def assign_policy_variables(adm_cases, policy_on_mask, policy, partial, perc_affected):
-    # Policies originally coded as 'home_isolation_partial' get 0.5 weight as 'home_isolation'
-    policy_on_value = 1 if not (policy == 'home_isolation' and partial == True) else 0.5
+def assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensity, perc_name):
+    policy_on_value = 1
     
-    adm_cases.loc[policy_on_mask, policy] = policy_on_value
+    adm_cases.loc[policy_on_mask, policy] = policy_on_value * intensity
     
     if policy not in exclude_from_popweights:
-        adm_cases.loc[policy_on_mask, policy + popweighted_suffix] = perc_affected
+        adm_cases.loc[policy_on_mask, policy + popweighted_suffix] = perc_name * intensity
     
     return adm_cases
         
-for date, policy, optional, adm, perc_affected, partial in adm1_policies[
-    ['Date', 'Policy', 'Opt', 'adm1_affected', 'adm1_pop_weight_perc_affected', 'home_isolation_partial']
-].to_numpy():
+def assign_adm1_policy_variables(adm1_cases, adm1_policies):    
     
-    # All policies on or after policy was enacted, where one of these conditions applies:
-        # The policy applies to all Adm1
-        # This Adm1 is named explicitly
-    policy_on_mask = (
-        (adm1_cases['date'] >= date) &
-        (
-            (adm1_cases['adm1_name'] == adm) | (adm == 'All')
-        )
-    )
-    
-    adm1_cases = assign_policy_variables(adm1_cases, policy_on_mask, policy, partial, perc_affected)
-    
-for date, policy, optional, adm1, adm2, perc_affected, partial in adm2_policies[
-    ['Date', 'Policy', 'Opt', 'adm1_affected', 'adm2_affected', 'adm2_pop_weight_perc_affected', 'home_isolation_partial']
-].to_numpy():
-    
-    # All policies on or after policy was enacted, where one of these conditions applies:
-        # The policy applies to all Adm1
-        # This Adm2 is named explicitly
-        # This Adm2's Adm1 is named explicitly, and Adm2 is listed as "All" (i.e. all under that Adm1)
-    policy_on_mask = (
-        (adm2_cases['date'] >= date) &
-        (
-            (adm2_cases['adm2_name'] == adm2) | 
-            (adm1 == 'All') | 
+    for date, policy, optional, adm, perc_name, intensity in adm1_policies[
+        ['date_start', 'policy', 'optional', 'adm1_name', 'adm1_pop_weight_perc', 'policy_intensity']
+    ].to_numpy():
+
+        # All policies on or after policy was enacted, where one of these conditions applies:
+            # The policy applies to all Adm1
+            # This Adm1 is named explicitly
+        policy_on_mask = (
+            (adm1_cases['date'] >= date) &
             (
-                (adm2 == 'All') & (adm1 == adm2_cases['adm1_name'])
+                (adm1_cases['adm1_name'] == adm) | (adm == 'All')
             )
         )
-    )
 
-    adm2_cases = assign_policy_variables(adm2_cases, policy_on_mask, policy, partial, perc_affected)
+        adm1_cases = assign_policy_variable_from_mask(adm1_cases, policy_on_mask, policy, intensity, perc_name)
+    
+    return adm1_cases
 
+def assign_adm2_policy_variables(adm2_cases, adm2_policies):
+
+    for date, policy, optional, adm1, adm2, perc_name, intensity in adm2_policies[
+        ['date_start', 'policy', 'optional', 'adm1_name', 'adm2_name', 'adm2_pop_weight_perc', 'policy_intensity']
+    ].to_numpy():
+
+        # All policies on or after policy was enacted, where one of these conditions applies:
+            # The policy applies to all Adm1
+            # This Adm2 is named explicitly
+            # This Adm2's Adm1 is named explicitly, and Adm2 is listed as "All" (i.e. all under that Adm1)
+        policy_on_mask = (
+            (adm2_cases['date'] >= date) &
+            (
+                (adm2_cases['adm2_name'] == adm2) | 
+                (adm1 == 'All') | 
+                (
+                    (adm2 == 'All') & (adm1 == adm2_cases['adm1_name'])
+                )
+            )
+        )
+
+        adm2_cases = assign_policy_variable_from_mask(adm2_cases, policy_on_mask, policy, intensity, perc_name)
+        
+    return adm2_cases
+
+adm1_cases = assign_adm1_policy_variables(adm1_cases, adm1_policies)
+adm2_cases = assign_adm2_policy_variables(adm2_cases, adm2_policies)
 
 # Count number of policies in each health-policy dataset
 
@@ -566,7 +531,7 @@ for date, policy, optional, adm1, adm2, perc_affected, partial in adm2_policies[
 
 adm1_cases['policies_enacted'] = 0
 adm2_cases['policies_enacted'] = 0
-for policy_name in policies['Policy'].unique():
+for policy_name in policies['policy'].unique():
     adm1_cases['policies_enacted'] += adm1_cases[policy_name]
     adm2_cases['policies_enacted'] += adm2_cases[policy_name]
 
@@ -595,28 +560,12 @@ missing_from_template = (set(adm1_cases.columns) | set(adm2_cases.columns)) - se
 assert len(missing_from_template) == 0
 
 
-# Filter dataset to rows on or before cutoff date
-
-# In[ ]:
-
-
-adm1_cases = adm1_cases[adm1_cases['date'] <= end_of_analysis_date]
-adm2_cases = adm2_cases[adm2_cases['date'] <= end_of_analysis_date]
-
-
-# Filter out rows where adm1 is known but adm2 is unknown
-
-# In[ ]:
-
-
-adm2_cases = adm2_cases[adm2_cases['adm2_name'] != 'Unknown']
-
-
 # Save to `ITA_processed.csv`'s
 
 # In[ ]:
 
+adm1_cases = adm1_cases.sort_values(['date', 'adm1_name'], ascending=True)
+adm2_cases = adm2_cases.sort_values(['date', 'adm2_name'], ascending=True)
 
 adm1_cases.to_csv(path_processed_region, index=False)
 adm2_cases.to_csv(path_processed_province, index=False)
-
