@@ -53,17 +53,15 @@ def merge_policies_with_population_on_level(policies, adm_level, country_code, e
 
     # Check that all non-"All" populations are assigned
     condition = policies.loc[policies[f"adm{adm_level}_name"] != "All", f"adm{adm_level}_pop"].isnull().sum() == 0
-    if errors=="raise":
-        assert condition            
-    elif errors=="ignore":
-        pass
-    elif not condition:
+    if not (condition or errors=="ignore"):
         null_adm = sorted(set(policies.loc[policies[f"adm{adm_level}_pop"].isnull(), f'adm{adm_level}_name']) - set(['All']))
         message = f"Population not found for adm{adm_level}_name: {null_adm}"
         if errors=="warn":
             warnings.warn(message)
-        else:
+        elif errors=="raise":
             raise ValueError(message)
+        else:
+            raise ValueError("Choice of value for ``errors'' is not valid.")
 
     return policies
 
