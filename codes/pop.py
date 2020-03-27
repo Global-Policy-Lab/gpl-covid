@@ -83,20 +83,6 @@ def merge_policies_with_population(policies, country_code, max_adm_level, errors
     for adm_level in range(1, max_adm_level + 1):
         policies = merge_policies_with_population_on_level(policies, adm_level, country_code, errors)
 
-        # Check that all non-"All" populations are assigned
-        condition = policies.loc[policies[f"adm{adm_level}_name"] != "All", f"adm{adm_level}_pop"].isnull().sum() == 0
-        if errors=="raise":
-            assert condition
-        elif errors=="ignore":
-            pass
-        elif not condition:
-            null_adm = sorted(set(policies.loc[policies[f"adm{adm_level}_pop"].isnull(), f'adm{adm_level}_name']) - set(['All']))
-            message = f"Population not found for adm{adm_level}_name: {null_adm}"
-            if errors=="warn":
-                warnings.warn(message)
-            else:
-                raise ValueError(message)
-
     return policies
 
 def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors='raise'):
@@ -126,17 +112,15 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors
 
     # Check that all non-"All" populations are assigned
     condition = result.loc[result[f'adm{adm_level}_name'] != 'All', 'population'].isnull().sum() == 0
-    if errors=="raise":
-        assert condition            
-    elif errors=="ignore":
-        pass
-    elif not condition:
+    if not (condition or errors=="ignore"):
         null_adm = sorted(set(result.loc[result['population'].isnull(), f'adm{adm_level}_name']) - set(['All']))
         message = f"Population not found for adm{adm_level}_name: {null_adm}"
         if errors=="warn":
             warnings.warn(message)
-        else:
+        elif errors=="raise":
             raise ValueError(message)
+        else:
+            raise ValueError("Choice of value for ``errors'' is not valid.")
 
     return result
 
