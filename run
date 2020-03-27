@@ -54,7 +54,6 @@ python codes/data/korea/korea-interim-to-processed.py
 # USA
 printf "***Processing USA data***\n"
 python codes/data/usa/merge_policy_and_cases.py
-python codes/data/usa/filter-processed-to-end-date.py
 Rscript codes/data/usa/check_health_data.R
 
 

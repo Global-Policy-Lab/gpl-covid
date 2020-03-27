@@ -34,9 +34,6 @@ ssc install coefplot, replace
 ssc install filelist, replace
 ```
 
-## Data Documentation
-A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
-
 ## Code Structure
 ```text
 codes
@@ -72,7 +69,6 @@ codes
 │       ├── check_health_data.R
 │       ├── download_and_clean_JHU_usa.R
 │       ├── download_latest_covidtrackingdotcom_data.py
-│       ├── filter-processed-to-end-date.py
 │       └── merge_policy_and_cases.py
 ├── models
 │   ├── CHN_create_CBs.R
@@ -110,6 +106,9 @@ codes
 └── utils.py
 ```
 
+## Data Documentation
+A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
+
 ## Replication Steps
 
 There are four stages to our analysis:
@@ -121,7 +120,7 @@ There are four stages to our analysis:
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was performed through manual downloading and/or processing of datasets and is described in as much detail as possible. The sections should be run in the order listed, as some files from later sections will depend on those from earlier sections (e.g. the geographical and population data).
 
-For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Appendix. A version that was frozen at the time of submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](references/data_sources_static_20200321.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
+For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Appendix. A version that was frozen at the time of submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](references/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
 #### Geographical and population data
 1. `python codes/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries). **Note:** To run this script, you will need a U.S. Census API key. See [Setup](##Setup)
@@ -161,7 +160,7 @@ For the United States, pieces of this policy/testing regime data collection pipe
 #### Epidemiological data
 
 ##### Multi-country
-1. `Rscript codes/data/multi_country/download_6_countries_JHU.R`: Downloads 6 countries' data from the Johns Hopkins University Data underlying the dashboard [here](https://coronavirus.jhu.edu/map.html).
+1. `Rscript codes/data/multi_country/download_6_countries_JHU.R`: Downloads 6 countries' data from the Johns Hopkins University Data underlying [their dashboard](https://coronavirus.jhu.edu/map.html). **Note:** The JHU dataset format has been changing frequently, so it is possible that this script will need to be modified.
 
 ##### China
 1. For data from January 24, 2020 onwards, we relied on [an open source GitHub project](https://github.com/BlankerL/DXY-COVID-19-Data). Download the data and save it to [data/raw/china/DXYArea.csv](data/raw/china/DXYArea.csv).
@@ -210,8 +209,7 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 
 ##### United States
 1. `python codes/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
-2. (optional) `python codes/data/usa/filter-processed-to-end-date.py`: Run the script to filter [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv) to exclude data after 3/18, if you want to replicate our original dataset.
-3. (optional) `Rscript codes/data/usa/check_health_data.R`: Confirm that known data quality issues have been dealt with.
+2. (optional) `Rscript codes/data/usa/check_health_data.R`: Confirm that known data quality issues have been dealt with.
 
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
