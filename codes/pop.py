@@ -74,7 +74,7 @@ def merge_policies_with_population(policies, country_code, max_adm_level, errors
         max_adm_level (int): Adm-level at and below which populations should be assigned, down to adm1
             e.g. `max_adm_level` == 3 would assign populations at adm-levels 1, 2, and 3
     Kwargs:
-       errors (str): Error-handling behavior. Options are "raise", "ignore", "warn", and "error" (default)
+       errors (str): Error-handling behavior. Options are "raise" (default), "ignore", and "warn"
 
     Returns:
         pandas.DataFrame: `policies` with new columns, "adm_{`adm_level`}_pop" for each `adm_level` from 1 to `max_adm_level`
