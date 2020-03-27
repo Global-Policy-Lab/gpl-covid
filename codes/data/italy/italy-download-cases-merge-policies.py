@@ -499,7 +499,7 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code):
     )
 
 def calculate_policy_popweights_each_row(policies, max_adm_level):
-    """Assign sum of population weights *added on a given day* to DataFrame of policy data
+    """Assign population weights of a single policy row to DataFrame of policy data
 
     Args:
         policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```,
