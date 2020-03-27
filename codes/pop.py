@@ -143,7 +143,7 @@ def aggregate_policy_popweights(policies, adm_level, country_code):
 
     sum_cumulative = sum_each_day.join(sum_cumulative)
 
-    sum_cumulative = sum_cumulative.set_index(['date_start', 'policy', f'adm{adm_level}_name'])[f'cum_adm{adm_level}_pop_weight_perc']
+    sum_cumulative = sum_cumulative.set_index(['date_start', 'policy', f'adm{adm_level}_name'])[[f'cum_adm{adm_level}_pop_weight_perc']]
     sum_cumulative.name = f'cum_adm{adm_level}_pop_weight_perc'
     policies = pd.merge(policies, sum_cumulative, how='left', left_on=['date_start', 'policy', f'adm{adm_level}_name'], right_index=True)
 
