@@ -17,24 +17,37 @@ gen year = year(t)
 gen day = day(t)
 
 
-//clean up
+// clean up
 drop if adm2_name == "Unknown"
 drop adm1_id adm2_id
 encode adm1_name, gen(adm1_id)
 encode adm2_name, gen(adm2_id)
 duplicates report adm2_id t
 
-//set up panel
+// set up panel
 tsset adm2_id t, daily
 
-//quality control
+// quality control
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
-drop if t <=  21969 // start Feb 25
+drop if t < mdy(2,25,2020) // start Feb 25
 
-// check which admin unit has longest series
-tab adm2_name if cum_confirmed_cases!=., sort //use Bergamo
+// flag which admin unit has longest series
+tab adm2_name if cum_confirmed_cases!=., sort 
+bysort adm1_name adm2_name: egen adm2_obs_ct = count(cum_confirmed_cases)
 
-//construct dep vars
+// if multiple admin units have max number of days w/ confirmed cases, 
+// choose the admin unit with the max number of confirmed cases 
+bysort adm1_name adm2_name: egen adm2_max_cases = max(cum_confirmed_cases)
+egen max_obs_ct = max(adm2_obs_ct)
+bysort adm2_obs_ct: egen max_obs_ct_max_cases = max(adm2_max_cases) 
+
+gen longest_series = adm2_obs_ct==max_obs_ct & adm2_max_cases==max_obs_ct_max_cases
+drop adm2_obs_ct adm2_max_cases max_obs_ct max_obs_ct_max_cases
+
+sort adm2_id t
+tab adm2_name if longest_series==1
+
+// construct dep vars
 lab var cum_confirmed_cases "cumulative confirmed cases"
 
 gen l_cum_confirmed_cases = log(cum_confirmed_cases)
@@ -43,25 +56,35 @@ lab var l_cum_confirmed_cases "log(cum_confirmed_cases)"
 gen D_l_cum_confirmed_cases = D.l_cum_confirmed_cases 
 lab var D_l_cum_confirmed_cases "change in log(cum_confirmed_cases)"
 
-// quality control
-replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0 // cannot have negative changes in cumulative values
+// quality control: cannot have negative changes in cumulative values
+replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0 
 
 
 //--------------testing regime changes
 
-gen testing_regime_change_feb26 = (t==21971)
+*gen testing_regime_change_feb26 = (t==mdy(2,26,2020))
 
+// grab each date of any testing regime change
+preserve
+	collapse (min) t if testing_regime>0, by(testing_regime)
+	levelsof t, local(testing_change_dates)
+restore
+
+// create a dummy for each testing regime change date
+foreach t_chg of local testing_change_dates{
+	local t_str = string(`t_chg', "%td")
+	gen testing_regime_change_`t_str' = t==`t_chg'
+}
 
 //------------------diagnostic
 
 // diagnostic plot of trends with sample avg as line
 reg D_l_cum_confirmed_cases
-gen sample_avg = _b[_cons]
-replace sample_avg = . if adm2_name ~= "Bergamo" 
+gen sample_avg = _b[_cons] if longest_series==1
 
 
 reg D_l_cum_confirmed_cases i.t
-predict day_avg if adm2_name  == "Bergamo"
+predict day_avg if longest_series==1
 lab var day_avg "Observed avg. change in log cases"
 
 tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
@@ -89,7 +112,7 @@ outsheet using "models/reg_data/ITA_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
 
-//looking at different policies (similar to Fig2)
+// looking at different policies (similar to Fig2)
 coefplot, keep(p_*)
 
 tempfile results_file
@@ -147,18 +170,12 @@ preserve
 	outsheet * using "models/ITA_ATE.csv", comma replace 
 restore
 
-//quality control: don't want to be forecasting negative growth (not modeling recoveries)
-replace y_actual = 0 if y_actual < 0
-replace y_counter = 0 if y_counter < 0
-
+// quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix lb_y_actual so there are no negative growth rates in error bars
-gen lb_y_actual_pos = lb_y_actual 
-	replace lb_y_actual_pos = 0 if lb_y_actual<0 & lb_y_actual!=.
-gen ub_y_actual_pos = ub_y_actual 
-	replace ub_y_actual_pos = 0 if ub_y_actual<0 & ub_y_actual!=.
-gen lb_counter_pos = lb_counter
-	replace lb_counter_pos = 0 if lb_counter<0 & lb_counter!=.
-
+foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_counter{
+	replace `var' = 0 if `var'<0 & `var'!=.
+}
+	
 // the mean here is the avg "biological" rate of initial spread (FOR Fig2)
 sum y_counter
 post results ("ITA") ("no_policy rate") ("`suffix'") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
@@ -176,10 +193,10 @@ sum treatment
 
 // computing daily avgs in sample, store with a single panel unit (longest time series)
 reg y_actual i.t
-predict m_y_actual if adm2_name=="Bergamo"
+predict m_y_actual if longest_series==1
 
 reg y_counter i.t
-predict m_y_counter if adm2_name=="Bergamo"
+predict m_y_counter if longest_series==1
 
 
 postclose results
@@ -197,8 +214,8 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual_pos lb_y_actual_pos t_random,  lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter_pos t_random2, lwidth(vthin) color(red*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
+(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
 (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///

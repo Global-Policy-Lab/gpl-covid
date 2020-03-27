@@ -5,9 +5,6 @@
 import pandas as pd
 from codes import utils as cutil
 
-end_of_analysis_date = "2020-03-18"
-
-
 # Define paths
 template = pd.read_csv(cutil.DATA_PROCESSED / '[country]_processed.csv')
 path_kor_interim = cutil.DATA_INTERIM / 'korea' / 'KOR_interim.csv'
@@ -34,10 +31,6 @@ kor = kor.rename(columns=replace_columns)
 
 # Check that all columns are in template
 assert len(set(kor.columns) - set(template.columns)) == 0
-
-
-# Filter to 3/18 and before
-kor = kor[pd.to_datetime(kor['date']) <= pd.to_datetime(end_of_analysis_date)]
 
 
 # Output

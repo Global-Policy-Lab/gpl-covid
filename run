@@ -13,9 +13,7 @@ python codes/data/multi_country/get_adm_info.py
 
 
 ### Policy
-printf "***Downloading USA policy and testing data***\n"
-Rscript codes/data/usa/US_cleaning_school_district_closures.R
-Rscript codes/data/usa/US_pop_weight_US_policies.R
+printf "***Downloading USA testing data***\n"
 python codes/data/usa/download_latest_covidtrackingdotcom_data.py
 jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb
 
@@ -56,7 +54,6 @@ python codes/data/korea/korea-interim-to-processed.py
 # USA
 printf "***Processing USA data***\n"
 python codes/data/usa/merge_policy_and_cases.py
-python codes/data/usa/filter-processed-to-end-date.py
 Rscript codes/data/usa/check_health_data.R
 
 
