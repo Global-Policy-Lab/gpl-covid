@@ -444,7 +444,8 @@ df_shp.loc[:, 'adm2_name'] = df_shp.apply(
     axis=1)
 
 df = pd.merge(
-    df, df_shp.loc[:, ['adm1_name', 'adm2_name', 'latitude', 'longitude']],
+    df.reset_index(),
+    df_shp.loc[:, ['adm1_name', 'adm2_name', 'latitude', 'longitude']],
     how='left', on=['adm1_name', 'adm2_name'])
 
 output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -452,3 +453,4 @@ df.to_csv(output_file, index=True)
 
 print('Data Description: ', df.describe(include='all').T)
 print('Data Types: ', df.dtypes)
+print('Variables: ', df.columns)
