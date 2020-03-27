@@ -26,11 +26,12 @@ replace adm1 = "AuvergneRhoneAlpes" if adm1 == "AuvergneRhôneAlpes"
 encode adm1, gen(adm1_id)
 
 //set up panel
-tsset adm1_id t, daily
+xtset adm1_id t
 
 // quality control
-local suffix = "_imputed" // either "_imputed" for imputed time serie or "" for regular time serie 
+*local suffix = "_imputed" // either "_imputed" for imputed time serie or "" for regular time serie 
 drop if cum_confirmed_cases`suffix' < 10  
+keep if t >= date("20200229","YMD") // Non stable growth before that point & missing data, only one region with +10 but no growth
 
 //construct dep vars
 lab var cum_confirmed_cases`suffix' "cumulative confirmed cases"
@@ -43,6 +44,7 @@ lab var D_l_cum_confirmed_cases`suffix' "change in log(cum. confirmed cases`suff
 
 //quality control
 replace D_l_cum_confirmed_cases`suffix' = . if D_l_cum_confirmed_cases`suffix' < 0 // cannot have negative changes in cumulative values
+
 //0 negative changes for France
 
 // check which admin unit has longest series
@@ -76,6 +78,7 @@ g no_gathering_100 = no_gathering_size <= 100
 g pck_no_gathering = (no_gathering_1000 + no_gathering_100 + event_cancel + no_gathering_inside) / 4
 
 
+
 // output data used for reg
 outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
@@ -102,7 +105,8 @@ lincom national_lockdown + school_closure_regional + social_distance + pck_no_ga
 post results ("FRA") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 //looking at different policies
-coefplot, keep(national_lockdown school_closure_regional social_distance pck_no_gathering ) 
+coefplot, xline(0) keep(national_lockdown school_closure_regional social_distance pck_no_gathering ) 
+
 //------------- checking error structure (make fig for appendix)
 
 predict e if e(sample), resid
@@ -138,7 +142,7 @@ predictnl y_counter =  testing_regime * _b[testing_regime] + _b[_cons] ///
 // get ATE
 preserve
 	keep if e(sample) == 1
-	collapse  D_l_cum_confirmed_cases_imputed school_closure_regional social_distance pck_no_gathering national_lockdown
+	collapse  D_l_cum_confirmed_cases`suffix' school_closure_regional social_distance pck_no_gathering national_lockdown
 	predictnl ATE = school_closure_regional * _b[school_closure_regional] ///
 	+ social_distance * _b[social_distance]+ pck_no_gathering*_b[pck_no_gathering] ///
 	+ national_lockdown* _b[national_lockdown], ci(LB UB) se(sd) p(pval)
