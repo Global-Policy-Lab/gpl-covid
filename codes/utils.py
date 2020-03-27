@@ -18,7 +18,7 @@ adm3_dir_fmt = 'gadm36_{iso3}_{datestamp}.zip'
 
 CUM_CASE_MIN_FILTER = 10
 PROCESSED_DATA_ERROR_HANDLING = "warn"
-PROCESSED_DATA_DATE_CUTOFF = True
+PROCESSED_DATA_DATE_CUTOFF = False
 
 with open(HOME / "api_keys.json", "r") as f:
     API_KEYS = json.load(f)
