@@ -101,7 +101,7 @@ for country in full:
         message = "Column contains nulls: " + col
         test_condition(nulls_not_found, country, message)
     
-    # Check that all columns are in templateJM
+    # Check that all columns are in template
     missing_from_template = set(df.columns) - set(template.columns)
     template_mismatch = len(missing_from_template) == 0
     message = "Columns missing from template ([country]_processed.csv): " + str(sorted(missing_from_template))
