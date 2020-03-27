@@ -24,8 +24,7 @@ printf "***Downloading Johns Hopkins U data for all countries***\n"
 Rscript codes/data/multi_country/download_6_countries_JHU.R
 
 #### FRA
-printf "***Downloading FRA epi data***\n"
-Rscript codes/data/france/scrape_conf_cases_by_region.R
+printf "***Processing FRA epi data***\n"
 stata -b do codes/data/france/format_infected.do
 
 ### Dataset merging
