@@ -5,39 +5,15 @@ import os
 
 #### Settings
 
-path_cutoff_dates = cutil.HOME / 'codes' / 'data' / 'cutoff_dates.csv'
-cutoff_dates = pd.read_csv(path_cutoff_dates)
-cutoff = pd.to_datetime(
-    str(cutoff_dates.set_index('tag').loc['default', 'end_date'])
-)
 use_cutoff = cutil.PROCESSED_DATA_DATE_CUTOFF
+country_list = cutil.ISOS
+default_error_behavior = cutil.PROCESSED_DATA_ERROR_HANDLING
 
+path_cutoff_dates = cutil.CODES / 'data' / 'cutoff_dates.csv'
 path_template = cutil.DATA_PROCESSED / '[country]_processed.csv'
 
-template = pd.read_csv(path_template)
 
-country_codes = {
-    'CHN':2, 
-    'FRA':1, 
-    'IRN':1, 
-    'ITA':2, 
-    'KOR':1, 
-    'USA':1,
-}
-
-# Read each country's processed datasets into `processed`
-processed = dict()
-for country in country_codes:
-    processed[country] = dict()
-    max_adm = max([int(d[3:]) for d in os.listdir(cutil.DATA_PROCESSED) if d[:3] == 'adm'])
-    for adm in range(0, max_adm):
-        path_processed = cutil.DATA_PROCESSED / f'adm{adm}' / f'{country}_processed.csv'
-        if path_processed.exists():
-            df = pd.read_csv(path_processed)
-            df = df.sort_values(['date', f'adm{adm}_name'])
-            processed[country][str(adm)] = df
-
-def test_condition(condition, country, adm, message, errors=cutil.PROCESSED_DATA_ERROR_HANDLING):
+def test_condition(condition, country, adm, message, errors=default_error_behavior):
     if condition or errors == "ignore":
         return
     
@@ -49,9 +25,9 @@ def test_condition(condition, country, adm, message, errors=cutil.PROCESSED_DATA
     else:
         raise ValueError("Choice of value for ``errors'' is not valid.")
 
-def check_cutoff_date(df, country, adm):
+def check_cutoff_date(df, country, adm, cutoff_date):
     if use_cutoff:
-        past_cutoff_date = pd.to_datetime(df['date']).max() <= cutoff
+        past_cutoff_date = pd.to_datetime(df['date']).max() <= cutoff_date
         test_condition(past_cutoff_date, country, adm, "Dates exceed cutoff date")
 
 def check_balanced_panel(df, country, adm):
@@ -112,23 +88,55 @@ def check_columns_are_not_null(df, country, adm):
         nulls_not_found = df[col].isnull().sum() == 0
         test_condition(nulls_not_found, country, adm, f"Column contains nulls: {col}")
 
-def check_columns_are_in_template(df, country, adm):
+def check_columns_are_in_template(df, country, adm, template):
     # Check that all columns are in template
     missing_from_template = set(df.columns) - set(template.columns)
     template_matches = len(missing_from_template) == 0
     message = "Columns missing from template ([country]_processed.csv): " + str(sorted(missing_from_template))
     test_condition(template_matches, country, adm, message)
 
+def get_cutoff_date(path_cutoff_dates):
+    cutoff_table = pd.read_csv(path_cutoff_dates)
+    cutoff_date = pd.to_datetime(
+        str(cutoff_table.set_index('tag').loc['default', 'end_date'])
+    )
 
-# Run a series of checks on each country
-for country in processed:
-    for adm in processed[country]:
-        df = processed[country][adm]
+    return cutoff_date
 
-        check_cutoff_date(df, country, adm)
-        check_balanced_panel(df, country, adm)
-        check_latlons(df, country, adm)
-        check_cumulativity(df, country, adm)
-        check_popweights_in_bounds(df, country, adm)
-        check_columns_are_not_null(df, country, adm)
-        check_columns_are_in_template(df, country, adm)
+def get_processed_datasets():
+    # Read each country's processed datasets into `processed`
+    processed = dict()
+
+    for country in country_list:
+        processed[country] = dict()
+        max_adm = max([int(d[3:]) for d in os.listdir(cutil.DATA_PROCESSED) if d[:3] == 'adm'])
+        for adm in range(0, max_adm):
+            path_processed = cutil.DATA_PROCESSED / f'adm{adm}' / f'{country}_processed.csv'
+            if path_processed.exists():
+                df = pd.read_csv(path_processed)
+                df = df.sort_values(['date', f'adm{adm}_name'])
+                processed[country][str(adm)] = df
+
+    return processed
+
+def main():
+
+    cutoff_date = get_cutoff_date(path_cutoff_dates)
+    template = pd.read_csv(path_template)
+    processed = get_processed_datasets()
+
+    # Run a series of checks on each country
+    for country in processed:
+        for adm in processed[country]:
+            df = processed[country][adm]
+
+            check_cutoff_date(df, country, adm, cutoff_date)
+            check_balanced_panel(df, country, adm)
+            check_latlons(df, country, adm)
+            check_cumulativity(df, country, adm)
+            check_popweights_in_bounds(df, country, adm)
+            check_columns_are_not_null(df, country, adm)
+            check_columns_are_in_template(df, country, adm, template)
+
+if __name__=="__main__":
+    main()
