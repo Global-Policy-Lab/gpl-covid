@@ -1,4 +1,4 @@
-﻿# The Effect of Large-Scale Anti-Contagion Policies on the Coronavirus (COVID-19) Pandemic
+# The Effect of Large-Scale Anti-Contagion Policies on the Coronavirus (COVID-19) Pandemic
 
 This repository contains code and data necessary to replicate the findings of our paper [INSERT arXiv CITATION].
 
@@ -155,12 +155,8 @@ Policy data for all countries was manually collected from a variety of sources a
 
 For the United States, pieces of this policy/testing regime data collection pipeline are scripted. If you wish to perform those scripted portions, follow these steps:
 
-1. Begin with manually collected policy data [here](data/raw/usa/US_covid_policies_pre_school_closure_data.xlsx)
-2. To incorporate US policy on school closures due to COVID-19 into the raw policy dataset, download the most up-to-date information on school closures [here](https://www.edweek.org/ew/section/multimedia/map-coronavirus-and-school-closures.html) and save to [here](data/raw/usa/coronavirus-and-school-closures.html)
-3. `Rscript US_cleaning_school_district_closures.R`: Clean the downloaded school closures data and prepare it to be merged with the rest of the raw US policy data that was manually collected. The clean school closure data is saved [here](data/interim/usa/US_school_closures_clean.csv).
-4. `Rscript US_pop_weight_US_policies.R`: Merge the school closure data with the raw US policy data that was manually collected, create population-weighted policy variables, and save [data/interim/usa/US_COVID-19_policies.csv](data/interim/usa/US_COVID-19_policies.csv)
-5. `python codes/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
-6. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Check that detected testing regime changes make sense and discard any false detections (it is in a notebook so you should manually check the detected changes, but you may run it directly using our choices with the above command).
+1. `python codes/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
+2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Check that detected testing regime changes make sense and discard any false detections (it is in a notebook so you should manually check the detected changes, but you may run it directly using our choices with the above command).
 
 #### Epidemiological data
 
