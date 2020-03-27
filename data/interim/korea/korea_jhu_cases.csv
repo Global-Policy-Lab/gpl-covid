@@ -58,4 +58,9 @@ date,adm0_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recoveries
 2020-03-18,South Korea,8413,6789,84,1540
 2020-03-19,South Korea,8565,6934,91,1540
 2020-03-20,South Korea,8652,7018,94,1540
-2020-03-21,South Korea,NA,NA,NA,NA
+2020-03-21,South Korea,8799,7157,102,1540
+2020-03-22,South Korea,8961,5941,111,2909
+2020-03-23,South Korea,8961,5941,111,2909
+2020-03-24,South Korea,9037,5410,120,3507
+2020-03-25,South Korea,9137,5281,126,3730
+2020-03-26,South Korea,9241,4966,131,4144
