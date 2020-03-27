@@ -1,11 +1,56 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 import numpy as np
 import pandas as pd
+import geopandas as gpd
 import matplotlib.pyplot as plt
 from codes import utils as cutil
 from os.path import join
+
+
+def convert_non_monotonic_to_nan(array):
+    """Converts a numpy array to a monotonically increasing one.
+    
+    Args:
+        array (numpy.ndarray [N,]): input array
+        
+    Returns:
+        numpy.ndarray [N,]: some values marked as missing, all non-missing
+            values should be monotonically increasing
+    
+    Usage:
+        >>> convert_non_monotonic_to_nan(np.array([0, 0, 5, 3, 4, 6, 3, 7, 6, 7, 8]))
+        np.array([ 0.,  0., np.nan,  3., np.nan, np.nan,  3., np.nan,  6.,  7.,  8.])
+    """
+    keep = np.arange(0, len(array))
+    is_monotonic = False
+    while not is_monotonic:
+        is_monotonic_array = np.hstack((
+            array[keep][1:] >= array[keep][:-1], np.array(True)))
+        is_monotonic = is_monotonic_array.all()
+        keep = keep[is_monotonic_array]
+    out_array = np.full_like(array.astype(np.float), np.nan)
+    out_array[keep] = array[keep]
+    return out_array
+
+
+def log_interpolate(array):
+    """Interpolates assuming log growth.
+
+    Args:
+        array (numpy.ndarray [N,]): input array with missing values
+
+    Returns:
+        numpy.ndarray [N,]: all missing values will be filled
+
+    Usage:
+        >>> log_interpolate(np.array([0, np.nan, 2, np.nan, 4, 6, np.nan, 7, 8]))
+        np.array([0, 0, 2, 3, 4, 6, 7, 7, 8])
+    """
+    idx = np.arange(0, len(array))
+    log_array = np.log(array.astype(np.float32) + 1e-1)
+    interp_array = np.interp(
+        x=idx, xp=idx[~np.isnan(array)], fp=log_array[~np.isnan(array)])
+    return np.round(np.exp(interp_array)).astype(int)
+
 
 DATA_CHINA = cutil.DATA_RAW / "china"
 health_dxy_file = join(DATA_CHINA, 'DXYArea.csv')
@@ -13,6 +58,15 @@ health_jan_file = join(DATA_CHINA, 'china_city_health_jan.xlsx')
 policy_file = join(DATA_CHINA, 'china_city_policy.xlsx')
 pop_file = join(DATA_CHINA, 'china_city_pop.csv')
 output_file = cutil.DATA_PROCESSED / "adm2" / 'CHN_processed.csv'
+match_file = join(DATA_CHINA, 'match_china_city_name_w_adm2.csv')
+shp_file = cutil.DATA_INTERIM / 'adm' / 'adm2' / 'adm2.shp'
+
+end_date_file = cutil.HOME / 'codes' / 'data' / 'cutoff_dates.csv'
+
+end_date = pd.read_csv(end_date_file)
+end_date, = end_date.loc[end_date['tag'] == 'default', 'end_date'].values
+end_date = str(end_date)
+print('End Date: ', end_date)
 
 ## Load and clean pre 01/24 data
 
@@ -217,7 +271,7 @@ df = pd.concat([df, df_jan_merged], sort=False)
 
 # createa balanced panel
 adm = df.loc[:, ['adm0_name', 'adm1_name', 'adm2_name']].drop_duplicates()
-days = pd.date_range(start='2020-01-10', end='2020-03-18')
+days = pd.date_range(start='20200110', end=end_date)
 adm_days = pd.concat([adm.assign(date=d) for d in days])
 df = pd.merge(adm_days, df, how='left', on=['adm0_name', 'adm1_name', 'adm2_name', 'date'])
 
@@ -315,51 +369,6 @@ df.loc[:, 'testing_regime'] = (
 
 ## Multiple sanity checks, Save
 
-def convert_non_monotonic_to_nan(array):
-    """Converts a numpy array to a monotonically increasing one.
-    
-    Args:
-        array (numpy.ndarray [N,]): input array
-        
-    Returns:
-        numpy.ndarray [N,]: some values marked as missing, all non-missing
-            values should be monotonically increasing
-    
-    Usage:
-        >>> convert_non_monotonic_to_nan(np.array([0, 0, 5, 3, 4, 6, 3, 7, 6, 7, 8]))
-        np.array([ 0.,  0., np.nan,  3., np.nan, np.nan,  3., np.nan,  6.,  7.,  8.])
-    """
-    keep = np.arange(0, len(array))
-    is_monotonic = False
-    while not is_monotonic:
-        is_monotonic_array = np.hstack((
-            array[keep][1:] >= array[keep][:-1], np.array(True)))
-        is_monotonic = is_monotonic_array.all()
-        keep = keep[is_monotonic_array]
-    out_array = np.full_like(array.astype(np.float), np.nan)
-    out_array[keep] = array[keep]
-    return out_array
-
-
-def log_interpolate(array):
-    """Interpolates assuming log growth.
-
-    Args:
-        array (numpy.ndarray [N,]): input array with missing values
-
-    Returns:
-        numpy.ndarray [N,]: all missing values will be filled
-
-    Usage:
-        >>> log_interpolate(np.array([0, np.nan, 2, np.nan, 4, 6, np.nan, 7, 8]))
-        np.array([0, 0, 2, 3, 4, 6, 7, 7, 8])
-    """
-    idx = np.arange(0, len(array))
-    log_array = np.log(array.astype(np.float32) + 1e-1)
-    interp_array = np.interp(
-        x=idx, xp=idx[~np.isnan(array)], fp=log_array[~np.isnan(array)])
-    return np.round(np.exp(interp_array)).astype(int)
-
 # drop/impute non monotonic observations
 for col in ['cum_confirmed_cases', 'cum_deaths', 'cum_recoveries']:
     for _, row in adm.iterrows():
@@ -414,8 +423,32 @@ df.loc[:, 'active_cases_imputed'] = (
     df.loc[:, 'cum_recoveries_imputed'].values
 )
 
+# merge with lon lat
+df_shp = gpd.read_file(shp_file)
+df_match = pd.read_csv(match_file)
+
+df_shp = df_shp.loc[df_shp['adm0_name'] == 'CHN', :]
+
+df_shp = pd.merge(
+    df_shp, df_match,
+    left_on=['adm1_name', 'adm2_name'],
+    right_on=['shp_adm1', 'shp_adm2'],
+    how='left')
+
+df_shp.loc[:, 'adm1_name'] = df_shp.apply(
+    lambda x: x['epi_adm1'] if pd.notnull(x['epi_adm1']) else x['adm1_name'],
+    axis=1)
+
+df_shp.loc[:, 'adm2_name'] = df_shp.apply(
+    lambda x: x['epi_adm2'] if pd.notnull(x['epi_adm2']) else x['adm2_name'],
+    axis=1)
+
+df = pd.merge(
+    df, df_shp.loc[:, ['adm1_name', 'adm2_name', 'latitude', 'longitude']],
+    how='left', on=['adm1_name', 'adm2_name'])
+
 output_file.parent.mkdir(parents=True, exist_ok=True)
 df.to_csv(output_file, index=True)
-print(df.describe(include='all').T)
-print(df.dtypes)
 
+print('Data Description: ', df.describe(include='all').T)
+print('Data Types: ', df.dtypes)
