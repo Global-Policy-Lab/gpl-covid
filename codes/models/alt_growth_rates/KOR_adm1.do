@@ -70,9 +70,27 @@ replace D_l_active_cases = transmissionrate if D_l_active_cases_raw < 0.04
 
 //------------------------------------------------------------------------ ACTIVE CASES ADJUSTMENT: END
 
+
 //quality control
 replace D_l_active_cases = . if D_l_active_cases < 0 // trying to not model recoveries
-gen testing_regime_change_feb29 = (t==21974) // change in testing regime
+
+
+//------------------testing regime changes
+
+// grab each date of any testing regime change
+preserve
+	collapse (min) t, by(testing_regime)
+	sort t //should already be sorted but just in case
+	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
+	levelsof t, local(testing_change_dates)
+restore
+
+// create a dummy for each testing regime change date
+foreach t_chg of local testing_change_dates{
+	local t_str = string(`t_chg', "%td")
+	gen testing_regime_change_`t_str' = t==`t_chg'
+}
+
 
 //------------------diagnostic
 

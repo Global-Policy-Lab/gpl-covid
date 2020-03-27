@@ -62,8 +62,22 @@ replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0 // cannot hav
 
 //--------------testing regime changes
 
-gen testing_regime_change_mar13 = (t==21987) * D.testing_regime // only implmented in some states
-gen testing_regime_change_mar20 = (t==21990) * D.testing_regime // only implemented in some states
+// some testing regime changes at the state-level
+*tab adm1_name t if testing_regime>0
+
+// grab each date of any testing regime change by state
+preserve
+	collapse (min) t, by(testing_regime adm1_name)
+	sort adm1_name t //should already be sorted but just in case
+	by adm1_name: drop if _n==1 //dropping 1st testing regime of state sample (no change to control for)
+	levelsof t, local(testing_change_dates)
+restore
+
+// create a dummy for each testing regime change date w/in state
+foreach t_chg of local testing_change_dates{
+	local t_str = string(`t_chg', "%td")
+	gen testing_regime_change_`t_str' = t==`t_chg' * D.testing_regime
+}
 
 //------------------diagnostic
 

@@ -63,10 +63,24 @@ replace cum_confirmed_cases = . if t == 21976 | t == 21977
 
 //------------------testing regime changes
 
+// grab each date of any testing regime change
+preserve
+	collapse (min) t, by(testing_regime)
+	sort t //should already be sorted but just in case
+	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
+	levelsof t, local(testing_change_dates)
+restore
+
+// create a dummy for each testing regime change date
+foreach t_chg of local testing_change_dates{
+	local t_str = string(`t_chg', "%td")
+	gen testing_regime_change_`t_str' = t==`t_chg'
+}
+
 // high_screening_regime in Qom, which transitioned on Mar 6
 // assume rollout completed on Mar 13
-gen testing_regime_mar13 = t==mdy(3,13,2020)
-
+drop testing_regime_change_06mar2020
+gen testing_regime_13mar2020 = t==mdy(3,13,2020)
 
 //------------------diagnostic
 
@@ -111,7 +125,7 @@ gen p_2_x_Tehran = p_2*(adm1_name== "Tehran")
 outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran testing_regime_mar13, ///
+reghdfe D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran testing_regime_*, ///
 absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
 // saving coefs
@@ -225,7 +239,7 @@ saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, rep
 
 //-------------------------------Running the model for Tehran only 
 
-reg D_l_cum_confirmed_cases p_1 p_2 testing_regime_mar13 if adm1_name=="Tehran"
+reg D_l_cum_confirmed_cases p_1 p_2 testing_regime_* if adm1_name=="Tehran"
 post results ("IRN_Tehran") ("no_policy rate") ("`suffix'") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
 
 postclose results

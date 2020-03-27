@@ -45,7 +45,7 @@ gen longest_series = adm2_obs_ct==max_obs_ct & adm2_max_cases==max_obs_ct_max_ca
 drop adm2_obs_ct adm2_max_cases max_obs_ct max_obs_ct_max_cases
 
 sort adm2_id t
-tab adm2_name if longest_series==1
+tab adm2_name if longest_series==1 & cum_confirmed_cases!=.
 
 // construct dep vars
 lab var cum_confirmed_cases "cumulative confirmed cases"
@@ -62,11 +62,11 @@ replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0
 
 //--------------testing regime changes
 
-*gen testing_regime_change_feb26 = (t==mdy(2,26,2020))
-
 // grab each date of any testing regime change
 preserve
-	collapse (min) t if testing_regime>0, by(testing_regime)
+	collapse (min) t, by(testing_regime)
+	sort t //should already be sorted but just in case
+	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
 	levelsof t, local(testing_change_dates)
 restore
 
