@@ -3,6 +3,25 @@ import pandas as pd
 import numpy as np
 import warnings
 
+def population_col_is_filled(df, adm_col, pop_col):
+    """Check if population column is filled
+    
+    Args:
+        df (pandas.DataFrame): DataFrame containing population column and adm-unit column
+        adm_col (str): Name of adm-unit column in `df`
+        pop_col (str): Name of population column in `df`
+
+    Returns:
+        tuple of (bool, list):
+            `col_is_valid`: True if column is valid, else False
+            `null_adm`: List of adm-units missing populations
+
+    """
+    df_without_pop = df.loc[(df[adm_col] != 'All') & (df[pop_col].isnull())]
+    col_is_valid = len(df_without_pop) == 0
+    null_adm = sorted(set(df_without_pop[adm_col]))
+    return col_is_valid, null_adm
+
 def get_adm_fields(adm_level, field_name='name'):
     """Get list of adm-fields from `adm_level` up to the adm1 level"""
     return [f'adm{i}_' + field_name for i in range(1, adm_level + 1)]
@@ -52,9 +71,8 @@ def merge_policies_with_population_on_level(policies, adm_level, country_code, e
     )
 
     # Check that all non-"All" populations are assigned
-    condition = policies.loc[policies[f"adm{adm_level}_name"] != "All", f"adm{adm_level}_pop"].isnull().sum() == 0
+    condition, null_adm = population_col_is_filled(policies, f"adm{adm_level}_name", f"adm{adm_level}_pop")
     if not (condition or errors=="ignore"):
-        null_adm = sorted(set(policies.loc[policies[f"adm{adm_level}_pop"].isnull(), f'adm{adm_level}_name']) - set(['All']))
         message = f"Population not found for adm{adm_level}_name: {null_adm}"
         if errors=="warn":
             warnings.warn(message)
@@ -111,9 +129,8 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors
     )
 
     # Check that all non-"All" populations are assigned
-    condition = result.loc[result[f'adm{adm_level}_name'] != 'All', 'population'].isnull().sum() == 0
+    condition, null_adm = population_col_is_filled(result, f'adm{adm_level}_name', 'population')
     if not (condition or errors=="ignore"):
-        null_adm = sorted(set(result.loc[result['population'].isnull(), f'adm{adm_level}_name']) - set(['All']))
         message = f"Population not found for adm{adm_level}_name: {null_adm}"
         if errors=="warn":
             warnings.warn(message)
