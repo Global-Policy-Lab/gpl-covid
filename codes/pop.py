@@ -35,6 +35,8 @@ def merge_policies_with_population_on_level(policies, adm_level, country_code, e
         policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```
         adm_level (int): Adm-level of requested populations.
         country_code (str): Three-letter country code of requested populations
+    Kwargs:
+       errors (str): Error-handling behavior. Options are "raise", "ignore", "warn", and "error" (default)
 
     Returns:
         pandas.DataFrame: `policies` with a new column, "adm_{`adm_level`}_pop"
@@ -73,6 +75,8 @@ def merge_policies_with_population(policies, country_code, max_adm_level, errors
         country_code (str): Three-letter country code of requested populations
         max_adm_level (int): Adm-level at and below which populations should be assigned, down to adm1
             e.g. `max_adm_level` == 3 would assign populations at adm-levels 1, 2, and 3
+    Kwargs:
+       errors (str): Error-handling behavior. Options are "raise", "ignore", "warn", and "error" (default)
 
     Returns:
         pandas.DataFrame: `policies` with new columns, "adm_{`adm_level`}_pop" for each `adm_level` from 1 to `max_adm_level`
@@ -104,6 +108,9 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors
         epi_df (pandas.DataFrame): List of cases as formatted in ```data/processed/{`adm_level`}/{`country_code`}_processed.csv```
         adm_level (int): Adm-level of requested populations.
         country_code (str): Three-letter country code of requested populations
+    Kwargs:
+       errors (str): Error-handling behavior. Options are "raise", "ignore", "warn", and "error" (default)
+
     Returns:
         pandas.DataFrame: `epi_df` with a new column, "population"
 
