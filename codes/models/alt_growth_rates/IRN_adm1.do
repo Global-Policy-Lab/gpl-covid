@@ -27,6 +27,22 @@ tsset adm1_id t, daily
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 drop if t <= mdy(2,26,2020) // DATA QUALITY CUTOFF DATE
 
+// flag which admin unit has longest series
+tab adm1_name if cum_confirmed_cases!=., sort 
+bysort adm1_name: egen adm1_obs_ct = count(cum_confirmed_cases)
+
+// if multiple admin units have max number of days w/ confirmed cases, 
+// choose the admin unit with the max number of confirmed cases 
+bysort adm1_name: egen adm1_max_cases = max(cum_confirmed_cases)
+egen max_obs_ct = max(adm1_obs_ct)
+bysort adm1_obs_ct: egen max_obs_ct_max_cases = max(adm1_max_cases) 
+
+gen longest_series = adm1_obs_ct==max_obs_ct & adm1_max_cases==max_obs_ct_max_cases
+drop adm1_obs_ct adm1_max_cases max_obs_ct max_obs_ct_max_cases
+
+sort adm1_id t
+tab adm1_name if longest_series==1 & cum_confirmed_cases!=.
+
 //construct dep vars
 lab var cum_confirmed_cases "cumulative confirmed cases"
 
@@ -47,20 +63,32 @@ replace cum_confirmed_cases = . if t == 21976 | t == 21977
 
 //------------------testing regime changes
 
+// grab each date of any testing regime change
+preserve
+	collapse (min) t if testing_regime>0, by(testing_regime)
+	levelsof t, local(testing_change_dates)
+restore
+
+// create a dummy for each testing regime change date
+foreach t_chg of local testing_change_dates{
+	local t_str = string(`t_chg', "%td")
+	gen testing_regime_change_`t_str' = t==`t_chg'
+}
+
 // high_screening_regime in Qom, which transitioned on Mar 6
 // assume rollout completed on Mar 13
-gen testing_regime_mar13 = t==mdy(3,13,2020)
-
+drop testing_regime_change_06mar2020
+gen testing_regime_13mar2020 = t==mdy(3,13,2020)
 
 //------------------diagnostic
 
 // diagnostic plot of trends with sample avg as line
 reg D_l_cum_confirmed_cases
 gen sample_avg = _b[_cons]
-replace sample_avg = . if adm1_name ~= "Qom" & e(sample) == 1
+replace sample_avg = . if longest_series==0 & e(sample) == 1
 
 reg D_l_cum_confirmed_cases i.t
-predict day_avg if adm1_name  == "Qom" & e(sample) == 1
+predict day_avg if longest_series==1 & e(sample) == 1
 lab var day_avg "Observed avg. change in log cases"
 
 tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
@@ -95,7 +123,7 @@ gen p_2_x_Tehran = p_2*(adm1_name== "Tehran")
 outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran testing_regime_mar13, ///
+reghdfe D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran testing_regime_*, ///
 absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
 // saving coefs
@@ -179,10 +207,10 @@ sum treatment
 
 // computing daily avgs in sample, store with a single panel unit (longest time series)
 reg y_actual i.t
-predict m_y_actual if adm1_name=="Qom"
+predict m_y_actual if longest_series==1
 
 reg y_counter i.t
-predict m_y_counter if adm1_name=="Qom"
+predict m_y_counter if longest_series==1
 
 
 // add random noise to time var to create jittered error bars
@@ -209,7 +237,7 @@ saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, rep
 
 //-------------------------------Running the model for Tehran only 
 
-reg D_l_cum_confirmed_cases p_1 p_2 testing_regime_mar13 if adm1_name=="Tehran"
+reg D_l_cum_confirmed_cases p_1 p_2 testing_regime_* if adm1_name=="Tehran"
 post results ("IRN_Tehran") ("no_policy rate") ("`suffix'") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
 
 postclose results
