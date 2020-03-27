@@ -1,0 +1,138 @@
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(magrittr))
+
+source("codes/data/usa/get_usafacts_data.R")
+state_adm_data <- read_csv("data/interim/adm/adm1/adm1.csv",
+                     col_types = cols(
+                       adm0_name = col_character(),
+                       adm1_name = col_character(),
+                       latitude = col_double(),
+                       longitude = col_double(),
+                       pop_density_km2 = col_double(),
+                       area_km2 = col_double(),
+                       population = col_double()
+                     ))
+
+county_adm_data <- read_csv("data/interim/usa/adm2_pop_fips.csv",
+                            col_types = cols(
+                              adm1_name = col_character(),
+                              adm2_name = col_character(),
+                              fips = col_character(),
+                              population = col_double(),
+                              area_km2 = col_double(),
+                              capital = col_character()
+                            ))
+
+usa_state_adm_data <- state_adm_data %>% 
+  filter(adm0_name %in% c("USA"))
+
+usa_county_adm_data <- county_adm_data %>% 
+  mutate(adm0_name  = "USA")
+stopifnot(all(nchar(usa_county_adm_data$fips[!is.na(usa_county_adm_data$fips)]) == 5))
+
+usa_county_adm_data <- usa_county_adm_data %>% 
+  filter(!is.na(fips))
+suppressWarnings(usa_data <- get_usafacts_data())
+
+usa_county_data <- usa_data %>% 
+  filter(!(str_detect(adm2_name, "Statewide Unallocated"))) %>% 
+  filter(!(str_detect(adm2_name, "Cruise Ship")))
+
+usa_county_data <- usa_county_data %>% 
+  select(-matches("X[0-9]+"))
+
+usa_state_data <- usa_data %>% 
+  filter(!(str_detect(adm2_name, "Cruise Ship"))) %>% 
+  group_by(state_fips, adm1_name, date) %>%
+  select(-county_fips, -adm2_name) %>% 
+  summarise_all(sum) %>% 
+  ungroup()
+
+usa_county_data <- usa_county_data %>% 
+  mutate(cum_recoveries = NA_real_) %>% 
+  unite(tmp_id, county_fips, state_fips, adm1_name, adm2_name, remove = FALSE) 
+
+suppressWarnings({
+  # Some fiddly manual edits to downwards data revisions 
+  usa_county_data <- usa_county_data %>% 
+    mutate(cum_confirmed_cases_imputed = if_else(
+      tmp_id %in% c("06041_06_CA_Marin County", "06079_06_CA_San Luis Obispo County") & 
+        date %in% lubridate::as_date(c("2020-03-11", "2020-03-12")) & cum_confirmed_cases == 16, 
+      0, cum_confirmed_cases
+    )) %>% 
+    mutate(cum_confirmed_cases = if_else(
+      tmp_id %in% c("06041_06_CA_Marin County", "06079_06_CA_San Luis Obispo County") & 
+        date %in% lubridate::as_date(c("2020-03-11", "2020-03-12")) & cum_confirmed_cases == 16, 
+      NA_real_, cum_confirmed_cases
+    )) %>% 
+    mutate(cum_confirmed_cases_imputed = if_else(
+      tmp_id %in% c("08097_08_CO_Pitkin County") & 
+        date %in% lubridate::as_date(c("2020-03-15", "2020-03-16")) & cum_confirmed_cases == 12, 
+      11, cum_confirmed_cases_imputed
+    )) %>% 
+    mutate(cum_confirmed_cases = if_else(
+      tmp_id %in% c("08097_08_CO_Pitkin County") & 
+        date %in% lubridate::as_date(c("2020-03-15", "2020-03-16")) & cum_confirmed_cases == 12, 
+      NA_real_, cum_confirmed_cases
+    )) %>% 
+    fix_issues()
+})
+# usa_state_data %>%
+#   unite(tmp_id, state_fips, adm1_name, remove = FALSE) %>%
+#   examine_issues(cum_confirmed_cases)
+
+suppressWarnings({
+  usa_state_data <- usa_state_data %>% 
+    mutate(cum_recoveries = NA_real_) %>% 
+    unite(tmp_id, state_fips, adm1_name, remove = FALSE) %>%
+    fix_issues()
+})
+
+usa_state_data <- usa_state_data %>% 
+  mutate(active_cases = cum_confirmed_cases - cum_deaths - cum_recoveries,
+         active_cases_imputed = cum_confirmed_cases_imputed - cum_deaths_imputed - cum_recoveries_imputed)
+usa_county_data <- usa_county_data %>% 
+  mutate(active_cases = cum_confirmed_cases - cum_deaths - cum_recoveries,
+         active_cases_imputed = cum_confirmed_cases_imputed - cum_deaths_imputed - cum_recoveries_imputed)
+
+names_order <- read_csv("data/processed/[country]_processed.csv", 
+                        col_types = cols(.default = col_character())) %>% names()
+
+counties_missed <- usa_county_data %>%
+  anti_join(usa_county_adm_data, by = c("county_fips" = "fips")) %>% 
+  select(county_fips, adm1_name, adm2_name) %>% distinct()
+if(nrow(counties_missed) > 0){
+  cat("Counties unmatched in adm dataset in usafacts cleaning:\n")
+  print(counties_missed)
+}
+
+suppressWarnings({
+  usa_county_data_standardised <- usa_county_data %>%
+    select(-adm2_name, -adm1_name, -state_fips) %>% 
+    inner_join(usa_county_adm_data, by = c("county_fips" = "fips")) %>% 
+    mutate(adm0_name = "USA") %>%
+    select(one_of(names_order)) %>% 
+    arrange(adm1_name, adm2_name, date)
+})
+
+suppressWarnings({
+  usa_state_data_standardised <- usa_state_data %>% 
+    mutate(adm0_name = "USA") %>% 
+    select(one_of(names_order)) %>% 
+    arrange(adm1_name, date)
+})
+
+usa_county_data_standardised2 <- usa_county_data_standardised %>% 
+  complete(date, nesting(adm0_name, adm1_name, adm2_name))
+
+usa_state_data_standardised2 <- usa_state_data_standardised %>% 
+  complete(date, nesting(adm0_name, adm1_name))
+
+stopifnot(nrow(usa_state_data_standardised2) == nrow(usa_state_data_standardised))
+stopifnot(nrow(usa_county_data_standardised2) == nrow(usa_county_data_standardised2))
+
+stopifnot(!anyNA(usa_county_data_standardised$cum_confirmed_cases_imputed))
+stopifnot(!anyNA(usa_state_data_standardised$cum_confirmed_cases_imputed))
+
+write_csv(usa_county_data_standardised, path = "data/interim/usa/usa_usafacts_county.csv")
+write_csv(usa_state_data_standardised, path = "data/interim/usa/usa_usafacts_state.csv")

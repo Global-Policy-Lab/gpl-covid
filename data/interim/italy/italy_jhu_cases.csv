@@ -1,4 +1,4 @@
-date,adm0_name,adm_name,adm_level,cumulative_confirmed_cases,cumulative_deaths,cumulative_recoveries,active_cases
+date,adm0_name,adm_name,adm_level,cum_confirmed_cases,cum_deaths,cum_recoveries,active_cases
 2020-01-22,Italy,Italy,0,0,0,0,0
 2020-01-23,Italy,Italy,0,0,0,0,0
 2020-01-24,Italy,Italy,0,0,0,0,0
