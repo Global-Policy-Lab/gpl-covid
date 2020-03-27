@@ -32,6 +32,22 @@ drop if cum_confirmed_cases < 10
 bysort adm1_id: egen total_obs = total((adm1_id~=.))
 drop if total_obs < 4 // drop state if less than 4 obs
 
+// flag which admin unit has longest series
+tab adm1_name if cum_confirmed_cases!=., sort 
+bysort adm1_name: egen adm1_obs_ct = count(cum_confirmed_cases)
+
+// if multiple admin units have max number of days w/ confirmed cases, 
+// choose the admin unit with the max number of confirmed cases 
+bysort adm1_name: egen adm1_max_cases = max(cum_confirmed_cases)
+egen max_obs_ct = max(adm1_obs_ct)
+bysort adm1_obs_ct: egen max_obs_ct_max_cases = max(adm1_max_cases) 
+
+gen longest_series = adm1_obs_ct==max_obs_ct & adm1_max_cases==max_obs_ct_max_cases
+drop adm1_obs_ct adm1_max_cases max_obs_ct max_obs_ct_max_cases
+
+sort adm1_id t
+tab adm1_name if longest_series==1 & cum_confirmed_cases!=.
+
 //construct dep vars
 lab var cum_confirmed_cases "cumulative confirmed cases"
 
@@ -46,18 +62,32 @@ replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0 // cannot hav
 
 //--------------testing regime changes
 
-gen testing_regime_change_mar13 = (t==21987) * D.testing_regime // only implmented in some states
-gen testing_regime_change_mar20 = (t==21990) * D.testing_regime // only implemented in some states
+// some testing regime changes at the state-level
+*tab adm1_name t if testing_regime>0
+
+// grab each date of any testing regime change by state
+preserve
+	collapse (min) t, by(testing_regime adm1_name)
+	sort adm1_name t //should already be sorted but just in case
+	by adm1_name: drop if _n==1 //dropping 1st testing regime of state sample (no change to control for)
+	levelsof t, local(testing_change_dates)
+restore
+
+// create a dummy for each testing regime change date w/in state
+foreach t_chg of local testing_change_dates{
+	local t_str = string(`t_chg', "%td")
+	gen testing_regime_change_`t_str' = t==`t_chg' * D.testing_regime
+}
 
 //------------------diagnostic
 
 // diagnostic plot of trends with sample avg as line
 reg D_l_cum_confirmed_cases
 gen sample_avg = _b[_cons]
-replace sample_avg = . if adm1_name ~= "Washington" & e(sample) == 1
+replace sample_avg = . if longest_series==0 & e(sample) == 1
 
 reg D_l_cum_confirmed_cases i.t
-predict day_avg if adm1_name  == "Washington" & e(sample) == 1
+predict day_avg if longest_series==1 & e(sample) == 1
 
 lab var day_avg "Observed avg. change in log cases"
 
@@ -178,10 +208,10 @@ sum treatment
 
 // computing daily avgs in sample, store with a single panel unit (longest time series)
 reg y_actual i.t
-predict m_y_actual if adm1_name=="Washington"
+predict m_y_actual if longest_series==1
 
 reg y_counter i.t
-predict m_y_counter if adm1_name=="Washington"
+predict m_y_counter if longest_series==1
 
 postclose results
 
