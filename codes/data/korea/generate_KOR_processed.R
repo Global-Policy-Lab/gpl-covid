@@ -6,8 +6,6 @@ rm(list = ls())
 library(dplyr)
 library(magrittr)
 
-end_of_analysis_date <- "2020-03-26"
-
 # set working directory
 dir <- "data/interim/korea/" 
 pol.dir <- "data/raw/korea/"
@@ -84,9 +82,6 @@ for (o in 1:nrow(intl_out)){
 
 # Check that all columns are in template
 stopifnot(names(df) %in% names(template)) 
-
-# Filter to end date and before
-df <- filter(df, df$date <= end_of_analysis_date)
 
 #write csv
 write.csv(df, paste0(template.dir, output), row.names = F)
