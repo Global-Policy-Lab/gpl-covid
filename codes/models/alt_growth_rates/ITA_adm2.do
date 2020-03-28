@@ -3,6 +3,11 @@
 clear all
 //-----------------------setup
 
+// import end of sample cut-off 
+import delim using codes/data/cutoff_dates.csv, clear 
+keep if tag == "default"
+local end_sample = end_date[1]
+
 // load data
 insheet using data/processed/adm2/ITA_processed.csv, clear
 
@@ -30,6 +35,7 @@ tsset adm2_id t, daily
 // quality control
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 drop if t < mdy(2,25,2020) // start Feb 25
+keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 // flag which admin unit has longest series
 tab adm2_name if cum_confirmed_cases!=., sort 
@@ -116,13 +122,13 @@ reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_*, absorb(i.adm2_id i.
 coefplot, keep(p_*)
 
 tempfile results_file
-postfile results str18 adm0 str18 policy str18 suffix beta se using `results_file', replace
+postfile results str18 adm0 str18 policy beta se using `results_file', replace
 foreach var in "p_1" "p_2" "p_3" "p_4"{
-	post results ("ITA") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+	post results ("ITA") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 // effect of package of policies (FOR FIG2)
 lincom p_1 + p_2 + p_3 + p_4
-post results ("ITA") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+post results ("ITA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 
 //------------- checking error structure (appendix)
@@ -178,7 +184,7 @@ foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_
 	
 // the mean here is the avg "biological" rate of initial spread (FOR Fig2)
 sum y_counter
-post results ("ITA") ("no_policy rate") ("`suffix'") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+post results ("ITA") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
 
 //export predicted counterfactual growth rate
 preserve
@@ -203,7 +209,7 @@ postclose results
 
 preserve
 	use `results_file', clear
-	outsheet * using "models/ITA_coefs`suffix'.csv", comma replace
+	outsheet * using "models/ITA_coefs.csv", comma replace
 restore
 
 // add random noise to time var to create jittered error bars
@@ -223,6 +229,6 @@ tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Italy, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/ITA_adm2_conf_cases_growth_rates_fixedx.gph, replace)

@@ -27,7 +27,7 @@ xtset adm1_id t
 // quality control
 drop if cum_confirmed_cases < 10  
 keep if t >= date("20200228","YMD") // Non stable growth before that point & missing data, only one region with +10 but no growth
-keep if t <= date("`end_sample'","YMD")
+keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 
 // flag which admin unit has longest series
@@ -164,12 +164,10 @@ preserve
 restore
 
 // quality control: cannot have negative growth in cumulative cases
-replace y_actual = 0 if y_actual < 0
-replace y_counter = 0 if y_counter < 0
-
-// fix lb_y_actual so there are no negative growth rates in error bars
-gen lb_y_actual_pos = lb_y_actual 
-replace lb_y_actual_pos = 0 if lb_y_actual<0 & lb_y_actual!=.
+// fix so there are no negative growth rates in error bars
+foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_counter{
+	replace `var' = 0 if `var'<0 & `var'!=.
+}
 
 // the mean here is the avg "biological" rate of initial spread (FOR FIG2)
 sum y_counter
@@ -209,7 +207,7 @@ g t_random = t + rnormal(0,1)/10
 g t_random2 = t + rnormal(0,1)/10
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual_pos t_random,  lwidth(vthin) color(blue*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
@@ -218,7 +216,7 @@ tw (rspike ub_y_actual lb_y_actual_pos t_random,  lwidth(vthin) color(blue*.5)) 
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/FRA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
