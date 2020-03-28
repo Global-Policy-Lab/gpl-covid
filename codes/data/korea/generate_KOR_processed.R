@@ -10,6 +10,7 @@ library(magrittr)
 dir <- "data/interim/korea/" 
 pol.dir <- "data/raw/korea/"
 template.dir <- "data/processed/"
+latlon.dir <- "data/interim/adm/adm1/"
 output <- "adm1/KOR_processed.csv"
 
 #load data
@@ -20,6 +21,14 @@ template <- read.csv(paste0(template.dir, '[country]_processed.csv'), header = T
 
 
 #----------------------------------------------------------------------------------------------------------------------------
+#load latlon
+latlon.agg <- read.csv(paste0(latlon.dir, "adm1.csv"), stringsAsFactors = F) %>%
+  filter(adm0_name == "KOR") %>%
+  select(adm1_name, lat = latitude, lon = longitude)
+
+# merge latlon
+df <- left_join(df, latlon.agg, by = c("adm1_name"))
+
 #convert date column
 df$date <- as.Date(df$date, "%m/%d/%y")
 
@@ -79,6 +88,7 @@ intl_out <- filter(pol, policy == "travel_ban_intl_out_opt")
 for (o in 1:nrow(intl_out)){
   df$travel_ban_intl_out_opt_country_list[df$travel_ban_intl_out_opt == 1 & df$date >= intl_out$date_start[o]] <- intl_out$travel_ban_intl_out_opt_country_list[o]
 }
+
 
 # Check that all columns are in template
 stopifnot(names(df) %in% names(template)) 
