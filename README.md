@@ -203,8 +203,7 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 1. `python codes/data/italy/italy-download-cases-merge-policies.py`
 
 ##### South Korea
-1. `Rscript codes/data/korea/generate_KOR_interim.R`
-2. `python codes/data/korea/korea-interim-to-processed.py`
+1. `Rscript codes/data/korea/generate_KOR_processed.R`
 
 ##### United States
 1. `python codes/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
