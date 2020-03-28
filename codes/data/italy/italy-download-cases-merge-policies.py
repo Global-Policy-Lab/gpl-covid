@@ -41,8 +41,6 @@ path_processed_province = cutil.DATA_PROCESSED / 'adm2' / 'ITA_processed.csv'
 # ## Download and read raw data from Github
 
 # #### Read inputs
-# Columns in template (i.e. columns allowed in output)
-template_cols = set(pd.read_csv(path_template).columns)
 
 # Italy-specific data
 adm2_cases = pd.read_csv(url_adm2_cases)
@@ -142,55 +140,56 @@ def impute_day1_adm2_cases(adm1_cases, adm2_cases):
 
 	return adm2_cases
 
+def code_as_null_where_missing(adm1_cases, adm2_cases):
+	# ###### Check data limitations
+	# Go to https://github.com/pcm-dpc/COVID-19 and check "Avvisi" for any documented data issues
+
+	# #### Fill known missing cumulative totals as nulls
+	# Information on missingness gathered from GitHub "Avvisi" section
+	adm1_days_missing = [
+	    ("2020-03-10", "Lombardia"),
+	    ("2020-03-11", "Abruzzo"),
+	    ("2020-03-16", "P.A. Trento"),
+	    ("2020-03-16", "Puglia"),
+	    ("2020-03-18", "Campania"),
+	]
+
+	adm2_days_missing = [
+	    ("2020-03-17", "Rimini"),
+	    ("2020-03-18", "Parma")
+	]
+
+	# Replace missing values in `adm_cases` to null. These missing values are tabulated in the source data
+	# as the value of that variable on the previous non-missing day, which can skew analysis of growth rates
+	def fill_missing_as_null(adm_cases, date, adm_name, adm_col):
+	    
+	    # Get all cumulative columns
+	    cum_cols = [col for col in adm_cases.columns if col.startswith(cumulative_prefix)]
+	    
+	    # Replace values known to be missing with np.nan
+	    for col in cum_cols:
+	        adm_cases.loc[(
+	            (adm_cases['date'] == date) & (adm_cases[adm_col] == adm_name)
+	        ), col] = np.nan
+	        
+	    return adm_cases
+
+	# Fill in nulls for missing adm1 data, in the adm1 dataset
+	for date, adm1 in adm1_days_missing:
+	    adm1_cases = fill_missing_as_null(adm1_cases, date, adm1, 'adm1_name')
+	        
+	# Fill in nulls for missing adm1 data, in the adm2 dataset
+	for date, adm1 in adm1_days_missing:
+	    adm2_cases = fill_missing_as_null(adm2_cases, date, adm1, 'adm1_name')
+
+	# Fill in nulls for missing adm2 data, in the adm2 dataset
+	for date, adm2 in adm2_days_missing:
+	    adm2_cases = fill_missing_as_null(adm2_cases, date, adm2, 'adm2_name')
+
+	return adm1_cases, adm2_cases
+
 adm2_cases = impute_day1_adm2_cases(adm1_cases, adm2_cases)
-
-# ###### Check data limitations
-# Go to https://github.com/pcm-dpc/COVID-19 and check "Avvisi" for any documented data issues
-
-# #### Fill known missing cumulative totals as nulls
-# Information on missingness gathered from GitHub "Avvisi" section
-adm1_days_missing = [
-    ("2020-03-10", "Lombardia"),
-    ("2020-03-11", "Abruzzo"),
-    ("2020-03-16", "P.A. Trento"),
-    ("2020-03-16", "Puglia"),
-    ("2020-03-18", "Campania"),
-]
-
-adm2_days_missing = [
-    ("2020-03-17", "Rimini"),
-    ("2020-03-18", "Parma")
-]
-
-# Replace missing values in `adm_cases` to null. These missing values are tabulated in the source data
-# as the value of that variable on the previous non-missing day, which can skew analysis of growth rates
-def fill_missing_as_null(adm_cases, date, adm_name, adm_col):
-    
-    # Get all cumulative columns
-    cum_cols = [col for col in adm_cases.columns if 'cum_' in col]
-    
-    # Replace values known to be missing with np.nan
-    for col in cum_cols:
-        adm_cases.loc[(
-            (adm_cases['date'] == date) & (adm_cases[adm_col] == adm_name)
-        ), col] = np.nan
-        
-    return adm_cases
-
-# Fill in nulls for missing adm1 data, in the adm1 dataset
-for date, adm1 in adm1_days_missing:
-    adm1_cases = fill_missing_as_null(adm1_cases, date, adm1, 'adm1_name')
-        
-# Fill in nulls for missing adm1 data, in the adm2 dataset
-for date, adm1 in adm1_days_missing:
-    adm2_cases = fill_missing_as_null(adm2_cases, date, adm1, 'adm1_name')
-
-# Fill in nulls for missing adm2 data, in the adm2 dataset
-for date, adm2 in adm2_days_missing:
-    adm2_cases = fill_missing_as_null(adm2_cases, date, adm2, 'adm2_name')
-
-
-adm2_cases[adm2_cases['cum_confirmed_cases'].isnull()].sample(5)
+adm1_cases, adm2_cases = code_as_null_where_missing(adm1_cases, adm2_cases)
 
 
 # ### Impute values in cases where cumulative counts rise and then fall
@@ -307,73 +306,74 @@ adm2_cases = impute_each_cumulative_column(adm2_cases, 'adm2_id')
 
 # #### Save processed health data to `interim` folder
 path_italy_interim_province.parent.mkdir(parents=True, exist_ok=True)
-adm2_cases.to_csv(path_italy_interim_province, index=False)
 adm1_cases.to_csv(path_italy_interim_region, index=False)
+adm2_cases.to_csv(path_italy_interim_province, index=False)
 
 # Filter out rows where adm1 is known but adm2 is unknown
-
-# In[ ]:
-
-
 adm2_cases = adm2_cases[adm2_cases['adm2_name'] != 'Unknown']
 
-
 # ## Merge Health with Policies
+def clean_policies_with_assumptions(policies):
+	# Map some regions/provinces in policy dataset to corresponding names in health data
+	replace_dict = {
+	    'Lombardy':'Lombardia',
+	    'Piedmont':'Piemonte',
+	    'Emilia-Romagna':'Emilia Romagna',
+	    'Padua':'Padova',
+	    'Venice':'Venezia',
+	    'Pesaro and Urbino':'Pesaro e Urbino',
+	    'Apulia':'Puglia', 
+	    "Vo'Eugane":'Vò',
+	}
 
-# Clean data
-policies_full['date_start'] = pd.to_datetime(policies_full['date_start'])
-policies_full['date_end'] = pd.to_datetime(policies_full['date_end'])
-policies_full['date_end'] = policies_full['date_end'].fillna(pd.to_datetime('2099-12-31'))
-policies_full['policy'] = policies_full['policy'].str.strip()
+	# Standardize naming between policy and health data
+	policies['adm1_name'] = policies['adm1_name'].replace(replace_dict)
+	policies['adm2_name'] = policies['adm2_name'].replace(replace_dict)
+	policies['adm3_name'] = policies['adm3_name'].replace(replace_dict)
 
-# Convert 'optional' to indicator variable
-policies_full['optional'] = policies_full['optional'].replace({"Y":1, "N":0})
-policies_full['optional'] = policies_full['optional'].fillna(0)
+	# Clean data
+	policies['date_start'] = pd.to_datetime(policies['date_start'])
+	policies['date_end'] = pd.to_datetime(policies['date_end'])
+	policies['date_end'] = policies['date_end'].fillna(pd.to_datetime('2099-12-31'))
+	policies['policy'] = policies['policy'].str.strip()
 
-# Set default values for null fields
-policies_full['adm0_name'] = policies_full['adm0_name'].fillna('Italy')
-policies_full['adm1_name'] = policies_full['adm1_name'].fillna('All')
-policies_full['adm2_name'] = policies_full['adm2_name'].fillna('All')
-policies_full['adm3_name'] = policies_full['adm3_name'].fillna('All')
+	# Convert 'optional' to indicator variable
+	policies['optional'] = policies['optional'].replace({"Y":1, "N":0})
+	policies['optional'] = policies['optional'].fillna(0)
 
-# Map some regions/provinces in policy dataset to corresponding names in health data
-replace_dict = {
-    'Lombardy':'Lombardia',
-    'Piedmont':'Piemonte',
-    'Emilia-Romagna':'Emilia Romagna',
-    'Padua':'Padova',
-    'Venice':'Venezia',
-    'Pesaro and Urbino':'Pesaro e Urbino',
-    'Apulia':'Puglia', 
-    "Vo'Eugane":'Vò',
-}
+	# Set default values for null fields
+	policies['adm0_name'] = policies['adm0_name'].fillna('Italy')
+	policies['adm1_name'] = policies['adm1_name'].fillna('All')
+	policies['adm2_name'] = policies['adm2_name'].fillna('All')
+	policies['adm3_name'] = policies['adm3_name'].fillna('All')
 
-# Standardize naming between policy and health data
-policies_full['adm1_name'] = policies_full['adm1_name'].replace(replace_dict)
-policies_full['adm2_name'] = policies_full['adm2_name'].replace(replace_dict)
-policies_full['adm3_name'] = policies_full['adm3_name'].replace(replace_dict)
+	# Remove any duplicates, grouping on relevant columns
+	policies = policies[
+	    ['adm3_name','adm2_name','adm1_name','adm0_name',
+	     'date_start', 'date_end', 'policy','policy_intensity', 'optional']
+	].drop_duplicates()
 
-# Remove any duplicates, grouping on relevant columns
-policies = policies_full[
-    ['adm3_name','adm2_name','adm1_name','adm0_name',
-     'date_start', 'date_end', 'policy','policy_intensity', 'optional']
-].drop_duplicates()
+	# If this fails, have to implement `testing_regime` as categorical variable
+	# This works right now because only one change in "testing_regime", a categorical variable
+	assert policies.groupby('policy')['policy'].count()['testing_regime'] == 1
 
-# If this fails, have to implement `testing_regime` as categorical variable
-# This works right now because only one change in "testing_regime", a categorical variable
-assert policies.groupby('policy')['policy'].count()['testing_regime'] == 1
+	# Replace optional policies with `policy_name` to `policy_name_opt`
+	policies.loc[policies['optional'] == 1, 'policy'] = policies.loc[policies['optional'] == 1, 'policy'] + optional_suffix
 
-# Replace optional policies with `policy_name` to `policy_name_opt`
-policies.loc[policies['optional'] == 1, 'policy'] = policies.loc[policies['optional'] == 1, 'policy'] + optional_suffix
+	return policies
 
-# Ensure all policies listed have corresponding adm-units in health data
-adm1_not_found = set(policies['adm1_name'].unique()) - set(adm1_cases['adm1_name'].unique()) - set(['All'])
-adm2_not_found = set(policies['adm2_name'].unique()) - set(adm2_cases['adm2_name'].unique()) - set(['All'])
-assert len(adm1_not_found) == 0
-assert len(adm2_not_found) == 0
+policies = clean_policies_with_assumptions(policies_full)
+
+def check_adms_match(policies, adm1_cases, adm2_cases):
+	# Ensure all policies listed have corresponding adm-units in health data
+	adm1_not_found = set(policies['adm1_name'].unique()) - set(adm1_cases['adm1_name'].unique()) - set(['All'])
+	adm2_not_found = set(policies['adm2_name'].unique()) - set(adm2_cases['adm2_name'].unique()) - set(['All'])
+	assert len(adm1_not_found) == 0
+	assert len(adm2_not_found) == 0
+
+check_adms_match(policies, adm1_cases, adm2_cases)
 
 ## Merge Policies and Cases with Population, calculate pop-weights
-
 country_code = 'ITA'
 max_adm_level = 3
 
@@ -388,13 +388,19 @@ policies = cpop.aggregate_policy_popweights(policies, 2, country_code)
 # End of population assignment
 
 # Check that population weights are all there
-assert len(policies[policies['adm1_pop_intensity_weight'].isnull()]) == 0
-assert len(policies[policies['adm2_pop_intensity_weight'].isnull()]) == 0
-assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
-assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
-assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
-assert adm1_cases['population'].isnull().sum() == 0
-assert adm2_cases['population'].isnull().sum() == 0
+def check_pops_in_policies(policies):
+	assert len(policies[policies['adm1_pop_intensity_weight'].isnull()]) == 0
+	assert len(policies[policies['adm2_pop_intensity_weight'].isnull()]) == 0
+	assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
+	assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
+	assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
+
+def check_pops_in_cases(adm_cases):
+	assert adm_cases['population'].isnull().sum() == 0
+
+check_pops_in_policies(policies)
+check_pops_in_cases(adm1_cases)
+check_pops_in_cases(adm2_cases)
 
 # Assign policy indicators
 adm1_cases = cmerge.assign_adm_policy_variables(adm1_cases, policies, 1)
