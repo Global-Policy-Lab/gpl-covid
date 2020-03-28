@@ -2,12 +2,44 @@ import pandas as pd
 import numpy as np
 from codes import utils as cutil
 import os
+import argparse
+
+parser = argparse.ArgumentParser(
+    description='Check for issues in [country]_processed.csv datasets. '
+        'Defaults to checking all of datasets.'
+    )
+
+max_adm = max([int(d[3:]) for d in os.listdir(cutil.DATA_PROCESSED) if d[:3] == 'adm'])
+all_adm = list(range(0, max_adm + 1))
+
+parser.add_argument("--a", choices=all_adm, default=None, type=int, help=f"Adm-level")
+parser.add_argument("--c", choices=sorted(cutil.ISOS), default=None, type=str.upper, help=f"Country ISO code")
+parser.add_argument("--e", choices=["raise", "warn"], default="raise", type=str, help=f"Error behavior")
+args = parser.parse_args()
+
+def get_adm_list(adm_input):
+    if adm_input != None:
+        return [adm_input]    
+    return all_adm
+
+def get_country_list(country_input):
+    if country_input != None:
+        return [country_input]
+    return cutil.ISOS
+
+def get_default_error_behavior(error_input):
+    if error_input != None:
+        return error_input
+    return cutil.PROCESSED_DATA_ERROR_HANDLING
+
 
 #### Settings
 
-use_cutoff = cutil.PROCESSED_DATA_DATE_CUTOFF
-country_list = cutil.ISOS
-default_error_behavior = cutil.PROCESSED_DATA_ERROR_HANDLING
+adm_list = get_adm_list(args.a)
+country_list = get_country_list(args.c)
+default_error_behavior = get_default_error_behavior(args.e)
+
+use_cutoff = cutil.PROCESSED_DATA_DATE_CUTOFF    
 
 path_cutoff_dates = cutil.CODES / 'data' / 'cutoff_dates.csv'
 path_template = cutil.DATA_PROCESSED / '[country]_processed.csv'
@@ -118,8 +150,7 @@ def get_processed_datasets():
 
     for country in country_list:
         processed[country] = dict()
-        max_adm = max([int(d[3:]) for d in os.listdir(cutil.DATA_PROCESSED) if d[:3] == 'adm'])
-        for adm in range(0, max_adm):
+        for adm in adm_list:
             path_processed = cutil.DATA_PROCESSED / f'adm{adm}' / f'{country}_processed.csv'
             if path_processed.exists():
                 df = pd.read_csv(path_processed)
@@ -129,7 +160,6 @@ def get_processed_datasets():
     return processed
 
 def main():
-
     cutoff_date = get_cutoff_date(path_cutoff_dates)
     template = pd.read_csv(path_template)
     processed = get_processed_datasets()
