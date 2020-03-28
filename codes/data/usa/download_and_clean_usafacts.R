@@ -152,8 +152,8 @@ stopifnot(!anyNA(usa_county_data_standardised$cum_confirmed_cases_imputed))
 stopifnot(!anyNA(usa_state_data_standardised$cum_confirmed_cases_imputed))
 
 usa_state_data_standardised <- usa_state_data_standardised %>% 
-  left_join(tibble(state.abb = state.abb,
-                   state.name = state.name), by = c("adm1_name" = "state.abb")) %>% 
+  left_join(tibble(state.abb = c(state.abb, "DC"),
+                   state.name = c(state.name, "District of Columbia")), by = c("adm1_name" = "state.abb")) %>% 
   mutate(adm1_name = state.name) %>% 
   select(-state.name)
 
