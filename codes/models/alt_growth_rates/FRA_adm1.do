@@ -2,10 +2,13 @@
 
 clear all
 //-----------------------setup
+<<<<<<< Updated upstream
 // import end of sample cut-off 
 import delim using codes/data/cutoff_dates.csv, clear 
 keep if tag == "default"
 local end_sample = end_date[1]
+=======
+>>>>>>> Stashed changes
 
 // load data
 insheet using data/processed/adm1/FRA_processed.csv, clear 
@@ -14,6 +17,8 @@ cap set scheme covid19_fig3 // optional scheme for graphs
  
 // set up time variables
 gen t = date(date, "YMD")
+keep if t <= date("20200325","YMD") // merge with outside file
+
 lab var t "date"
 keep if t <= date("`end_sample'","YMD")
 
@@ -35,6 +40,7 @@ xtset adm1_id t
 // quality control
 *local suffix = "_imputed" // either "_imputed" for imputed time serie or "" for regular time serie 
 drop if cum_confirmed_cases`suffix' < 10  
+<<<<<<< Updated upstream
 keep if t >= date("20200228","YMD") // Non stable growth before that point & missing data, only one region with +10 but no growth
 
 //construct dep vars
@@ -51,6 +57,24 @@ replace D_l_cum_confirmed_cases`suffix' = . if D_l_cum_confirmed_cases`suffix' <
 
 //0 negative changes for France
 
+=======
+keep if t >= date("20200229","YMD") // Non stable growth before that point & missing data, only one region with +10 but no growth
+
+//construct dep vars
+lab var cum_confirmed_cases`suffix' "cumulative confirmed cases"
+
+gen l_cum_confirmed_cases`suffix' = log(cum_confirmed_cases`suffix')
+lab var l_cum_confirmed_cases`suffix' "log(cum_confirmed_cases`suffix')"
+
+gen D_l_cum_confirmed_cases`suffix' = D.l_cum_confirmed_cases`suffix' 
+lab var D_l_cum_confirmed_cases`suffix' "change in log(cum. confirmed cases`suffix')"
+
+//quality control
+replace D_l_cum_confirmed_cases`suffix' = . if D_l_cum_confirmed_cases`suffix' < 0 // cannot have negative changes in cumulative values
+
+//0 negative changes for France
+
+>>>>>>> Stashed changes
 // check which admin unit has longest series
 tab adm1 if cum_confirmed_cases!=., sort //use AuvergneRhoneAlpes
 
@@ -67,13 +91,22 @@ predict day_avg if regexm(adm1, "^Auvergne") & e(sample)
 lab var day_avg "Observed avg. change in log cases"
 
 tw (sc D_l_cum_confirmed_cases`suffix' t, msize(tiny))(line sample_avg t)(sc day_avg t)
+<<<<<<< Updated upstream
 
 
+=======
+
+
+>>>>>>> Stashed changes
 //------------------main estimates
 g testing_regime = t == mdy(3,15,2020) // start of stade 3, none systematic testing
 lab var testing_regime "Testing Regime Change"
 // generate policy packages
+<<<<<<< Updated upstream
 g national_lockdown = (business_closure + home_isolation) / 2 // big national lockdown policy
+=======
+g national_lockdown = (business_closure + home_isolation + school_closure_national) / 3 // big national lockdown policy
+>>>>>>> Stashed changes
 lab var national_lockdown "Lockdown"
 
 g no_gathering_5000 = no_gathering_size <= 5000
@@ -88,7 +121,11 @@ outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
 // main regression model
 
+<<<<<<< Updated upstream
 reghdfe D_l_cum_confirmed_cases`suffix' testing national_lockdown school_closure ///
+=======
+reghdfe D_l_cum_confirmed_cases`suffix' testing national_lockdown school_closure_regional ///
+>>>>>>> Stashed changes
  social_distance pck_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
  
 outreg2 using "models/tables/FRA_estimates_table", word replace label ///
@@ -98,18 +135,26 @@ cap erase "models/tables/FRA_estimates_table.txt"
 //saving coefs
 tempfile results_file
 postfile results str18 adm0 str18 policy str18 suffix beta se using `results_file', replace
+<<<<<<< Updated upstream
 foreach var in "national_lockdown" "school_closure" "social_distance" "pck_no_gathering" {
+=======
+foreach var in "national_lockdown" "school_closure_regional" "social_distance" "pck_no_gathering" {
+>>>>>>> Stashed changes
 	post results ("FRA") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 
 // effect of package of policies
-lincom national_lockdown + school_closure + social_distance + pck_no_gathering 
+lincom national_lockdown + school_closure_regional + social_distance + pck_no_gathering 
 
 post results ("FRA") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 //looking at different policies
+<<<<<<< Updated upstream
 coefplot, xline(0) keep(national_lockdown school_closure social_distance pck_no_gathering ) 
+=======
+coefplot, xline(0) keep(national_lockdown school_closure_regional social_distance pck_no_gathering ) 
+>>>>>>> Stashed changes
 
 //------------- checking error structure (make fig for appendix)
 
@@ -127,14 +172,14 @@ graph drop hist_fra qn_fra
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = school_closure * _b[school_closure] ///
+predictnl y_actual = school_closure_regional * _b[school_closure_regional] ///
 + social_distance * _b[social_distance]+ pck_no_gathering*_b[pck_no_gathering] ///
 + testing_regime * _b[testing_regime] + national_lockdown* _b[national_lockdown] ///
 + _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
-gen treatment = school_closure * _b[school_closure] ///
+gen treatment = school_closure_regional * _b[school_closure_regional] ///
 + social_distance * _b[social_distance]+ pck_no_gathering*_b[pck_no_gathering] ///
 + national_lockdown* _b[national_lockdown] ///
 if e(sample)
@@ -146,8 +191,13 @@ predictnl y_counter =  testing_regime * _b[testing_regime] + _b[_cons] ///
 // get ATE
 preserve
 	keep if e(sample) == 1
+<<<<<<< Updated upstream
 	collapse  D_l_cum_confirmed_cases`suffix' school_closure social_distance pck_no_gathering national_lockdown
 	predictnl ATE = school_closure * _b[school_closure] ///
+=======
+	collapse  D_l_cum_confirmed_cases`suffix' school_closure_regional social_distance pck_no_gathering national_lockdown
+	predictnl ATE = school_closure_regional * _b[school_closure_regional] ///
+>>>>>>> Stashed changes
 	+ social_distance * _b[social_distance]+ pck_no_gathering*_b[pck_no_gathering] ///
 	+ national_lockdown* _b[national_lockdown], ci(LB UB) se(sd) p(pval)
 	g adm0 = "FRA"
