@@ -231,35 +231,6 @@ def log_interpolate(array):
         x=idx, xp=idx[~np.isnan(array)], fp=log_array[~np.isnan(array)])
     return np.round(np.exp(interp_array)).astype(np.int32)
 
-def impute_cumulative_array(array):
-    """Ensures array is cumulative, imputing where necessary
-    Args:
-        array-like (numpy.ndarray [N,], pandas.Series, etc.): input array with missing values
-    Returns:
-        numpy.ndarray [N,]: all non-monotonic values will be filled by logarithmic interpolation
-    Usage:
-        >>> impute_cumulative_array(np.array([0, 0, 5, 3, 4, 6, 3, 7, 6, 7, 8]))
-        np.array([0, 0, 2, 3, 4, 6, 7, 7, 8])
-    """
-    array = np.array(array)
-    
-    # Hold onto original array to retrieve null values later
-    array_orig = array.copy()
-    
-    # Convert array to re-impute nulls as filled by previous day
-    array = np.array(pd.Series(array_orig).fillna(method='ffill'))
-    
-    # Replace cumulative totals that rise and then fall with nulls, assuming latest information is most correct
-    array = convert_non_monotonic_to_nan(array)
-    
-    # Keep nulls from original array and nulls from checking for monotonicity
-    array = np.where(np.isnan(array_orig), np.nan, array)
-    
-    # Interpolate all nulls
-    array = log_interpolate(array)
-    
-    return array
-
 def impute_cumulative_df(df, src_col, dst_col, groupby_col):
     """Calculates imputed columns and returns 
     Args:
@@ -279,12 +250,13 @@ def impute_cumulative_df(df, src_col, dst_col, groupby_col):
 
     for adm_name in df[groupby_col].unique():
         sub = df.loc[df[groupby_col] == adm_name].copy()
-        sub[dst_col] = impute_cumulative_array(sub[src_col])
         
         # Set rising-then-falling cumulative counts to null in the original column
         sub.loc[sub[src_col].notnull(), src_col] = convert_non_monotonic_to_nan(
             np.array(sub.loc[sub[src_col].notnull(), src_col])
         )
+
+        sub[dst_col] = log_interpolate(sub[src_col])
         
         df.loc[df[groupby_col] == adm_name] = sub
         
