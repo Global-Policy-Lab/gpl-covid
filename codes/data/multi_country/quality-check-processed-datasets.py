@@ -43,7 +43,7 @@ use_cutoff = cutil.PROCESSED_DATA_DATE_CUTOFF
 
 path_cutoff_dates = cutil.CODES / 'data' / 'cutoff_dates.csv'
 path_template = cutil.DATA_PROCESSED / '[country]_processed.csv'
-
+path_data_dictionary = cutil.HOME / 'references' / 'data_dictionary.xlsx'
 
 def test_condition(condition, country, adm, message, errors=default_error_behavior):
     if condition or errors == "ignore":
@@ -120,12 +120,45 @@ def check_columns_are_not_null(df, country, adm):
         nulls_not_found = df[col].isnull().sum() == 0
         test_condition(nulls_not_found, country, adm, f"Column contains nulls: {col}")
 
+def _check_columns_are_in_list(df, country, adm, list_items, list_name):
+    missing_from_list = set(df.columns) - set(list_items)
+    list_matches = len(missing_from_list) == 0
+    list_mismatches = str(sorted(missing_from_list))
+    message = f"Columns missing from {list_name}: {list_mismatches}" 
+    test_condition(list_matches, country, adm, message)
+
 def check_columns_are_in_template(df, country, adm, template):
     # Check that all columns are in template
-    missing_from_template = set(df.columns) - set(template.columns)
-    template_matches = len(missing_from_template) == 0
-    message = "Columns missing from template ([country]_processed.csv): " + str(sorted(missing_from_template))
-    test_condition(template_matches, country, adm, message)
+    _check_columns_are_in_list(df, country, adm, template.columns, "template")
+
+def check_columns_are_in_data_dictionary(df, country, adm):
+    country_processed = pd.read_excel(path_data_dictionary, sheet_name='country_processed')
+    policy_categories = pd.read_excel(path_data_dictionary, sheet_name='policy_categories')
+    health_cols = set(country_processed['Variable Name'])
+
+    add_health_cols = set()
+    if 'adm[1,2]_id' in health_cols:
+        add_health_cols.add('adm1_id')
+        add_health_cols.add('adm2_id')
+    for col in health_cols:
+        if col[:4] == "cum_" or col[:7] == "active_":
+            add_health_cols.add(col + "_imputed")
+
+    health_cols = health_cols.union(add_health_cols)
+
+    policy_cols = set(policy_categories['Category Name'])
+    add_policy_cols = set()
+    if "no_gathering" in policy_cols:
+        add_policy_cols.add("no_gathering_size")
+
+    for col in policy_cols:
+        for opt in ["", "_opt"]:
+            for popwt in ["", "_popwt"]:
+                add_policy_cols.add(col + opt + popwt)
+
+    policy_cols = policy_cols.union(add_policy_cols)
+    all_cols = policy_cols.union(health_cols)
+    _check_columns_are_in_list(df, country, adm, all_cols, "data dictionary")
 
 def check_opt_and_non_opt_align(df, country, adm):
     for col in df.columns:
@@ -177,6 +210,7 @@ def main():
             check_columns_are_not_null(df, country, adm)
             check_columns_are_in_template(df, country, adm, template)
             check_opt_and_non_opt_align(df, country, adm)
+            check_columns_are_in_data_dictionary(df, country, adm)
 
 if __name__=="__main__":
     main()
