@@ -55,6 +55,9 @@ printf "***Processing USA data***\n"
 python codes/data/usa/merge_policy_and_cases.py
 Rscript codes/data/usa/check_health_data.R
 
+# quality-check processed datasets
+printf "***Checking processed data***\n"
+python codes/data/multi_country/quality-check-processed-datasets.py
 
 ## regression model estimation
 printf "***Estimating regression model and creating Figure 3 and A1***\n"
