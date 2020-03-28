@@ -3,31 +3,29 @@
 rm(list = ls())
 
 #load packages
-library(dplyr)
-library(magrittr)
+suppressWarnings(library(dplyr))
+suppressWarnings(library(magrittr))
 
 # set working directory
 dir <- "data/interim/korea/" 
 pol.dir <- "data/raw/korea/"
 template.dir <- "data/processed/"
 latlon.dir <- "data/interim/adm/adm1/"
-output <- "adm1/KOR_processed.csv"
+output.dir <- paste0(template.dir,"adm1/KOR_processed.csv")
 
 #load data
 df <- read.csv(paste0(dir, "KOR_health.csv"), header = T, stringsAsFactors = F) #main health data manually collected
 pop <- read.csv(paste0(dir, "KOR_population.csv"), header = T, stringsAsFactors = F)  #population data
 pol <- read.csv(paste0(pol.dir, "KOR_policy_data_sources.csv"), header = T, stringsAsFactors = F)  #policy data
 template <- read.csv(paste0(template.dir, '[country]_processed.csv'), header = T, stringsAsFactors = F)  #template data
-
+latlon <- read.csv(paste0(latlon.dir, "adm1.csv"), stringsAsFactors = F) %>% # latlon
+              filter(adm0_name == "KOR") %>%
+              select(adm1_name, lat = latitude, lon = longitude)
 
 #----------------------------------------------------------------------------------------------------------------------------
-#load latlon
-latlon.agg <- read.csv(paste0(latlon.dir, "adm1.csv"), stringsAsFactors = F) %>%
-  filter(adm0_name == "KOR") %>%
-  select(adm1_name, lat = latitude, lon = longitude)
 
 # merge latlon
-df <- left_join(df, latlon.agg, by = c("adm1_name"))
+df <- left_join(df, latlon, by = c("adm1_name"))
 
 #convert date column
 df$date <- as.Date(df$date, "%m/%d/%y")
@@ -53,7 +51,7 @@ for (r in 1:NROW(pol$policy)){
 #code policies according to date
 for (p in 1:NROW(pol$policy)){
   
-  print(paste0("coding for ", pol$policy[p], ", ", pol$date[p]))
+  #print(paste0("coding for ", pol$policy[p], ", ", pol$date[p]))
   
   for (i in 1:nrow(df)){ 
     
@@ -94,5 +92,6 @@ for (o in 1:nrow(intl_out)){
 stopifnot(names(df) %in% names(template)) 
 
 #write csv
-write.csv(df, paste0(template.dir, output), row.names = F)
+print("writing output file")
+write.csv(df, paste0(output.dir), row.names = F)
 
