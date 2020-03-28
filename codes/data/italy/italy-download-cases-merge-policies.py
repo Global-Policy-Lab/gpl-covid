@@ -12,6 +12,7 @@ import pandas as pd
 import numpy as np
 from codes import utils as cutil
 from codes import pop as cpop
+from codes import merge as cmerge
 
 # #### Define paths
 
@@ -353,11 +354,10 @@ adm2_cases = adm2_cases[adm2_cases['adm2_name'] != 'Unknown']
 
 # ## Merge Health with Policies
 
-# If this changes, need to update implementation
-assert policies_full['date_end'].notnull().sum() == 0
-
 # Clean data
 policies_full['date_start'] = pd.to_datetime(policies_full['date_start'])
+policies_full['date_end'] = pd.to_datetime(policies_full['date_end'])
+policies_full['date_end'] = policies_full['date_end'].fillna(pd.to_datetime('2099-12-31'))
 policies_full['policy'] = policies_full['policy'].str.strip()
 
 # Convert 'optional' to indicator variable
@@ -390,7 +390,7 @@ policies_full['adm3_name'] = policies_full['adm3_name'].replace(replace_dict)
 # Remove any duplicates, grouping on relevant columns
 policies = policies_full[
     ['adm3_name','adm2_name','adm1_name','adm0_name',
-     'date_start','policy','policy_intensity', 'optional']
+     'date_start', 'date_end', 'policy','policy_intensity', 'optional']
 ].drop_duplicates()
 
 
@@ -436,8 +436,8 @@ policies = cpop.aggregate_policy_popweights(policies, 2, country_code)
 # End of population assignment
 
 # Check that population weights are all there
-assert len(policies[policies['adm1_pop_weight_perc'].isnull()]) == 0
-assert len(policies[policies['adm2_pop_weight_perc'].isnull()]) == 0
+assert len(policies[policies['adm1_pop_intensity_weight'].isnull()]) == 0
+assert len(policies[policies['adm2_pop_intensity_weight'].isnull()]) == 0
 assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
 assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
 assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
@@ -446,115 +446,22 @@ assert adm2_cases['population'].isnull().sum() == 0
 
 # In[ ]:
 
-adm1_policies = policies[['date_start', 'adm1_name', 'policy', 'optional', 'policy_intensity', 'adm1_pop_weight_perc']].drop_duplicates()
-adm2_policies = policies[['date_start', 'adm1_name', 'adm2_name', 'policy', 'optional', 'policy_intensity', 'adm2_pop_weight_perc']].drop_duplicates()
+adm1_policies = policies[['date_start', 'date_end', 'adm1_name', 'policy', 'optional', 'policy_intensity', 'adm1_pop_intensity_weight']].drop_duplicates()
+adm2_policies = policies[['date_start', 'date_end', 'adm1_name', 'adm2_name', 'policy', 'optional', 'policy_intensity', 'adm2_pop_intensity_weight']].drop_duplicates()
 
 # Assign policy indicators
 
 # In[ ]:
 
-
-exclude_from_popweights = ['testing_regime', 'travel_ban_intl_in', 'travel_ban_intl_out']
-
-# Initialize policy columns in health data
-for policy_name in policies['policy'].unique():
-    adm1_cases[policy_name] = 0
-    adm2_cases[policy_name] = 0
-    
-    # Include pop-weighted column for policies applied within the country
-    if policy_name not in exclude_from_popweights:
-        adm1_cases[policy_name + popweighted_suffix] = 0
-        adm2_cases[policy_name + popweighted_suffix] = 0
-
-def assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensity, perc_name):
-    policy_on_value = 1
-    
-    adm_cases.loc[policy_on_mask, policy] = policy_on_value * intensity
-    
-    if policy not in exclude_from_popweights:
-        adm_cases.loc[policy_on_mask, policy + popweighted_suffix] = perc_name * intensity
-    
-    return adm_cases
-        
-def assign_adm1_policy_variables(adm1_cases, adm1_policies):    
-    
-    for date, policy, optional, adm, perc_name, intensity in adm1_policies[
-        ['date_start', 'policy', 'optional', 'adm1_name', 'adm1_pop_weight_perc', 'policy_intensity']
-    ].to_numpy():
-
-        # All policies on or after policy was enacted, where one of these conditions applies:
-            # The policy applies to all Adm1
-            # This Adm1 is named explicitly
-        policy_on_mask = (
-            (adm1_cases['date'] >= date) &
-            (
-                (adm1_cases['adm1_name'] == adm) | (adm == 'All')
-            )
-        )
-
-        adm1_cases = assign_policy_variable_from_mask(adm1_cases, policy_on_mask, policy, intensity, perc_name)
-    
-    return adm1_cases
-
-def assign_adm2_policy_variables(adm2_cases, adm2_policies):
-
-    for date, policy, optional, adm1, adm2, perc_name, intensity in adm2_policies[
-        ['date_start', 'policy', 'optional', 'adm1_name', 'adm2_name', 'adm2_pop_weight_perc', 'policy_intensity']
-    ].to_numpy():
-
-        # All policies on or after policy was enacted, where one of these conditions applies:
-            # The policy applies to all Adm1
-            # This Adm2 is named explicitly
-            # This Adm2's Adm1 is named explicitly, and Adm2 is listed as "All" (i.e. all under that Adm1)
-        policy_on_mask = (
-            (adm2_cases['date'] >= date) &
-            (
-                (adm2_cases['adm2_name'] == adm2) | 
-                (adm1 == 'All') | 
-                (
-                    (adm2 == 'All') & (adm1 == adm2_cases['adm1_name'])
-                )
-            )
-        )
-
-        adm2_cases = assign_policy_variable_from_mask(adm2_cases, policy_on_mask, policy, intensity, perc_name)
-        
-    return adm2_cases
-
-adm1_cases = assign_adm1_policy_variables(adm1_cases, adm1_policies)
-adm2_cases = assign_adm2_policy_variables(adm2_cases, adm2_policies)
-
-# Count number of policies in each health-policy dataset
-
-# In[ ]:
-
-
-adm1_cases['policies_enacted'] = 0
-adm2_cases['policies_enacted'] = 0
-for policy_name in policies['policy'].unique():
-    adm1_cases['policies_enacted'] += adm1_cases[policy_name]
-    adm2_cases['policies_enacted'] += adm2_cases[policy_name]
-
+adm1_cases = cmerge.assign_adm_policy_variables(adm1_cases, adm1_policies, 1)
+adm2_cases = cmerge.assign_adm_policy_variables(adm2_cases, adm2_policies, 2)
 
 # Use default value for `no_gathering_size`
-
-# In[ ]:
-
-
 adm1_cases['no_gathering_size'] = 0
 adm2_cases['no_gathering_size'] = 0
 
 
-# Read `[country]_processed` template and find any output columns missing in template
-
-# In[ ]:
-
-
 template = pd.read_csv(path_template)
-
-
-# In[ ]:
-
 
 missing_from_template = (set(adm1_cases.columns) | set(adm2_cases.columns)) - set(template.columns)
 assert len(missing_from_template) == 0

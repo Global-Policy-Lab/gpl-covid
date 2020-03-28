@@ -160,7 +160,7 @@ def calculate_policy_popweights_each_row(policies, max_adm_level):
             policies[lower_level].notnull(),
             this_level_weight
         ] = (
-            policies['policy_intensity'] * multiplier * policies[lower_level] / policies[this_level]
+            multiplier * policies[lower_level] / policies[this_level]
         )
 
         policies.loc[policies[lower_level].isnull(), this_level_weight] = policies['policy_intensity']
