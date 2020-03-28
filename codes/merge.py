@@ -48,21 +48,26 @@ def count_policies_enacted(adm_cases, adm_policies):
 
     return adm_cases
 
-def assign_adm_policy_variables(adm_cases, adm_policies, adm_cases_level):
+def get_relevant_policy_cols(adm_levels, adm_cases_level):
+    adm_names = [f'adm{adm_level}_name' for adm_level in adm_levels]
+    non_adm_name_cols = ['date_start', 'date_end', 'policy', 'optional', 'policy_intensity', f'adm{adm_cases_level}_pop_intensity_weight']
+    return adm_names + non_adm_name_cols
+
+def get_relevant_policy_set(policies, adm_levels, adm_cases_level):
+    policy_cols = get_relevant_policy_cols(adm_levels, adm_cases_level)
+    return policies[policy_cols].drop_duplicates()
+
+def assign_adm_policy_variables(adm_cases, policies, adm_cases_level):
+    adm_levels = list(range(1, adm_cases_level + 1))
+
+    policy_cols = get_relevant_policy_cols(adm_levels, adm_cases_level)
+    adm_policies = get_relevant_policy_set(policies, adm_levels, adm_cases_level)
     adm_cases = initialize_policy_variables(adm_cases, adm_policies)
 
-    adm_levels = list(range(1, adm_cases_level + 1))
-    adm_names = [f'adm{adm_level}_name' for adm_level in adm_levels]
-    adm_values = adm_policies[adm_names].to_numpy()
-    other_values = adm_policies[
-        ['date_start', 'date_end', 'policy', 'optional', f'adm{adm_cases_level}_pop_intensity_weight', 'policy_intensity']
-    ].to_numpy()
-
-    for i in range(len(adm_values)):
-        date_start, date_end, policy, optional, weight, intensity = other_values[i]
-        adms = adm_values[i]
+    for *adms, date_start, date_end, policy, optional, intensity, weight in adm_policies.to_numpy():
         policy_on_mask = get_mask(adm_cases, adms, adm_levels, date_start, date_end)
         adm_cases = assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensity, weight)
        
     adm_cases = count_policies_enacted(adm_cases, adm_policies) 
+
     return adm_cases

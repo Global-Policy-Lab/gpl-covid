@@ -393,30 +393,16 @@ policies = policies_full[
      'date_start', 'date_end', 'policy','policy_intensity', 'optional']
 ].drop_duplicates()
 
-
-# In[ ]:
-
-
 # If this fails, have to implement `testing_regime` as categorical variable
 # This works right now because only one change in "testing_regime", a categorical variable
 assert policies.groupby('policy')['policy'].count()['testing_regime'] == 1
 
-
 # Replace optional policies with `policy_name` to `policy_name_opt`
-
-# In[ ]:
-
-
 policies.loc[policies['optional'] == 1, 'policy'] = policies.loc[policies['optional'] == 1, 'policy'] + optional_suffix
 
-
 # Ensure all policies listed have corresponding adm-units in health data
-
-# In[ ]:
-
 adm1_not_found = set(policies['adm1_name'].unique()) - set(adm1_cases['adm1_name'].unique()) - set(['All'])
 adm2_not_found = set(policies['adm2_name'].unique()) - set(adm2_cases['adm2_name'].unique()) - set(['All'])
-
 assert len(adm1_not_found) == 0
 assert len(adm2_not_found) == 0
 
@@ -444,33 +430,23 @@ assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
 assert adm1_cases['population'].isnull().sum() == 0
 assert adm2_cases['population'].isnull().sum() == 0
 
-# In[ ]:
-
-adm1_policies = policies[['date_start', 'date_end', 'adm1_name', 'policy', 'optional', 'policy_intensity', 'adm1_pop_intensity_weight']].drop_duplicates()
-adm2_policies = policies[['date_start', 'date_end', 'adm1_name', 'adm2_name', 'policy', 'optional', 'policy_intensity', 'adm2_pop_intensity_weight']].drop_duplicates()
-
 # Assign policy indicators
+adm1_cases = cmerge.assign_adm_policy_variables(adm1_cases, policies, 1)
+adm2_cases = cmerge.assign_adm_policy_variables(adm2_cases, policies, 2)
 
-# In[ ]:
-
-adm1_cases = cmerge.assign_adm_policy_variables(adm1_cases, adm1_policies, 1)
-adm2_cases = cmerge.assign_adm_policy_variables(adm2_cases, adm2_policies, 2)
-
-# Use default value for `no_gathering_size`
 adm1_cases['no_gathering_size'] = 0
 adm2_cases['no_gathering_size'] = 0
 
+# Check nothing's missing in template
+def check_against_template(*adm_cases_list):
+	template = pd.read_csv(path_template)
+	for adm_cases in adm_cases_list:
+		missing_from_template = set(adm1_cases.columns) - set(template.columns)
+		assert len(missing_from_template) == 0
 
-template = pd.read_csv(path_template)
-
-missing_from_template = (set(adm1_cases.columns) | set(adm2_cases.columns)) - set(template.columns)
-assert len(missing_from_template) == 0
-
+check_against_template(adm1_cases, adm2_cases)
 
 # Save to `ITA_processed.csv`'s
-
-# In[ ]:
-
 adm1_cases = adm1_cases.sort_values(['date', 'adm1_name'], ascending=True)
 adm2_cases = adm2_cases.sort_values(['date', 'adm2_name'], ascending=True)
 
