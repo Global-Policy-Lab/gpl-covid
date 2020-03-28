@@ -2,6 +2,10 @@
 
 clear all
 //-----------------------setup
+// import end of sample cut-off 
+import delim using codes/data/cutoff_dates.csv, clear 
+keep if tag == "default"
+local end_sample = end_date[1]
 
 // load data
 insheet using data/processed/adm1/FRA_processed.csv, clear 
@@ -10,9 +14,9 @@ cap set scheme covid19_fig3 // optional scheme for graphs
  
 // set up time variables
 gen t = date(date, "YMD")
-keep if t <= date("20200325","YMD") // merge with outside file
-
 lab var t "date"
+keep if t <= date("`end_sample'","YMD")
+
 gen dow = dow(t)
 gen month = month(t)
 gen year = year(t)
