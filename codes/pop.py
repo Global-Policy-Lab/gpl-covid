@@ -144,14 +144,14 @@ def calculate_policy_popweights_each_row(policies, max_adm_level):
             e.g. `max_adm_level` == 3 would assign population weights at adm-levels 1, 2, and 3
     Returns:
         pandas.DataFrame: `policies` with a new column for each level up to `max_adm_level`
-            i.e. "adm_{`adm_level`}_pop_weight_perc_newtoday" for each `adm_level` from 1 to `max_adm_level`
+            i.e. "adm_{`adm_level`}_pop_intensity_weight_newtoday" for each `adm_level` from 1 to `max_adm_level`
 
     """
     for adm_level in range(max_adm_level, 0, -1):
         lower_level = f'adm{adm_level + 1}_pop'
         this_level = f'adm{adm_level}_pop'
-        lower_level_weight = f'adm{adm_level + 1}_pop_weight_perc_newtoday'
-        this_level_weight = f'adm{adm_level}_pop_weight_perc_newtoday'
+        lower_level_weight = f'adm{adm_level + 1}_pop_intensity_weight_newtoday'
+        this_level_weight = f'adm{adm_level}_pop_intensity_weight_newtoday'
         policies[this_level_weight] = np.nan
         
         multiplier = policies[lower_level_weight] if lower_level_weight in policies.columns else 1
@@ -160,10 +160,10 @@ def calculate_policy_popweights_each_row(policies, max_adm_level):
             policies[lower_level].notnull(),
             this_level_weight
         ] = (
-            multiplier * policies[lower_level] / policies[this_level]
+            policies['policy_intensity'] * multiplier * policies[lower_level] / policies[this_level]
         )
 
-        policies.loc[policies[lower_level].isnull(), this_level_weight] = 1
+        policies.loc[policies[lower_level].isnull(), this_level_weight] = policies['policy_intensity']
 
     return policies
 
@@ -172,30 +172,30 @@ def aggregate_policy_popweights(policies, adm_level, country_code):
 
     Args:
         policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```,
-            with "_pop" columns and "_pop_weight_perc_newtoday" already assigned.
+            with "_pop" columns and "_pop_intensity_weight_newtoday" already assigned.
         max_adm_level (int): Adm-level at and below which population weights should be assigned, down to adm1
             e.g. `max_adm_level` == 3 would assign population weights at adm-levels 1, 2, and 3
     Returns:
         pandas.DataFrame: `policies` with 
             1. a new column for each level up to `max_adm_level`
-                i.e. "adm_{`adm_level`}_pop_weight_perc" for each `adm_level` from 1 to `max_adm_level`
-            2. temporary column dropped "adm_{`adm_level`}_pop_weight_perc_newtoday"
+                i.e. "adm_{`adm_level`}_pop_intensity_weight" for each `adm_level` from 1 to `max_adm_level`
+            2. temporary column dropped "adm_{`adm_level`}_pop_intensity_weight_newtoday"
 
     """
-    sum_each_day = policies.sort_values('date_start').groupby(['date_start', 'policy', f'adm{adm_level}_name'])[f'adm{adm_level}_pop_weight_perc_newtoday'].sum().reset_index()
+    sum_each_day = policies.sort_values('date_start').groupby(['date_start', 'policy', f'adm{adm_level}_name'])[f'adm{adm_level}_pop_intensity_weight_newtoday'].sum().reset_index()
 
-    sum_cumulative = sum_each_day.groupby([f'adm{adm_level}_name', 'policy'])[f'adm{adm_level}_pop_weight_perc_newtoday'].cumsum()
-    sum_cumulative.name = f'cum_adm{adm_level}_pop_weight_perc'
+    sum_cumulative = sum_each_day.groupby([f'adm{adm_level}_name', 'policy'])[f'adm{adm_level}_pop_intensity_weight_newtoday'].cumsum()
+    sum_cumulative.name = f'cum_adm{adm_level}_pop_intensity_weight'
     sum_cumulative.loc[sum_cumulative > 1] = 1
 
     sum_cumulative = sum_each_day.join(sum_cumulative)
 
-    sum_cumulative = sum_cumulative.set_index(['date_start', 'policy', f'adm{adm_level}_name'])[[f'cum_adm{adm_level}_pop_weight_perc']]
+    sum_cumulative = sum_cumulative.set_index(['date_start', 'policy', f'adm{adm_level}_name'])[[f'cum_adm{adm_level}_pop_intensity_weight']]
 
     policies = pd.merge(policies, sum_cumulative, how='left', left_on=['date_start', 'policy', f'adm{adm_level}_name'], right_index=True)
 
-    policies[f'adm{adm_level}_pop_weight_perc'] = policies[f'cum_adm{adm_level}_pop_weight_perc']
+    policies[f'adm{adm_level}_pop_intensity_weight'] = policies[f'cum_adm{adm_level}_pop_intensity_weight']
     policies = policies.drop(columns=[
-        f'cum_adm{adm_level}_pop_weight_perc', f'adm{adm_level}_pop_weight_perc_newtoday'
+        f'cum_adm{adm_level}_pop_intensity_weight', f'adm{adm_level}_pop_intensity_weight_newtoday'
     ])
     return policies
