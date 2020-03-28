@@ -95,6 +95,15 @@ def check_columns_are_in_template(df, country, adm, template):
     message = "Columns missing from template ([country]_processed.csv): " + str(sorted(missing_from_template))
     test_condition(template_matches, country, adm, message)
 
+def check_opt_and_non_opt_align(df, country, adm):
+    for col in df.columns:
+        if "_opt" in col and col.replace("_opt", "") in df.columns:
+            nonopt_col = col.replace("_opt", "")
+            row_mismatch_len = len(df[df[nonopt_col] + df[col] > 1])
+            cols_add_to_one_or_below = row_mismatch_len == 0
+            message = f"Sum of fields > 1 in cols {nonopt_col} and {col}, in {row_mismatch_len} cases"
+            test_condition(cols_add_to_one_or_below, country, adm, message)
+
 def get_cutoff_date(path_cutoff_dates):
     cutoff_table = pd.read_csv(path_cutoff_dates)
     cutoff_date = pd.to_datetime(
@@ -137,6 +146,7 @@ def main():
             check_popweights_in_bounds(df, country, adm)
             check_columns_are_not_null(df, country, adm)
             check_columns_are_in_template(df, country, adm, template)
+            check_opt_and_non_opt_align(df, country, adm)
 
 if __name__=="__main__":
     main()
