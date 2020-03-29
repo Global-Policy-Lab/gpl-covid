@@ -198,6 +198,10 @@ outsheet using "models/reg_data/CHN_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_*, absorb(i.adm12_id, savefe) cluster(t) resid
 
+outreg2 using "results/tables/CHN_estimates_table", word replace label ///
+ addtext(City FE, "YES", Day-of-Week FE, "NO") title("Regression output: China")
+cap erase "results/tables/CHN_estimates_table.txt"
+
 // export coef
 tempfile results_file
 postfile results str18 adm0 str50 policy beta se using `results_file', replace

@@ -118,6 +118,11 @@ outsheet using "models/reg_data/ITA_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
 
+outreg2 using "results/tables/ITA_estimates_table", word replace label ///
+ addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: Italy")
+cap erase "results/tables/ITA_estimates_table.txt"
+
+
 // looking at different policies (similar to Fig2)
 coefplot, keep(p_*)
 
