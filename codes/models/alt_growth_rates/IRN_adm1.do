@@ -3,6 +3,11 @@
 clear all
 //-----------------------setup
 
+// import end of sample cut-off 
+import delim using codes/data/cutoff_dates.csv, clear 
+keep if tag == "default"
+local end_sample = end_date[1]
+
 // load data
 insheet using data/processed/adm1/IRN_processed.csv, clear 
 
@@ -26,6 +31,7 @@ tsset adm1_id t, daily
 // quality control
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 drop if t <= mdy(2,26,2020) // DATA QUALITY CUTOFF DATE
+keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 // flag which admin unit has longest series
 tab adm1_name if cum_confirmed_cases!=., sort 
@@ -130,16 +136,16 @@ absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
 // saving coefs
 tempfile results_file
-postfile results str18 adm0 str50 policy str18 suffix beta se using `results_file', replace
+postfile results str18 adm0 str50 policy beta se using `results_file', replace
 foreach var in "p_1" "p_2"{
-	post results ("IRN") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+	post results ("IRN") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 // effect of package of policies (FOR FIG2)
 lincom p_1 + p_2 //rest of country
-post results ("IRN") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+post results ("IRN") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 lincom p_1 + p_2 + p_1_x_Tehran + p_2_x_Tehran //in Tehran
-post results ("IRN") ("comb. policy Tehran") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+post results ("IRN") ("comb. policy Tehran") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 // looking at different policies (FOR FIG2)
 coefplot, keep(p_1 p_2)
@@ -194,7 +200,7 @@ foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_
 
 // the mean here is the avg "biological" rate of initial spread (FOR Fig2)
 sum y_counter
-post results ("IRN") ("no_policy rate") ("`suffix'") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+post results ("IRN") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
 
 // export predicted counterfactual growth rate
 preserve
@@ -232,7 +238,7 @@ tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
@@ -240,13 +246,13 @@ saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, rep
 //-------------------------------Running the model for Tehran only 
 
 reg D_l_cum_confirmed_cases p_1 p_2 testing_regime_* if adm1_name=="Tehran"
-post results ("IRN_Tehran") ("no_policy rate") ("`suffix'") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
+post results ("IRN_Tehran") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
 
 postclose results
 
 preserve
 	use `results_file', clear
-	outsheet * using "models/IRN_coefs`suffix'.csv", comma replace // for display (figure 2)
+	outsheet * using "models/IRN_coefs.csv", comma replace // for display (figure 2)
 restore
 
 
@@ -278,7 +284,7 @@ tw (rspike ub_y_actual_thr lb_y_actual_thr t, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg_thr t, color(black)) ///
 if e(sample), ///
 title("Tehran, Iran", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
 
