@@ -1,17 +1,7 @@
-adm0,policy,suffix,beta,se
-<<<<<<< Updated upstream
-"FRA","national_lockdown","",-.047,.024
-"FRA","school_closure","",-.008,.04
-"FRA","social_distance","",.012,.103
-"FRA","pck_no_gathering","",-.249,.114
-"FRA","comb. policy","",-.292,.06
-"FRA","no_policy rate","",.356,.062
-=======
-"FRA","event_cancel","_imputed",-.23,.268
-"FRA","school_closure_reg","_imputed",-.109,.054
-"FRA","social_distance","_imputed",.025,.145
-"FRA","national_no_gather","_imputed",-.114,.031
-"FRA","national_lockdown","_imputed",-.018,.025
-"FRA","comb. policy","_imputed",-.446,.249
-"FRA","no_policy rate","_imputed",.373,.136
->>>>>>> Stashed changes
+adm0,policy,beta,se
+"FRA","national_lockdown",-.047,.024
+"FRA","school_closure",-.008,.04
+"FRA","social_distance",.012,.103
+"FRA","pck_no_gathering",-.249,.114
+"FRA","comb. policy",-.292,.06
+"FRA","no_policy rate",.356,.062
