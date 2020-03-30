@@ -167,14 +167,26 @@ def calculate_policy_popweights_each_row(policies, max_adm_level):
 
     return policies
 
-def aggregate_policy_popweights(policies, adm_level, country_code):
+def get_cum_sum(policies, adm_level):
+    sum_each_day = policies.sort_values('date_start').groupby(['date_start', 'policy', f'adm{adm_level}_name'])[f'adm{adm_level}_pop_intensity_weight_newtoday'].sum().reset_index()
+
+    sum_cumulative = sum_each_day.groupby([f'adm{adm_level}_name', 'policy'])[[f'adm{adm_level}_pop_intensity_weight_newtoday']].cumsum()
+    sum_cumulative = sum_cumulative.rename(columns={f'adm{adm_level}_pop_intensity_weight_newtoday':f'cum_adm{adm_level}_pop_intensity_weight'})
+    sum_cumulative.loc[sum_cumulative[f'cum_adm{adm_level}_pop_intensity_weight'] > 1] = 1
+
+    sum_cumulative = sum_each_day.join(sum_cumulative)
+
+    sum_cumulative = sum_cumulative.set_index(['date_start', 'policy', f'adm{adm_level}_name'])[[f'cum_adm{adm_level}_pop_intensity_weight']]
+
+    return sum_cumulative
+
+def aggregate_policy_popweights(policies, adm_level):
     """Assign all population weights to DataFrame of policy data
 
     Args:
-        policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```,
+        policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{country_code}/{country_code}_policy_data_sources.csv```,
             with "_pop" columns and "_pop_intensity_weight_newtoday" already assigned.
-        max_adm_level (int): Adm-level at and below which population weights should be assigned, down to adm1
-            e.g. `max_adm_level` == 3 would assign population weights at adm-levels 1, 2, and 3
+        adm_level (int): Adm-level at and below which population weights should be assigned
     Returns:
         pandas.DataFrame: `policies` with 
             1. a new column for each level up to `max_adm_level`
@@ -182,15 +194,7 @@ def aggregate_policy_popweights(policies, adm_level, country_code):
             2. temporary column dropped "adm_{`adm_level`}_pop_intensity_weight_newtoday"
 
     """
-    sum_each_day = policies.sort_values('date_start').groupby(['date_start', 'policy', f'adm{adm_level}_name'])[f'adm{adm_level}_pop_intensity_weight_newtoday'].sum().reset_index()
-
-    sum_cumulative = sum_each_day.groupby([f'adm{adm_level}_name', 'policy'])[f'adm{adm_level}_pop_intensity_weight_newtoday'].cumsum()
-    sum_cumulative.name = f'cum_adm{adm_level}_pop_intensity_weight'
-    sum_cumulative.loc[sum_cumulative > 1] = 1
-
-    sum_cumulative = sum_each_day.join(sum_cumulative)
-
-    sum_cumulative = sum_cumulative.set_index(['date_start', 'policy', f'adm{adm_level}_name'])[[f'cum_adm{adm_level}_pop_intensity_weight']]
+    sum_cumulative = get_cum_sum(policies, adm_level)
 
     policies = pd.merge(policies, sum_cumulative, how='left', left_on=['date_start', 'policy', f'adm{adm_level}_name'], right_index=True)
 

@@ -17,7 +17,8 @@ from codes import impute as cimpute
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--r", type=bool, default=True, help="reload raw health (GitHub) datasets")
+parser.add_argument('--nr', dest='r', action='store_false', help="do not reload raw health (GitHub) datasets")
+parser.set_defaults(r=True)
 args = parser.parse_args()
 reload_raw = args.r
 
@@ -293,8 +294,8 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 
 	policies = cpop.merge_policies_with_population(policies, country_code, max_adm_level)
 	policies = cpop.calculate_policy_popweights_each_row(policies, 2)
-	policies = cpop.aggregate_policy_popweights(policies, 1, country_code)
-	policies = cpop.aggregate_policy_popweights(policies, 2, country_code)
+	policies = cpop.aggregate_policy_popweights(policies, 1)
+	policies = cpop.aggregate_policy_popweights(policies, 2)
 	# End of population assignment
 
 	# Check that population weights are all there
