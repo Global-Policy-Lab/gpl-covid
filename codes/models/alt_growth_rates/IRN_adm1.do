@@ -134,6 +134,11 @@ outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 reghdfe D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran testing_regime_*, ///
 absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
+outreg2 using "results/tables/IRN_estimates_table", word replace label ///
+ addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: Iran")
+cap erase "results/tables/IRN_estimates_table.txt"
+
+
 // saving coefs
 tempfile results_file
 postfile results str18 adm0 str50 policy beta se using `results_file', replace

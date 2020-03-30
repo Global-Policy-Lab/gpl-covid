@@ -21,7 +21,7 @@ gen month = month(t)
 gen year = year(t)
 gen day = day(t)
 
-//set up panel
+// set up panel
 xtset adm1_id t
 
 // quality control
@@ -100,11 +100,11 @@ outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 reghdfe D_l_cum_confirmed_cases testing national_lockdown school_closure ///
  social_distance pck_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
  
-outreg2 using "models/tables/FRA_estimates_table", word replace label ///
+outreg2 using "results/tables/FRA_estimates_table", word replace label ///
  addtext(Region FE, "YES", Day-of-Week FE, "YES") title("Regression output: France")
-cap erase "models/tables/FRA_estimates_table.txt"
+cap erase "results/tables/FRA_estimates_table.txt"
 
-//saving coefs
+// saving coefs
 tempfile results_file
 postfile results str18 adm0 str18 policy beta se using `results_file', replace
 foreach var in "national_lockdown" "school_closure" "social_distance" "pck_no_gathering" {
@@ -116,7 +116,7 @@ lincom national_lockdown + school_closure + social_distance + pck_no_gathering
 
 post results ("FRA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
-//looking at different policies
+// looking at different policies
 coefplot, xline(0) keep(national_lockdown school_closure social_distance pck_no_gathering ) 
 
 
@@ -173,7 +173,7 @@ foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_
 sum y_counter
 post results ("FRA") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
 
-//export predicted counterfactual growth rate
+// export predicted counterfactual growth rate
 preserve
 	keep if e(sample) == 1
 	keep y_counter

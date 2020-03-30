@@ -125,6 +125,11 @@ outsheet using "models/reg_data/USA_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
+outreg2 using "results/tables/USA_estimates_table", word replace label ///
+ addtext(State FE, "YES", Day-of-Week FE, "YES") title("Regression output: United States")
+cap erase "results/tables/USA_estimates_table.txt"
+
+
 // export coef
 tempfile results_file
 postfile results str18 adm0 str18 policy beta se using `results_file', replace

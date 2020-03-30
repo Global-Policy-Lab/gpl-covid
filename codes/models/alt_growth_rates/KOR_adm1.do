@@ -136,6 +136,11 @@ outsheet using "models/reg_data/KOR_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
+outreg2 using "results/tables/KOR_estimates_table", word replace label ///
+ addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: South Korea")
+cap erase "results/tables/KOR_estimates_table.txt"
+
+
 // export coef
 tempfile results_file
 postfile results str18 adm0 str18 policy beta se using `results_file', replace
