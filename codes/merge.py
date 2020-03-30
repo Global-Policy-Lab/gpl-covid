@@ -1,9 +1,10 @@
 import numpy as np
+import pandas as pd
 
-popweighted_suffix = '_popwt'
+popweighted_suffix = 'popwt'
 exclude_from_popweights = ['testing_regime', 'travel_ban_intl_in', 'travel_ban_intl_out']
 
-def assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensity, weight):
+def assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensity, weight, policy_level):
     """Assigns a policy as a (weighted or non-weighted) indicator to a DataFrame
     Args:
         adm_cases (pandas.DataFrame): DataFrame to assign `policy` column
@@ -19,10 +20,10 @@ def assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensit
         pandas.DataFrame: `adm_cases` with a new column named after `policy`, and, if
             applicable, a new column named after `policy` with `popweighted_suffix` appended
     """    
-    adm_cases.loc[policy_on_mask, policy] = intensity
+    adm_cases.loc[policy_on_mask, f'{policy}_{str(policy_level)}'] = intensity
     
     if policy not in exclude_from_popweights:
-        adm_cases.loc[policy_on_mask, policy + popweighted_suffix] = weight
+        adm_cases.loc[policy_on_mask, f'{policy}_{popweighted_suffix}_{str(policy_level)}'] = weight
     
     return adm_cases
 
@@ -58,7 +59,7 @@ def get_mask(adm_cases, adm_names, adm_levels, date_start, date_end):
     policy_on_mask = (date_in_bounds) & (adms_covered)
     return policy_on_mask
 
-def initialize_policy_variables(adm_cases, adm_policies):
+def initialize_policy_variables(adm_cases, adm_policies, policy_level):
     """Assigns a policy as 0 (not enacted) to all rows of a DataFrame
     Args:
         adm_cases (pandas.DataFrame): DataFrame to assign policy columns
@@ -72,11 +73,11 @@ def initialize_policy_variables(adm_cases, adm_policies):
 
     # Initialize policy columns in health data
     for policy_name in adm_policies['policy'].unique():
-        adm_cases[policy_name] = 0
+        adm_cases[f'{policy_name}_{str(policy_level)}'] = 0
         
         # Include pop-weighted column for policies applied within the country
         if policy_name not in exclude_from_popweights:
-            adm_cases[policy_name + popweighted_suffix] = 0
+            adm_cases[f'{policy_name}_{popweighted_suffix}_{str(policy_level)}'] = 0
 
     return adm_cases
 
@@ -110,10 +111,10 @@ def get_relevant_policy_cols(adm_levels, adm_cases_level):
         list of str: list of columns in a policies DataFrame that are needed to create indicator variables
     """
     adm_names = [f'adm{adm_level}_name' for adm_level in adm_levels]
-    non_adm_name_cols = ['date_start', 'date_end', 'policy', 'optional', 'policy_intensity', f'adm{adm_cases_level}_pop_intensity_weight']
+    non_adm_name_cols = ['date_start', 'date_end', 'policy', 'policy_intensity', f'adm{adm_cases_level}_pop_intensity_weight']
     return adm_names + non_adm_name_cols
 
-def get_relevant_policy_set(policies, adm_levels, adm_cases_level):
+def get_relevant_policy_set(policies, adm_levels, adm_cases_level, policy_level):
     """Get a version of `policies` with the relevant columns included, and duplicates dropped
     Args:
         policies (pandas.DataFrame): Full DataFrame of policies
@@ -127,9 +128,91 @@ def get_relevant_policy_set(policies, adm_levels, adm_cases_level):
         pandas.DataFrame: a version of `policies` with the relevant columns included, and duplicates dropped
     """
     policy_cols = get_relevant_policy_cols(adm_levels, adm_cases_level)
-    return policies[policy_cols].drop_duplicates()
+    groupby_cols = [col for col in policy_cols if col != 'policy_intensity'] + ['policy_level']
 
-def assign_adm_policy_variables(adm_cases, policies, adm_cases_level):
+    max_policy_intensities = policies.groupby(groupby_cols)[['policy_intensity']].max()
+
+    policies = pd.merge(policies[groupby_cols], max_policy_intensities, left_on=groupby_cols, right_index=True)
+
+    return policies.loc[policies['policy_level'] == policy_level][policy_cols].drop_duplicates()
+
+def aggregate_policies_across_levels(adm_cases, policies, adm_level, max_adm_level):
+
+    for policy in policies['policy'].unique():
+        if '_opt' in policy:
+            adm_cases_policy_cols = [
+                col for col in adm_cases if col[:len(policy)] == policy
+            ]
+        else:
+            adm_cases_policy_cols = [
+                col for col in adm_cases if col[:len(policy)] == policy and '_opt' not in col
+            ]
+
+        # Get all popwt cols
+        adm_cases_popwt_cols = [
+            col for col in adm_cases_policy_cols if popweighted_suffix in col
+        ]
+
+        # Get all intensity cols (indicators)
+        adm_cases_intensity_cols = [
+            col for col in adm_cases_policy_cols if popweighted_suffix not in col
+        ]
+
+        # Assign non-weighted col to the maximum intensity across adm levels
+        adm_cases[policy] = np.max([adm_cases[col] for col in adm_cases_intensity_cols])
+
+        # Get cols at or below (lower resolution) adm level of `adm_cases`
+        adm_cases_intensity_lower_cols = [
+            col for col in adm_cases_intensity_cols if int(col[-1]) <= adm_level
+        ]
+
+        adm_cases_intensity_lower = [
+            adm_cases[col] for col in adm_cases_intensity_cols if int(col[-1]) <= adm_level
+        ]
+
+        # Get cols above (higher resolution) adm level of `adm_cases`
+        adm_cases_intensity_higher_cols = [
+            col for col in adm_cases_intensity_cols if int(col[-1]) > adm_level
+        ]
+
+        # Get pop-weighted cols above (higher resolution) adm level of `adm_cases`
+        adm_cases_popwt_higher = [
+            col for col in adm_cases_popwt_cols if int(col[-1]) > adm_level
+        ]
+
+        # Assign default intensity as highest intensity at or below resolution of adm level
+        if len(adm_cases_intensity_lower) > 0:
+            default_intensity = np.amax(adm_cases_intensity_lower, axis=0)
+        else:
+            default_intensity = np.zeros_like(adm_cases[policy])
+
+        if policy not in exclude_from_popweights:
+            # Where higher-level intensity is higher, use weights
+            adm_cases[f'{policy}_{popweighted_suffix}'] = 0
+            pop_accounted_for = np.zeros_like(adm_cases[policy])
+            for i in range(len(adm_cases_intensity_higher_cols)):
+                col = adm_cases_intensity_higher_cols[i]
+                pop_col = adm_cases_popwt_higher[i]
+
+                pop_this_col = adm_cases[pop_col].where(adm_cases[col] > default_intensity, 0)
+
+                adm_cases[f'{policy}_{popweighted_suffix}'] += (
+                    pop_this_col *
+                    adm_cases[col]
+                )
+                pop_accounted_for += pop_this_col
+
+            if len(adm_cases_intensity_lower) > 0:
+                adm_cases[f'{policy}_{popweighted_suffix}'] += (
+                    default_intensity *
+                    (1 - pop_accounted_for)
+                )
+
+        adm_cases = adm_cases.drop(columns=adm_cases_intensity_cols + adm_cases_popwt_cols)
+
+    return adm_cases
+
+def assign_adm_policy_variables(adm_cases, policies, adm_cases_level, max_adm_level):
     """Assign all policy variables from `policies` to `adm_cases`
     Args:
         adm_cases (pandas.DataFrame): table to assign policy variables to, 
@@ -144,13 +227,16 @@ def assign_adm_policy_variables(adm_cases, policies, adm_cases_level):
     adm_levels = list(range(1, adm_cases_level + 1))
 
     policy_cols = get_relevant_policy_cols(adm_levels, adm_cases_level)
-    adm_policies = get_relevant_policy_set(policies, adm_levels, adm_cases_level)
-    adm_cases = initialize_policy_variables(adm_cases, adm_policies)
 
-    for *adms, date_start, date_end, policy, optional, intensity, weight in adm_policies.to_numpy():
-        policy_on_mask = get_mask(adm_cases, adms, adm_levels, date_start, date_end)
-        adm_cases = assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensity, weight)
-       
-    adm_cases = count_policies_enacted(adm_cases, adm_policies) 
+    for policy_level in range(0, 4):
+        adm_policies = get_relevant_policy_set(policies, adm_levels, adm_cases_level, policy_level)
+        adm_cases = initialize_policy_variables(adm_cases, adm_policies, policy_level)
+
+        for *adms, date_start, date_end, policy, intensity, weight in adm_policies.to_numpy():
+            policy_on_mask = get_mask(adm_cases, adms, adm_levels, date_start, date_end)
+            adm_cases = assign_policy_variable_from_mask(adm_cases, policy_on_mask, policy, intensity, weight, policy_level)
+    
+    adm_cases = aggregate_policies_across_levels(adm_cases, policies, adm_cases_level, max_adm_level)
+    # adm_cases = count_policies_enacted(adm_cases, adm_policies) 
 
     return adm_cases
