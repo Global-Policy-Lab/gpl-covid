@@ -33,9 +33,8 @@ tsset adm1_id t, daily
 replace active_cases = . if cum_confirmed_cases < 10 
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 
-drop if t <= 21961 // start 2/17/2020
+drop if t <= mdy(2,18,2020) // start 2/18
 keep if t <= date("`end_sample'","YMD") // to match other country end dates
-
 
 // flag which admin unit has longest series
 tab adm1_name if active_cases!=., sort 
@@ -100,7 +99,6 @@ foreach t_chg of local testing_change_dates{
 	gen testing_regime_change_`t_str' = t==`t_chg'
 }
 
-
 //------------------diagnostic
 
 // diagnostic plot of trends with sample avg as line
@@ -115,11 +113,34 @@ lab var day_avg "Observed avg. change in log cases"
 tw (sc D_l_active_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 
 
+//------------------disaggregated model
+// reghdfe D_l_active_cases testing_regime_change_* ///
+// business_closure_opt emergency_declaration no_demonstration no_gathering_opt ///
+// pos_cases_quarantine religious_closure school_closure social_distance_opt ///
+// welfare_services_closure work_from_home_opt ///
+// , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+//
+// coefplot,keep(business_closure_opt emergency_declaration no_demonstration no_gathering_opt ///
+// pos_cases_quarantine religious_closure school_closure social_distance_opt ///
+// welfare_services_closure work_from_home_opt)
+
+
 //------------------grouping treatments (based on timing and similarity)
 
-gen p_1 = (business_closure + work_from_home_opt)/2
-gen p_2 = (no_demonstration + religious_closure )/2
-gen p_3 = social_distance_opt
+// prev policy packages
+// gen p_1 = (welfare_services_closure + work_from_home_opt)/2
+// gen p_2 = (no_demonstration + religious_closure )/2
+// gen p_3 = social_distance_opt
+// gen p_4 = emergency_declaration 
+//
+// lab var p_1 "closure, stay home"
+// lab var p_2 "no groups"
+// lab var p_3 "social distance"
+// lab var p_4 "emergency declaration"
+
+gen p_1 = (business_closure_opt + work_from_home_opt)/2
+gen p_2 = (no_demonstration + religious_closure)/2
+gen p_3 = (welfare_services_closure + social_distance_opt + no_gathering_opt)/3
 gen p_4 = emergency_declaration 
 
 lab var p_1 "closure, stay home"
@@ -127,6 +148,9 @@ lab var p_2 "no groups"
 lab var p_3 "social distance"
 lab var p_4 "emergency declaration"
 
+*gen p_5 = pos_cases_quarantine // started for all provinces 3/22
+*lab var p_5 "quarantine positive cases"
+// note all schools are closed for the entire sample period
 
 //------------------main estimates
 
@@ -174,19 +198,19 @@ graph drop hist_kor qn_kor
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
 predictnl y_actual = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_3* _b[p_3] + /// 
-p_4* _b[p_4] /// 
- + _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
+p_1 * _b[p_1] + ///
+p_2 * _b[p_2] + ///
+p_3 * _b[p_3] + ///  
+p_4 * _b[p_4] + ///  
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_3* _b[p_3] + /// 
-p_4* _b[p_4] /// 
+p_1 *_b[p_1] + ///
+p_2 * _b[p_2] + ///
+p_3 * _b[p_3] + /// 
+p_4 * _b[p_4] /// 
 if e(sample)
 
 // predicting counterfactual growth for each obs
@@ -197,7 +221,7 @@ predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_cou
 preserve
 	keep if e(sample) == 1
 	collapse  D_l_active_cases p_* 
-	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_3*_b[p_3] + p_4*_b[p_4], ci(LB UB) se(sd) p(pval)
+	predictnl ATE = p_1*_b[p_1] + p_2*_b[p_2] + p_3*_b[p_3] + p_4*_b[p_4], ci(LB UB) se(sd) p(pval)
 	g adm0 = "KOR"
 	outsheet * using "models/KOR_ATE.csv", comma replace 
 restore
@@ -258,3 +282,15 @@ title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log
 xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
+
+// tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
+// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+// || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+// (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (sc day_avg t, color(black)) ///
+// if e(sample), ///
+// title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
+// xscale(range(21960(10)21999)) xlabel(21960(10)21999, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) xsize(8)
