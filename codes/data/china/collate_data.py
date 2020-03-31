@@ -55,7 +55,7 @@ def log_interpolate(array):
 DATA_CHINA = cutil.DATA_RAW / "china"
 health_dxy_file = join(DATA_CHINA, 'DXYArea.csv')
 health_jan_file = join(DATA_CHINA, 'china_city_health_jan.xlsx')
-policy_file = join(DATA_CHINA, 'china_city_policy.xlsx')
+policy_file = join(DATA_CHINA, 'CHN_policy_data_sources.csv')
 pop_file = join(DATA_CHINA, 'china_city_pop.csv')
 output_file = cutil.DATA_PROCESSED / "adm2" / 'CHN_processed.csv'
 match_file = join(DATA_CHINA, 'match_china_city_name_w_adm2.csv')
@@ -286,12 +286,16 @@ for _, row in adm.iterrows():
 ## Load and clean policy data
 
 # load dataset of the policies in China
-df_policy = pd.read_excel(policy_file, sheet_name='City Policies')
+df_policy = pd.read_csv(policy_file).dropna(how='all')
 # subset columns
 df_policy = df_policy.loc[:, [
     'adm0_name', 'adm1_name', 'adm2_name', 'date_start', 'date_end', 'policy']]
 # save set of policies
 policy_set = df_policy['policy'].unique().tolist()
+
+# parse
+df_policy.loc[:, 'date_start'] = pd.to_datetime(df_policy['date_start'])
+df_policy.loc[:, 'date_end'] = pd.to_datetime(df_policy['date_end'])
 
 # check city name agreement
 policy_city_set = set(
@@ -300,7 +304,10 @@ policy_city_set = set(
 adm_city_set = set(
     adm.drop_duplicates()
     .apply(tuple, axis=1).tolist())
-print(policy_city_set - adm_city_set)
+adm_city_set = adm_city_set | set(
+    adm.loc[:, ['adm0_name', 'adm1_name']].drop_duplicates()
+    .apply(lambda x: (*x, 'All'), axis=1).tolist())
+print('Mismatched: ', policy_city_set - adm_city_set)
 
 # subset adm1 policies
 adm1_policy = df_policy.loc[df_policy['adm2_name'] == 'ALL', :]
@@ -443,13 +450,17 @@ df_shp.loc[:, 'adm2_name'] = df_shp.apply(
     lambda x: x['epi_adm2'] if pd.notnull(x['epi_adm2']) else x['adm2_name'],
     axis=1)
 
+df_shp = df_shp.loc[:, ['adm1_name', 'adm2_name', 'latitude', 'longitude']]
+
+df_shp.columns = ['adm1_name', 'adm2_name', 'lat', 'lon']
+
 df = pd.merge(
     df.reset_index(),
-    df_shp.loc[:, ['adm1_name', 'adm2_name', 'latitude', 'longitude']],
+    df_shp,
     how='left', on=['adm1_name', 'adm2_name'])
 
 output_file.parent.mkdir(parents=True, exist_ok=True)
-df.to_csv(output_file, index=True)
+df.to_csv(output_file, index=False)
 
 print('Data Description: ', df.describe(include='all').T)
 print('Data Types: ', df.dtypes)
