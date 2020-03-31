@@ -136,79 +136,125 @@ def get_relevant_policy_set(policies, adm_levels, adm_cases_level, policy_level)
 
     return policies.loc[policies['policy_level'] == policy_level][policy_cols].drop_duplicates()
 
-def aggregate_policies_across_levels(adm_cases, policies, adm_level, max_adm_level):
+def get_popwt_policy(adm_cases, policy, adm_cases_intensity_higher_cols, adm_cases_popwt_higher, adm_cases_intensity_lower, default_intensity):
+    # Where higher-level intensity is higher, use weights
+    adm_cases[f'{policy}_{popweighted_suffix}'] = 0
+    pop_accounted_for = np.zeros_like(adm_cases[policy])
+    for i in range(len(adm_cases_intensity_higher_cols)):
+        col = adm_cases_intensity_higher_cols[i]
+        pop_col = adm_cases_popwt_higher[i]
 
-    for policy in policies['policy'].unique():
+        pop_this_col = adm_cases[pop_col].where(adm_cases[col] > default_intensity, 0)
+
+        adm_cases[f'{policy}_{popweighted_suffix}'] += (
+            pop_this_col *
+            adm_cases[col]
+        )
+        pop_accounted_for += pop_this_col
+
+    if len(adm_cases_intensity_lower) > 0:
+        adm_cases[f'{policy}_{popweighted_suffix}'] += (
+            default_intensity *
+            (1 - pop_accounted_for)
+        )
+
+    return adm_cases[f'{policy}_{popweighted_suffix}']
+
+def get_default_intensity(adm_cases_intensity_lower, adm_cases, policy):
+    if len(adm_cases_intensity_lower) > 0:
+        default_intensity = np.amax(adm_cases_intensity_lower, axis=0)
+    else:
+        default_intensity = np.zeros_like(adm_cases[policy])
+
+    return default_intensity
+
+def aggregate_policies_across_levels(adm_cases, policies, adm_level, max_adm_level):
+    all_policies = policies['policy'].unique()
+    for policy in all_policies:
+        # Get max of mandatory policy intensities (lower)
+        # Get max of optional policy intensities (lower)
+        # For lower levels, choose default_mandatory, else default_optional
+        # For higher levels, choose max(mandatory, default_mandatory) if > 0, else
+            # max(optional, default_optional)
         if '_opt' in policy:
-            adm_cases_policy_cols = [
-                col for col in adm_cases if col[:len(policy)] == policy
-            ]
-        else:
-            adm_cases_policy_cols = [
-                col for col in adm_cases if col[:len(policy)] == policy and '_opt' not in col
-            ]
+            continue
+
+        policy_opt = policy + '_opt'            
+
+        adm_cases_policy_cols = [col for col in adm_cases if col[:len(policy)] == policy and '_opt' not in col]
 
         # Get all popwt cols
-        adm_cases_popwt_cols = [
-            col for col in adm_cases_policy_cols if popweighted_suffix in col
-        ]
+        adm_cases_popwt_cols = [col for col in adm_cases_policy_cols if popweighted_suffix in col]
 
         # Get all intensity cols (indicators)
-        adm_cases_intensity_cols = [
-            col for col in adm_cases_policy_cols if popweighted_suffix not in col
-        ]
+        adm_cases_intensity_cols = [col for col in adm_cases_policy_cols if popweighted_suffix not in col]
+
+        # Get cols at or below (lower resolution) adm level of `adm_cases`
+        adm_cases_intensity_lower_cols = [col for col in adm_cases_intensity_cols if int(col[-1]) <= adm_level]
+
+        adm_cases_intensity_lower = [adm_cases[col] for col in adm_cases_intensity_cols if int(col[-1]) <= adm_level]
+
+        # Get cols above (higher resolution) adm level of `adm_cases`
+        adm_cases_intensity_higher_cols = [col for col in adm_cases_intensity_cols if int(col[-1]) > adm_level]
+
+        # Get pop-weighted cols above (higher resolution) adm level of `adm_cases`
+        adm_cases_popwt_higher = [col for col in adm_cases_popwt_cols if int(col[-1]) > adm_level]
 
         # Assign non-weighted col to the maximum intensity across adm levels
         adm_cases[policy] = np.max([adm_cases[col] for col in adm_cases_intensity_cols])
 
-        # Get cols at or below (lower resolution) adm level of `adm_cases`
-        adm_cases_intensity_lower_cols = [
-            col for col in adm_cases_intensity_cols if int(col[-1]) <= adm_level
-        ]
-
-        adm_cases_intensity_lower = [
-            adm_cases[col] for col in adm_cases_intensity_cols if int(col[-1]) <= adm_level
-        ]
-
-        # Get cols above (higher resolution) adm level of `adm_cases`
-        adm_cases_intensity_higher_cols = [
-            col for col in adm_cases_intensity_cols if int(col[-1]) > adm_level
-        ]
-
-        # Get pop-weighted cols above (higher resolution) adm level of `adm_cases`
-        adm_cases_popwt_higher = [
-            col for col in adm_cases_popwt_cols if int(col[-1]) > adm_level
-        ]
-
         # Assign default intensity as highest intensity at or below resolution of adm level
-        if len(adm_cases_intensity_lower) > 0:
-            default_intensity = np.amax(adm_cases_intensity_lower, axis=0)
-        else:
-            default_intensity = np.zeros_like(adm_cases[policy])
+        default_intensity_mandatory = get_default_intensity(adm_cases_intensity_lower, adm_cases, policy)
 
         if policy not in exclude_from_popweights:
-            # Where higher-level intensity is higher, use weights
-            adm_cases[f'{policy}_{popweighted_suffix}'] = 0
-            pop_accounted_for = np.zeros_like(adm_cases[policy])
-            for i in range(len(adm_cases_intensity_higher_cols)):
-                col = adm_cases_intensity_higher_cols[i]
-                pop_col = adm_cases_popwt_higher[i]
+            adm_cases[f'{policy}_{popweighted_suffix}'] = get_popwt_policy(
+                adm_cases, policy, 
+                adm_cases_intensity_higher_cols,
+                adm_cases_popwt_higher,
+                adm_cases_intensity_lower,
+                default_intensity_mandatory)
 
-                pop_this_col = adm_cases[pop_col].where(adm_cases[col] > default_intensity, 0)
+        if policy_opt in all_policies:
+            adm_cases_policy_cols_opt = [col for col in adm_cases if col[:len(policy)] == policy and '_opt' in col]
 
-                adm_cases[f'{policy}_{popweighted_suffix}'] += (
-                    pop_this_col *
-                    adm_cases[col]
-                )
-                pop_accounted_for += pop_this_col
+            # Get all popwt cols
+            adm_cases_popwt_cols_opt = [col for col in adm_cases_policy_cols_opt if popweighted_suffix in col]
 
-            if len(adm_cases_intensity_lower) > 0:
-                adm_cases[f'{policy}_{popweighted_suffix}'] += (
-                    default_intensity *
-                    (1 - pop_accounted_for)
-                )
+            # Get all intensity cols (indicators)
+            adm_cases_intensity_cols_opt = [col for col in adm_cases_policy_cols_opt if popweighted_suffix not in col]
 
-        adm_cases = adm_cases.drop(columns=adm_cases_intensity_cols + adm_cases_popwt_cols)
+            # Get cols at or below (lower resolution) adm level of `adm_cases`
+            adm_cases_intensity_lower_cols_opt = [col for col in adm_cases_intensity_cols_opt if int(col[-1]) <= adm_level]
+
+            adm_cases_intensity_lower_opt = [adm_cases[col] for col in adm_cases_intensity_cols_opt if int(col[-1]) <= adm_level]
+
+            # Get cols above (higher resolution) adm level of `adm_cases`
+            adm_cases_intensity_higher_cols_opt = [col for col in adm_cases_intensity_cols_opt if int(col[-1]) > adm_level]
+
+            # Get pop-weighted cols above (higher resolution) adm level of `adm_cases`
+            adm_cases_popwt_higher_opt = [col for col in adm_cases_popwt_cols_opt if int(col[-1]) > adm_level]
+
+            # Assign non-weighted col to the maximum intensity across adm levels
+            adm_cases[policy_opt] = np.max([adm_cases[col] for col in adm_cases_intensity_cols_opt])
+
+            # Assign default intensity as highest intensity at or below resolution of adm level
+            default_intensity_optional = get_default_intensity(adm_cases_intensity_lower_opt, adm_cases, policy_opt)
+
+            # Use optional default policy only where mandatory default policy is 0
+            default_intensity_optional = np.where(default_intensity_mandatory == 0, default_intensity_optional, default_intensity_mandatory)
+
+            if policy_opt not in exclude_from_popweights:
+                adm_cases[f'{policy_opt}_{popweighted_suffix}'] = get_popwt_policy(
+                    adm_cases, policy_opt, 
+                    adm_cases_intensity_higher_cols_opt,
+                    adm_cases_popwt_higher_opt,
+                    adm_cases_intensity_lower_opt,
+                    default_intensity_optional)
+
+        dropcols = adm_cases_intensity_cols + adm_cases_popwt_cols
+        if policy_opt in all_policies:
+            dropcols += adm_cases_intensity_cols_opt + adm_cases_popwt_cols_opt
+        adm_cases = adm_cases.drop(columns=dropcols)
 
     return adm_cases
 
