@@ -1,4 +1,4 @@
-"date","adm0_name","adm1_name","adm2_name","school_closure","travel_ban_optional","no_gathering","work_from_home","testing_regime","home_isolation","religious_closure","new_confirmed_cases","cum_confirmed_cases","new_confirmed_cases_imputed","cum_confirmed_cases_imputed"
+"date","adm0_name","adm1_name","adm2_name","school_closure","travel_ban_local_opt","no_gathering","work_from_home","testing_regime","home_isolation","religious_closure","new_confirmed_cases","cum_confirmed_cases","new_confirmed_cases_imputed","cum_confirmed_cases_imputed"
 2020-02-19,"IRN",1,"Qom",0,0,0,0,0,0,0,2,2,2,2
 2020-02-20,"IRN",1,"Qom",1,1,0,0,0,0,0,2,4,2,4
 2020-02-21,"IRN",1,"Qom",1,1,0,0,0,0,0,7,11,7,11
