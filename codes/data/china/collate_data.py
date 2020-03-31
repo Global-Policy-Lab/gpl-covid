@@ -304,7 +304,10 @@ policy_city_set = set(
 adm_city_set = set(
     adm.drop_duplicates()
     .apply(tuple, axis=1).tolist())
-print(policy_city_set - adm_city_set)
+adm_city_set = adm_city_set | set(
+    adm.loc[:, ['adm0_name', 'adm1_name']].drop_duplicates()
+    .apply(lambda x: (*x, 'All'), axis=1).tolist())
+print('Mismatched: ', policy_city_set - adm_city_set)
 
 # subset adm1 policies
 adm1_policy = df_policy.loc[df_policy['adm2_name'] == 'ALL', :]
@@ -447,13 +450,17 @@ df_shp.loc[:, 'adm2_name'] = df_shp.apply(
     lambda x: x['epi_adm2'] if pd.notnull(x['epi_adm2']) else x['adm2_name'],
     axis=1)
 
+df_shp = df_shp.loc[:, ['adm1_name', 'adm2_name', 'latitude', 'longitude']]
+
+df_shp.columns = ['adm1_name', 'adm2_name', 'lat', 'lon']
+
 df = pd.merge(
     df.reset_index(),
-    df_shp.loc[:, ['adm1_name', 'adm2_name', 'latitude', 'longitude']],
+    df_shp,
     how='left', on=['adm1_name', 'adm2_name'])
 
 output_file.parent.mkdir(parents=True, exist_ok=True)
-df.to_csv(output_file, index=True)
+df.to_csv(output_file, index=False)
 
 print('Data Description: ', df.describe(include='all').T)
 print('Data Types: ', df.dtypes)
