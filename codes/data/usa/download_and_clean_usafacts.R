@@ -52,6 +52,12 @@ usa_county_data <- usa_county_data %>%
   mutate(cum_recoveries = NA_real_) %>% 
   unite(tmp_id, county_fips, state_fips, adm1_name, adm2_name, remove = FALSE) 
 
+# Remove today as it gets updated
+usa_county_data <- usa_county_data %>% 
+  filter(date < max(date))
+usa_state_data <- usa_state_data %>% 
+  filter(date < max(date))
+
 suppressWarnings({
   # Some fiddly manual edits to downwards data revisions 
   usa_county_data <- usa_county_data %>% 
@@ -75,8 +81,19 @@ suppressWarnings({
         date %in% lubridate::as_date(c("2020-03-15", "2020-03-16")) & cum_confirmed_cases == 12, 
       NA_real_, cum_confirmed_cases
     )) %>% 
+    mutate(cum_confirmed_cases_imputed = if_else(
+      tmp_id %in% c("06025_06_CA_Imperial County") & 
+        date %in% lubridate::as_date(c("2020-03-11", "2020-03-12")) & cum_confirmed_cases == 16, 
+      0, cum_confirmed_cases_imputed
+    )) %>% 
+    mutate(cum_confirmed_cases = if_else(
+      tmp_id %in% c("06025_06_CA_Imperial County") & 
+        date %in% lubridate::as_date(c("2020-03-11", "2020-03-12")) & cum_confirmed_cases == 16, 
+      NA_real_, cum_confirmed_cases
+    )) %>% 
     fix_issues()
 })
+
 # usa_state_data %>%
 #   unite(tmp_id, state_fips, adm1_name, remove = FALSE) %>%
 #   examine_issues(cum_confirmed_cases)
@@ -133,6 +150,12 @@ stopifnot(nrow(usa_county_data_standardised2) == nrow(usa_county_data_standardis
 
 stopifnot(!anyNA(usa_county_data_standardised$cum_confirmed_cases_imputed))
 stopifnot(!anyNA(usa_state_data_standardised$cum_confirmed_cases_imputed))
+
+usa_state_data_standardised <- usa_state_data_standardised %>% 
+  left_join(tibble(state.abb = c(state.abb, "DC"),
+                   state.name = c(state.name, "District of Columbia")), by = c("adm1_name" = "state.abb")) %>% 
+  mutate(adm1_name = state.name) %>% 
+  select(-state.name)
 
 write_csv(usa_county_data_standardised, path = "data/interim/usa/usa_usafacts_county.csv")
 write_csv(usa_state_data_standardised, path = "data/interim/usa/usa_usafacts_state.csv")

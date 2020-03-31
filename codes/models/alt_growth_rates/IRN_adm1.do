@@ -3,6 +3,11 @@
 clear all
 //-----------------------setup
 
+// import end of sample cut-off 
+import delim using codes/data/cutoff_dates.csv, clear 
+keep if tag == "default"
+local end_sample = end_date[1]
+
 // load data
 insheet using data/processed/adm1/IRN_processed.csv, clear 
 
@@ -26,6 +31,23 @@ tsset adm1_id t, daily
 // quality control
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 drop if t <= mdy(2,26,2020) // DATA QUALITY CUTOFF DATE
+keep if t <= date("`end_sample'","YMD") // to match other country end dates
+
+// flag which admin unit has longest series
+tab adm1_name if cum_confirmed_cases!=., sort 
+bysort adm1_name: egen adm1_obs_ct = count(cum_confirmed_cases)
+
+// if multiple admin units have max number of days w/ confirmed cases, 
+// choose the admin unit with the max number of confirmed cases 
+bysort adm1_name: egen adm1_max_cases = max(cum_confirmed_cases)
+egen max_obs_ct = max(adm1_obs_ct)
+bysort adm1_obs_ct: egen max_obs_ct_max_cases = max(adm1_max_cases) 
+
+gen longest_series = adm1_obs_ct==max_obs_ct & adm1_max_cases==max_obs_ct_max_cases
+drop adm1_obs_ct adm1_max_cases max_obs_ct max_obs_ct_max_cases
+
+sort adm1_id t
+tab adm1_name if longest_series==1 & cum_confirmed_cases!=.
 
 //construct dep vars
 lab var cum_confirmed_cases "cumulative confirmed cases"
@@ -47,20 +69,34 @@ replace cum_confirmed_cases = . if t == 21976 | t == 21977
 
 //------------------testing regime changes
 
+// grab each date of any testing regime change
+preserve
+	collapse (min) t, by(testing_regime)
+	sort t //should already be sorted but just in case
+	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
+	levelsof t, local(testing_change_dates)
+restore
+
+// create a dummy for each testing regime change date
+foreach t_chg of local testing_change_dates{
+	local t_str = string(`t_chg', "%td")
+	gen testing_regime_change_`t_str' = t==`t_chg'
+}
+
 // high_screening_regime in Qom, which transitioned on Mar 6
 // assume rollout completed on Mar 13
-gen testing_regime_mar13 = t==mdy(3,13,2020)
-
+drop testing_regime_change_06mar2020
+gen testing_regime_13mar2020 = t==mdy(3,13,2020)
 
 //------------------diagnostic
 
 // diagnostic plot of trends with sample avg as line
 reg D_l_cum_confirmed_cases
 gen sample_avg = _b[_cons]
-replace sample_avg = . if adm1_name ~= "Qom" & e(sample) == 1
+replace sample_avg = . if longest_series==0 & e(sample) == 1
 
 reg D_l_cum_confirmed_cases i.t
-predict day_avg if adm1_name  == "Qom" & e(sample) == 1
+predict day_avg if longest_series==1 & e(sample) == 1
 lab var day_avg "Observed avg. change in log cases"
 
 tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
@@ -95,21 +131,26 @@ gen p_2_x_Tehran = p_2*(adm1_name== "Tehran")
 outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran testing_regime_mar13, ///
+reghdfe D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran testing_regime_*, ///
 absorb(i.adm1_id i.dow, savefe) cluster(date) resid
+
+outreg2 using "results/tables/IRN_estimates_table", word replace label ///
+ addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: Iran")
+cap erase "results/tables/IRN_estimates_table.txt"
+
 
 // saving coefs
 tempfile results_file
-postfile results str18 adm0 str50 policy str18 suffix beta se using `results_file', replace
+postfile results str18 adm0 str50 policy beta se using `results_file', replace
 foreach var in "p_1" "p_2"{
-	post results ("IRN") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+	post results ("IRN") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 // effect of package of policies (FOR FIG2)
 lincom p_1 + p_2 //rest of country
-post results ("IRN") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+post results ("IRN") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 lincom p_1 + p_2 + p_1_x_Tehran + p_2_x_Tehran //in Tehran
-post results ("IRN") ("comb. policy Tehran") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+post results ("IRN") ("comb. policy Tehran") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 // looking at different policies (FOR FIG2)
 coefplot, keep(p_1 p_2)
@@ -164,7 +205,7 @@ foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_
 
 // the mean here is the avg "biological" rate of initial spread (FOR Fig2)
 sum y_counter
-post results ("IRN") ("no_policy rate") ("`suffix'") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+post results ("IRN") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
 
 // export predicted counterfactual growth rate
 preserve
@@ -179,10 +220,10 @@ sum treatment
 
 // computing daily avgs in sample, store with a single panel unit (longest time series)
 reg y_actual i.t
-predict m_y_actual if adm1_name=="Qom"
+predict m_y_actual if longest_series==1
 
 reg y_counter i.t
-predict m_y_counter if adm1_name=="Qom"
+predict m_y_counter if longest_series==1
 
 
 // add random noise to time var to create jittered error bars
@@ -193,30 +234,30 @@ g t_random2 = t + rnormal(0,1)/10
 
 // Graph of predicted growth rates (FOR FIG3)
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+|| (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
 (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
 
 //-------------------------------Running the model for Tehran only 
 
-reg D_l_cum_confirmed_cases p_1 p_2 testing_regime_mar13 if adm1_name=="Tehran"
-post results ("IRN_Tehran") ("no_policy rate") ("`suffix'") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
+reg D_l_cum_confirmed_cases p_1 p_2 testing_regime_* if adm1_name=="Tehran"
+post results ("IRN_Tehran") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
 
 postclose results
 
 preserve
 	use `results_file', clear
-	outsheet * using "models/IRN_coefs`suffix'.csv", comma replace // for display (figure 2)
+	outsheet * using "models/IRN_coefs.csv", comma replace // for display (figure 2)
 restore
 
 
@@ -239,16 +280,16 @@ predict day_avg_thr if adm1_name  == "Tehran" & e(sample) == 1
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
-tw (rspike ub_y_actual_thr lb_y_actual_thr t,  lwidth(vthin) color(blue*.5)) ///
+tw (rspike ub_y_actual_thr lb_y_actual_thr t, lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter_thr lb_counter_thr t, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual_thr t,  msize(tiny) color(blue*.5) ) ///
+|| (scatter y_actual_thr t, msize(tiny) color(blue*.5) ) ///
 (scatter y_counter_thr t, msize(tiny) color(red*.5)) ///
 (connect y_actual_thr t, color(blue) m(square) lpattern(solid)) ///
 (connect y_counter_thr t, color(red) lpattern(dash) m(Oh)) ///
 (sc day_avg_thr t, color(black)) ///
 if e(sample), ///
-title("Tehran, Iran", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+title("Tehran, Iran", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
+xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/sub_natl_growth_rates/Tehran_adm1_conf_cases_growth_rates_fixedx.gph, replace)
+saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
 

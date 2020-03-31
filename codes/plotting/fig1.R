@@ -710,7 +710,7 @@ notify(country)
                   "no_demonstration",
                   "social_distance_opt", 
                   "religious_closure",
-                  "business_closure")
+                  "business_closure_opt")
   legend.list <- c("emergency declaration", 
                    "no demonstration", 
                    "social distancing", 

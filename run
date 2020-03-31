@@ -24,8 +24,7 @@ printf "***Downloading Johns Hopkins U data for all countries***\n"
 Rscript codes/data/multi_country/download_6_countries_JHU.R
 
 #### FRA
-printf "***Downloading FRA epi data***\n"
-Rscript codes/data/france/scrape_conf_cases_by_region.R
+printf "***Processing FRA epi data***\n"
 stata -b do codes/data/france/format_infected.do
 
 ### Dataset merging
@@ -56,6 +55,9 @@ printf "***Processing USA data***\n"
 python codes/data/usa/merge_policy_and_cases.py
 Rscript codes/data/usa/check_health_data.R
 
+# quality-check processed datasets
+printf "***Checking processed data***\n"
+python codes/data/multi_country/quality-check-processed-datasets.py
 
 ## regression model estimation
 printf "***Estimating regression model and creating Figure 3 and A1***\n"
