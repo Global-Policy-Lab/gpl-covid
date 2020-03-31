@@ -56,6 +56,7 @@ preserve
 	tempfile f0
 	save `f0'
 	//iterate for each day after march 13 until last available date
+	local D = mdy(3,13,2020)
 	while `D' <= 10e5 {
 		local month_file = month(`D')
 		local day_file = day(`D')
