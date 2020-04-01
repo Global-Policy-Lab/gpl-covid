@@ -351,28 +351,28 @@ exclude_from_popweights = ['testing_regime', 'travel_ban_intl_in', 'travel_ban_i
 
 #     return adm_cases
 
-def count_policies_enacted(adm_cases, adm_policies):
-    """Count number of (non-pop-weighted) policy variables enacted on each row of `adm_cases`
+def count_policies_enacted(df, policy_list):
+    """Count number of (non-pop-weighted) policy variables enacted on each row of `df`
     Args:
-        adm_cases (pandas.DataFrame): DataFrame with policies as columns
-        adm_policies (pandas.DataFrame): DataFrame of policies, with all
+        df (pandas.DataFrame): DataFrame with policies as columns
+        policy_list (pandas.DataFrame): DataFrame of policies, with all
             unique policy categories listed in the 'policy' column
 
     Returns:
-        pandas.DataFrame: `adm_cases` with a new column counting number of non-pop-weighted
+        pandas.DataFrame: `df` with a new column counting number of non-pop-weighted
             policy variables in place, for each row
     """
-    adm_cases['policies_enacted'] = 0
-    for policy_name in adm_policies['policy'].unique():
-        adm_cases['policies_enacted'] += adm_cases[policy_name]
+    df['policies_enacted'] = 0
+    for policy_name in policy_list:
+        df['policies_enacted'] += df[policy_name]
 
-    return adm_cases
+    return df
 
 def get_policy_level(row):
     # Assign policy_level to distinguish policies specified at different admin-unit levels
     adm_levels = sorted([int(col[3]) for col in row.keys() if col.startswith('adm') and col.endswith('name')], reverse=True)
     for level in adm_levels:
-        if row[f'adm{level}_name'] != 'All':
+        if row[f'adm{level}_name'].lower() != 'all':
             return level
     return 0
 
@@ -389,9 +389,11 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
             been computed. Though messy, this saves a lot of time
 
     Returns:
-        pandas.DataFrame: a version of `cases_df` with all policies from `policies` assigned as new columns
+        tuple of (float, float): Tuple representing (intensity, pop-weighted-intensity) of `adm` 
+            on `date` for `policy`
     """
     adm_name = f'adm{adm_level}_name'
+
     adm_intensity = f'adm{adm_level}_policy_intensity'
     adm_levels = sorted([int(col[3]) for col in policies.columns if col.startswith('adm') and col.endswith('name')])
     adm_lower_levels = [l for l in adm_levels if l <= adm_level]
@@ -399,7 +401,7 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
     policies_to_date = policies[(policies['policy'] == policy) & 
                                 (policies['date_start'] <= date) &
                                 (policies['date_end'] >= date) &
-                                ((policies[adm_name] == adm) | (policies[adm_name] == 'All'))
+                                ((policies[adm_name] == adm) | (policies[adm_name].str.lower() == 'all'))
                                ].copy()
 
     if len(policies_to_date) == 0:
@@ -416,28 +418,50 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
     # other levels will compare
     default_policy_intensity = np.nanmax([policies_to_date.loc[policies_to_date['policy_level'].isin(adm_lower_levels), 'policy_intensity'].max(), 0])
 
-    policies_to_date[adm_intensity] = default_policy_intensity
-
     # Initialize final reported intensity to default intensity
     total_intensity = default_policy_intensity
-    
-    # For each higher level (higher res than `adm`), add any intensities that are higher than the intensities
-    # at lower levels to the total intensity, and track the highest intensity for each policy up to that level
+
+    level2_adm_intensities = pd.Series()
     for level in adm_higher_levels:
+        if level == 3 and len(adm_higher_levels) == 2:
+            # Set policy_intensity to maximum between this policy_intensity and the highest policy_intensity
+            # applied at the adm2 level for this adm3's adm2
+            # check the lists to see if there is an adm2_policy which matches adm2's level and has a higher intensity
+            has_adm2_intensity = (
+                (policies_to_date['adm2_name'].isin(level2_adm_intensities.index))
+            )
+
+            policies_to_date['adm2_policy_intensity'] = 0
+            policies_to_date.loc[has_adm2_intensity, 'adm2_policy_intensity'] = (
+                policies_to_date.loc[has_adm2_intensity, 'adm2_name'].apply(lambda x: level2_adm_intensities.loc[x, 'policy_intensity'])
+            )
+
+            use_adm3 = (has_adm2_intensity) & (policies_to_date['policy_intensity'] > policies_to_date['adm2_policy_intensity'])
+
+            additional_policy_intensities = (
+                (policies_to_date.loc[use_adm3, 'policy_intensity'] - policies_to_date.loc[use_adm3, 'adm2_policy_intensity']) *
+                (policies_to_date.loc[use_adm3, f'adm3_pop'] / policies_to_date.loc[use_adm3, f'adm2_pop'])
+            )
+
+            total_intensity += additional_policy_intensities.sum()
+
+            # Make sure not to count these ones again (but we don't continue the loop because there may be
+            # other adm3 policies with higher policy_intensity than default intensity, without corresponding
+            # adm2 intensities
+            policies_to_date.loc[use_adm3, 'policy_intensity'] = 0
+
+        elif level == 2 and len(adm_higher_levels) == 2:
+            # Assign maximum adm2 policy intensities so that adm3 can compare
+            level2_adm_intensities = policies_to_date[policies_to_date['policy_level'] == 2].groupby('adm2_name')[['policy_intensity']].max()
+
         this_adm_higher_than_adm = (
             (policies_to_date['policy_level'] == level) &
-            (policies_to_date['policy_intensity'] > policies_to_date[adm_intensity])
+            (policies_to_date['policy_intensity'] > default_policy_intensity)
         )
-
         additional_policy_intensities = (
-            (policies_to_date.loc[this_adm_higher_than_adm, 'policy_intensity'] - policies_to_date[adm_intensity]) *
+            (policies_to_date.loc[this_adm_higher_than_adm, 'policy_intensity'] - default_policy_intensity) *
             (policies_to_date.loc[this_adm_higher_than_adm, f'adm{level}_pop'] / policies_to_date.loc[this_adm_higher_than_adm, f'adm{adm_level}_pop'])
         )
-
-        # TODO: Make sure that, e.g., if we are assigning adm1:
-        # If there is an adm2 policy with a higher policy_intensity, then
-        # We check all adm3 policy intensities against their respective adm2 intensities
-        policies_to_date.loc[this_adm_higher_than_adm, adm_intensity] += additional_policy_intensities
 
         total_intensity += additional_policy_intensities.sum()
 
@@ -490,7 +514,7 @@ def assign_policies_to_panel(cases_df, policies, cases_level):
 
         df = df.drop(columns=[policy + '_tmp'])
         
-    df['policies_enacted'] = count_policies_enacted(df, policies)
+    df = count_policies_enacted(df, policy_list)
 
     # Merge panel with `cases_df`
     merged = pd.merge(cases_df, df, left_on=['date', f'adm{cases_level}_name'], right_on=['date', f'adm{cases_level}_name'])
