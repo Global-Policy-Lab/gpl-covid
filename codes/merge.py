@@ -377,7 +377,9 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
         date (datetime.datetime): date on which policies are applied
         adm (str): name of admin-unit on which policies are applied
         adm_level (int): level of admin-unit on which policies are applied
-        policy_pickle_dict (dict of dicts): Dictionary with keys `adm` and `
+        policy_pickle_dict (dict of dicts): Dictionary with keys `adm` and a pickled version of
+            `policies_to_date` (computed within this function) to get result if it has already
+            been computed. Though messy, this saves a lot of time
 
     Returns:
         pandas.DataFrame: a version of `cases_df` with all policies from `policies` assigned as new columns
