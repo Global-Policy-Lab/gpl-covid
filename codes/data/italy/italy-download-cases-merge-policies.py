@@ -84,8 +84,8 @@ def process_raw_and_interim_health():
 	    'denominazione_provincia':'adm2_name',
 	    'codice_regione':'adm1_id',
 	    'codice_provincia':'adm2_id',
-	    'totale_attualmente_positivi':'active_cases',
-	    'nuovi_attualmente_positivi':'active_cases_new',
+	    'totale_positivi':'active_cases',
+	    'variazione_totale_positivi':'active_cases_new',
 	    'totale_casi':cumulative_prefix + 'confirmed_cases',
 	    'ricoverati_con_sintomi':cumulative_prefix + 'hospitalized_symptom',
 	    'terapia_intensiva':cumulative_prefix + 'intensive_care',
@@ -121,8 +121,14 @@ def process_raw_and_interim_health():
 	adm2_cases['adm2_name'] = adm2_cases['adm2_name'].replace('In fase di definizione/aggiornamento', 'Unknown')
 
 	# Drop extraneous columns
-	adm1_cases = adm1_cases.drop(columns=[col for col in adm1_cases.columns if col not in replace_dict.values()])
-	adm2_cases = adm2_cases.drop(columns=[col for col in adm2_cases.columns if col not in replace_dict.values()])
+	extra_cols_adm1 = [col for col in adm1_cases.columns if col not in replace_dict.values()]
+	extra_cols_adm2 = [col for col in adm2_cases.columns if col not in replace_dict.values()]
+	if print_stuff:
+		print('Adm1 extra cols:', extra_cols_adm1)
+		print('Adm2 extra cols:', extra_cols_adm2)
+
+	adm1_cases = adm1_cases.drop(columns=extra_cols_adm1)
+	adm2_cases = adm2_cases.drop(columns=extra_cols_adm2)
 
 	# Impute cumulative confirmed cases at `adm2` level on the first day of the dataset (2/24/2020) from `adm1`
 	def impute_day1_adm2_cases(adm1_cases, adm2_cases):
