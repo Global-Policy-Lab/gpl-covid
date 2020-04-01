@@ -9,7 +9,7 @@ names_order <- read_csv("data/processed/[country]_processed.csv",
 
 suppressWarnings({
   usa_data <- usa_data %>% 
-    rename(adm1_name = province_state) %>% 
+    select(-province_state) %>% 
     mutate(adm0_name = "USA") %>% 
     mutate(cum_confirmed_cases_imputed = cum_confirmed_cases,
            cum_deaths_imputed = cum_deaths,
@@ -17,4 +17,4 @@ suppressWarnings({
     select(one_of(names_order))
 })
 
-write_csv(usa_data, path = "data/interim/usa/usa_jhu_cases_national.csv")
+write_csv(usa_data, path = "data/interim/usa/usa_jhu_cases.csv")
