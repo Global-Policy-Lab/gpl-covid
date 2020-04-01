@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import copy
+import datetime
 
 popweighted_suffix = 'popwt'
 exclude_from_popweights = ['testing_regime', 'travel_ban_intl_in', 'travel_ban_intl_out']
@@ -136,7 +138,7 @@ def get_relevant_policy_set(policies, adm_levels, adm_cases_level, policy_level)
 
     return policies.loc[policies['policy_level'] == policy_level][policy_cols].drop_duplicates()
 
-def get_popwt_policy(adm_cases, policy, adm_cases_intensity_higher_cols, adm_cases_popwt_higher, adm_cases_intensity_lower, default_intensity):
+def get_popwt_policy(adm_cases, policies, policy, adm_cases_intensity_higher_cols, adm_cases_popwt_higher, adm_cases_intensity_lower, default_intensity):
     # Where higher-level intensity is higher, use weights
     adm_cases[f'{policy}_{popweighted_suffix}'] = 0
     pop_accounted_for = np.zeros_like(adm_cases[policy])
@@ -208,7 +210,7 @@ def aggregate_policies_across_levels(adm_cases, policies, adm_level, max_adm_lev
 
         if policy not in exclude_from_popweights:
             adm_cases[f'{policy}_{popweighted_suffix}'] = get_popwt_policy(
-                adm_cases, policy, 
+                adm_cases, policies, policy, 
                 adm_cases_intensity_higher_cols,
                 adm_cases_popwt_higher,
                 adm_cases_intensity_lower,
@@ -245,7 +247,7 @@ def aggregate_policies_across_levels(adm_cases, policies, adm_level, max_adm_lev
 
             if policy_opt not in exclude_from_popweights:
                 adm_cases[f'{policy_opt}_{popweighted_suffix}'] = get_popwt_policy(
-                    adm_cases, policy_opt, 
+                    adm_cases, policies, policy_opt, 
                     adm_cases_intensity_higher_cols_opt,
                     adm_cases_popwt_higher_opt,
                     adm_cases_intensity_lower_opt,
@@ -257,6 +259,76 @@ def aggregate_policies_across_levels(adm_cases, policies, adm_level, max_adm_lev
         adm_cases = adm_cases.drop(columns=dropcols)
 
     return adm_cases
+
+def add_subregion_spec_col(policies, min_level, max_level):
+    full = pd.DataFrame()
+    for policy in policies['policy'].unique():
+        pdf = policies.loc[policies['policy'] == policy].copy()
+
+        all_adm_names = [f'adm{level}_name' for level in range(min_level, max_level + 1)]
+        adm_dict_levels = ['optional', 'policy_intensity'] + all_adm_names
+
+        def add_to_state_tracker(adm_units_with_policy, x):
+            starting_point = adm_units_with_policy
+
+            for level in adm_dict_levels:
+                val = str(x[level])
+                if val not in starting_point:
+                    starting_point[val] = dict()
+
+                starting_point = starting_point[val]
+
+            return adm_units_with_policy
+
+        pdf['last_today'] = pdf['date_start'].diff(-1) != datetime.timedelta(0)
+        df = pd.DataFrame(columns=['state'] + list(pdf.columns))
+        adm_units_with_policy = dict()
+        for row in pdf.itertuples():
+            row = row._asdict()
+
+            adm_units_with_policy = add_to_state_tracker(adm_units_with_policy, row)
+
+            if row['last_today']:
+                # Freeze adm_units at the end of the day, so that previously assigned rows on this day
+                # are updated to the end of the day, which is then preserved for all these rows
+                # (but continues to be updated for the following rows)
+                adm_units_with_policy = copy.deepcopy(adm_units_with_policy)
+
+            row['state'] = adm_units_with_policy
+
+            df = df.append(row, ignore_index=True)
+
+        def get_best_from_group(x, i):
+            if 'All' in x[x.columns[-i]].unique():
+                x = x[x[x.columns[-i]] == 'All'].drop_duplicates()
+            return x
+
+        def get_policy_at_levels(x):
+            starting_point = copy.deepcopy(x)
+
+            def get_rows(starting_point, keys=[]):
+                rows = []
+                for key in starting_point:
+                    if len(starting_point[key]) == 0:
+                        rows.append(keys + [key])
+
+                    rows += get_rows(starting_point[key], keys + [key])
+
+                return rows
+
+            res = pd.DataFrame(get_rows(starting_point), columns=adm_dict_levels)
+
+            for i in range(1, 2 + max_level - min_level):
+                res = res.groupby(adm_dict_levels[:-i]).apply(lambda d: get_best_from_group(d, i)).reset_index(drop=True)
+            res = res.groupby(['optional'] + all_adm_names)[['policy_intensity']].max().reset_index(drop=False)
+            return res
+
+        df['policy_at_levels'] = df['state'].apply(get_policy_at_levels)
+        df = df.drop(columns=['state', 'last_today', 'Index'])
+
+        full = pd.concat([full, df], ignore_index=True)
+        
+    return full
 
 def assign_adm_policy_variables(adm_cases, policies, adm_cases_level, max_adm_level):
     """Assign all policy variables from `policies` to `adm_cases`

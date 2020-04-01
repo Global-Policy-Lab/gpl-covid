@@ -105,6 +105,10 @@ def process_raw_and_interim_health():
 	adm2_cases['date'] = extract_date_from_datetime(adm2_cases['date'])
 	adm1_cases['date'] = extract_date_from_datetime(adm1_cases['date'])
 
+	# TODO: replace Emilia-Romagna with Emilia Romagna in adm info (official GitHub changed name)
+	adm2_cases['adm1_name'] = adm2_cases['adm1_name'].replace({'Emilia-Romagna':'Emilia Romagna'})
+	adm1_cases['adm1_name'] = adm1_cases['adm1_name'].replace({'Emilia-Romagna':'Emilia Romagna'})
+
 	# Clean lat-lon coordinates
 	adm2_cases.loc[:,['lat','lon']] = adm2_cases.loc[:,['lat','lon']].replace(0, np.nan)
 	assert adm1_cases['lat'].isnull().sum() == 0
