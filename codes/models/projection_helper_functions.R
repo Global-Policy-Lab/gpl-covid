@@ -65,8 +65,10 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
     unnest(model)
 }
 
-compute_predicted_cum_cases <- function(full_data, model, policy_variables_used, other_control_variables, lhs, filter_spec = TRUE, gamma = 1/3,
-                                        time_steps_per_day = 6, mmat_actual = NULL){
+compute_predicted_cum_cases <- function(full_data, model, policy_variables_used, other_control_variables, 
+                                        lhs, filter_spec = TRUE, gamma = 1/3,
+                                        time_steps_per_day = 6, mmat_actual = NULL,
+                                        proportion_confirmed = 1){
   if(!"population" %in% names(full_data)){
     stop("\"population\" variable required. If unavailable, please add a column using full_data <- full_data %>% mutate(population = 1e+8)")
   }
