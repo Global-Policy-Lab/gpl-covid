@@ -1,7 +1,7 @@
-library(tidyverse)
+suppressPackageStartupMessages(library(tidyverse))
 source("codes/data/multi_country/get_JHU_country_data.R")
-france_data <- get_jhu_data("France", province_states_to_include = "France") %>% 
-  filter(province_state == "France")
+france_data <- get_jhu_data("France") %>% 
+  filter(is.na(province_state))
 
 names_order <- read_csv("data/processed/[country]_processed.csv", 
                         col_types = cols(.default = col_character())) %>% names()
