@@ -1,7 +1,7 @@
-adm0,policy,suffix,beta,se
-"KOR","p_1","",-.084,.032
-"KOR","p_2","",-.146,.117
-"KOR","p_3","",-.166,.043
-"KOR","p_4","",-.085,.04
-"KOR","comb. policy","",-.481,.111
-"KOR","no_policy rate","",.371,.067
+adm0,policy,beta,se
+"KOR","p_1",.059,.053
+"KOR","p_2",-.043,.334
+"KOR","p_3",-.286,.082
+"KOR","p_4",-.08,.034
+"KOR","comb. policy",-.35,.32
+"KOR","no_policy rate",.297,.041
