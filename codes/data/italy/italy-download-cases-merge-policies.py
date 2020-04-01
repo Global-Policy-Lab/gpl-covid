@@ -18,9 +18,11 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--nr', dest='r', action='store_false', help="do not reload raw health (GitHub) datasets")
-parser.set_defaults(r=True)
+parser.add_argument('--p', dest='p', action='store_true', help="print out print statements")
+parser.set_defaults(r=True, p=False)
 args = parser.parse_args()
 reload_raw = args.r
+print_stuff = args.p
 
 # #### Define paths
 
@@ -265,17 +267,6 @@ def read_policies():
 	     'date_start', 'date_end', 'policy','policy_intensity', 'optional']
 	].drop_duplicates()
 
-	def get_policy_level(row):
-	    if row['adm3_name'] != 'All':
-	        return 3
-	    elif row['adm2_name'] != 'All':
-	        return 2
-	    elif row['adm1_name'] != 'All':
-	        return 1
-	    return 0
-    
-	policies['policy_level'] = policies.apply(get_policy_level, axis=1)
-
 	# If this fails, have to implement `testing_regime` as categorical variable
 	# This works right now because only one change in "testing_regime", a categorical variable
 	assert policies.groupby('policy')['policy'].count()['testing_regime'] == 1
@@ -297,6 +288,15 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 		assert len(adm1_not_found) == 0
 		assert len(adm2_not_found) == 0
 
+	# Check nothing's missing in template
+	def check_against_template(*adm_cases_list):
+		template = pd.read_csv(path_template)
+		for adm_cases in adm_cases_list:
+			missing_from_template = set(adm1_cases.columns) - set(template.columns)
+			if print_stuff:
+				print(missing_from_template)
+			assert len(missing_from_template) == 0
+
 	check_adms_match(policies, adm1_cases, adm2_cases)
 
 	## Merge Policies and Cases with Population, calculate pop-weights
@@ -307,21 +307,13 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 	adm1_cases = cpop.merge_cases_with_population_on_level(adm1_cases, 1, country_code)
 	adm2_cases = cpop.merge_cases_with_population_on_level(adm2_cases, 2, country_code)
 
-	policies['action'] = 'enact'
 	policies = cpop.merge_policies_with_population(policies, country_code, max_adm_level)
-	policies = cpop.calculate_policy_popweights_each_row(policies, 2)
-	policies = cpop.aggregate_policy_popweights(policies, 1, max_adm_level)
-	policies = cpop.aggregate_policy_popweights(policies, 2, max_adm_level)
-	# End of population assignment
 
 	# Check that population weights are all there
 	def check_pops_in_policies(policies):
-		enacted = policies[policies['action'] == 'enact']
-		assert len(enacted[enacted['adm1_pop_intensity_weight'].isnull()]) == 0
-		assert len(enacted[enacted['adm2_pop_intensity_weight'].isnull()]) == 0
-		assert len(enacted[enacted['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
-		assert len(enacted[enacted['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
-		assert len(enacted[enacted['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
+		assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
+		assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
+		assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
 
 	def check_pops_in_cases(adm_cases):
 		assert adm_cases['population'].isnull().sum() == 0
@@ -336,13 +328,6 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 
 	adm1_cases['no_gathering_size'] = 0
 	adm2_cases['no_gathering_size'] = 0
-
-	# Check nothing's missing in template
-	def check_against_template(*adm_cases_list):
-		template = pd.read_csv(path_template)
-		for adm_cases in adm_cases_list:
-			missing_from_template = set(adm1_cases.columns) - set(template.columns)
-			assert len(missing_from_template) == 0
 
 	check_against_template(adm1_cases, adm2_cases)
 

@@ -368,6 +368,13 @@ def count_policies_enacted(adm_cases, adm_policies):
 
     return adm_cases
 
+def get_policy_level(row):
+    # Assign policy_level to distinguish policies specified at different admin-unit levels
+    adm_levels = sorted([int(col[3]) for col in row.keys() if col.startswith('adm') and col.endswith('name')], reverse=True)
+    for level in adm_levels:
+        if row[f'adm{level}_name'] != 'All':
+            return level
+    return 0
 
 def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
     """Assign all policy variables from `policies` to `cases_df`
@@ -409,6 +416,8 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
     # other levels will compare
     default_policy_intensity = np.nanmax([policies_to_date.loc[policies_to_date['policy_level'].isin(adm_lower_levels), 'policy_intensity'].max(), 0])
 
+    policies_to_date[adm_intensity] = default_policy_intensity
+
     # Initialize final reported intensity to default intensity
     total_intensity = default_policy_intensity
     
@@ -425,6 +434,9 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
             (policies_to_date.loc[this_adm_higher_than_adm, f'adm{level}_pop'] / policies_to_date.loc[this_adm_higher_than_adm, f'adm{adm_level}_pop'])
         )
 
+        # TODO: Make sure that, e.g., if we are assigning adm1:
+        # If there is an adm2 policy with a higher policy_intensity, then
+        # We check all adm3 policy intensities against their respective adm2 intensities
         policies_to_date.loc[this_adm_higher_than_adm, adm_intensity] += additional_policy_intensities
 
         total_intensity += additional_policy_intensities.sum()
@@ -447,8 +459,12 @@ def assign_policies_to_panel(cases_df, policies, cases_level):
     Returns:
         pandas.DataFrame: a version of `cases_df` with all policies from `policies` assigned as new columns
     """
+
+    # Assign policy_level to distinguish policies specified at different admin-unit levels
+    policies['policy_level'] = policies.apply(get_policy_level, axis=1)
+
     policy_list = list(policies['policy'].unique())
-    policy_popwts = [p + '_popwt' for p in policy_list]
+    policy_popwts = [p + '_popwt' for p in policy_list if p not in exclude_from_popweights]
 
     date_min = cases_df['date'].min()
     date_max = cases_df['date'].max()
@@ -467,15 +483,14 @@ def assign_policies_to_panel(cases_df, policies, cases_level):
     for policy in policy_list:
         policy_pickle_dict = dict()
         df[policy + '_tmp'] = df.apply(lambda row: get_policy_vals(policies, policy, row['date'], row[f'adm{cases_level}_name'], cases_level, policy_pickle_dict), axis=1)
-        df[policy + '_popwt'] = df[policy + '_tmp'].apply(lambda x: x[0])
         df[policy] = df[policy + '_tmp'].apply(lambda x: x[1])
-        drop_cols = [policy + '_tmp']
 
-        if policy in exclude_from_popweights:
-            drop_cols.append(policy + '_popwt')
-        df = df.drop(columns=drop_cols)
+        if policy not in exclude_from_popweights:
+            df[policy + '_popwt'] = df[policy + '_tmp'].apply(lambda x: x[0])
+
+        df = df.drop(columns=[policy + '_tmp'])
         
-    df['policies_enacted'] = count_policies_enacted(cases_df, policies)
+    df['policies_enacted'] = count_policies_enacted(df, policies)
 
     # Merge panel with `cases_df`
     merged = pd.merge(cases_df, df, left_on=['date', f'adm{cases_level}_name'], right_on=['date', f'adm{cases_level}_name'])
