@@ -331,8 +331,8 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 	check_pops_in_cases(adm2_cases)
 
 	# Assign policy indicators
-	adm1_cases = cmerge.assign_adm_policy_variables(adm1_cases, policies, 1, max_adm_level)
-	adm2_cases = cmerge.assign_adm_policy_variables(adm2_cases, policies, 2, max_adm_level)
+	adm1_cases = cmerge.assign_policies_to_panel(adm1_cases, policies, 1)
+	adm2_cases = cmerge.assign_policies_to_panel(adm2_cases, policies, 2)
 
 	adm1_cases['no_gathering_size'] = 0
 	adm2_cases['no_gathering_size'] = 0
