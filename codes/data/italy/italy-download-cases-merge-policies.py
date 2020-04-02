@@ -11,7 +11,6 @@
 import pandas as pd
 import numpy as np
 from codes import utils as cutil
-from codes import pop as cpop
 from codes import merge as cmerge
 from codes import impute as cimpute
 import argparse
@@ -304,29 +303,6 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 			assert len(missing_from_template) == 0
 
 	check_adms_match(policies, adm1_cases, adm2_cases)
-
-	## Merge Policies and Cases with Population, calculate pop-weights
-	country_code = 'ITA'
-	max_adm_level = 3
-
-	# Assign "population" column to each DataFrame that has a corresponding `_processed.csv` file
-	adm1_cases = cpop.merge_cases_with_population_on_level(adm1_cases, 1, country_code)
-	adm2_cases = cpop.merge_cases_with_population_on_level(adm2_cases, 2, country_code)
-
-	policies = cpop.merge_policies_with_population(policies, country_code, max_adm_level)
-
-	# Check that population weights are all there
-	def check_pops_in_policies(policies):
-		assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
-		assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
-		assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
-
-	def check_pops_in_cases(adm_cases):
-		assert adm_cases['population'].isnull().sum() == 0
-
-	check_pops_in_policies(policies)
-	check_pops_in_cases(adm1_cases)
-	check_pops_in_cases(adm2_cases)
 
 	# Assign policy indicators
 	adm1_cases = cmerge.assign_policies_to_panel(adm1_cases, policies, 1)

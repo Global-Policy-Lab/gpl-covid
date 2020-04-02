@@ -3,6 +3,7 @@ import pandas as pd
 import copy
 import datetime
 import pickle
+import codes.pop as cpop
 
 popweighted_suffix = 'popwt'
 exclude_from_popweights = ['testing_regime', 'travel_ban_intl_in', 'travel_ban_intl_out']
@@ -556,7 +557,7 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[])
         cases_df (pandas.DataFrame): table to assign policy variables to, 
             typically with case data already assigned
         policies (pandas.DataFrame): table of policies, listed by date and regions affected
-        cases_level (int): Administrative unit level used for analysis of policy effects,
+        cases_level (int): Adminisrative unit level used for analysis of policy effects,
             typically the lowest level which pop-weights have been applied to
         aggregate_vars (list of str): list of policy variables where optional version
             should be treated independently of mandatory version
@@ -564,6 +565,9 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[])
     Returns:
         pandas.DataFrame: a version of `cases_df` with all policies from `policies` assigned as new columns
     """
+
+    # Assign population columns to `policies` and `cases_df`
+    policies, cases_df = cpop.assign_all_populations(policies, cases_df, cases_level)
 
     # Assign policy_level to distinguish policies specified at different admin-unit levels
     policies['policy_level'] = policies.apply(get_policy_level, axis=1)

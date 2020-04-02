@@ -134,6 +134,30 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors
 
     return result
 
+def check_pops_in_policies(policies, max_level):
+    # Check that population weights are all there
+    assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
+    assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
+    assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
+
+def check_pops_in_cases(cases_df):
+    assert cases_df['population'].isnull().sum() == 0
+
+def assign_all_populations(policies, cases_df, cases_level):
+    all_adm0 = policies['adm0_name'].unique()
+    assert len(all_adm0) == 1
+    country_code = all_adm0[0]
+
+    max_adm_level = max([int(col[3]) for col in policies.columns if col.startswith('adm') and col.endswith('name')])
+
+    cases_df = merge_cases_with_population_on_level(cases_df, cases_level, country_code)
+    policies = merge_policies_with_population(policies, country_code, max_adm_level)
+
+    check_pops_in_policies(policies, max_adm_level)
+    check_pops_in_cases(cases_df)
+
+    return policies, cases_df
+
 ### Deprecated ###
 # def calculate_policy_popweights_each_row(policies, max_adm_level):
 #     """Assign population weights of a single policy row to DataFrame of policy data
