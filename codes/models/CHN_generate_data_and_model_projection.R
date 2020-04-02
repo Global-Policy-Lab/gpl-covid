@@ -5,6 +5,9 @@ source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
 source("codes/data/multi_country/get_JHU_country_data.R")
 underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
+if(!(exists("gamma") & class(gamma) != "function")){
+  gamma = 0.052
+}
 mydata <- read_csv('models/reg_data/CHN_reg_data.csv',                   
                    col_types = cols(
                      .default = col_double(),
