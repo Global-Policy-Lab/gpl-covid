@@ -278,7 +278,7 @@ def read_policies():
 	assert policies.groupby('policy')['policy'].count()['testing_regime'] == 1
 
 	# Replace optional policies with `policy_name` to `policy_name_opt`
-	policies.loc[policies['optional'] == 1, 'policy'] = policies.loc[policies['optional'] == 1, 'policy'] + optional_suffix
+	# policies.loc[policies['optional'] == 1, 'policy'] = policies.loc[policies['optional'] == 1, 'policy'] + optional_suffix
 
 	return policies
 

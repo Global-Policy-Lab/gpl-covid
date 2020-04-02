@@ -376,6 +376,144 @@ def get_policy_level(row):
             return level
     return 0
 
+def get_intensities(policies, adm_level):
+    if len(policies) == 0:
+        return (0, 0)
+
+    adm_levels = sorted([int(col[3]) for col in policies.columns if col.startswith('adm') and col.endswith('name')])
+    adm_lower_levels = [l for l in adm_levels if l <= adm_level]
+    adm_higher_levels = [l for l in adm_levels if l > adm_level]
+
+    # Calculate max intensity of units at this level and below (lower res), and set as default against which
+    # other levels will compare
+    default_policy_intensity = np.nanmax([policies.loc[policies['policy_level'].isin(adm_lower_levels), 'policy_intensity'].max(), 0])
+
+    # Initialize final reported intensity to default intensity
+    total_intensity = default_policy_intensity
+
+    max_use_adm3_and_has_adm2_intensity = 0
+
+    level2_adm_intensities = pd.DataFrame()
+    for level in adm_higher_levels:
+        if level == 3 and len(adm_higher_levels) == 2:
+            # Set policy_intensity to maximum between this policy_intensity and the highest policy_intensity
+            # applied at the adm2 level for this adm3's adm2
+            # check the lists to see if there is an adm2_policy which matches adm2's level and has a higher intensity
+            has_adm2_intensity = (
+                (policies['policy_level'] == 3) &
+                (policies['adm2_name'].isin(level2_adm_intensities.index))
+            )
+
+            policies['adm2_policy_intensity'] = 0
+            policies.loc[has_adm2_intensity, 'adm2_policy_intensity'] = (
+                policies.loc[has_adm2_intensity, 'adm2_name'].apply(lambda x: level2_adm_intensities.loc[x, 'policy_intensity'])
+            )
+
+            use_adm3_and_has_adm2 = (has_adm2_intensity) & (policies['policy_intensity'] > policies['adm2_policy_intensity'])
+
+            additional_policy_intensities = (
+                (policies.loc[use_adm3_and_has_adm2, 'policy_intensity'] - policies.loc[use_adm3_and_has_adm2, 'adm2_policy_intensity']) *
+                (policies.loc[use_adm3_and_has_adm2, f'adm3_pop'] / policies.loc[use_adm3_and_has_adm2, f'adm{adm_level}_pop'])
+            )
+
+            total_intensity += additional_policy_intensities.sum()
+
+            # Make sure not to count these ones again (but we don't continue the loop because there may be
+            # other adm3 policies with higher policy_intensity than default intensity, without corresponding
+            # adm2 intensities. Save maximum intensity found here in case it is the max in the whole dataset
+            # because then we want the `policy` column to reflect this maximum
+            if use_adm3_and_has_adm2.sum() != 0:
+                max_use_adm3_and_has_adm2_intensity = policies.loc[use_adm3_and_has_adm2, 'policy_intensity'].max()
+                policies.loc[use_adm3_and_has_adm2, 'policy_intensity'] = 0
+
+        elif level == 2 and len(adm_higher_levels) == 2:
+            # Assign maximum adm2 policy intensities so that adm3 can compare
+            level2_adm_intensities = policies[policies['policy_level'] == 2].groupby('adm2_name')[['policy_intensity']].max()
+
+        this_adm_higher_than_adm = (
+            (policies['policy_level'] == level) &
+            (policies['policy_intensity'] > default_policy_intensity)
+        )
+        additional_policy_intensities = (
+            (policies.loc[this_adm_higher_than_adm, 'policy_intensity'] - default_policy_intensity) *
+            (policies.loc[this_adm_higher_than_adm, f'adm{level}_pop'] / policies.loc[this_adm_higher_than_adm, f'adm{adm_level}_pop'])
+        )
+
+        total_intensity += additional_policy_intensities.sum()
+
+    assert total_intensity <= 1
+
+    max_intensity = max(max_use_adm3_and_has_adm2_intensity, policies['policy_intensity'].max())
+    return total_intensity, max_intensity
+
+def calculate_intensities_adm_day_policy(policies_to_date, adm_level):
+    adm_name = f'adm{adm_level}_name'
+    adm_intensity = f'adm{adm_level}_policy_intensity'
+    adm_levels = sorted([int(col[3]) for col in policies_to_date.columns if col.startswith('adm') and col.endswith('name')])
+    adm_lower_levels = [l for l in adm_levels if l <= adm_level]
+    adm_higher_levels = [l for l in adm_levels if l > adm_level]
+
+    def in_other(row, other):
+        """Find any rows in `other` that cover the area covered by the policy `row`, returning the maximum
+        intensity in `other` so that the full optional intensity (but no more) will be accounted for in the 
+        overlap DataFrame
+        """
+        other_contains_row = np.ones_like(other['adm0_name'], dtype=bool)
+        for level in adm_levels:
+            other_contains_row = (other_contains_row) & (
+                other[f'adm{level}_name'].isin([row[f'adm{level}_name'], 'all', 'All'])
+            )
+
+        if other_contains_row.sum() == 0:
+            return 0
+
+        return other.loc[other_contains_row, 'policy_intensity'].max()
+
+    is_opt = policies_to_date['optional'] == 1
+    policies_opt = policies_to_date[is_opt].copy()
+    policies_mand = policies_to_date[~is_opt].copy()
+
+    if len(policies_opt) > 0 and len(policies_mand) > 0:
+        # Apply logic of calculating mandatory policies fully,
+        # calculating optional policies by taking the full value
+        # and subtracting the value of those policies that have
+        # overlap with mandatory policies
+
+        policies_opt['intensity_in_mand'] = policies_opt.apply(lambda row: in_other(row, policies_mand), axis=1)
+        policies_opt = policies_opt[policies_opt['intensity_in_mand'] == 0]
+        policies_mand['intensity_in_opt'] = policies_mand.apply(lambda row: in_other(row, policies_opt), axis=1)
+
+        # Set `policies_overlap` to the mandatory policies that are found in `policies_opt`, with `policy_intensity`
+        # replaced by the intensity found in the corresponding row of `policies_opt`
+        policies_overlap = policies_mand[policies_mand['intensity_in_opt'] > 0].copy()
+        policies_overlap = policies_overlap.drop(columns=['policy_intensity'])
+        policies_overlap = policies_overlap.rename(columns={'intensity_in_opt':'policy_intensity'})
+
+        total_mandatory_intensity, mandatory_intensity_indicator = get_intensities(policies_mand, adm_level)
+        subtotal_optional_intensity, optional_intensity_indicator = get_intensities(policies_opt, adm_level)
+        total_overlap_intensity, overlap_intensity_indicator = get_intensities(policies_overlap, adm_level)
+
+        total_optional_intensity = subtotal_optional_intensity - total_overlap_intensity        
+    else:
+        # If there are not both mandatory and optional policies, just get the intensities of those DataFrames
+        # individually, without worrying about overlap
+        if len(policies_opt) == 0:
+            total_optional_intensity, optional_intensity_indicator = (0, 0)
+        else:
+            total_optional_intensity, optional_intensity_indicator = get_intensities(policies_opt, adm_level)
+
+        if len(policies_mand) == 0:
+            total_mandatory_intensity, mandatory_intensity_indicator = (0, 0)
+        else:
+            total_mandatory_intensity, mandatory_intensity_indicator = get_intensities(policies_mand, adm_level)
+
+    # For the policy indicator, ensure that not both are counted
+    if optional_intensity_indicator == 1 and mandatory_intensity_indicator == 1:
+        optional_intensity_indicator = 0
+
+    result = (total_mandatory_intensity, mandatory_intensity_indicator, total_optional_intensity, optional_intensity_indicator)
+    return result
+
 def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
@@ -394,10 +532,6 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
     """
     adm_name = f'adm{adm_level}_name'
 
-    adm_intensity = f'adm{adm_level}_policy_intensity'
-    adm_levels = sorted([int(col[3]) for col in policies.columns if col.startswith('adm') and col.endswith('name')])
-    adm_lower_levels = [l for l in adm_levels if l <= adm_level]
-    adm_higher_levels = [l for l in adm_levels if l > adm_level]
     policies_to_date = policies[(policies['policy'] == policy) & 
                                 (policies['date_start'] <= date) &
                                 (policies['date_end'] >= date) &
@@ -405,7 +539,7 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
                                ].copy()
 
     if len(policies_to_date) == 0:
-        return (0, 0)
+        return (0, 0, 0, 0)
 
     # Check if `policies_to_date` result has already been computed for `adm`, use that result if so
     psave = pickle.dumps(policies_to_date)
@@ -413,65 +547,12 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
         policy_pickle_dict[adm] = dict()
     if psave in policy_pickle_dict[adm]:
         return policy_pickle_dict[adm][psave]
+    else:
+        result = calculate_intensities_adm_day_policy(policies_to_date, adm_level)
 
-    # Calculate max intensity of units at this level and below (lower res), and set as default against which
-    # other levels will compare
-    default_policy_intensity = np.nanmax([policies_to_date.loc[policies_to_date['policy_level'].isin(adm_lower_levels), 'policy_intensity'].max(), 0])
+    policy_pickle_dict[adm][psave] = result
 
-    # Initialize final reported intensity to default intensity
-    total_intensity = default_policy_intensity
-
-    level2_adm_intensities = pd.Series()
-    for level in adm_higher_levels:
-        if level == 3 and len(adm_higher_levels) == 2:
-            # Set policy_intensity to maximum between this policy_intensity and the highest policy_intensity
-            # applied at the adm2 level for this adm3's adm2
-            # check the lists to see if there is an adm2_policy which matches adm2's level and has a higher intensity
-            has_adm2_intensity = (
-                (policies_to_date['policy_level'] == 3) &
-                (policies_to_date['adm2_name'].isin(level2_adm_intensities.index))
-            )
-
-            policies_to_date['adm2_policy_intensity'] = 0
-            policies_to_date.loc[has_adm2_intensity, 'adm2_policy_intensity'] = (
-                policies_to_date.loc[has_adm2_intensity, 'adm2_name'].apply(lambda x: level2_adm_intensities.loc[x, 'policy_intensity'])
-            )
-
-            use_adm3_and_has_adm2 = (has_adm2_intensity) & (policies_to_date['policy_intensity'] > policies_to_date['adm2_policy_intensity'])
-
-            additional_policy_intensities = (
-                (policies_to_date.loc[use_adm3_and_has_adm2, 'policy_intensity'] - policies_to_date.loc[use_adm3_and_has_adm2, 'adm2_policy_intensity']) *
-                (policies_to_date.loc[use_adm3_and_has_adm2, f'adm3_pop'] / policies_to_date.loc[use_adm3_and_has_adm2, f'adm{adm_level}_pop'])
-            )
-
-            total_intensity += additional_policy_intensities.sum()
-
-            # Make sure not to count these ones again (but we don't continue the loop because there may be
-            # other adm3 policies with higher policy_intensity than default intensity, without corresponding
-            # adm2 intensities
-            policies_to_date.loc[use_adm3_and_has_adm2, 'policy_intensity'] = 0
-
-        elif level == 2 and len(adm_higher_levels) == 2:
-            # Assign maximum adm2 policy intensities so that adm3 can compare
-            level2_adm_intensities = policies_to_date[policies_to_date['policy_level'] == 2].groupby('adm2_name')[['policy_intensity']].max()
-
-        this_adm_higher_than_adm = (
-            (policies_to_date['policy_level'] == level) &
-            (policies_to_date['policy_intensity'] > default_policy_intensity)
-        )
-        additional_policy_intensities = (
-            (policies_to_date.loc[this_adm_higher_than_adm, 'policy_intensity'] - default_policy_intensity) *
-            (policies_to_date.loc[this_adm_higher_than_adm, f'adm{level}_pop'] / policies_to_date.loc[this_adm_higher_than_adm, f'adm{adm_level}_pop'])
-        )
-
-        total_intensity += additional_policy_intensities.sum()
-
-    assert total_intensity <= 1
-
-    max_intensity = policies_to_date['policy_intensity'].max()
-    policy_pickle_dict[adm][psave] = (total_intensity, max_intensity)
-
-    return (total_intensity, max_intensity)
+    return result
 
 def assign_policies_to_panel(cases_df, policies, cases_level):
     """Assign all policy variables from `policies` to `cases_df`
@@ -507,14 +588,18 @@ def assign_policies_to_panel(cases_df, policies, cases_level):
     
     # Assign each policy one-by-one to the panel
     for policy in policy_list:
+        print(cases_level, policy)
         policy_pickle_dict = dict()
-        df[policy + '_tmp'] = df.apply(lambda row: get_policy_vals(policies, policy, row['date'], row[f'adm{cases_level}_name'], cases_level, policy_pickle_dict), axis=1)
-        df[policy] = df[policy + '_tmp'].apply(lambda x: x[1])
-
+        tmp = df.apply(lambda row: get_policy_vals(policies, policy, row['date'], row[f'adm{cases_level}_name'], cases_level, policy_pickle_dict), axis=1)
+        df[policy] = tmp.apply(lambda x: x[1])
+        opt_col = tmp.apply(lambda x: x[3])
+        use_opt_col = opt_col.sum() > 0
+        if use_opt_col:
+            df[policy + '_opt'] = tmp.apply(lambda x: x[3])
         if policy not in exclude_from_popweights:
-            df[policy + '_popwt'] = df[policy + '_tmp'].apply(lambda x: x[0])
-
-        df = df.drop(columns=[policy + '_tmp'])
+            df[policy + '_popwt'] = tmp.apply(lambda x: x[0])
+            if use_opt_col:
+                df[policy + '_opt_popwt'] = tmp.apply(lambda x: x[2])
         
     df = count_policies_enacted(df, policy_list)
 
