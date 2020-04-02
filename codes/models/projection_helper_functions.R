@@ -1,7 +1,8 @@
 # KB re-reviewed this function on 03/27 - I think it's right.
 compute_bootstrap_replications <- function(full_data, policy_variables_to_use, lhs, 
                                            other_control_variables = NULL, times = 1000, gamma = 1/3,
-                                           time_steps_per_day = 6){
+                                           time_steps_per_day = 6,
+                                           proportion_confirmed = 1){
   full_data <- full_data %>% ungroup()
   if(!lhs %in% names(full_data)){
     stop(paste0("need ", lhs, " in full_data"))
@@ -45,7 +46,8 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
                                          policy_variables_used = policy_variables_to_use,
                                          other_control_variables = other_control_variables,
                                          gamma = gamma,
-                                         time_steps_per_day = time_steps_per_day)
+                                         time_steps_per_day = time_steps_per_day,
+                                         proportion_confirmed = proportion_confirmed)
       pb$tick()$print()
       out
     }))
@@ -136,10 +138,11 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     select(colnames(mmat_actual)) %>% 
     as.matrix()
   
+  # mmat we'll use to predict the counterfactual
   mmat_no_policy_counterfactual <- mmat_actual_for_prediction
+  # mmat we'll use to verify we constructed the first one correctly
   mmat_no_policy_counterfactual2 <- mmat_actual_for_prediction
   
-  # mmat we'll use to prediction counterfactual
   mmat_no_policy_counterfactual2 <- true_data_subset_for_prediction %>% 
     mutate_at(vars(all_of(policy_variables_used)),
               list(~0)) %>% 
@@ -172,6 +175,14 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     inner_join(no_policy_counterfactual_data_for_prediction, by = c("tmp_id", "date")) %>% 
     pull(xxxxid)
   
+  # This helps us to look at which rows don't get matched to diagnose data errors
+  # This can uncover instances of missing RHS that shouldn't be missing
+  # no_policy_counterfactual_data_storage %>%
+  #   group_by(tmp_id) %>% 
+  #   slice(-1) %>% 
+  #   anti_join(no_policy_counterfactual_data_for_prediction, by = c("tmp_id", "date")) %>% 
+  #   select(tmp_id, date, other_control_variables, policy_variables_to_use)
+  
   np_predict_with_nas_in_the_right_spot <- rep(NA_real_, nrow(no_policy_counterfactual_data_storage))
 
   stopifnot(length(matching_indices) == nrow(np_predict))
@@ -190,6 +201,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       is.na() %>% 
       all()
   })
+  
   # All the ones other than the first should not be NA
   stopifnot({
     no_policy_counterfactual_data_storage %>% 

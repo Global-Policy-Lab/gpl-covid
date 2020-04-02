@@ -3,6 +3,7 @@ library(tidyverse)
 library(lfe)
 source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
+underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
 
 mydata <- read_csv("models/reg_data/IRN_reg_data.csv",
                    col_types = cols(

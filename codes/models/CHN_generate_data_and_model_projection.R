@@ -17,11 +17,12 @@ mydata <- read_csv('models/reg_data/CHN_reg_data.csv',
                      date = col_date(format = ""),
                      t = col_character(),
                      adm2_id = col_character(),
-                     adm1_id = col_character()
+                     adm1_id = col_character(),
+                     adm1_adm2_name = col_character(),
+                     day_avg = col_double()
                    )) %>% 
   arrange(adm1_name, adm2_name, date) %>%
-  mutate(adm12_id = factor(adm12_id)) %>%
-  mutate(tmp_id = factor(adm12_id))
+  mutate(tmp_id = factor(adm1_adm2_name))
 
 changed = TRUE
 while(changed){
