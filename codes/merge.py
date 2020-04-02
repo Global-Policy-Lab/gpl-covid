@@ -581,7 +581,7 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[])
     date_max = cases_df['date'].max()
 
     # Initalize panel with same structure as `cases_df`
-    df = pd.DataFrame(
+    policy_panel = pd.DataFrame(
         index=pd.MultiIndex.from_product([
             pd.date_range(date_min, date_max), 
             sorted(cases_df[f'adm{cases_level}_name'].unique())
@@ -597,27 +597,27 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[])
 
         # Get Series of 4-tuples for mandatory pop-weighted, mandatory indicator,
         # optional pop-weighted, optional indicator
-        tmp = df.apply(lambda row: get_policy_vals(policies, policy, row['date'], row[f'adm{cases_level}_name'], cases_level, policy_pickle_dict), axis=1)
+        tmp = policy_panel.apply(lambda row: get_policy_vals(policies, policy, row['date'], row[f'adm{cases_level}_name'], cases_level, policy_pickle_dict), axis=1)
         
         # Assign regular policy indicator
-        df[policy] = tmp.apply(lambda x: x[1])
+        policy_panel[policy] = tmp.apply(lambda x: x[1])
 
         # Assign opt-column if there's anything there
         opt_col = tmp.apply(lambda x: x[3])
         use_opt_col = opt_col.sum() > 0
         if use_opt_col:
-            df[policy + '_opt'] = tmp.apply(lambda x: x[3])
+            policy_panel[policy + '_opt'] = tmp.apply(lambda x: x[3])
 
         # Assign pop-weighted column if it's not excluded from pop-weighting, and opt-pop-weighted if
         # Optional and pop-weighted are both used
         if policy not in exclude_from_popweights:
-            df[policy + '_popwt'] = tmp.apply(lambda x: x[0])
+            policy_panel[policy + '_popwt'] = tmp.apply(lambda x: x[0])
             if use_opt_col:
-                df[policy + '_opt_popwt'] = tmp.apply(lambda x: x[2])
+                policy_panel[policy + '_opt_popwt'] = tmp.apply(lambda x: x[2])
         
-    df = count_policies_enacted(df, policy_list)
+    policy_panel = count_policies_enacted(policy_panel, policy_list)
 
     # Merge panel with `cases_df`
-    merged = pd.merge(cases_df, df, left_on=['date', f'adm{cases_level}_name'], right_on=['date', f'adm{cases_level}_name'])
+    merged = pd.merge(cases_df, policy_panel, left_on=['date', f'adm{cases_level}_name'], right_on=['date', f'adm{cases_level}_name'])
     
     return merged
