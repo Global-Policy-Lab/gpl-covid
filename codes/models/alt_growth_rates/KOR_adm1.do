@@ -142,14 +142,14 @@ gen p_1 = (business_closure_opt + work_from_home_opt)/2
 gen p_2 = (no_demonstration + religious_closure)/2
 gen p_3 = (welfare_services_closure + social_distance_opt + no_gathering_opt)/3
 gen p_4 = emergency_declaration 
+gen p_5 = pos_cases_quarantine // started for all provinces 3/22
 
 lab var p_1 "closure, stay home"
 lab var p_2 "no groups"
 lab var p_3 "social distance"
 lab var p_4 "emergency declaration"
+lab var p_5 "quarantine positive cases"
 
-*gen p_5 = pos_cases_quarantine // started for all provinces 3/22
-*lab var p_5 "quarantine positive cases"
 // note all schools are closed for the entire sample period
 
 //------------------main estimates
@@ -168,13 +168,13 @@ cap erase "results/tables/KOR_estimates_table.txt"
 // export coef
 tempfile results_file
 postfile results str18 adm0 str18 policy beta se using `results_file', replace
-foreach var in "p_1" "p_2" "p_3" "p_4" {
+foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" {
 	post results ("KOR") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 // effect of package of policies (FOR FIG2)
-lincom p_1 + p_2 + p_3 // without emergency declaration, which was only in one prov
-lincom p_1 + p_2 + p_3 + p_4
+lincom p_1 + p_2 + p_3 + p_5 // without emergency declaration, which was only in one prov
+lincom p_1 + p_2 + p_3 + p_4 + p_5
 post results ("KOR") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 // looking at different policies (similar to Fig2)
@@ -202,6 +202,7 @@ p_1 * _b[p_1] + ///
 p_2 * _b[p_2] + ///
 p_3 * _b[p_3] + ///  
 p_4 * _b[p_4] + ///  
+p_5 * _b[p_5] + ///  
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
@@ -210,7 +211,8 @@ gen treatment = ///
 p_1 *_b[p_1] + ///
 p_2 * _b[p_2] + ///
 p_3 * _b[p_3] + /// 
-p_4 * _b[p_4] /// 
+p_4 * _b[p_4] + /// 
+p_5 * _b[p_5] /// 
 if e(sample)
 
 // predicting counterfactual growth for each obs
@@ -221,7 +223,7 @@ predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_cou
 preserve
 	keep if e(sample) == 1
 	collapse  D_l_active_cases p_* 
-	predictnl ATE = p_1*_b[p_1] + p_2*_b[p_2] + p_3*_b[p_3] + p_4*_b[p_4], ci(LB UB) se(sd) p(pval)
+	predictnl ATE = p_1*_b[p_1] + p_2*_b[p_2] + p_3*_b[p_3] + p_4*_b[p_4] + p_5*_b[p_5], ci(LB UB) se(sd) p(pval)
 	g adm0 = "KOR"
 	outsheet * using "models/KOR_ATE.csv", comma replace 
 restore
@@ -279,18 +281,32 @@ tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22003)) xlabel(21930(10)22003, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
 
-// tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
-// (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
-// (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
-// (sc day_avg t, color(black)) ///
-// if e(sample), ///
-// title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
-// xscale(range(21960(10)21999)) xlabel(21960(10)21999, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) xsize(8)
+
+//-------------------------------CREATING DAILY LAGS
+
+
+// sum t
+// local start_date = `r(min)'
+//
+// local orig_obs = r(N)
+// local set_obs = r(N) + 50
+//
+// set obs `set_obs'
+// replace t = `start_date' - (_n-`orig_obs') if t==.
+//
+// sum adm1_id if longest_series==1
+// replace adm1_id = `r(min)' if _n > `orig_obs'
+// fillin adm1_id t
+//
+// foreach pvar of varlist p_*{
+// gen D_`pvar' = D.`pvar'
+// replace D_`pvar' = 0 if D_`pvar' == .
+// }
+//
+// reghdfe D_l_active_cases testing_regime_change_* L(-5/35).(D_p_*), absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+//
+// coefplot, keep(*_p_1) vertical xsize(10)
