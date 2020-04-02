@@ -20,7 +20,6 @@
 
 # Clean the workspace and load packages
 
-# setwd('C:/Users/Andy Hultgren/Documents/ARE/GPL/coronavirus_sprint')
 
 rm(list=ls())
 
