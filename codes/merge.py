@@ -554,7 +554,7 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
 
     return result
 
-def assign_policies_to_panel(cases_df, policies, cases_level):
+def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[]):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
         cases_df (pandas.DataFrame): table to assign policy variables to, 
@@ -562,6 +562,8 @@ def assign_policies_to_panel(cases_df, policies, cases_level):
         policies (pandas.DataFrame): table of policies, listed by date and regions affected
         cases_level (int): Administrative unit level used for analysis of policy effects,
             typically the lowest level which pop-weights have been applied to
+        aggregate_vars (list of str): list of policy variables where optional version
+            should be treated independently of mandatory version
 
     Returns:
         pandas.DataFrame: a version of `cases_df` with all policies from `policies` assigned as new columns
@@ -569,6 +571,12 @@ def assign_policies_to_panel(cases_df, policies, cases_level):
 
     # Assign policy_level to distinguish policies specified at different admin-unit levels
     policies['policy_level'] = policies.apply(get_policy_level, axis=1)
+
+    # Treat policies in `aggregate_vars` as independent policies (just like mandatory policies)
+    # Set optional to 0 to avoid applying normal optional logic in `get_policy_vals()`
+    for policy in aggregate_vars:
+        policies.loc[policies['optional'] == 1, 'policy'] = policies.loc[policies['optional'] == 1, 'policy'] + '_opt'
+        policies.loc[policies['optional'] == 1, 'optional'] = 0
 
     policy_list = list(policies['policy'].unique())
     policy_popwts = [p + '_popwt' for p in policy_list if p not in exclude_from_popweights]
