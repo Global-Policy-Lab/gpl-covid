@@ -428,6 +428,7 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
             # applied at the adm2 level for this adm3's adm2
             # check the lists to see if there is an adm2_policy which matches adm2's level and has a higher intensity
             has_adm2_intensity = (
+                (policies_to_date['policy_level'] == 3) &
                 (policies_to_date['adm2_name'].isin(level2_adm_intensities.index))
             )
 
@@ -436,11 +437,11 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
                 policies_to_date.loc[has_adm2_intensity, 'adm2_name'].apply(lambda x: level2_adm_intensities.loc[x, 'policy_intensity'])
             )
 
-            use_adm3 = (has_adm2_intensity) & (policies_to_date['policy_intensity'] > policies_to_date['adm2_policy_intensity'])
+            use_adm3_and_has_adm2 = (has_adm2_intensity) & (policies_to_date['policy_intensity'] > policies_to_date['adm2_policy_intensity'])
 
             additional_policy_intensities = (
-                (policies_to_date.loc[use_adm3, 'policy_intensity'] - policies_to_date.loc[use_adm3, 'adm2_policy_intensity']) *
-                (policies_to_date.loc[use_adm3, f'adm3_pop'] / policies_to_date.loc[use_adm3, f'adm2_pop'])
+                (policies_to_date.loc[use_adm3_and_has_adm2, 'policy_intensity'] - policies_to_date.loc[use_adm3_and_has_adm2, 'adm2_policy_intensity']) *
+                (policies_to_date.loc[use_adm3_and_has_adm2, f'adm3_pop'] / policies_to_date.loc[use_adm3_and_has_adm2, f'adm{adm_level}_pop'])
             )
 
             total_intensity += additional_policy_intensities.sum()
@@ -448,7 +449,7 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
             # Make sure not to count these ones again (but we don't continue the loop because there may be
             # other adm3 policies with higher policy_intensity than default intensity, without corresponding
             # adm2 intensities
-            policies_to_date.loc[use_adm3, 'policy_intensity'] = 0
+            policies_to_date.loc[use_adm3_and_has_adm2, 'policy_intensity'] = 0
 
         elif level == 2 and len(adm_higher_levels) == 2:
             # Assign maximum adm2 policy intensities so that adm3 can compare
@@ -465,11 +466,12 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
 
         total_intensity += additional_policy_intensities.sum()
 
-    pop_weighted_intensity = min(total_intensity, 1.0)
-    max_intensity = policies_to_date['policy_intensity'].max()
-    policy_pickle_dict[adm][psave] = (pop_weighted_intensity, max_intensity)
+    assert total_intensity <= 1
 
-    return (pop_weighted_intensity, max_intensity)
+    max_intensity = policies_to_date['policy_intensity'].max()
+    policy_pickle_dict[adm][psave] = (total_intensity, max_intensity)
+
+    return (total_intensity, max_intensity)
 
 def assign_policies_to_panel(cases_df, policies, cases_level):
     """Assign all policy variables from `policies` to `cases_df`
