@@ -110,7 +110,7 @@ tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 // the break in the health data (only diff is Qom, which had school closures the whole time)
 
 gen p_1 = (L3.school_closure + L3.travel_ban_local_opt + L3.work_from_home)/3
-replace p_1 = 0 if p_1 == . & D_l_cum_confirmed_cases~=.
+replace p_1 = 0 if p_1 == . 
 lab var p_1 "school_closure, travel_ban_optional, work_from_home"
 
 
