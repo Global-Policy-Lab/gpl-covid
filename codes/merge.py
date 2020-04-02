@@ -390,8 +390,7 @@ def get_intensities(policies, adm_level):
 
     # Initialize final reported intensity to default intensity
     total_intensity = default_policy_intensity
-
-    max_use_adm3_and_has_adm2_intensity = 0
+    max_intensity = policies['policy_intensity'].max()
 
     level2_adm_intensities = pd.DataFrame()
     for level in adm_higher_levels:
@@ -422,9 +421,7 @@ def get_intensities(policies, adm_level):
             # other adm3 policies with higher policy_intensity than default intensity, without corresponding
             # adm2 intensities. Save maximum intensity found here in case it is the max in the whole dataset
             # because then we want the `policy` column to reflect this maximum
-            if use_adm3_and_has_adm2.sum() != 0:
-                max_use_adm3_and_has_adm2_intensity = policies.loc[use_adm3_and_has_adm2, 'policy_intensity'].max()
-                policies.loc[use_adm3_and_has_adm2, 'policy_intensity'] = 0
+            policies.loc[use_adm3_and_has_adm2, 'policy_intensity'] = 0
 
         elif level == 2 and len(adm_higher_levels) == 2:
             # Assign maximum adm2 policy intensities so that adm3 can compare
@@ -443,7 +440,6 @@ def get_intensities(policies, adm_level):
 
     assert total_intensity <= 1
 
-    max_intensity = max(max_use_adm3_and_has_adm2_intensity, policies['policy_intensity'].max())
     return total_intensity, max_intensity
 
 def calculate_intensities_adm_day_policy(policies_to_date, adm_level):
@@ -493,7 +489,8 @@ def calculate_intensities_adm_day_policy(policies_to_date, adm_level):
         subtotal_optional_intensity, optional_intensity_indicator = get_intensities(policies_opt, adm_level)
         total_overlap_intensity, overlap_intensity_indicator = get_intensities(policies_overlap, adm_level)
 
-        total_optional_intensity = subtotal_optional_intensity - total_overlap_intensity        
+        total_optional_intensity = subtotal_optional_intensity - total_overlap_intensity
+        assert total_optional_intensity >= 0
     else:
         # If there are not both mandatory and optional policies, just get the intensities of those DataFrames
         # individually, without worrying about overlap
@@ -549,8 +546,7 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
         return policy_pickle_dict[adm][psave]
     else:
         result = calculate_intensities_adm_day_policy(policies_to_date, adm_level)
-
-    policy_pickle_dict[adm][psave] = result
+        policy_pickle_dict[adm][psave] = result
 
     return result
 
@@ -598,12 +594,22 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[])
     for policy in policy_list:
         print(cases_level, policy)
         policy_pickle_dict = dict()
+
+        # Get Series of 4-tuples for mandatory pop-weighted, mandatory indicator,
+        # optional pop-weighted, optional indicator
         tmp = df.apply(lambda row: get_policy_vals(policies, policy, row['date'], row[f'adm{cases_level}_name'], cases_level, policy_pickle_dict), axis=1)
+        
+        # Assign regular policy indicator
         df[policy] = tmp.apply(lambda x: x[1])
+
+        # Assign opt-column if there's anything there
         opt_col = tmp.apply(lambda x: x[3])
         use_opt_col = opt_col.sum() > 0
         if use_opt_col:
             df[policy + '_opt'] = tmp.apply(lambda x: x[3])
+
+        # Assign pop-weighted column if it's not excluded from pop-weighting, and opt-pop-weighted if
+        # Optional and pop-weighted are both used
         if policy not in exclude_from_popweights:
             df[policy + '_popwt'] = tmp.apply(lambda x: x[0])
             if use_opt_col:
