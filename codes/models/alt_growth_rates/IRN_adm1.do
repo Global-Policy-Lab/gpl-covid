@@ -173,13 +173,7 @@ graph drop hist_irn qn_irn
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = ///
-p_1 * _b[p_1] + ///
-p_2 * _b[p_2] + ///
-p_1_x_Tehran * _b[p_1_x_Tehran] + ///
-p_2_x_Tehran * _b[p_2_x_Tehran] + ///
-p_3 * _b[p_3] + ///
-_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
+predictnl y_actual = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
@@ -193,7 +187,8 @@ if e(sample)
 
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter = testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // ATE
 preserve
@@ -270,11 +265,11 @@ restore
 
 
 // predicted "actual" outcomes with real policies
-predictnl y_actual_thr = p_1*_b[p_1] + p_2* _b[p_2] + ///
-_b[_cons] if e(sample), ci(lb_y_actual_thr ub_y_actual_thr)
+predictnl y_actual_thr = xb() if e(sample), ci(lb_y_actual_thr ub_y_actual_thr)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter_thr =  _b[_cons] if e(sample), ci(lb_counter_thr ub_counter_thr)
+predictnl y_counter_thr =  testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+_b[_cons] if e(sample), ci(lb_counter_thr ub_counter_thr)
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars

@@ -162,24 +162,24 @@ graph drop hist_usa qn_usa
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_3* _b[p_3] /// 
-+ _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
+predictnl y_actual = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_3* _b[p_3] /// 
+p_1 * _b[p_1] + ///
+p_2 * _b[p_2] + ///
+p_3 * _b[p_3] /// 
 if e(sample)
 
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter = ///
+testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
+testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
+testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // compute ATE
 preserve
@@ -253,15 +253,15 @@ foreach state in "Washington" "California" "New York" {
 	post results ("`rowname'") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
 
 	// predicted "actual" outcomes with real policies
-	predictnl y_actual_`state0' = ///
-	p_1*_b[p_1] + ///
-	p_2* _b[p_2] + ///
-	p_3* _b[p_3] + /// 
-	_b[_cons] if e(sample), ///
+	predictnl y_actual_`state0' = xb() if e(sample), ///
 	ci(lb_y_actual_`state0' ub_y_actual_`state0')
 		
 	// predicting counterfactual growth for each obs
-	predictnl y_counter_`state0' =  _b[_cons] if e(sample), ///
+	predictnl y_counter_`state0' = ///
+	testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
+	testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
+	testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
+	_b[_cons] if e(sample), ///
 	ci(lb_counter_`state0' ub_counter_`state0')
 
 	// quality control: don't want to be forecasting negative growth (not modeling recoveries)

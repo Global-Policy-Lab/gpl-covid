@@ -251,36 +251,30 @@ graph drop hist_chn qn_chn
 // ------------- generating predicted values and counterfactual predictions based on treatment
 
 // predicted "actual" outcomes with real policies
-predictnl y_actual = ///
-home_isolation_L0_to_L7 *_b[home_isolation_L0_to_L7] + ///
-travel_ban_local_L0_to_L7*_b[travel_ban_local_L0_to_L7] + ///
-home_isolation_L8_to_L14*_b[home_isolation_L8_to_L14] +  ///
-travel_ban_local_L8_to_L14*_b[travel_ban_local_L8_to_L14] + ///
-home_isolation_L15_to_L21*_b[home_isolation_L15_to_L21] + ///
-travel_ban_local_L15_to_L21*_b[travel_ban_local_L15_to_L21] + /// 
-home_isolation_L22_to_L28*_b[home_isolation_L22_to_L28] + /// 
-travel_ban_local_L22_to_L28*_b[travel_ban_local_L22_to_L28] + ///
-home_isolation_L29_to_L70*_b[home_isolation_L29_to_L70] + ///
-travel_ban_local_L29_to_L70*_b[travel_ban_local_L29_to_L70] ///
-+ _b[_cons] + __hdfe1__ if e(sample), ci(lb_y_actual ub_y_actual)
+*predict y_actual if e(sample)
+predictnl y_actual = xb() + __hdfe1__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
 home_isolation_L0_to_L7 *_b[home_isolation_L0_to_L7] + ///
-travel_ban_local_L0_to_L7*_b[travel_ban_local_L0_to_L7] + ///
-home_isolation_L8_to_L14*_b[home_isolation_L8_to_L14] +  ///
-travel_ban_local_L8_to_L14*_b[travel_ban_local_L8_to_L14] + ///
-home_isolation_L15_to_L21*_b[home_isolation_L15_to_L21] + ///
-travel_ban_local_L15_to_L21*_b[travel_ban_local_L15_to_L21] + /// 
-home_isolation_L22_to_L28*_b[home_isolation_L22_to_L28] + /// 
-travel_ban_local_L22_to_L28*_b[travel_ban_local_L22_to_L28] + ///
-home_isolation_L29_to_L70*_b[home_isolation_L29_to_L70] + ///
-travel_ban_local_L29_to_L70*_b[travel_ban_local_L29_to_L70] ///
+travel_ban_local_L0_to_L7 * _b[travel_ban_local_L0_to_L7] + ///
+home_isolation_L8_to_L14 * _b[home_isolation_L8_to_L14] +  ///
+travel_ban_local_L8_to_L14 * _b[travel_ban_local_L8_to_L14] + ///
+home_isolation_L15_to_L21 * _b[home_isolation_L15_to_L21] + ///
+travel_ban_local_L15_to_L21 * _b[travel_ban_local_L15_to_L21] + /// 
+home_isolation_L22_to_L28 * _b[home_isolation_L22_to_L28] + /// 
+travel_ban_local_L22_to_L28 * _b[travel_ban_local_L22_to_L28] + ///
+home_isolation_L29_to_L70 * _b[home_isolation_L29_to_L70] + ///
+travel_ban_local_L29_to_L70 * _b[travel_ban_local_L29_to_L70] ///
 if e(sample)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter =  _b[_cons] + __hdfe1__ if e(sample), ci(lb_counter ub_counter)
+*gen y_counter = y_actual - treatment if e(sample)
+predictnl y_counter =  ///
+testing_regime_change_13feb2020 * _b[testing_regime_change_13feb2020] + ///
+testing_regime_change_20feb2020 *_b[testing_regime_change_20feb2020] + ///
+_b[_cons] + __hdfe1__ if e(sample), ci(lb_counter2 ub_counter2)
 
 // compute ATE
 preserve
@@ -385,16 +379,13 @@ preserve
 restore
 
 // predicted "actual" outcomes with real policies
-predictnl y_actual_wh = ///
-home_isolation_L0_to_L7*_b[home_isolation_L0_to_L7] + ///
-home_isolation_L8_to_L14*_b[home_isolation_L8_to_L14] +  ///
-home_isolation_L15_to_L21*_b[home_isolation_L15_to_L21] + ///
-home_isolation_L22_to_L28*_b[home_isolation_L22_to_L28] + /// 
-home_isolation_L29_to_L70*_b[home_isolation_L29_to_L70] + ///
-_b[_cons] if e(sample), ci(lb_y_actual_wh ub_y_actual_wh)
+predictnl y_actual_wh = xb() if e(sample), ci(lb_y_actual_wh ub_y_actual_wh)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter_wh =  _b[_cons] if e(sample), ci(lb_counter_wh ub_counter_wh)
+predictnl y_counter_wh =  ///
+testing_regime_change_13feb2020 * _b[testing_regime_change_13feb2020] + ///
+testing_regime_change_20feb2020 *_b[testing_regime_change_20feb2020] + ///
+_b[_cons] if e(sample), ci(lb_counter_wh ub_counter_wh)
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars

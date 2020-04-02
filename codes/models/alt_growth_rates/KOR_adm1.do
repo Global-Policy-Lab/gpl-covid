@@ -197,13 +197,7 @@ graph drop hist_kor qn_kor
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = ///
-p_1 * _b[p_1] + ///
-p_2 * _b[p_2] + ///
-p_3 * _b[p_3] + ///  
-p_4 * _b[p_4] + ///  
-p_5 * _b[p_5] + ///  
-_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
+predictnl y_actual = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
@@ -217,7 +211,12 @@ if e(sample)
 
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter = ///
+testing_regime_change_20feb2020 *_b[testing_regime_change_20feb2020] + ///
+testing_regime_change_29feb2020 * _b[testing_regime_change_29feb2020] + ///
+testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // compute ATE
 preserve
