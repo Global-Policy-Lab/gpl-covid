@@ -565,8 +565,11 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
     Returns:
         pandas.DataFrame: a version of `cases_df` with all policies from `policies` assigned as new columns
     """
+
     # Convert 'optional' to indicator variable
-    policies['optional'] = policies['optional'].replace({"Y":1, "N":0})
+    if policies['optional'].dtype == 'object':
+        policies['optional'] = policies['optional'].replace({"Y":1, "N":0})
+    
     policies['optional'] = policies['optional'].fillna(0)
     if errors == 'raise':
         assert len(policies['optional'].unique()) <= 2
@@ -606,7 +609,6 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
     
     # Assign each policy one-by-one to the panel
     for policy in policy_list:
-        print(cases_level, policy)
         policy_pickle_dict = dict()
 
         # Get Series of 4-tuples for mandatory pop-weighted, mandatory indicator,
