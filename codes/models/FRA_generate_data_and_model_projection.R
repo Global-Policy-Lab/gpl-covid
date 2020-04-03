@@ -5,7 +5,7 @@ source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
 underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
 
-mydata <- read_csv("models/reg_data/FRA_reg_data.csv",
+france_data <- read_csv("models/reg_data/FRA_reg_data.csv",
                    col_types = cols(
                      .default = col_double(),
                      adm0_name = col_character(),
@@ -18,16 +18,16 @@ mydata <- read_csv("models/reg_data/FRA_reg_data.csv",
 
 changed = TRUE
 while(changed){
-  new <- mydata %>% 
+  new <- france_data %>% 
     group_by(tmp_id) %>% 
     filter(!(is.na(cum_confirmed_cases) & date == min(date)))  
-  if(nrow(new) == nrow(mydata)){
+  if(nrow(new) == nrow(france_data)){
     changed <- FALSE
   }
-  mydata <- new
+  france_data <- new
 }
 
-policy_variables_to_use <- 
+france_policy_variables_to_use <- 
   c(
     "testing_regime",
     'national_lockdown',
@@ -36,29 +36,29 @@ policy_variables_to_use <-
     'pck_no_gathering'
   )  
 
-other_control_variables <- 'day_of_week'
+france_other_control_variables <- 'day_of_week'
 
 # reghdfe D_l_cum_confirmed_cases testing national_lockdown school_closure ///
 #   social_distance pck_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 
 formula <- as.formula(
   paste("D_l_cum_confirmed_cases ~ tmp_id +", 
-        paste(policy_variables_to_use, collapse = " + "), ' + ',
-        paste(other_control_variables, collapse = " + "),
+        paste(france_policy_variables_to_use, collapse = " + "), ' + ',
+        paste(france_other_control_variables, collapse = " + "),
         " - 1 | 0 | 0 | date "
   ))
 
 
-main_model <- suppressWarnings({
-  felm(data = mydata,
+france_model <- suppressWarnings({
+  felm(data = france_data,
        formula = formula,
-       cmethod = 'reghdfe'); #summary(main_model)
+       cmethod = 'reghdfe'); #summary(france_model)
 })
 
-main_projection <- compute_predicted_cum_cases(full_data = mydata, model = main_model,
+main_projection <- compute_predicted_cum_cases(full_data = france_data, model = france_model,
                                                lhs = "D_l_cum_confirmed_cases",
-                                               policy_variables_used = policy_variables_to_use,
-                                               other_control_variables = other_control_variables,
+                                               policy_variables_used = france_policy_variables_to_use,
+                                               other_control_variables = france_other_control_variables,
                                                gamma = gamma,
                                                proportion_confirmed = underreporting %>% 
                                                  filter(country == "France") %>% 
