@@ -568,6 +568,7 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
     # Convert 'optional' to indicator variable
     policies['optional'] = policies['optional'].replace({"Y":1, "N":0})
     policies['optional'] = policies['optional'].fillna(0)
+    assert len(policies['optional'].unique()) <= 2
 
     policies['date_end'] = policies['date_end'].fillna(pd.to_datetime('2099-12-31'))
 
