@@ -1,6 +1,8 @@
-adm0,policy,suffix,beta,se
-"IRN","p_1","",-.299,.047
-"IRN","p_2","",-.066,.011
-"IRN","comb. policy","",-.365,.044
-"IRN","comb. policy Teheran","",-.306,.103
-"IRN","no_policy rate","",.501,.088
+adm0,policy,beta,se
+"IRN","p_1",-.347,.048
+"IRN","p_2",-.102,.02
+"IRN","p_3",.033,.039
+"IRN","comb. policy",-.416,.06
+"IRN","comb. policy Tehran",-.392,.104
+"IRN","no_policy rate",.537,.048
+"IRN_Tehran","no_policy rate",.484,.063

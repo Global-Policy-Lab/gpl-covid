@@ -118,12 +118,14 @@ lab var p_1 "school_closure, travel_ban_optional, work_from_home"
 gen p_2 = home_isolation
 lab var p_2 "home_isolation"
 
-
 // Creating Tehran-specific treatments because policies have very different effect in Tehran than rest of country 
 //(primarily an issue of timing, Tehran had a bigger effect for the earlier raft of policies compared to the rest of the country)
 gen p_1_x_Tehran = p_1*(adm1_name== "Tehran")
 gen p_2_x_Tehran = p_2*(adm1_name== "Tehran")
 
+// shrines in Qom closed March 17
+gen p_3 = religious_closure
+lab var p_3 "religious_closure"
 
 //------------------main estimates
 
@@ -131,8 +133,7 @@ gen p_2_x_Tehran = p_2*(adm1_name== "Tehran")
 outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran testing_regime_*, ///
-absorb(i.adm1_id i.dow, savefe) cluster(date) resid
+reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
 outreg2 using "results/tables/IRN_estimates_table", word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: Iran")
@@ -142,18 +143,18 @@ cap erase "results/tables/IRN_estimates_table.txt"
 // saving coefs
 tempfile results_file
 postfile results str18 adm0 str50 policy beta se using `results_file', replace
-foreach var in "p_1" "p_2"{
+foreach var in "p_1" "p_2" "p_3"{
 	post results ("IRN") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 // effect of package of policies (FOR FIG2)
-lincom p_1 + p_2 //rest of country
+lincom p_1 + p_2 + p_3 //rest of country
 post results ("IRN") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 lincom p_1 + p_2 + p_1_x_Tehran + p_2_x_Tehran //in Tehran
 post results ("IRN") ("comb. policy Tehran") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 // looking at different policies (FOR FIG2)
-coefplot, keep(p_1 p_2)
+coefplot, keep(p_1 p_2 p_3)
 
 
 //------------- checking error structure (FOR APPENDIX FIGURE)
@@ -172,27 +173,29 @@ graph drop hist_irn qn_irn
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = p_1*_b[p_1] + p_2* _b[p_2] + p_1_x_Tehran*_b[p_1_x_Tehran] + p_2_x_Tehran*_b[p_2_x_Tehran] ///
-+ _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
+predictnl y_actual = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_1_x_Tehran*_b[p_1_x_Tehran] + ///
-p_2_x_Tehran* _b[p_2_x_Tehran] ///
+p_1 * _b[p_1] + ///
+p_2 * _b[p_2] + ///
+p_1_x_Tehran * _b[p_1_x_Tehran] + ///
+p_2_x_Tehran * _b[p_2_x_Tehran] + ///
+p_3 * _b[p_3] ///
 if e(sample)
 
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter = testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+
 // ATE
 preserve
 	keep if e(sample) == 1
-	collapse  D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran
+	collapse  D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran p_3
 	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_1_x_Tehran*_b[p_1_x_Tehran] ///
-	+ p_2_x_Tehran*_b[p_2_x_Tehran], ci(LB UB) se(sd) p(pval)
+	+ p_2_x_Tehran*_b[p_2_x_Tehran] + p_3* _b[p_3], ci(LB UB) se(sd) p(pval)
 	g adm0 = "IRN"
 	outsheet * using "models/IRN_ATE.csv", comma replace 
 restore
@@ -262,11 +265,11 @@ restore
 
 
 // predicted "actual" outcomes with real policies
-predictnl y_actual_thr = p_1*_b[p_1] + p_2* _b[p_2] + ///
-_b[_cons] if e(sample), ci(lb_y_actual_thr ub_y_actual_thr)
+predictnl y_actual_thr = xb() if e(sample), ci(lb_y_actual_thr ub_y_actual_thr)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter_thr =  _b[_cons] if e(sample), ci(lb_counter_thr ub_counter_thr)
+predictnl y_counter_thr =  testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+_b[_cons] if e(sample), ci(lb_counter_thr ub_counter_thr)
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars
