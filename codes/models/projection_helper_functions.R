@@ -169,11 +169,9 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
   
   np_predict <- predict.felm(model, newdata = mmat_no_policy_counterfactual)
   stopifnot(nrow(mmat_no_policy_counterfactual) == nrow(no_policy_counterfactual_data_for_prediction))
-  
-  matching_indices <- no_policy_counterfactual_data_storage %>% 
-    mutate(xxxxid = 1:n()) %>% 
-    inner_join(no_policy_counterfactual_data_for_prediction, by = c("tmp_id", "date")) %>% 
-    pull(xxxxid)
+  np_predict_df <- no_policy_counterfactual_data_for_prediction %>% 
+    mutate(prediction_logdiff = np_predict$fit) %>% 
+    select(tmp_id, date, prediction_logdiff)
   
   # This helps us to look at which rows don't get matched to diagnose data errors
   # This can uncover instances of missing RHS that shouldn't be missing
@@ -183,15 +181,10 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
   #   anti_join(no_policy_counterfactual_data_for_prediction, by = c("tmp_id", "date")) %>% 
   #   select(tmp_id, date, other_control_variables, policy_variables_to_use)
   
-  np_predict_with_nas_in_the_right_spot <- rep(NA_real_, nrow(no_policy_counterfactual_data_storage))
-
-  stopifnot(length(matching_indices) == nrow(np_predict))
   # This bit adds the predicted values in the spots where we are predicting
-  np_predict_with_nas_in_the_right_spot[matching_indices] <- np_predict %>% pull(fit)
   
   no_policy_counterfactual_data_storage <- no_policy_counterfactual_data_storage %>% 
-    ungroup() %>% 
-    mutate(prediction_logdiff = np_predict_with_nas_in_the_right_spot) 
+    left_join(np_predict_df, by = c("tmp_id", "date")) 
   # All the first ones should be NA
   stopifnot({
     no_policy_counterfactual_data_storage %>% 
@@ -235,12 +228,13 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     ))
   
   true_predict <- predict.felm(model, newdata = mmat_actual_for_prediction)
-  true_predict_with_nas_in_the_right_spot <- np_predict_with_nas_in_the_right_spot
-  true_predict_with_nas_in_the_right_spot[matching_indices] <- true_predict %>% pull(fit)
+  true_predict_df <- true_data_subset_for_prediction %>% 
+    mutate(prediction_logdiff = true_predict$fit) %>% 
+    select(tmp_id, date, prediction_logdiff)
   
   true_data_storage <- true_data_storage %>% 
     ungroup() %>% 
-    mutate(prediction_logdiff = true_predict_with_nas_in_the_right_spot) %>% 
+    left_join(true_predict_df, by = c("tmp_id", "date")) %>% 
     group_by(tmp_id) %>% 
     mutate(predicted_cum_confirmed_cases = calculate_projection_for_one_unit(
       cum_confirmed_cases_first = cum_confirmed_cases[1],
