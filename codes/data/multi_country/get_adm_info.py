@@ -464,6 +464,19 @@ def main():
         pop.append(int(e[1].text.replace(",","")))
     pop_terr = pd.DataFrame({"adm1_name": country, "population_terr": pop, "adm0_name": "USA"}).set_index(["adm0_name", "adm1_name"])
 
+    # included US Virgin Islands in territories
+    terr_url = "https://worldpopulationreview.com/countries/united-states-virgin-islands-population/"
+    data = requests.get(terr_url).text
+    text = BeautifulSoup(data, "lxml")
+    pop_usvg = pd.Series(
+        [int(text.find(attrs={"class": "popNumber"}).text.replace(",", ""))],
+        index=pd.MultiIndex.from_tuples(
+            (("USA", "US Virgin Islands"),), names=["adm0_name", "adm1_name"]
+        ),
+        name="population_terr",
+    )
+    pop_terr = pop_terr.append(pd.DataFrame(pop_usvg))
+
     pop_st = pop_st.join(pop_terr, how="outer")
     # taking population terr b/c more recent than ACS for puerto rico
     pop_st.population_terr = pop_st.population_terr.fillna(pop_st.population_census)
