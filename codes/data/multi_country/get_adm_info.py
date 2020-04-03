@@ -58,7 +58,6 @@ def process_gadm(in_gdf):
 
     return in_gdf
 
-
 def main():
     # ## Global adm1
 
@@ -431,24 +430,62 @@ def main():
     for k,v in manual_names.items():
         us_pops.loc[us_pops.fips==k,['adm1_name','adm2_name']] = v
     us_pops = us_pops.set_index(["adm0_name", "adm1_name", "adm2_name"])
-    
+
     # save fips xwalk
     us_pops.reset_index(level="adm0_name", drop=True).to_csv(
         cutil.DATA_INTERIM / "usa" / "adm2_pop_fips.csv", index=True
     )
-    
-    
+
+
     # ##### Merge back into global adm datasets
+    ## adm2
     adm2_gdf = adm2_gdf.join(us_pops.population, rsuffix='_r', how="outer")
     adm2_gdf['population'] = adm2_gdf.population.fillna(adm2_gdf.population_r)
     adm2_gdf = adm2_gdf.drop(columns='population_r')
 
-    st_pops = (
-        adm2_gdf.loc[:, "population"]
-        .groupby(["adm0_name", "adm1_name"])
-        .sum(min_count=1)
+    ## adm1
+    pop_st = pd.DataFrame(
+        c.acs5.state(("NAME", "B01003_001E"), Census.ALL)
     )
-    adm1_gdf["population"] = adm1_gdf.population.fillna(st_pops)
+    pop_st = pop_st.rename(columns={"NAME": "adm1_name", "B01003_001E":"population_census"}).drop(columns="state")
+    pop_st["adm0_name"] = "USA"
+    pop_st = pop_st.set_index(["adm0_name", "adm1_name"], drop=True)
+
+    # add territories
+    terr_url = "https://worldpopulationreview.com/countries/united-states-territories/"
+    data = requests.get(terr_url).text
+    text = BeautifulSoup(data, "lxml")
+    table = text.table
+
+    elements = [i.find_all("td") for i in table.tbody.find_all("tr")]
+    country, pop = [], []
+    for e in elements:
+        country.append(e[0].text)
+        pop.append(int(e[1].text.replace(",","")))
+    pop_terr = pd.DataFrame({"adm1_name": country, "population_terr": pop, "adm0_name": "USA"}).set_index(["adm0_name", "adm1_name"])
+
+    # included US Virgin Islands in territories
+    terr_url = "https://worldpopulationreview.com/countries/united-states-virgin-islands-population/"
+    data = requests.get(terr_url).text
+    text = BeautifulSoup(data, "lxml")
+    pop_usvg = pd.Series(
+        [int(text.find(attrs={"class": "popNumber"}).text.replace(",", ""))],
+        index=pd.MultiIndex.from_tuples(
+            (("USA", "US Virgin Islands"),), names=["adm0_name", "adm1_name"]
+        ),
+        name="population_terr",
+    )
+    pop_terr = pop_terr.append(pd.DataFrame(pop_usvg))
+
+    pop_st = pop_st.join(pop_terr, how="outer")
+    # taking population terr b/c more recent than ACS for puerto rico
+    pop_st.population_terr = pop_st.population_terr.fillna(pop_st.population_census)
+    pop_st = pop_st.drop(columns="population_census")
+
+    # merge back into global adm1 dataset
+    adm1_gdf = adm1_gdf.join(pop_st, how="outer")
+    adm1_gdf.loc[idx["USA",:],"population"] = adm1_gdf.loc[idx["USA",:], "population_terr"]
+    adm1_gdf = adm1_gdf.drop(columns="population_terr")
 
     # ### ITA
 
