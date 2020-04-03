@@ -551,7 +551,7 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
 
     return result
 
-def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[]):
+def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[], errors='raise'):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
         cases_df (pandas.DataFrame): table to assign policy variables to, 
@@ -567,7 +567,7 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[])
     """
 
     # Assign population columns to `policies` and `cases_df`
-    policies, cases_df = cpop.assign_all_populations(policies, cases_df, cases_level)
+    policies, cases_df = cpop.assign_all_populations(policies, cases_df, cases_level, errors=errors)
 
     # Assign policy_level to distinguish policies specified at different admin-unit levels
     policies['policy_level'] = policies.apply(get_policy_level, axis=1)
