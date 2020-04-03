@@ -572,6 +572,8 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
     # Convert 'optional' to indicator variable
     if not np.issubdtype(policies['optional'].dtype, np.number):
         policies['optional'] = policies['optional'].replace({"Y":1, "N":0})
+        # fill any nans with 0
+        policies['optional'] = policies['optional'].fillna(0).astype(int)
     
     policies['optional'] = policies['optional'].fillna(0)
     if errors == 'raise':

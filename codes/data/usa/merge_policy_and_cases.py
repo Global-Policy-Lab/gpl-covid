@@ -35,8 +35,17 @@ def main():
 		testing_regime_data = pd.read_csv(testimg_regime_csv).loc[:,['date', 'adm1_name', 'testing_regime']]
 		testing_regime_data['date'] = pd.to_datetime(testing_regime_data['date'])
 
-		merged_with_policy = pd.merge(df_merged, testing_regime_data, left_on=['date', 'adm1_name'], 
+		# drop the old testing_regime category
+		df_merged = df_merged.drop(['testing_regime'], axis=1)
+
+		merged_with_policy = pd.merge(df_merged, testing_regime_data, how='left', left_on=['date', 'adm1_name'], 
 			right_on=['date', 'adm1_name'])
+
+		# sort by date, then forward fill; the rest should be 0
+		merged_with_policy = merged_with_policy.sort_values('date')
+		merged_with_policy['testing_regime'] = merged_with_policy['testing_regime'].fillna(method = 'ffill')
+		# anything left over should have a zero
+		merged_with_policy['testing_regime'] = merged_with_policy['testing_regime'].fillna(0)
 
 		df_merged = merged_with_policy
 	
