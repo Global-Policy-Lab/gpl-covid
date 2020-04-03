@@ -565,6 +565,11 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
     Returns:
         pandas.DataFrame: a version of `cases_df` with all policies from `policies` assigned as new columns
     """
+    # Convert 'optional' to indicator variable
+    policies['optional'] = policies['optional'].replace({"Y":1, "N":0})
+    policies['optional'] = policies['optional'].fillna(0)
+
+    policies['date_end'] = policies['date_end'].fillna(pd.to_datetime('2099-12-31'))
 
     # Assign population columns to `policies` and `cases_df`
     policies, cases_df = cpop.assign_all_populations(policies, cases_df, cases_level, errors=errors)
