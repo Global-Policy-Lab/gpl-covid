@@ -72,4 +72,8 @@ def main():
     # 5. Save data
     print('writing csv with testing regime changes to {0}'.format(fp_out))
     states_data.to_csv(fp_out, index=False)
+
+if __name__ == "__main__":
+    main()
+
     
