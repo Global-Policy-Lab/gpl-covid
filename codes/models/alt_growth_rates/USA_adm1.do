@@ -3,6 +3,11 @@
 clear all
 //-----------------------setup
 
+// import end of sample cut-off 
+import delim using codes/data/cutoff_dates.csv, clear 
+keep if tag == "default"
+local end_sample = end_date[1]
+
 // load data
 insheet using data/processed/adm1/USA_processed.csv, clear 
 
@@ -18,7 +23,7 @@ gen day = day(t)
 
 //clean up
 drop if t < mdy(3,3,2020) // begin sample on March 3, 2020
-
+keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 encode adm1, gen(adm1_id)
 duplicates report adm1_id t
@@ -120,16 +125,21 @@ outsheet using "models/reg_data/USA_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
+outreg2 using "results/tables/USA_estimates_table", word replace label ///
+ addtext(State FE, "YES", Day-of-Week FE, "YES") title("Regression output: United States")
+cap erase "results/tables/USA_estimates_table.txt"
+
+
 // export coef
 tempfile results_file
-postfile results str18 adm0 str18 policy str18 suffix beta se using `results_file', replace
+postfile results str18 adm0 str18 policy beta se using `results_file', replace
 foreach var in "p_1" "p_2" "p_3" {
-	post results ("USA") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+	post results ("USA") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 // effect of package of policies (FOR FIG2)
 lincom p_1 + p_2 + p_3 
-post results ("USA") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+post results ("USA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 
 //looking at different policies (similar to Fig2)
@@ -152,24 +162,24 @@ graph drop hist_usa qn_usa
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_3* _b[p_3] /// 
-+ _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
+predictnl y_actual = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_3* _b[p_3] /// 
+p_1 * _b[p_1] + ///
+p_2 * _b[p_2] + ///
+p_3 * _b[p_3] /// 
 if e(sample)
 
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter = ///
+testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
+testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
+testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // compute ATE
 preserve
@@ -188,7 +198,7 @@ foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_
 
 // the mean here is the avg "biological" rate of initial spread (FOR Fig2)
 sum y_counter
-post results ("USA") ("no_policy rate") ("`suffix'") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+post results ("USA") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
 
 //export predicted counterfactual growth rate
 preserve
@@ -226,7 +236,7 @@ tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title("United States", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)21999)) xlabel(21930(10)21999, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/USA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
@@ -240,18 +250,18 @@ foreach state in "Washington" "California" "New York" {
 	local state0 = regexr("`state'", " ", "")
 	local rowname = "USA_" + "`state0'"
 	display "`rowname'"
-	post results ("`rowname'") ("no_policy rate") ("`suffix'") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
+	post results ("`rowname'") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
 
 	// predicted "actual" outcomes with real policies
-	predictnl y_actual_`state0' = ///
-	p_1*_b[p_1] + ///
-	p_2* _b[p_2] + ///
-	p_3* _b[p_3] + /// 
-	_b[_cons] if e(sample), ///
+	predictnl y_actual_`state0' = xb() if e(sample), ///
 	ci(lb_y_actual_`state0' ub_y_actual_`state0')
 		
 	// predicting counterfactual growth for each obs
-	predictnl y_counter_`state0' =  _b[_cons] if e(sample), ///
+	predictnl y_counter_`state0' = ///
+	testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
+	testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
+	testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
+	_b[_cons] if e(sample), ///
 	ci(lb_counter_`state0' ub_counter_`state0')
 
 	// quality control: don't want to be forecasting negative growth (not modeling recoveries)
@@ -277,7 +287,7 @@ foreach state in "Washington" "California" "New York" {
 	(sc day_avg_`state0' t, color(black)) ///
 	if e(sample), ///
 	title("`title'", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-	xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+	xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 	saving(results/figures/appendix/sub_natl_growth_rates/`state0'_conf_cases_growth_rates_fixedx.gph, replace)
 }
@@ -286,5 +296,5 @@ postclose results
 
 preserve
 	use `results_file', clear
-	outsheet * using "models/USA_coefs`suffix'.csv", comma replace
+	outsheet * using "models/USA_coefs.csv", comma replace
 restore

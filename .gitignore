@@ -147,3 +147,5 @@ api_keys.json
 
 # Results folder
 results/
+
+**/archive/

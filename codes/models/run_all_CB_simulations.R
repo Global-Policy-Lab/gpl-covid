@@ -3,6 +3,7 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lfe))
 set.seed(718)
 times = 1000
+underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
 # source("codes/models/calculate_gamma_from_china_and_korea.R")
 gamma = readr::read_csv("models/gamma_est.csv",
                         col_types = 

@@ -1,4 +1,4 @@
-library(tidyverse)
+suppressPackageStartupMessages(library(tidyverse))
 source("codes/data/multi_country/get_JHU_country_data.R")
 iran_data <- get_jhu_data("Iran") %>% 
   select(-province_state)
