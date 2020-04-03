@@ -3,6 +3,11 @@
 clear all
 //-----------------------setup
 
+// import end of sample cut-off 
+import delim using codes/data/cutoff_dates.csv, clear 
+keep if tag == "default"
+local end_sample = end_date[1]
+
 // load data
 insheet using data/processed/adm1/IRN_processed.csv, clear 
 
@@ -26,6 +31,7 @@ tsset adm1_id t, daily
 // quality control
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 drop if t <= mdy(2,26,2020) // DATA QUALITY CUTOFF DATE
+keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 // flag which admin unit has longest series
 tab adm1_name if cum_confirmed_cases!=., sort 
@@ -104,7 +110,7 @@ tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 // the break in the health data (only diff is Qom, which had school closures the whole time)
 
 gen p_1 = (L3.school_closure + L3.travel_ban_local_opt + L3.work_from_home)/3
-replace p_1 = 0 if p_1 == . & D_l_cum_confirmed_cases~=.
+replace p_1 = 0 if p_1 == . 
 lab var p_1 "school_closure, travel_ban_optional, work_from_home"
 
 
@@ -112,12 +118,14 @@ lab var p_1 "school_closure, travel_ban_optional, work_from_home"
 gen p_2 = home_isolation
 lab var p_2 "home_isolation"
 
-
 // Creating Tehran-specific treatments because policies have very different effect in Tehran than rest of country 
 //(primarily an issue of timing, Tehran had a bigger effect for the earlier raft of policies compared to the rest of the country)
 gen p_1_x_Tehran = p_1*(adm1_name== "Tehran")
 gen p_2_x_Tehran = p_2*(adm1_name== "Tehran")
 
+// shrines in Qom closed March 17
+gen p_3 = religious_closure
+lab var p_3 "religious_closure"
 
 //------------------main estimates
 
@@ -125,24 +133,28 @@ gen p_2_x_Tehran = p_2*(adm1_name== "Tehran")
 outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran testing_regime_*, ///
-absorb(i.adm1_id i.dow, savefe) cluster(date) resid
+reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
+
+outreg2 using "results/tables/IRN_estimates_table", word replace label ///
+ addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: Iran")
+cap erase "results/tables/IRN_estimates_table.txt"
+
 
 // saving coefs
 tempfile results_file
-postfile results str18 adm0 str50 policy str18 suffix beta se using `results_file', replace
-foreach var in "p_1" "p_2"{
-	post results ("IRN") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+postfile results str18 adm0 str50 policy beta se using `results_file', replace
+foreach var in "p_1" "p_2" "p_3"{
+	post results ("IRN") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 // effect of package of policies (FOR FIG2)
-lincom p_1 + p_2 //rest of country
-post results ("IRN") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom p_1 + p_2 + p_3 //rest of country
+post results ("IRN") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 lincom p_1 + p_2 + p_1_x_Tehran + p_2_x_Tehran //in Tehran
-post results ("IRN") ("comb. policy Tehran") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+post results ("IRN") ("comb. policy Tehran") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 // looking at different policies (FOR FIG2)
-coefplot, keep(p_1 p_2)
+coefplot, keep(p_1 p_2 p_3)
 
 
 //------------- checking error structure (FOR APPENDIX FIGURE)
@@ -161,27 +173,29 @@ graph drop hist_irn qn_irn
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = p_1*_b[p_1] + p_2* _b[p_2] + p_1_x_Tehran*_b[p_1_x_Tehran] + p_2_x_Tehran*_b[p_2_x_Tehran] ///
-+ _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
+predictnl y_actual = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_1_x_Tehran*_b[p_1_x_Tehran] + ///
-p_2_x_Tehran* _b[p_2_x_Tehran] ///
+p_1 * _b[p_1] + ///
+p_2 * _b[p_2] + ///
+p_1_x_Tehran * _b[p_1_x_Tehran] + ///
+p_2_x_Tehran * _b[p_2_x_Tehran] + ///
+p_3 * _b[p_3] ///
 if e(sample)
 
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter = testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+
 // ATE
 preserve
 	keep if e(sample) == 1
-	collapse  D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran
+	collapse  D_l_cum_confirmed_cases p_1 p_2 p_1_x_Tehran p_2_x_Tehran p_3
 	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_1_x_Tehran*_b[p_1_x_Tehran] ///
-	+ p_2_x_Tehran*_b[p_2_x_Tehran], ci(LB UB) se(sd) p(pval)
+	+ p_2_x_Tehran*_b[p_2_x_Tehran] + p_3* _b[p_3], ci(LB UB) se(sd) p(pval)
 	g adm0 = "IRN"
 	outsheet * using "models/IRN_ATE.csv", comma replace 
 restore
@@ -194,7 +208,7 @@ foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_
 
 // the mean here is the avg "biological" rate of initial spread (FOR Fig2)
 sum y_counter
-post results ("IRN") ("no_policy rate") ("`suffix'") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+post results ("IRN") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
 
 // export predicted counterfactual growth rate
 preserve
@@ -232,7 +246,7 @@ tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
@@ -240,22 +254,22 @@ saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, rep
 //-------------------------------Running the model for Tehran only 
 
 reg D_l_cum_confirmed_cases p_1 p_2 testing_regime_* if adm1_name=="Tehran"
-post results ("IRN_Tehran") ("no_policy rate") ("`suffix'") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
+post results ("IRN_Tehran") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
 
 postclose results
 
 preserve
 	use `results_file', clear
-	outsheet * using "models/IRN_coefs`suffix'.csv", comma replace // for display (figure 2)
+	outsheet * using "models/IRN_coefs.csv", comma replace // for display (figure 2)
 restore
 
 
 // predicted "actual" outcomes with real policies
-predictnl y_actual_thr = p_1*_b[p_1] + p_2* _b[p_2] + ///
-_b[_cons] if e(sample), ci(lb_y_actual_thr ub_y_actual_thr)
+predictnl y_actual_thr = xb() if e(sample), ci(lb_y_actual_thr ub_y_actual_thr)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter_thr =  _b[_cons] if e(sample), ci(lb_counter_thr ub_counter_thr)
+predictnl y_counter_thr =  testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+_b[_cons] if e(sample), ci(lb_counter_thr ub_counter_thr)
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars
@@ -278,7 +292,7 @@ tw (rspike ub_y_actual_thr lb_y_actual_thr t, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg_thr t, color(black)) ///
 if e(sample), ///
 title("Tehran, Iran", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
 

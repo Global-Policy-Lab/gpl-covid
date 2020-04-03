@@ -129,8 +129,13 @@ by adm1: replace no_gathering_size = sum(no_gathering_size)
 replace no_gathering_size = 1000 if no_gathering_size == 6000 // decrease cutoff instead of adding the intensity
 replace no_gathering_size = 100 if no_gathering_size == 6100 // decrease cutoff instead of adding the intensity
 
-// ----------------------- merge national and local mesure, adjust for intensity 
-replace social_distance = (social_distance + social_distance_national)/2
+// ----------------------- merge national and regional measure, adjust for intensity 
+egen school_closure_local = rowmax(school_closure school_closure_regional school_closure_national) // same policy, aggregate taking max
+egen school_closure_local_popw = rowmax(school_closure_popw school_closure_regional school_closure_national) // same policy, aggregate taking max
+drop school_closure school_closure_regional school_closure_national school_closure_popw
+rename (school_closure_local school_closure_local_popw) (school_closure school_closure_popw)
+
+replace social_distance = (social_distance + social_distance_national)/2 // The national policy is different than regional, so treatment intensity is changing
 replace social_distance_popw = (social_distance_popw + social_distance_national)/2
 drop social_distance_national
 

@@ -3,7 +3,12 @@
 clear all
 //-----------------------setup
 
-//load data
+// import end of sample cut-off 
+import delim using codes/data/cutoff_dates.csv, clear 
+keep if tag == "default"
+local end_sample = end_date[1]
+
+// load data
 insheet using data/processed/adm1/KOR_processed.csv, clear 
 
 cap set scheme covid19_fig3 // optional scheme for graphs
@@ -16,18 +21,20 @@ gen month = month(t)
 gen year = year(t)
 gen day = day(t)
 
-//clean up
-drop if t <= 21961 // start 2/17/2020
+// clean up
 capture: drop adm2_id
 encode adm1_name, gen(adm1_id)
 duplicates report adm1_id t
 
-//set up panel
+// set up panel
 tsset adm1_id t, daily
 
-//quality control
+// quality control
 replace active_cases = . if cum_confirmed_cases < 10 
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
+
+drop if t <= mdy(2,18,2020) // start 2/18
+keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 // flag which admin unit has longest series
 tab adm1_name if active_cases!=., sort 
@@ -45,7 +52,8 @@ drop adm1_obs_ct adm1_max_cases max_obs_ct max_obs_ct_max_cases
 sort adm1_id t
 tab adm1_name if longest_series==1 & active_cases!=.
 
-//construct dep vars
+
+// construct dep vars
 lab var active_cases "active cases"
 
 gen l_active_cases = log(active_cases)
@@ -71,7 +79,7 @@ replace D_l_active_cases = transmissionrate if D_l_active_cases_raw < 0.04
 //------------------------------------------------------------------------ ACTIVE CASES ADJUSTMENT: END
 
 
-//quality control
+// quality control
 replace D_l_active_cases = . if D_l_active_cases < 0 // trying to not model recoveries
 
 
@@ -91,7 +99,6 @@ foreach t_chg of local testing_change_dates{
 	gen testing_regime_change_`t_str' = t==`t_chg'
 }
 
-
 //------------------diagnostic
 
 // diagnostic plot of trends with sample avg as line
@@ -106,18 +113,44 @@ lab var day_avg "Observed avg. change in log cases"
 tw (sc D_l_active_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 
 
+//------------------disaggregated model
+// reghdfe D_l_active_cases testing_regime_change_* ///
+// business_closure_opt emergency_declaration no_demonstration no_gathering_opt ///
+// pos_cases_quarantine religious_closure school_closure social_distance_opt ///
+// welfare_services_closure work_from_home_opt ///
+// , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+//
+// coefplot,keep(business_closure_opt emergency_declaration no_demonstration no_gathering_opt ///
+// pos_cases_quarantine religious_closure school_closure social_distance_opt ///
+// welfare_services_closure work_from_home_opt)
+
+
 //------------------grouping treatments (based on timing and similarity)
 
-gen p_1 = (business_closure + work_from_home_opt)/2
-gen p_2 = (no_demonstration + religious_closure )/2
-gen p_3 = social_distance_opt
+// prev policy packages
+// gen p_1 = (welfare_services_closure + work_from_home_opt)/2
+// gen p_2 = (no_demonstration + religious_closure )/2
+// gen p_3 = social_distance_opt
+// gen p_4 = emergency_declaration 
+//
+// lab var p_1 "closure, stay home"
+// lab var p_2 "no groups"
+// lab var p_3 "social distance"
+// lab var p_4 "emergency declaration"
+
+gen p_1 = (business_closure_opt + work_from_home_opt)/2
+gen p_2 = (no_demonstration + religious_closure)/2
+gen p_3 = (welfare_services_closure + social_distance_opt + no_gathering_opt)/3
 gen p_4 = emergency_declaration 
+gen p_5 = pos_cases_quarantine // started for all provinces 3/22
 
 lab var p_1 "closure, stay home"
 lab var p_2 "no groups"
 lab var p_3 "social distance"
 lab var p_4 "emergency declaration"
+lab var p_5 "quarantine positive cases"
 
+// note all schools are closed for the entire sample period
 
 //------------------main estimates
 
@@ -125,21 +158,26 @@ lab var p_4 "emergency declaration"
 outsheet using "models/reg_data/KOR_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_active_cases`suffix' testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+
+outreg2 using "results/tables/KOR_estimates_table", word replace label ///
+ addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: South Korea")
+cap erase "results/tables/KOR_estimates_table.txt"
+
 
 // export coef
 tempfile results_file
-postfile results str18 adm0 str18 policy str18 suffix beta se using `results_file', replace
-foreach var in "p_1" "p_2" "p_3" "p_4" {
-	post results ("KOR") ("`var'") ("`suffix'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+postfile results str18 adm0 str18 policy beta se using `results_file', replace
+foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" {
+	post results ("KOR") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 // effect of package of policies (FOR FIG2)
-lincom p_1 + p_2 + p_3 // without emergency declaration, which was only in one prov
-lincom p_1 + p_2 + p_3 + p_4
-post results ("KOR") ("comb. policy") ("`suffix'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom p_1 + p_2 + p_3 + p_5 // without emergency declaration, which was only in one prov
+lincom p_1 + p_2 + p_3 + p_4 + p_5
+post results ("KOR") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
-//looking at different policies (similar to Fig2)
+// looking at different policies (similar to Fig2)
 coefplot, keep(p_*)
 
 
@@ -159,50 +197,46 @@ graph drop hist_kor qn_kor
 
 // predicted "actual" outcomes with real policies
 *predict y_actual if e(sample)
-predictnl y_actual = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_3* _b[p_3] + /// 
-p_4* _b[p_4] /// 
- + _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
+predictnl y_actual = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual ub_y_actual)
 lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
-p_1*_b[p_1] + ///
-p_2* _b[p_2] + ///
-p_3* _b[p_3] + /// 
-p_4* _b[p_4] /// 
+p_1 *_b[p_1] + ///
+p_2 * _b[p_2] + ///
+p_3 * _b[p_3] + /// 
+p_4 * _b[p_4] + /// 
+p_5 * _b[p_5] /// 
 if e(sample)
 
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter = ///
+testing_regime_change_20feb2020 *_b[testing_regime_change_20feb2020] + ///
+testing_regime_change_29feb2020 * _b[testing_regime_change_29feb2020] + ///
+testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // compute ATE
 preserve
 	keep if e(sample) == 1
-	collapse  D_l_active_cases`suffix' p_* 
-	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_3*_b[p_3] + p_4*_b[p_4], ci(LB UB) se(sd) p(pval)
+	collapse  D_l_active_cases p_* 
+	predictnl ATE = p_1*_b[p_1] + p_2*_b[p_2] + p_3*_b[p_3] + p_4*_b[p_4] + p_5*_b[p_5], ci(LB UB) se(sd) p(pval)
 	g adm0 = "KOR"
 	outsheet * using "models/KOR_ATE.csv", comma replace 
 restore
 
 
-//quality control: don't want to be forecasting negative growth (not modeling recoveries)
-replace y_actual = 0 if y_actual < 0
-replace y_counter = 0 if y_counter < 0
-
+// quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars
-gen lb_y_actual_pos = lb_y_actual 
-replace lb_y_actual_pos = 0 if lb_y_actual<0 & lb_y_actual!=.
-gen ub_y_actual_pos = ub_y_actual 
-replace ub_y_actual_pos = 0 if ub_y_actual<0 & ub_y_actual!=.
-
+foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_counter{
+	replace `var' = 0 if `var'<0 & `var'!=.
+}
 
 // the mean here is the avg "biological" rate of initial spread (FOR Fig2)
 sum y_counter
-post results ("KOR") ("no_policy rate") ("`suffix'") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+post results ("KOR") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
 
 //export predicted counterfactual growth rate
 preserve
@@ -226,7 +260,7 @@ predict m_y_counter if longest_series==1
 postclose results
 preserve
 	use `results_file', clear
-	outsheet * using "models/KOR_coefs`suffix'.csv", comma replace //coefficients for display (fig2)
+	outsheet * using "models/KOR_coefs.csv", comma replace //coefficients for display (fig2)
 restore
 
 // add random noise to time var to create jittered error bars
@@ -237,7 +271,7 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual_pos lb_y_actual_pos t_random,  lwidth(vthin) color(blue*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
@@ -246,6 +280,32 @@ tw (rspike ub_y_actual_pos lb_y_actual_pos t_random,  lwidth(vthin) color(blue*.
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21993)) xlabel(21930(10)21993, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22003)) xlabel(21930(10)22003, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
+
+
+//-------------------------------CREATING DAILY LAGS
+
+
+// sum t
+// local start_date = `r(min)'
+//
+// local orig_obs = r(N)
+// local set_obs = r(N) + 50
+//
+// set obs `set_obs'
+// replace t = `start_date' - (_n-`orig_obs') if t==.
+//
+// sum adm1_id if longest_series==1
+// replace adm1_id = `r(min)' if _n > `orig_obs'
+// fillin adm1_id t
+//
+// foreach pvar of varlist p_*{
+// gen D_`pvar' = D.`pvar'
+// replace D_`pvar' = 0 if D_`pvar' == .
+// }
+//
+// reghdfe D_l_active_cases testing_regime_change_* L(-5/35).(D_p_*), absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+//
+// coefplot, keep(*_p_1) vertical xsize(10)
