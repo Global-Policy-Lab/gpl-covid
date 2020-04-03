@@ -253,12 +253,7 @@ def read_policies():
 	# Clean data
 	policies['date_start'] = pd.to_datetime(policies['date_start'])
 	policies['date_end'] = pd.to_datetime(policies['date_end'])
-	policies['date_end'] = policies['date_end'].fillna(pd.to_datetime('2099-12-31'))
 	policies['policy'] = policies['policy'].str.strip()
-
-	# Convert 'optional' to indicator variable
-	policies['optional'] = policies['optional'].replace({"Y":1, "N":0})
-	policies['optional'] = policies['optional'].fillna(0)
 
 	# Set default values for null fields
 	policies['adm0_name'] = policies['adm0_name'].fillna('Italy')
