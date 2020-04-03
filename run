@@ -15,7 +15,7 @@ python codes/data/multi_country/get_adm_info.py
 ### Policy
 printf "***Downloading USA testing data***\n"
 python codes/data/usa/download_latest_covidtrackingdotcom_data.py
-jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb
+python codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py
 
 
 ### Epi
