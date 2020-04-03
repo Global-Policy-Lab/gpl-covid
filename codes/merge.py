@@ -551,7 +551,7 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
 
     return result
 
-def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[]):
+def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[], errors='raise'):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
         cases_df (pandas.DataFrame): table to assign policy variables to, 
@@ -566,8 +566,26 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[])
         pandas.DataFrame: a version of `cases_df` with all policies from `policies` assigned as new columns
     """
 
+    # Make sure policies input doesn't change unexpectedly
+    policies = policies.copy()
+    
+    # Convert 'optional' to indicator variable
+    if not np.issubdtype(policies['optional'].dtype, np.number):
+        policies['optional'] = policies['optional'].replace({"Y":1, "N":0})
+        # fill any nans with 0
+        policies['optional'] = policies['optional'].fillna(0).astype(int)
+    
+    policies['optional'] = policies['optional'].fillna(0)
+    if errors == 'raise':
+        assert len(policies['optional'].unique()) <= 2
+    elif errors == 'warn':
+    	if len(policies['optional'].unique()) > 2:
+    		print('there were more than two values for optional: {0}'.format(policies['optional'].unique()))
+
+    policies['date_end'] = policies['date_end'].fillna(pd.to_datetime('2099-12-31'))
+
     # Assign population columns to `policies` and `cases_df`
-    policies, cases_df = cpop.assign_all_populations(policies, cases_df, cases_level)
+    policies, cases_df = cpop.assign_all_populations(policies, cases_df, cases_level, errors=errors)
 
     # Assign policy_level to distinguish policies specified at different admin-unit levels
     policies['policy_level'] = policies.apply(get_policy_level, axis=1)
@@ -596,7 +614,6 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[])
     
     # Assign each policy one-by-one to the panel
     for policy in policy_list:
-        print(cases_level, policy)
         policy_pickle_dict = dict()
 
         # Get Series of 4-tuples for mandatory pop-weighted, mandatory indicator,

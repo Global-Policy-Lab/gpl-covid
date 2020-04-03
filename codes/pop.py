@@ -18,7 +18,7 @@ def check_population_col_is_filled(df, adm_col, pop_col, errors="raise"):
             `null_adm`: List of adm-units missing populations
 
     """
-    df_without_pop = df.loc[(df[adm_col] != 'All') & (df[pop_col].isnull())]
+    df_without_pop = df.loc[(df[adm_col].str.lower() != 'all') & (df[pop_col].isnull())]
     col_is_valid = len(df_without_pop) == 0
 
     if not (col_is_valid or errors=="ignore"):
@@ -47,8 +47,16 @@ def get_adm_pops(adm_level, country_code):
             Indexed by all levels from "adm1" (first level) up to "adm{`adm_level`}"" (last level)
 
     """
-    path_adm = cutil.DATA_INTERIM / 'adm' / f'adm{adm_level}' / f'adm{adm_level}.csv'
-    adm_df = pd.read_csv(path_adm)
+
+    # hard code in for US adm3 data 
+    if (country_code == 'USA') and (adm_level == 3):
+        path_adm = cutil.DATA_INTERIM / 'usa' / f'adm{adm_level}_pop_small.csv'
+        adm_df = pd.read_csv(path_adm)
+        #adm_df['adm0_name'] = 'USA'
+    else:
+        path_adm = cutil.DATA_INTERIM / 'adm' / f'adm{adm_level}' / f'adm{adm_level}.csv'
+        adm_df = pd.read_csv(path_adm)
+
     indices = get_adm_fields(adm_level)
     return (adm_df.loc[adm_df['adm0_name'] == country_code]
             .set_index(indices)[['population']]
@@ -134,27 +142,39 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors
 
     return result
 
-def check_pops_in_policies(policies, max_level):
+def check_pops_in_policies(policies, max_level, errors='raise'):
     # Check that population weights are all there
-    assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
-    assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
-    assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
+    if errors == 'raise':
+        assert len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) == 1
+        assert len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) == 1
+        assert len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) == 1
+    elif errors == 'warn':
+        if len(policies[policies['adm3_pop'].isnull()]['adm3_name'].unique()) != 1: 
+            warnings.warn('adm3 pop is null for some adm3 level')
+        if len(policies[policies['adm2_pop'].isnull()]['adm2_name'].unique()) != 1: 
+            warnings.warn('adm2 pop is null for some adm2 level')
+        if len(policies[policies['adm1_pop'].isnull()]['adm1_name'].unique()) != 1: 
+            warnings.warn('adm1 pop is null for some adm1 level')
 
-def check_pops_in_cases(cases_df):
-    assert cases_df['population'].isnull().sum() == 0
+def check_pops_in_cases(cases_df, errors = 'raise'):
+    if errors == 'raise':
+        assert cases_df['population'].isnull().sum() == 0
+    elif errors == 'warn':
+        if cases_df['population'].isnull().sum() != 0:
+            print('there where some entries with Null population values')
 
-def assign_all_populations(policies, cases_df, cases_level):
+def assign_all_populations(policies, cases_df, cases_level,errors='raise'):
     all_adm0 = policies['adm0_name'].unique()
     assert len(all_adm0) == 1
     country_code = all_adm0[0]
 
     max_adm_level = max([int(col[3]) for col in policies.columns if col.startswith('adm') and col.endswith('name')])
 
-    cases_df = merge_cases_with_population_on_level(cases_df, cases_level, country_code)
-    policies = merge_policies_with_population(policies, country_code, max_adm_level)
+    cases_df = merge_cases_with_population_on_level(cases_df, cases_level, country_code, errors=errors)
+    policies = merge_policies_with_population(policies, country_code, max_adm_level, errors=errors)
 
-    check_pops_in_policies(policies, max_adm_level)
-    check_pops_in_cases(cases_df)
+    check_pops_in_policies(policies, max_adm_level, errors=errors)
+    check_pops_in_cases(cases_df, errors=errors)
 
     return policies, cases_df
 
