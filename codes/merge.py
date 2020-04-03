@@ -566,6 +566,9 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
         pandas.DataFrame: a version of `cases_df` with all policies from `policies` assigned as new columns
     """
 
+    # Make sure policies input doesn't change unexpectedly
+    policies = policies.copy()
+    
     # Convert 'optional' to indicator variable
     if not np.issubdtype(policies['optional'].dtype, np.number):
         policies['optional'] = policies['optional'].replace({"Y":1, "N":0})
