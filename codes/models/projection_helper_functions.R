@@ -1,5 +1,8 @@
-compute_bootstrap_replications <- function(full_data, policy_variables_to_use, lhs, other_control_variables = NULL, times = 1000, gamma = 1/3,
-                                           time_steps_per_day = 6){
+# KB re-reviewed this function on 03/27 - I think it's right.
+compute_bootstrap_replications <- function(full_data, policy_variables_to_use, lhs, 
+                                           other_control_variables = NULL, times = 1000, gamma = 1/3,
+                                           time_steps_per_day = 6,
+                                           proportion_confirmed = 1){
   full_data <- full_data %>% ungroup()
   if(!lhs %in% names(full_data)){
     stop(paste0("need ", lhs, " in full_data"))
@@ -11,22 +14,9 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
     paste(lhs, " ~ tmp_id + ", paste(c(policy_variables_to_use, other_control_variables), collapse = " + "),
           " - 1 | 0 | 0 | date "
     ))
-  if("no_variation_for_unit" %in% names(full_data)){
-    suppressWarnings({
-      main_model <- felm(data = full_data %>% 
-                           filter(!no_variation_for_unit) %>% 
-                           mutate(tmp_id = droplevels(tmp_id)),
-                         formula = formula,
-                         cmethod = "reghdfe"); # summary(main_model)
-    })
-    if(length(nan_variable <- rownames(main_model$coefficients)[which(is.nan(main_model$coefficients))]) > 0){
-      return(nan_variable)
-    }
-  } else {
-    main_model <- felm(data = full_data,
+  main_model <- felm(data = full_data,
                        formula = formula,
                        cmethod = "reghdfe"); # summary(main_model)
-  }
   
   # Eigen values can come out negative in small samples - set those ones to zero
   # https://github.com/sgaure/lfe/blob/deb7058637eb3ab95b0d41bb7fce7e589d480619/R/felm.R
@@ -56,7 +46,8 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
                                          policy_variables_used = policy_variables_to_use,
                                          other_control_variables = other_control_variables,
                                          gamma = gamma,
-                                         time_steps_per_day = time_steps_per_day)
+                                         time_steps_per_day = time_steps_per_day,
+                                         proportion_confirmed = proportion_confirmed)
       pb$tick()$print()
       out
     }))
@@ -65,8 +56,10 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
     unnest(model)
 }
 
-compute_predicted_cum_cases <- function(full_data, model, policy_variables_used, other_control_variables, lhs, filter_spec = TRUE, gamma = 1/3,
-                                        time_steps_per_day = 6, mmat_actual = NULL){
+compute_predicted_cum_cases <- function(full_data, model, policy_variables_used, other_control_variables, 
+                                        lhs, filter_spec = TRUE, gamma = 1/3,
+                                        time_steps_per_day = 6, mmat_actual = NULL,
+                                        proportion_confirmed = 1){
   if(!"population" %in% names(full_data)){
     stop("\"population\" variable required. If unavailable, please add a column using full_data <- full_data %>% mutate(population = 1e+8)")
   }
@@ -83,7 +76,8 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     ungroup() %>% 
     select(tmp_id, date, all_of(policy_variables_used), all_of(other_control_variables)) %>% 
     drop_na() %>%
-    # Don't want to bother predicting for the first period
+    # Don't want to bother predicting for the first period 
+    # because we 
     group_by(tmp_id) %>% 
     slice(-1) %>% 
     ungroup()
@@ -105,6 +99,9 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     true_data_subset_for_estimation %>% 
       select(all_of(policy_variables_used))
   ))))
+
+  # Creates a tibble with one row per unit and columns tmp_id
+  # and the column names from the model matrix
   tmp_id_tbl <- mmat_actual %>% 
     as_tibble() %>% 
     bind_cols(true_data_subset_for_estimation %>% 
@@ -112,9 +109,15 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     group_by(tmp_id) %>% 
     select(matches("tmp_id")) %>% 
     summarise_all(~.[1])
+  
+  # Add the model matrix columns to the prediction matrix
   true_data_subset_for_prediction <- true_data_subset_for_prediction %>% 
     left_join(tmp_id_tbl, by = c("tmp_id"))
+  
+  
   if("day_of_week" %in% other_control_variables){
+    # Creates a tibble with one row per DOW and columns day_of_week
+    # and the column names from the model matrix
     dow_tbl <- mmat_actual %>% 
       as_tibble() %>% 
       bind_cols(true_data_subset_for_estimation %>% 
@@ -122,21 +125,24 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       group_by(day_of_week) %>% 
       select(matches("day_of_week")) %>% 
       summarise_all(~.[1])
+    # Add the DOW model matrix columns to the prediction matrix
     true_data_subset_for_prediction <- true_data_subset_for_prediction %>% 
       left_join(dow_tbl, by = c("day_of_week"))
   }
   stopifnot(all(colnames(mmat_actual) %in% names(true_data_subset_for_prediction)))
   # colnames(mmat_actual)[!colnames(mmat_actual) %in% names(true_data_subset_for_prediction)]
   # Rows have been added and the names all match - can now reassign
-  mmat_actual <- true_data_subset_for_prediction %>% 
+  
+  # This is the mmat for all the rows where we have complete RHS data
+  mmat_actual_for_prediction <- true_data_subset_for_prediction %>% 
     select(colnames(mmat_actual)) %>% 
     as.matrix()
-
-  mmat_no_policy_counterfactual <- mmat_actual
-  mmat_no_policy_counterfactual2 <- mmat_actual
   
-  # We'll store the prediction data associated with counterfactual data here
-  # The mutate sets all of the policy variables to zero for all time
+  # mmat we'll use to predict the counterfactual
+  mmat_no_policy_counterfactual <- mmat_actual_for_prediction
+  # mmat we'll use to verify we constructed the first one correctly
+  mmat_no_policy_counterfactual2 <- mmat_actual_for_prediction
+  
   mmat_no_policy_counterfactual2 <- true_data_subset_for_prediction %>% 
     mutate_at(vars(all_of(policy_variables_used)),
               list(~0)) %>% 
@@ -160,121 +166,84 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
   }
   # Computed the same thing in two ways to make sure they're the same
   stopifnot(isTRUE(all.equal(mmat_no_policy_counterfactual, mmat_no_policy_counterfactual2)))
+  
   np_predict <- predict.felm(model, newdata = mmat_no_policy_counterfactual)
   stopifnot(nrow(mmat_no_policy_counterfactual) == nrow(no_policy_counterfactual_data_for_prediction))
-  matching_indices <- no_policy_counterfactual_data_storage %>% 
-    mutate(xxxxid = 1:n()) %>% 
-    inner_join(no_policy_counterfactual_data_for_prediction, by = c("tmp_id", "date")) %>% 
-    pull(xxxxid)
-  # browser()
-  no_policy_counterfactual_data_storage <- no_policy_counterfactual_data_storage %>% 
-    ungroup() %>% 
-    mutate(prediction_logdiff = {
-      # This is a bit of a hack to get the predicted values added to the data.frame with
-      # the NA values in the right place.
-      tmp <- !!rlang::sym(lhs)
-      # browser()
-      stopifnot(length(tmp[matching_indices]) == nrow(np_predict))
-      tmp[matching_indices] <- np_predict %>% pull(fit)
-      tmp
-    }) %>% 
-    group_by(tmp_id) %>% 
-    mutate(predicted_cum_confirmed_cases = 
-             # Here we start at cum_confirmed_cases[1] - predict itself for the first one (exp(0))
-             # Then predict the using the sum of the log changes from the second on
-             {
-               # cum_confirmed_cases == I + R
-               # number_of_infectious_individuals == I
-
-               # the simulation will start on the first hour of the second day
-               # the seed of the simulation is the last hour of the first day - which we assume to be 
-               # the number from the data
-               
-               cum_confirmed_cases_simulated <- rep(NA_real_, (length(cum_confirmed_cases) - 1)*time_steps_per_day + 1)
-               number_of_infectious_individuals <- cum_confirmed_cases_simulated
-               number_of_infectious_individuals[1] <- cum_confirmed_cases[1] # Assumption here is that all individuals are infectious initially
-               cum_confirmed_cases_simulated[1] <- cum_confirmed_cases[1]
-               prediction_logdiff_interpolated <- c(NA_real_, rep(prediction_logdiff[-1], each = time_steps_per_day))
-               stopifnot(length(prediction_logdiff_interpolated) == length(cum_confirmed_cases_simulated))
-               new_gamma = (1 + gamma)^(1/time_steps_per_day) - 1
-               for(i in 2:length(cum_confirmed_cases_simulated)){ # adm1_pop is constant here
-                 # new_infections <- number_of_infectious_individuals[i - 1]*
-                 #   exp((prediction_logdiff[i] + gamma)*max(population[1] - out[i - 1], 0)/population[1]) -
-                 #   number_of_infectious_individuals[i - 1]
-                 
-                 
-                 # i_t+1 = i_t exp(beta*S - gamma)
-                 number_of_infectious_individuals[i] = 
-                   number_of_infectious_individuals[i - 1]*exp((prediction_logdiff_interpolated[i]/time_steps_per_day + new_gamma)*
-                                                                 max(population[1] - cum_confirmed_cases_simulated[i - 1], 0)/population[1] - 
-                                                                 new_gamma)
-                 
-                 recoveries <- number_of_infectious_individuals[i - 1]*(exp(new_gamma) - 1)
-                 
-                 new_infections <- number_of_infectious_individuals[i] - number_of_infectious_individuals[i - 1] + recoveries
-                 # check a few timesteps and make sure we get convergence
-                 # number_of_infectious_individuals[i] = number_of_infectious_individuals[i - 1]*exp(-gamma) + new_infections
-                 # out[i] = out[i - 1] + active_cases[i - 1]*(exp(prediction_logdiff[i]*max(population[1] - out[i - 1], 0)/population[1]) - 1)
-                 cum_confirmed_cases_simulated[i] = cum_confirmed_cases_simulated[i - 1] + new_infections
-               }
-               out <- cum_confirmed_cases_simulated[seq(1, length(cum_confirmed_cases_simulated), by = time_steps_per_day)]
-               out
-             })
+  np_predict_df <- no_policy_counterfactual_data_for_prediction %>% 
+    mutate(prediction_logdiff = np_predict$fit) %>% 
+    select(tmp_id, date, prediction_logdiff)
   
-  true_predict <- predict.felm(model, newdata = mmat_actual)
+  # This helps us to look at which rows don't get matched to diagnose data errors
+  # This can uncover instances of missing RHS that shouldn't be missing
+  # no_policy_counterfactual_data_storage %>%
+  #   group_by(tmp_id) %>% 
+  #   slice(-1) %>% 
+  #   anti_join(no_policy_counterfactual_data_for_prediction, by = c("tmp_id", "date")) %>% 
+  #   select(tmp_id, date, other_control_variables, policy_variables_to_use)
+  
+  # This bit adds the predicted values in the spots where we are predicting
+  
+  no_policy_counterfactual_data_storage <- no_policy_counterfactual_data_storage %>% 
+    left_join(np_predict_df, by = c("tmp_id", "date")) 
+  # All the first ones should be NA
+  stopifnot({
+    no_policy_counterfactual_data_storage %>% 
+      group_by(tmp_id) %>% 
+      slice(1) %>% 
+      pull(prediction_logdiff) %>% 
+      is.na() %>% 
+      all()
+  })
+  
+  # All the ones other than the first should not be NA
+  stopifnot({
+    no_policy_counterfactual_data_storage %>% 
+      group_by(tmp_id) %>% 
+      slice(-1) %>% 
+      pull(prediction_logdiff) %>% 
+      is.na() %>%
+      magrittr::not() %>% 
+      all()
+  })
+  # There should be no gaps in the dates for any unit
+  stopifnot({
+    no_policy_counterfactual_data_storage %>% 
+      group_by(tmp_id) %>% 
+      mutate(date_diff = c(1, diff(date))) %>% 
+      pull(date_diff) %>% 
+      magrittr::equals(1) %>% 
+      all()
+  })
+  
+  no_policy_counterfactual_data_storage <- 
+    no_policy_counterfactual_data_storage %>% 
+    group_by(tmp_id) %>% 
+    mutate(predicted_cum_confirmed_cases = calculate_projection_for_one_unit(
+      cum_confirmed_cases_first = cum_confirmed_cases[1],
+      prediction_logdiff = prediction_logdiff,
+      time_steps_per_day = time_steps_per_day,
+      daily_gamma = gamma,
+      unit_population = population[1],
+      proportion_confirmed = proportion_confirmed
+    ))
+  
+  true_predict <- predict.felm(model, newdata = mmat_actual_for_prediction)
+  true_predict_df <- true_data_subset_for_prediction %>% 
+    mutate(prediction_logdiff = true_predict$fit) %>% 
+    select(tmp_id, date, prediction_logdiff)
   
   true_data_storage <- true_data_storage %>% 
     ungroup() %>% 
-    mutate(prediction_logdiff = {
-      # This is a bit of a hack to get the predicted values added to the data.frame with
-      # the NA values in the right place.
-      tmp <- !!rlang::sym(lhs)
-      stopifnot(length(tmp[matching_indices]) == nrow(true_predict))
-      tmp[matching_indices] <- true_predict %>% pull(fit)
-      tmp
-    }) %>% 
+    left_join(true_predict_df, by = c("tmp_id", "date")) %>% 
     group_by(tmp_id) %>% 
-    mutate(predicted_cum_confirmed_cases = 
-             # Here we start at cum_confirmed_cases[1] - predict itself for the first one (exp(0))
-             # Then predict the using the sum of the log changes from the second on
-             {
-               # cum_confirmed_cases == I + R
-               # number_of_infectious_individuals == I
-               time_steps_per_day <- 6
-               
-               # the simulation will start on the first hour of the second day
-               # the seed of the simulation is the last hour of the first day - which we assume to be 
-               # the number from the data
-               cum_confirmed_cases_simulated <- rep(NA_real_, (length(cum_confirmed_cases) - 1)*time_steps_per_day + 1)
-               number_of_infectious_individuals <- cum_confirmed_cases_simulated
-               number_of_infectious_individuals[1] <- cum_confirmed_cases[1] # Assumption here is that all individuals are infectious initially
-               cum_confirmed_cases_simulated[1] <- cum_confirmed_cases[1]
-               prediction_logdiff_interpolated <- c(NA_real_, rep(prediction_logdiff[-1], each = time_steps_per_day))
-               stopifnot(length(prediction_logdiff_interpolated) == length(cum_confirmed_cases_simulated))
-               new_gamma = (1 + gamma)^(1/time_steps_per_day) - 1
-               for(i in 2:length(cum_confirmed_cases_simulated)){ # adm1_pop is constant here
-                 # new_infections <- number_of_infectious_individuals[i - 1]*
-                 #   exp((prediction_logdiff[i] + gamma)*max(population[1] - out[i - 1], 0)/population[1]) -
-                 #   number_of_infectious_individuals[i - 1]
-                 
-                 
-                 # i_t+1 = i_t exp(beta*S - gamma)
-                 number_of_infectious_individuals[i] = 
-                   number_of_infectious_individuals[i - 1]*exp((prediction_logdiff_interpolated[i]/time_steps_per_day + new_gamma)*
-                                                                 max(population[1] - cum_confirmed_cases_simulated[i - 1], 0)/population[1] - 
-                                                                 new_gamma)
-                 
-                 recoveries <- number_of_infectious_individuals[i - 1]*(exp(new_gamma) - 1)
-                 
-                 new_infections <- number_of_infectious_individuals[i] - number_of_infectious_individuals[i - 1] + recoveries
-                 # check a few timesteps and make sure we get convergence
-                 # number_of_infectious_individuals[i] = number_of_infectious_individuals[i - 1]*exp(-gamma) + new_infections
-                 # out[i] = out[i - 1] + active_cases[i - 1]*(exp(prediction_logdiff[i]*max(population[1] - out[i - 1], 0)/population[1]) - 1)
-                 cum_confirmed_cases_simulated[i] = cum_confirmed_cases_simulated[i - 1] + new_infections
-               }
-               out <- cum_confirmed_cases_simulated[seq(1, length(cum_confirmed_cases_simulated), by = time_steps_per_day)]
-               out
-             })
+    mutate(predicted_cum_confirmed_cases = calculate_projection_for_one_unit(
+      cum_confirmed_cases_first = cum_confirmed_cases[1],
+      prediction_logdiff = prediction_logdiff,
+      time_steps_per_day = time_steps_per_day,
+      daily_gamma = gamma,
+      unit_population = population[1],
+      proportion_confirmed = proportion_confirmed
+    ))
 
   out <- true_data_storage %>% 
     filter({{filter_spec}}) %>% 
@@ -288,4 +257,62 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       by = "date"
     )
   out  
+}
+
+# Here we start at cum_confirmed_cases[1] - predict itself for the first one (exp(0))
+# Then predict the using the sum of the log changes from the second on
+calculate_projection_for_one_unit <- function(cum_confirmed_cases_first, 
+                                              prediction_logdiff,
+                                              time_steps_per_day,
+                                              daily_gamma,
+                                              unit_population,
+                                              proportion_confirmed){
+  # cum_confirmed_cases == I + R
+  # number_of_infectious_individuals == I
+  stopifnot(is.na(prediction_logdiff[1]))
+  stopifnot(!is.na(cum_confirmed_cases_first))
+  
+  # the simulation will start on the first hour of the second day
+  # the seed of the simulation is the last hour of the first day - which we assume to be 
+  # the number from the data
+  
+  cum_confirmed_cases_simulated <- rep(NA_real_, (length(prediction_logdiff) - 1)*time_steps_per_day + 1)
+  number_of_infectious_individuals <- cum_confirmed_cases_simulated # NA
+  number_of_susceptible_individuals <- cum_confirmed_cases_simulated # NA
+  number_of_recovered_individuals <- cum_confirmed_cases_simulated # NA
+  
+  # Assumption here is that all individuals are infectious initially
+  number_of_infectious_individuals[1] <- cum_confirmed_cases_first/proportion_confirmed
+  
+  cum_confirmed_cases_simulated[1] <- cum_confirmed_cases_first
+  number_of_susceptible_individuals[1] <- unit_population - number_of_infectious_individuals[1]
+  number_of_recovered_individuals[1] <- 0
+  
+  prediction_logdiff_interpolated <- c(NA_real_, rep(prediction_logdiff[-1], each = time_steps_per_day))
+  stopifnot(length(prediction_logdiff_interpolated) == length(cum_confirmed_cases_simulated))
+  new_gamma = (1 + daily_gamma)^(1/time_steps_per_day) - 1
+  for(i in 2:length(cum_confirmed_cases_simulated)){ # adm1_pop is constant here
+    # new_infections <- number_of_infectious_individuals[i - 1]*
+    #   exp((prediction_logdiff[i] + gamma)*max(population[1] - out[i - 1], 0)/population[1]) -
+    #   number_of_infectious_individuals[i - 1]
+    
+    # i_t+1 = i_t exp(beta*S - gamma)
+    number_of_infectious_individuals[i] = 
+      number_of_infectious_individuals[i - 1]*exp((prediction_logdiff_interpolated[i]/time_steps_per_day + new_gamma)*
+                                                    number_of_susceptible_individuals[i - 1]/unit_population - 
+                                                    new_gamma)
+     
+    recoveries <- number_of_infectious_individuals[i - 1]*(exp(new_gamma) - 1)
+    number_of_recovered_individuals[i] <- number_of_recovered_individuals[i - 1] + recoveries
+    number_of_susceptible_individuals[i] = unit_population - number_of_infectious_individuals[i] - 
+      number_of_recovered_individuals[i]
+      
+    new_true_infections <- number_of_infectious_individuals[i] - number_of_infectious_individuals[i - 1] + recoveries
+    # check a few timesteps and make sure we get convergence
+    # number_of_infectious_individuals[i] = number_of_infectious_individuals[i - 1]*exp(-gamma) + new_infections
+    # out[i] = out[i - 1] + active_cases[i - 1]*(exp(prediction_logdiff[i]*max(population[1] - out[i - 1], 0)/population[1]) - 1)
+    cum_confirmed_cases_simulated[i] = cum_confirmed_cases_simulated[i - 1] + new_true_infections*proportion_confirmed
+  }
+  out <- cum_confirmed_cases_simulated[seq(1, length(cum_confirmed_cases_simulated), by = time_steps_per_day)]
+  out
 }

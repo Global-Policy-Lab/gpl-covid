@@ -4,6 +4,7 @@ library(tidyverse)
 library(lfe)
 source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
+underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
 
 mydata <- read_csv("models/reg_data/KOR_reg_data.csv",
                    col_types = cols(
@@ -56,4 +57,7 @@ main_projection <- compute_predicted_cum_cases(full_data = mydata, model = main_
                                                lhs = "D_l_active_cases",
                                                policy_variables_used = policy_variables_to_use,
                                                other_control_variables = other_control_variables,
-                                               gamma = gamma)
+                                               gamma = gamma,
+                                               proportion_confirmed = underreporting %>% 
+                                                 filter(country == "South Korea") %>% 
+                                                 pull(underreporting_estimate))
