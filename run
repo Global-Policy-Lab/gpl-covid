@@ -47,8 +47,7 @@ python codes/data/italy/italy-download-cases-merge-policies.py
 
 # KOR
 printf "***Processing KOR data***\n"
-Rscript codes/data/korea/generate_KOR_interim.R
-python codes/data/korea/korea-interim-to-processed.py
+Rscript codes/data/korea/generate_KOR_processed.R
 
 # USA
 printf "***Processing USA data***\n"

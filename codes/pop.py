@@ -35,7 +35,7 @@ def get_adm_fields(adm_level, field_name='name'):
     """Get list of adm-fields from `adm_level` up to the adm1 level"""
     return [f'adm{i}_' + field_name for i in range(1, adm_level + 1)]
 
-def get_adm_pops(adm_level, country_code):
+def get_adm_pops(adm_level, country_code, latlons=False):
     """Get all populations at an adm-level within a country
 
     Args:
@@ -52,16 +52,21 @@ def get_adm_pops(adm_level, country_code):
     if (country_code == 'USA') and (adm_level == 3):
         path_adm = cutil.DATA_INTERIM / 'usa' / f'adm{adm_level}_pop_small.csv'
         adm_df = pd.read_csv(path_adm)
-        #adm_df['adm0_name'] = 'USA'
     else:
         path_adm = cutil.DATA_INTERIM / 'adm' / f'adm{adm_level}' / f'adm{adm_level}.csv'
         adm_df = pd.read_csv(path_adm)
 
+    get_cols = ['population']
+    if latlons:
+        get_cols += ['latitude', 'longitude']
+
     indices = get_adm_fields(adm_level)
     return (adm_df.loc[adm_df['adm0_name'] == country_code]
-            .set_index(indices)[['population']]
+            .set_index(indices)[get_cols]
             .rename(columns={
-                'population':f'adm{adm_level}_pop'
+                'population':f'adm{adm_level}_pop',
+                'latitude':'lat',
+                'longitude':'lon'
             }))
 
 def merge_policies_with_population_on_level(policies, adm_level, country_code, errors='raise'):
@@ -112,7 +117,7 @@ def merge_policies_with_population(policies, country_code, max_adm_level, errors
 
     return policies
 
-def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors='raise'):
+def merge_cases_with_population_on_level(epi_df, adm_level, country_code, get_latlons=True, errors='raise'):
     """Assign all populations at a given adm-level to DataFrame of epidemiological (cases) data
 
     Args:
@@ -126,7 +131,7 @@ def merge_cases_with_population_on_level(epi_df, adm_level, country_code, errors
         pandas.DataFrame: `epi_df` with a new column, "population"
 
     """
-    adm_pops = get_adm_pops(adm_level, country_code)
+    adm_pops = get_adm_pops(adm_level, country_code, latlons=get_latlons)
     result = pd.merge(
         epi_df, 
         adm_pops, 
@@ -163,14 +168,14 @@ def check_pops_in_cases(cases_df, errors = 'raise'):
         if cases_df['population'].isnull().sum() != 0:
             print('there where some entries with Null population values')
 
-def assign_all_populations(policies, cases_df, cases_level,errors='raise'):
+def assign_all_populations(policies, cases_df, cases_level, get_latlons=True, errors='raise'):
     all_adm0 = policies['adm0_name'].unique()
     assert len(all_adm0) == 1
     country_code = all_adm0[0]
 
     max_adm_level = max([int(col[3]) for col in policies.columns if col.startswith('adm') and col.endswith('name')])
 
-    cases_df = merge_cases_with_population_on_level(cases_df, cases_level, country_code, errors=errors)
+    cases_df = merge_cases_with_population_on_level(cases_df, cases_level, country_code, get_latlons=get_latlons, errors=errors)
     policies = merge_policies_with_population(policies, country_code, max_adm_level, errors=errors)
 
     check_pops_in_policies(policies, max_adm_level, errors=errors)
