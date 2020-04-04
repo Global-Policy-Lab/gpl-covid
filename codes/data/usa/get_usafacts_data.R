@@ -22,9 +22,17 @@ get_usafacts_data <- function(){
         mutate(variable = .y)
     }) %>% 
     bind_rows()
-  
+
   usa_facts_covid_cases <- usa_facts_covid_cases %>% 
     select(-matches("X[0-9]+"))
+  
+  usa_facts_covid_cases <- usa_facts_covid_cases %>% 
+    mutate(`County Name` = if_else(`County Name` == "Matthews County" & State == "VA",
+                                   "Mathews County", `County Name`) %>% 
+             str_replace(" city", " City") %>% 
+             str_replace("Lac qui ", "Lac Qui ") %>% 
+             str_replace("Doña Ana ", "Dona Ana ") %>% 
+             str_replace("Broomfield County and City", "Broomfield County"))
   
   usa_facts_covid_cases <- usa_facts_covid_cases %>% 
     pivot_longer(cols = matches("[0-9]+/[0-9]+/[0-9]+"),
