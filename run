@@ -27,6 +27,10 @@ Rscript codes/data/multi_country/download_6_countries_JHU.R
 printf "***Processing FRA epi data***\n"
 stata -b do codes/data/france/format_infected.do
 
+#### USA
+printf "***Processing USA epi data***\n"
+Rscript codes/data/usa/download_and_clean_usafacts.R
+
 ### Dataset merging
 #### CHN
 printf "***Processing CHN data***\n"
