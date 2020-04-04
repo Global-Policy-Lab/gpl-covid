@@ -506,7 +506,7 @@ def calculate_intensities_adm_day_policy(policies_to_date, adm_level):
             total_mandatory_intensity, mandatory_intensity_indicator = get_intensities(policies_mand, adm_level)
 
     # For the policy indicator, ensure that not both are counted
-    if optional_intensity_indicator == 1 and mandatory_intensity_indicator == 1:
+    if optional_intensity_indicator > 0 and mandatory_intensity_indicator > 0:
         optional_intensity_indicator = 0
 
     result = (total_mandatory_intensity, mandatory_intensity_indicator, total_optional_intensity, optional_intensity_indicator)
@@ -551,7 +551,7 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
 
     return result
 
-def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[], errors='raise'):
+def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[], get_latlons=True, errors='raise'):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
         cases_df (pandas.DataFrame): table to assign policy variables to, 
@@ -585,7 +585,7 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
     policies['date_end'] = policies['date_end'].fillna(pd.to_datetime('2099-12-31'))
 
     # Assign population columns to `policies` and `cases_df`
-    policies, cases_df = cpop.assign_all_populations(policies, cases_df, cases_level, errors=errors)
+    policies, cases_df = cpop.assign_all_populations(policies, cases_df, cases_level, get_latlons=get_latlons, errors=errors)
 
     # Assign policy_level to distinguish policies specified at different admin-unit levels
     policies['policy_level'] = policies.apply(get_policy_level, axis=1)

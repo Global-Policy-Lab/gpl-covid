@@ -204,7 +204,6 @@ Run the following scripts to merge epi, policy, testing, and population data for
 
 ##### United States
 1. `python codes/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
-2. (optional) `Rscript codes/data/usa/check_health_data.R`: Confirm that known data quality issues have been dealt with.
 
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
