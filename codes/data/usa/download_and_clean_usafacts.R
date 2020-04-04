@@ -54,7 +54,8 @@ usa_county_data <- usa_county_data %>%
 
 # Remove today as it gets updated
 usa_county_data <- usa_county_data %>% 
-  filter(date < max(date))
+  filter(date < max(date)) %>% 
+  filter(!str_detect(tmp_id, "Unallocated"))
 usa_state_data <- usa_state_data %>% 
   filter(date < max(date))
 
