@@ -52,7 +52,6 @@ Rscript codes/data/korea/generate_KOR_processed.R
 # USA
 printf "***Processing USA data***\n"
 python codes/data/usa/merge_policy_and_cases.py
-Rscript codes/data/usa/check_health_data.R
 
 # quality-check processed datasets
 printf "***Checking processed data***\n"
