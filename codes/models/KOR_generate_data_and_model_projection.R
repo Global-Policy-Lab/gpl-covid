@@ -49,11 +49,11 @@ formula <- as.formula(
   ))
 
 suppressWarnings({
-  main_model <- felm(data = korea_data,
+  korea_model <- felm(data = korea_data,
                      formula = formula,
-                     cmethod = 'reghdfe'); #summary(main_model)
+                     cmethod = 'reghdfe'); #summary(korea_model)
 })
-main_projection <- compute_predicted_cum_cases(full_data = korea_data, model = main_model,
+main_projection <- compute_predicted_cum_cases(full_data = korea_data, model = korea_model,
                                                lhs = "D_l_active_cases",
                                                policy_variables_used = korea_policy_variables_to_use,
                                                other_control_variables = korea_other_control_variables,

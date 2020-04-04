@@ -41,12 +41,12 @@ formula <- as.formula(
   ))
 
 suppressWarnings({
-  main_model <- felm(data = usa_data,
+  usa_model <- felm(data = usa_data,
                      formula = formula,
-                     cmethod = 'reghdfe'); #summary(main_model)
+                     cmethod = 'reghdfe'); #summary(usa_model)
 })
 
-main_projection <- compute_predicted_cum_cases(full_data = usa_data, model = main_model,
+main_projection <- compute_predicted_cum_cases(full_data = usa_data, model = usa_model,
                                                lhs = "D_l_cum_confirmed_cases",
                                                policy_variables_used = usa_policy_variables_to_use,
                                                other_control_variables = usa_other_control_variables,

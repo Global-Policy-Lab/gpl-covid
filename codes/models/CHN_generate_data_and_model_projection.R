@@ -53,13 +53,13 @@ formula <- as.formula(
         " - 1 | 0 | 0 | date "
   ))
 suppressWarnings({
-  main_model <- felm(data = china_data,
+  china_model <- felm(data = china_data,
                      formula = formula,
-                     cmethod = 'reghdfe'); #summary(main_model)
+                     cmethod = 'reghdfe'); #summary(china_model)
 })
 #projection
 
-main_projection <- compute_predicted_cum_cases(full_data = china_data, model = main_model,
+main_projection <- compute_predicted_cum_cases(full_data = china_data, model = china_model,
                                                lhs = "D_l_active_cases",
                                                policy_variables_used = china_policy_variables_to_use,
                                                other_control_variables = china_other_control_variables,
