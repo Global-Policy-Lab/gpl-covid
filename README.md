@@ -184,7 +184,7 @@ Epi data is downloaded and merged with policy data in one step, described in [th
 This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
 
 ##### USA
-1. `Rscript codes/data/usa/download_and_clean_usafacts.R`: Downloads county- and state-level data from (usafacts.org)[https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/]
+1. `Rscript codes/data/usa/download_and_clean_usafacts.R`: Downloads county- and state-level data from [usafacts.org](https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/)
 
 #### Merge all data for each country
 Run the following scripts to merge epi, policy, testing, and population data for each country. After completion, you may run [codes/data/multi_country/quality-check-processed-datasets.py](codes/data/multi_country/quality-check-processed-datasets.py), to make sure all of the fully processed datasets are correctly and consistently formatted.
