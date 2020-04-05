@@ -300,8 +300,8 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 	check_adms_match(policies, adm1_cases, adm2_cases)
 
 	# Assign policy indicators
-	adm1_cases = cmerge.assign_policies_to_panel(adm1_cases, policies, 1)
-	adm2_cases = cmerge.assign_policies_to_panel(adm2_cases, policies, 2)
+	adm1_cases = cmerge.assign_policies_to_panel(adm1_cases, policies, 1, get_latlons=False)
+	adm2_cases = cmerge.assign_policies_to_panel(adm2_cases, policies, 2, get_latlons=False)
 
 	adm1_cases['no_gathering_size'] = 0
 	adm2_cases['no_gathering_size'] = 0

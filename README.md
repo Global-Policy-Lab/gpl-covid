@@ -183,6 +183,9 @@ Epi data is downloaded and merged with policy data in one step, described in [th
 1. Korean epi data were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). 
 This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
 
+##### USA
+1. `Rscript codes/data/usa/download_and_clean_usafacts.R`: Downloads county- and state-level data from [usafacts.org](https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/)
+
 #### Merge all data for each country
 Run the following scripts to merge epi, policy, testing, and population data for each country. After completion, you may run [codes/data/multi_country/quality-check-processed-datasets.py](codes/data/multi_country/quality-check-processed-datasets.py), to make sure all of the fully processed datasets are correctly and consistently formatted.
 
@@ -204,7 +207,6 @@ Run the following scripts to merge epi, policy, testing, and population data for
 
 ##### United States
 1. `python codes/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
-2. (optional) `Rscript codes/data/usa/check_health_data.R`: Confirm that known data quality issues have been dealt with.
 
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:

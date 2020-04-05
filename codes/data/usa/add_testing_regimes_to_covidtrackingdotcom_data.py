@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import codes.utils as cutil
 
 # local imports
 import download_latest_covidtrackingdotcom_data as data_loader
@@ -8,7 +9,7 @@ import download_latest_covidtrackingdotcom_data as data_loader
 # flag whether to save this output in the /data/interim/usa folder 
 save_notebook_output = True
 
-path_to_int_data = '../../../data/interim/usa'
+path_to_int_data = cutil.DATA_INTERIM / "usa"
 fn_out = 'usa_states_covidtrackingdotcom_int_with_testing_regimes.csv'
 fp_out = os.path.join(path_to_int_data, fn_out)
 

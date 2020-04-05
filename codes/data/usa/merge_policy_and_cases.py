@@ -17,6 +17,9 @@ def main():
 	cases_data = pd.read_csv(os.path.join(int_data_dir,"usa_usafacts_state.csv"))
 	cases_data['date'] = pd.to_datetime(cases_data['date'])
 
+	# drop any cases data columns that are all null
+	cases_data = cases_data.dropna(how='all', axis=1)
+
 	policy_data = pd.read_csv(os.path.join(raw_data_dir,"usa_policy_data_sources.csv"),encoding='latin')
 
 	policy_data = policy_data.rename(columns={'Optional': 'optional'})
