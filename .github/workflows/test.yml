@@ -16,9 +16,13 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-
-    # Runs a single command using the runners shell
-    - name: Run all stages of pipeline
-      run: bash run --nostata
+      - uses: actions/checkout@v2
+      - uses: goanpeca/setup-miniconda@v1
+        with:
+          auto-update-conda: true
+          python-version: 3.7
+          activate-environment: gpl-covid
+          environment-file: ./environment.yml
+      - shell: bash -l {0}
+        name: Run all stages of pipeline
+        run: bash run --nostata --nocensus
