@@ -12,9 +12,10 @@ parser = argparse.ArgumentParser(
 max_adm = max([int(d[3:]) for d in os.listdir(cutil.DATA_PROCESSED) if d[:3] == 'adm'])
 all_adm = list(range(0, max_adm + 1))
 
-parser.add_argument("--a", choices=all_adm, default=None, type=int, help=f"Adm-level")
-parser.add_argument("--c", choices=sorted(cutil.ISOS), default=None, type=str.upper, help=f"Country ISO code")
-parser.add_argument("--e", choices=["raise", "warn"], default="raise", type=str, help=f"Error behavior")
+parser.add_argument("--a", choices=all_adm, default=None, type=int, help="Adm-level")
+parser.add_argument("--c", choices=sorted(cutil.ISOS), default=None, type=str.upper, help="Country ISO code")
+parser.add_argument("--e", choices=["raise", "warn"], default="raise", type=str, help="Error behavior")
+parser.add_argument("-l", "--no-check-latlons", action="store_true", help="Don't check presence of lat/lon values")
 args = parser.parse_args()
 
 def get_adm_list(adm_input):
@@ -205,9 +206,10 @@ def main():
         for adm in processed[country]:
             df = processed[country][adm]
 
+            if not args.no_check_latlons:
+                check_latlons(df, country, adm)
             check_cutoff_date(df, country, adm, cutoff_date)
             check_balanced_panel(df, country, adm)
-            check_latlons(df, country, adm)
             check_cumulativity(df, country, adm)
             check_popweights_in_bounds(df, country, adm)
             check_columns_are_not_null(df, country, adm)
