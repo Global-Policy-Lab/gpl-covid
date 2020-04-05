@@ -1,4 +1,3 @@
-
 def test_readme():
     with open("README.md", "r") as f:
         readme = f.read()

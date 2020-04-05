@@ -722,7 +722,9 @@ def main():
         out_dir = cutil.DATA_INTERIM / "adm" / fname
         out_dir.mkdir(parents=True, exist_ok=True)
         i.to_file(out_dir / f"{fname}.shp", index=True)
-        i.drop(columns="geometry").to_csv(out_dir / f"{fname}.csv", index=True, float_format="%.3f")
+        i.drop(columns="geometry").to_csv(
+            out_dir / f"{fname}.csv", index=True, float_format="%.3f"
+        )
 
 
 if __name__ == "__main__":
