@@ -34,6 +34,12 @@ usa_county_adm_data <- usa_county_adm_data %>%
   filter(!is.na(fips))
 suppressWarnings(usa_data <- get_usafacts_data())
 
+# trim off trailing NAs
+usa_data <- usa_data %>% 
+  arrange(adm1_name, adm2_name, date) %>% 
+  group_by(adm1_name, adm2_name) %>% 
+  filter(rev(cumsum(rev(!is.na(cum_confirmed_cases)))) > 0)
+
 usa_county_data <- usa_data %>% 
   filter(!(str_detect(adm2_name, "Statewide Unallocated"))) %>% 
   filter(!(str_detect(adm2_name, "Cruise Ship")))
@@ -116,6 +122,13 @@ usa_county_data <- usa_county_data %>%
 names_order <- read_csv("data/processed/[country]_processed.csv", 
                         col_types = cols(.default = col_character())) %>% names()
 
+# merge kusilvak and west hampton AK
+usa_county_data <- usa_county_data %>% 
+  mutate(adm2_name = adm2_name %>% 
+           str_replace("Wade Hampton Census Area", "Kusilvak Census Area"),
+         county_fips = county_fips %>% 
+           str_replace("02270", "02158")
+  )
 counties_missed <- usa_county_data %>%
   anti_join(usa_county_adm_data, by = c("county_fips" = "fips")) %>% 
   select(county_fips, adm1_name, adm2_name) %>% distinct()
