@@ -4,6 +4,19 @@ set -e
 pip install -e .
 
 
+## parse nostata flag
+STATA=true
+for arg in "$@"
+do
+    case $arg in
+        -n|--nostata)
+        STATA=false
+        shift
+        ;;
+    esac
+done
+
+
 ## data scraping and processing
 
 
@@ -15,7 +28,7 @@ python codes/data/multi_country/get_adm_info.py
 ### Policy
 printf "***Downloading USA testing data***\n"
 python codes/data/usa/download_latest_covidtrackingdotcom_data.py
-jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb
+python codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py
 
 
 ### Epi
@@ -25,7 +38,11 @@ Rscript codes/data/multi_country/download_6_countries_JHU.R
 
 #### FRA
 printf "***Processing FRA epi data***\n"
-stata -b do codes/data/france/format_infected.do
+if $STATA
+then
+    stop
+    stata -b do codes/data/france/format_infected.do
+fi
 
 #### USA
 printf "***Processing USA epi data***\n"
@@ -38,7 +55,10 @@ python codes/data/china/collate_data.py
 
 #### FRA
 printf "***Processing FRA data***\n"
-stata -b do codes/data/france/format_policy.do
+if $STATA
+then
+    stata -b do codes/data/france/format_policy.do
+fi
 
 # IRN
 printf "***Processing IRN data***\n"
@@ -51,13 +71,11 @@ python codes/data/italy/italy-download-cases-merge-policies.py
 
 # KOR
 printf "***Processing KOR data***\n"
-Rscript codes/data/korea/generate_KOR_interim.R
-python codes/data/korea/korea-interim-to-processed.py
+Rscript codes/data/korea/generate_KOR_processed.R
 
 # USA
 printf "***Processing USA data***\n"
 python codes/data/usa/merge_policy_and_cases.py
-Rscript codes/data/usa/check_health_data.R
 
 # quality-check processed datasets
 printf "***Checking processed data***\n"
@@ -65,7 +83,10 @@ python codes/data/multi_country/quality-check-processed-datasets.py
 
 ## regression model estimation
 printf "***Estimating regression model and creating Figure 3 and A1***\n"
-stata -b do codes/models/alt_growth_rates/MASTER_run_all_reg.do
+if $STATA
+then
+    stata -b do codes/models/alt_growth_rates/MASTER_run_all_reg.do
+fi
 
 
 ## SIR model projection
