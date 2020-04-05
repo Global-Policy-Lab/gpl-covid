@@ -114,9 +114,11 @@ def check_popweights_in_bounds(df, country, adm):
 def check_columns_are_not_null(df, country, adm):
     # Check that no column has null values, except KOR country list and pre-imputed cumulative columns
     for col in df:
-        if 'country_list' in col:
-            continue
-        if col + '_imputed' in df.columns:
+        if (
+            'country_list' in col or
+            col + "_imputed" in df.columns or
+            col in ["lon", "lat"]
+        ):
             continue
         nulls_not_found = df[col].isnull().sum() == 0
         test_condition(nulls_not_found, country, adm, f"Column contains nulls: {col}")
