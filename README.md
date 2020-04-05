@@ -151,7 +151,7 @@ Any policy/testing data that was scraped programmatically is formatted similar t
 
 ##### United States
 1. `python codes/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
-2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Check that detected testing regime changes make sense and discard any false detections (it is in a notebook so you should manually check the detected changes, but you may run it directly using our choices with the above command).
+2. `python codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py`: Check that detected testing regime changes make sense and discard any false detections. Because this can be an interactive step, there is also a corresponding [Notebook](codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb) that you may run.
 
 #### Epidemiological data
 

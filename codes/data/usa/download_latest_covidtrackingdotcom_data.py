@@ -102,7 +102,6 @@ def process_and_save_data_int(states_data_raw, save_locally=True):
         "date",
         "adm0_name",
         "adm1_name",
-        "adm_level",
         "cumulative_confirmed_cases",
         "cumulative_tests",
         "cumulative_deaths",
@@ -110,7 +109,6 @@ def process_and_save_data_int(states_data_raw, save_locally=True):
 
     # rename total to be more descriptive
     states_data = states_data_raw.rename(columns={"total": "total_inc_pending"})
-    states_data["adm_level"] = 1
 
     # make sure none of the neg cases are nan if previously reported cases aren't nan
     # do this by state!
