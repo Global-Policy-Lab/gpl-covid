@@ -164,9 +164,13 @@ def check_columns_are_in_data_dictionary(df, country, adm):
     all_cols = policy_cols.union(health_cols)
     _check_columns_are_in_list(df, country, adm, all_cols, "data dictionary")
 
-def check_opt_and_non_opt_align(df, country, adm):
+def check_opt_and_non_opt_align(df, country, adm, grab_bag_vars = ["social_distance"]):
     for col in df.columns:
         if "_opt" in col and col.replace("_opt", "") in df.columns:
+            
+            # ignore if one of the grab bag vars
+            if bool(sum([int(i in col) for i in grab_bag_vars])):
+                continue
             nonopt_col = col.replace("_opt", "")
             row_mismatch_len = len(df[df[nonopt_col] + df[col] > 1])
             cols_add_to_one_or_below = row_mismatch_len == 0
@@ -214,7 +218,7 @@ def main():
             check_popweights_in_bounds(df, country, adm)
             check_columns_are_not_null(df, country, adm)
             check_columns_are_in_template(df, country, adm, template)
-            check_opt_and_non_opt_align(df, country, adm)
+            check_opt_and_non_opt_align(df, country, adm, grab_bag_vars = ["social_distance"])
             check_columns_are_in_data_dictionary(df, country, adm)
 
 if __name__=="__main__":
