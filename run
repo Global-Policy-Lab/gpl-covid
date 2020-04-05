@@ -4,16 +4,22 @@ set -e
 pip install -e .
 
 
-## parse nostata flag
+## parse flags to not run certain things
 STATA=true
+CENSUS=true
 for arg in "$@"
 do
     case $arg in
-        -n|--nostata)
-        STATA=false
-        shift
+        -s|--nostata)
+            STATA=false
+            shift
+        ;;
+        -c|--nocensus)
+            CENSUS=false
+            shift
         ;;
     esac
+    
 done
 
 
@@ -22,8 +28,10 @@ done
 
 ### Geography/population
 printf "***Downloading shape and population info for all countries***\n"
-python codes/data/multi_country/get_adm_info.py
-
+if $CENSUS
+then
+    python codes/data/multi_country/get_adm_info.py
+fi
 
 ### Policy
 printf "***Downloading USA testing data***\n"
@@ -40,7 +48,6 @@ Rscript codes/data/multi_country/download_6_countries_JHU.R
 printf "***Processing FRA epi data***\n"
 if $STATA
 then
-    stop
     stata -b do codes/data/france/format_infected.do
 fi
 

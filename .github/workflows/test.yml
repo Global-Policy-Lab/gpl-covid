@@ -25,4 +25,4 @@ jobs:
           environment-file: ./environment.yml
       - shell: bash -l {0}
         name: Run all stages of pipeline
-        run: conda activate gpl-covid && bash run --nostata
+        run: bash run --nostata --nocensus
