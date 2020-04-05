@@ -154,7 +154,10 @@ def check_columns_are_in_data_dictionary(df, country, adm):
     for col in policy_cols:
         for opt in ["", "_opt"]:
             for popwt in ["", "_popwt"]:
-                add_policy_cols.add(col + opt + popwt)
+                varname = col + opt + popwt
+                add_policy_cols.add(varname)
+                if "travel_ban" in col:
+                    add_policy_cols.add(varname + "_country_list")
 
     policy_cols = policy_cols.union(add_policy_cols)
     all_cols = policy_cols.union(health_cols)
