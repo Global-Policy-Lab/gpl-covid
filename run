@@ -22,19 +22,19 @@ done
 
 ### Geography/population
 printf "***Downloading shape and population info for all countries***\n"
-#python codes/data/multi_country/get_adm_info.py
+python codes/data/multi_country/get_adm_info.py
 
 
 ### Policy
 printf "***Downloading USA testing data***\n"
-#python codes/data/usa/download_latest_covidtrackingdotcom_data.py
-#python codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py
+python codes/data/usa/download_latest_covidtrackingdotcom_data.py
+python codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py
 
 
 ### Epi
 #### Multi-country
 printf "***Downloading Johns Hopkins U data for all countries***\n"
-#Rscript codes/data/multi_country/download_6_countries_JHU.R
+Rscript codes/data/multi_country/download_6_countries_JHU.R
 
 #### FRA
 printf "***Processing FRA epi data***\n"
