@@ -292,7 +292,7 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 	def check_against_template(*adm_cases_list):
 		template = pd.read_csv(path_template)
 		for adm_cases in adm_cases_list:
-			missing_from_template = set(adm1_cases.columns) - set(template.columns)
+			missing_from_template = set(adm_cases.columns) - set(template.columns)
 			if print_stuff:
 				print(missing_from_template)
 			assert len(missing_from_template) == 0
