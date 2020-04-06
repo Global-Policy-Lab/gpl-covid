@@ -519,6 +519,7 @@ def get_policy_vals(policies, policy, date, adm, adm1, adm_level, policy_pickle_
         policy (str): name of policy category to be applied
         date (datetime.datetime): date on which policies are applied
         adm (str): name of admin-unit on which policies are applied
+        adm1 (str) name of adm1 unit within which policies are applied (necessary if `adm` is an adm2 unit)
         adm_level (int): level of admin-unit on which policies are applied
         policy_pickle_dict (dict of dicts): Dictionary with keys `adm` and a pickled version of
             `policies_to_date` (computed within this function) to get result if it has already
@@ -531,11 +532,6 @@ def get_policy_vals(policies, policy, date, adm, adm1, adm_level, policy_pickle_
     adm_name = f'adm{adm_level}_name'
 
     adm_levels = sorted([int(col[3]) for col in policies.columns if col.startswith('adm') and col.endswith('name')])
-    adm_lower_levels = [l for l in adm_levels if l <= adm_level]
-    adm_higher_levels = [l for l in adm_levels if l > adm_level]
-
-    # if policy != 'school_closure' or adm_level != 2 or pd.to_datetime('2020-02-25') != date or adm != 'Lecco':
-    #     return (0, 0, 0, 0)
 
     policies_to_date = policies[(policies['policy'] == policy) & 
                                 (policies['date_start'] <= date) &
@@ -544,7 +540,6 @@ def get_policy_vals(policies, policy, date, adm, adm1, adm_level, policy_pickle_
                                 ((policies['adm1_name'] == adm1) | (policies['adm1_name'].str.lower() == 'all'))
                                ].copy()
 
-    # print(date, policy, adm, policies_to_date)
     if len(policies_to_date) == 0:
         return (0, 0, 0, 0)
 
