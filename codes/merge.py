@@ -652,6 +652,9 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
         
     policy_panel = count_policies_enacted(policy_panel, policy_list)
 
+    if cases_level == 2:
+        policy_panel = policy_panel.drop(columns=['adm1_name'])
+        
     # Merge panel with `cases_df`
     merged = pd.merge(cases_df, policy_panel, left_on=['date', f'adm{cases_level}_name'], right_on=['date', f'adm{cases_level}_name'])
     
