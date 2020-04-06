@@ -2,6 +2,9 @@
 ##  Figure 1: Data Display  ##
 ##############################
 
+# Updated 4/6/2020
+# by hdruckenmiller
+
 rm(list=ls())
 library(dplyr)
 library(rgdal)
@@ -21,12 +24,20 @@ notify <- function(country) {
   message("Plotting map and timeseries for ",country)
 }
 
+# Cut off dates for analysis
+cut_dates <- read.csv("codes/data/cutoff_dates.csv")
+cut_dates$end_date <- as.Date(as.character(cut_dates$end_date), "%Y%m%d")
+
 #################
 
 # ITALY
 country <- "ITA"
 notify(country)
+
 #################
+
+start <- "2020-02-25"
+end <- cut_dates[cut_dates$tag=="default",]$end_date
 
 #### (1) Epidemiological timeseries ####
 adm1 <- read.csv(paste0(data_dir, "processed/adm1/", country, "_processed.csv"))
@@ -34,12 +45,12 @@ adm1$cum_confirmed_cases_imputed_drop <- adm1$cum_confirmed_cases_imputed
 adm1[adm1$cum_confirmed_cases_imputed < 10,]$cum_confirmed_cases_imputed_drop <- 0 
 national <- aggregate(adm1[,c("cum_confirmed_cases_imputed", "cum_confirmed_cases_imputed_drop",
                               "cum_deaths_imputed")], 
-                   by=list(adm1$date), FUN=sum)
+                      by=list(adm1$date), FUN=sum)
 colnames(national) <- c("date", "cases", "cases_drop", "deaths")
 national$date <- as.character(national$date)
 national$date <- as.Date(national$date, format='%Y-%m-%d')
 national <- arrange(national, date)
-national <- subset(national, date >= "2020-02-25" & date <= "2020-03-18")
+national <- subset(national, date >= start & date <= end)
 write.csv(national, paste0(data_dir, "processed/adm0/", country, "_cases_deaths.csv"))
 
 #### (2) Containment policies ####
@@ -52,10 +63,6 @@ for (id in ids){
     adm2 <- subset(adm2$adm2_id!=id)
   }
 }
-
-# Find 5 common policiees for this country 
-sum_polices <- colSums(adm2[,c(11:37)])
-round(sum_polices,0)
 
 # Aggregate these policies by date (so reflect # admin units have policy active on each day)
 policies <- aggregate(adm2[,c("school_closure",
@@ -96,7 +103,7 @@ plot(national$date, national$cases, type="l", ylim=c(0,cases_max),
 points(national$date, national$cases, pch=19) # Confirmed cases, points 
 axis(2, ylim=c(0,cases_max),las=1)  ## Left axis labels 
 mtext("Cumulative cases (solid) and deaths (dashed)",side=2,line=4)
-lines(national$date, national$deaths,axes=FALSE,  lty=2, lwd=2) # Cumulative deaths, dashed line
+lines(national$date, national$deaths,  lty=2, lwd=2) # Cumulative deaths, dashed line
 
 ## Plot containment policy data 
 par(new=TRUE)
@@ -140,7 +147,7 @@ dev.off()
 
 #### (3) Map confirmed cases ####
 
-map <- readOGR(paste0(data_dir, "interim/adm/adm2/adm2.shp"))
+suppressWarnings(map <- readOGR(paste0(data_dir, "interim/adm/adm2/adm2.shp")))
 map <- subset(map, adm0_name == country)
 map <- gSimplify(map, tol = 0.005)
 adm2$date <- as.Date(adm2$date, format='%Y-%m-%d')
@@ -149,21 +156,25 @@ adm2 <- adm2[adm2$date==max(adm2$date),]
 pdf(paste0(output_dir, country, "_map.pdf"),
     width = 5, heigh = 5)
 plot(map)
-points(adm2$lon, adm2$lat, col=alpha("darkred", 0.35), 
-       pch=19, cex=0.15*sqrt(adm2$cum_confirmed_cases_imputed))
+points(adm2$lon, adm2$lat, col=alpha("darkred", 0.3), 
+       pch=19, cex=0.1*sqrt(adm2$cum_confirmed_cases_imputed))
 
 # Add legend, size = 1000 cases
-points(min(adm2$lon, na.rm = T), min(adm2$lat, na.rm = T), col=alpha("darkred", 0.35), 
-       pch=19, cex=0.15*sqrt(1000))
-text(min(adm2$lon, na.rm = T), min(adm2$lat, na.rm = T), "1000 cases")
+points(min(adm2$lon, na.rm = T), min(adm2$lat, na.rm = T), col=alpha("darkred", 0.3), 
+       pch=19, cex=0.1*sqrt(5000))
+text(min(adm2$lon, na.rm = T), min(adm2$lat, na.rm = T), "5000 cases")
 
 dev.off()
 
 #######################################################################
 
+# IRAN
 country <- "IRN"
 notify(country)
 #####
+
+start <- "2020-02-27"
+end <- cut_dates[cut_dates$tag=="default",]$end_date
 
 #### (1) Epidemiological timeseries ####
 adm1 <- read.csv(paste0(data_dir, "processed/adm1/", country, "_processed.csv"))
@@ -176,8 +187,7 @@ colnames(national) <- c("date", "cases", "cases_drop")
 national$date <- as.character(national$date)
 national$date <- as.Date(national$date, format='%Y-%m-%d')
 national <- arrange(national, date)
-
-national <- subset(national, date >= "2020-02-27" & date <= "2020-03-18")
+national <- subset(national, date >= start & date <= end)
 write.csv(national, paste0(data_dir, "processed/adm0/", country, "_cases_deaths.csv"))
 
 #### (2) Containment policies ####
@@ -269,7 +279,7 @@ mtext("Date",side=1,col="black",line=2.5)
 dev.off()
 
 ### Cases Map ###
-map <- readOGR(paste0(data_dir, "interim/adm/adm1/adm1.shp"))
+suppressWarnings(map <- readOGR(paste0(data_dir, "interim/adm/adm1/adm1.shp")))
 map <- map[map$adm0_name=='IRN',]
 centroids <- gCentroid(map, byid = T)
 map$lon <- centroids$x
@@ -287,8 +297,8 @@ map <- gSimplify(map, tol = 0.005)
 pdf(paste0(output_dir, country, "_map.pdf"),
     width = 5, height = 5)
 plot(map)
-points(adm1$lon, adm1$lat, col=alpha("darkred", 0.35), 
-       pch=19, cex=0.15*sqrt(adm1$cum_confirmed_cases_imputed))
+points(adm1$lon, adm1$lat, col=alpha("darkred", 0.3), 
+       pch=19, cex=0.1*sqrt(adm1$cum_confirmed_cases_imputed))
 
 dev.off()
 
@@ -298,6 +308,9 @@ country <- "CHN"
 notify(country)
 
 #####
+
+start <- "2020-01-16"
+end <- cut_dates[cut_dates$tag=="CHN_analysis",]$end_date
 
 #### (1) Epidemiological timeseries ####
 adm2 <- read.csv(paste0(data_dir, "processed/adm2/", country, "_processed.csv"))
@@ -311,8 +324,7 @@ colnames(national) <- c("date", "cases", "cases_drop", "deaths")
 national$date <- as.character(national$date)
 national$date <- as.Date(national$date, format='%Y-%m-%d')
 national <- arrange(national, date)
-
-national <- subset(national, date >= "2020-01-16" & date <= "2020-03-18")
+national <- subset(national, date >= start & date <= end)
 write.csv(national, paste0(data_dir, "processed/adm0/", country, "_cases_deaths.csv"))
 
 #### (2) Containment policies ####
@@ -358,7 +370,7 @@ plot(national[!is.na(national$cases),]$date, national[!is.na(national$cases),]$c
 points(national$date, national$cases, pch=19)
 axis(2, ylim=c(0,cases_max),las=1)  ## las=1 makes horizontal labels
 mtext("Cumulative cases (solid) and deaths (dashed)",side=2,line=4)
-lines(national$date, national$deaths,axes=FALSE,  lty=2, lwd=2)
+lines(national$date, national$deaths,  lty=2, lwd=2)
 
 ## Plot containment policies
 par(new=TRUE)
@@ -390,7 +402,7 @@ match_city_names <- read.csv(
   paste0(data_dir, "raw/china/match_china_city_name_w_adm2.csv"),
   na.strings=c("", "NA"))
 
-map <- readOGR(paste0(data_dir, "interim/adm/adm2/adm2.shp"))
+suppressWarnings(map <- readOGR(paste0(data_dir, "interim/adm/adm2/adm2.shp")))
 map <- map[map$adm0_name == 'CHN', ]
 adm2$date <- as.Date(adm2$date, format='%Y-%m-%d')
 adm2 <- adm2[adm2$date==max(adm2$date),]
@@ -417,30 +429,33 @@ map <- gSimplify(map, tol = 0.005)
 pdf(paste0(output_dir, country, "_map.pdf"),
     width = 5, height = 5)
 plot(map)
-points(adm2$longitude, adm2$latitude, col=alpha("darkred", 0.35), 
-       pch=19, cex=0.15*sqrt(adm2$cum_confirmed_cases_imputed))
+points(adm2$longitude, adm2$latitude, col=alpha("darkred", 0.3), 
+       pch=19, cex=0.1*sqrt(adm2$cum_confirmed_cases_imputed))
 dev.off()
 
 ##########################################################
 
 country <- "USA"
 notify(country)
-  
-  policylist <- c("no_gathering_popwt", 
-                  "travel_ban_local_popwt", 
-                  "social_distance_popwt" , 
-                  "school_closure_popwt", 
-                  "business_closure_popwt")
-  legend.list <- c("no gathering", 
-                   "travel ban", 
-                   "social distancing", 
-                   "school closure", 
-                   "business closure") #set up legend
-  color.list <- c("darkgreen", 
-                  "steelblue3", 
-                  "mediumpurple2", 
-                  "darkblue", 
-                  "tomato3")
+
+start <- "2020-03-03"
+end <- cut_dates[cut_dates$tag=="default",]$end_date
+
+policylist <- c("no_gathering_popwt", 
+                "travel_ban_local_popwt", 
+                "social_distance_popwt" , 
+                "school_closure_popwt", 
+                "business_closure_popwt")
+legend.list <- c("no gathering", 
+                 "travel ban", 
+                 "social distancing", 
+                 "school closure", 
+                 "business closure") #set up legend
+color.list <- c("darkgreen", 
+                "steelblue3", 
+                "mediumpurple2", 
+                "darkblue", 
+                "tomato3")
 
 adm1 <- read.csv(paste0(data_dir, "processed/adm1/", country, "_processed.csv"))
 adm1$date <- as.Date(as.character(adm1$date), format='%Y-%m-%d')
@@ -452,9 +467,9 @@ national <- aggregate(adm1[,c("cum_confirmed_cases_imputed", "cum_confirmed_case
                       by=list(adm1$date), FUN=sum)
 colnames(national) <- c("date", "cases", "cases_drop", "deaths")
 national <- arrange(national, date)
-
+national <- subset(national, date >= start & date <= end)
 write.csv(national, paste0(data_dir, "processed/adm0/", country, "_cases_deaths.csv"))
-national <- subset(national, date >= "2020-03-03" & date <= "2020-03-18")
+
 
 # Calculate number of adm regions that enacted each policy 
 policies <- aggregate(adm1[,policylist], by=list(adm1$date), FUN="sum") 
@@ -485,7 +500,7 @@ plot(national$date, national$cases, type="l", ylim=c(0,cases_max),
 points(national$date, national$cases, pch=19)
 axis(2, ylim=c(0,cases_max),las=1)  ## las=1 makes horizontal labels
 mtext("Cumulative cases (solid) and deaths (dashed)",side=2,line=4)
-lines(national$date, national$deaths, axes=FALSE,  lty=2, lwd=2) #deaths
+lines(national$date, national$deaths,  lty=2, lwd=2) #deaths
 
 ## Allow a second plot on the same graph
 par(new=TRUE)
@@ -529,16 +544,12 @@ map <- subset(map, !(STATEFP %in% c("15","02","60","72","66", "69", "78")))
 centroids <- gCentroid(map, byid=TRUE)
 map$lon <- centroids$x
 map$lat <- centroids$y
-units <- as.data.frame(map[,c("NAME", "lon", "lat")]) 
-colnames(units)[1] <- "adm1_name"
-adm1$date <- as.Date(adm1$date, format='%Y-%m-%d')
 adm1 <- adm1[adm1$date==max(adm1$date),]
-adm1 <- merge(adm1, units, by="adm1_name")
 
 pdf(paste0(output_dir, country, "_map.pdf"), width = 5, height = 5)
 plot(map)
-points(adm1$lon, adm1$lat, col=alpha("darkred", 0.35), 
-       pch=19, cex=0.15*sqrt(adm1$cum_confirmed_cases_imputed))
+points(adm1$lon, adm1$lat, col=alpha("darkred", 0.3), 
+       pch=19, cex=0.1*sqrt(adm1$cum_confirmed_cases_imputed))
 dev.off()
 
 ##########################################################
@@ -546,10 +557,13 @@ dev.off()
 country <- "FRA"
 notify(country)
 
-policylist <- c("no_gathering_national_100", 
+start <- "2020-02-27"
+end <- cut_dates[cut_dates$tag=="default",]$end_date
+
+policylist <- c("no_gathering", 
                 "home_isolation", 
-                "social_distance_national", 
-                "school_closure_national", 
+                "social_distance", 
+                "school_closure", 
                 "event_cancel")
 legend.list <- c("no gatherings of more than 100", 
                  "no gatherings of more than 1000", 
@@ -561,51 +575,51 @@ color.list <- c("darkgreen",
                 "mediumpurple2", 
                 "darkblue", 
                 "deeppink4")
-  
-  #load data
-  adm1 <- read.csv(paste0(data_dir, "processed/adm1/", country, "_processed.csv"), stringsAsFactors = F) 
-  adm1$date <- as.Date(as.character(adm1$date), format='%Y-%m-%d')
-  
-  #load latlon
-  latlon.agg <- read.csv(paste0(data_dir, "interim/adm/adm1/adm1.csv"), stringsAsFactors = F) %>%
-    dplyr::filter(adm0_name == country) %>%
-    dplyr::select(adm1_name, lat = latitude, lon = longitude)
 
-  if (country=="FRA"){ #clean region names
-    latlon.agg$adm1_name[latlon.agg$adm1_name =="Auvergne-Rhône-Alpes" ] <- "AuvergneRhôneAlpes"
-    latlon.agg$adm1_name[latlon.agg$adm1_name =="Bourgogne-Franche-Comté" ] <- "BourgogneFrancheComté"
-    latlon.agg$adm1_name[latlon.agg$adm1_name =="Centre-Val de Loire"] <- "Centre"
-    latlon.agg$adm1_name[latlon.agg$adm1_name =="Grand Est" ] <- "GrandEst"
-    latlon.agg$adm1_name[latlon.agg$adm1_name =="Hauts-de-France" ] <- "HautsdeFrance"
-    latlon.agg$adm1_name[latlon.agg$adm1_name =="Île-de-France" ] <- "IledeFrance"
-    latlon.agg$adm1_name[latlon.agg$adm1_name =="Nouvelle-Aquitaine" ] <- "NouvelleAquitaine"
-    latlon.agg$adm1_name[latlon.agg$adm1_name =="Pays de la Loire"  ] <- "PaysdelaLoire"
-    latlon.agg$adm1_name[latlon.agg$adm1_name =="Provence-Alpes-Côte d'Azur"  ] <- "Paca"
-  }  
-  
+#load data
+adm1 <- read.csv(paste0(data_dir, "processed/adm1/", country, "_processed.csv"), stringsAsFactors = F) 
+adm1$date <- as.Date(as.character(adm1$date), format='%Y-%m-%d')
+
+#load latlon
+latlon.agg <- read.csv(paste0(data_dir, "interim/adm/adm1/adm1.csv"), stringsAsFactors = F) %>%
+  dplyr::filter(adm0_name == country) %>%
+  dplyr::select(adm1_name, lat = latitude, lon = longitude)
+
+if (country=="FRA"){ #clean region names
+  latlon.agg$adm1_name[latlon.agg$adm1_name =="Auvergne-Rhône-Alpes" ] <- "AuvergneRhôneAlpes"
+  latlon.agg$adm1_name[latlon.agg$adm1_name =="Bourgogne-Franche-Comté" ] <- "BourgogneFrancheComté"
+  latlon.agg$adm1_name[latlon.agg$adm1_name =="Centre-Val de Loire"] <- "Centre"
+  latlon.agg$adm1_name[latlon.agg$adm1_name =="Grand Est" ] <- "GrandEst"
+  latlon.agg$adm1_name[latlon.agg$adm1_name =="Hauts-de-France" ] <- "HautsdeFrance"
+  latlon.agg$adm1_name[latlon.agg$adm1_name =="Île-de-France" ] <- "IledeFrance"
+  latlon.agg$adm1_name[latlon.agg$adm1_name =="Nouvelle-Aquitaine" ] <- "NouvelleAquitaine"
+  latlon.agg$adm1_name[latlon.agg$adm1_name =="Pays de la Loire"  ] <- "PaysdelaLoire"
+  latlon.agg$adm1_name[latlon.agg$adm1_name =="Provence-Alpes-Côte d'Azur"  ] <- "Paca"
+}  
+
 # merge latlon
-  adm1 <- left_join(adm1, latlon.agg, by = c("adm1_name"))
-  adm1$lat <- as.numeric(adm1$lat)
-  adm1$lon <- as.numeric(adm1$lon)
+adm1 <- left_join(adm1, latlon.agg, by = c("adm1_name"))
+adm1$lat <- as.numeric(adm1$lat)
+adm1$lon <- as.numeric(adm1$lon)
 
 
 #----------------------------------------------------------------------------------------------------------------------------
 
-  adm1$cum_confirmed_cases_imputed_drop <- adm1$cum_confirmed_cases_imputed
-  adm1[adm1$cum_confirmed_cases_imputed < 10,]$cum_confirmed_cases_imputed_drop <- 0 
-  national <- aggregate(adm1[,c("cum_confirmed_cases_imputed", "cum_confirmed_cases_imputed_drop")], 
-                        by=list(adm1$date), FUN=sum)
-  colnames(national) <- c("date", "cases", "cases_drop")
-  national <- arrange(national, date)
-  national <- subset(national, date >= "2020-02-27" & date <= "2020-03-18")
-  write.csv(national, paste0(data_dir, "processed/adm0/", country, "_cases_deaths.csv"))
-  
-  
-  national <-  read.csv(paste0(data_dir, 
-                               "interim/france/france_jhu_cases.csv"), header = T, stringsAsFactors = F) %>% # merge JHU dataset because adm1 has no deaths
-    select(date, cases = cum_confirmed_cases, deaths = cum_deaths)
-  national$date <- as.Date(national$date, format='%Y-%m-%d')
-  national <- subset(national, date >= "2020-02-27" & date <= "2020-03-18")
+adm1$cum_confirmed_cases_imputed_drop <- adm1$cum_confirmed_cases_imputed
+adm1[adm1$cum_confirmed_cases_imputed < 10,]$cum_confirmed_cases_imputed_drop <- 0 
+national <- aggregate(adm1[,c("cum_confirmed_cases_imputed", "cum_confirmed_cases_imputed_drop")], 
+                      by=list(adm1$date), FUN=sum)
+colnames(national) <- c("date", "cases", "cases_drop")
+national <- arrange(national, date)
+national <- subset(national, date >= start & date <= end)
+write.csv(national, paste0(data_dir, "processed/adm0/", country, "_cases_deaths.csv"))
+
+
+national <-  read.csv(paste0(data_dir, 
+                             "interim/france/france_jhu_cases.csv"), header = T, stringsAsFactors = F) %>% # merge JHU dataset because adm1 has no deaths
+  select(date, cases = cum_confirmed_cases, deaths = cum_deaths)
+national$date <- as.Date(national$date, format='%Y-%m-%d')
+national <- subset(national, date >= start & date <= end)
 national <- arrange(national, date)
 
 
@@ -649,7 +663,7 @@ plot(national$date, national$cases, type="l", ylim=c(0,cases_max),
 points(national$date, national$cases, pch=19)
 axis(2, ylim=c(0,cases_max),las=1)  ## las=1 makes horizontal labels
 mtext("Cumulative cases (solid) and deaths (dashed)",side=2,line=4)
-lines(national$date, national$deaths, axes=FALSE,  lty=2, lwd=2) #deaths
+lines(national$date, national$deaths,  lty=2, lwd=2) #deaths
 
 ## Allow a second plot on the same graph
 par(new=TRUE)
@@ -685,7 +699,7 @@ dev.off()
 
 
 ### Cases Map ###
-map <- readOGR(paste0(data_dir, "interim/adm/adm1/adm1.shp"))
+suppressWarnings(map <- readOGR(paste0(data_dir, "interim/adm/adm1/adm1.shp")))
 map <- subset(map, adm0_name == country)
 map <- subset(map, longitude > -10 & latitude > 0)
 map <- gSimplify(map, tol = 0.005)
@@ -697,8 +711,8 @@ adm1 <- adm1[adm1$date==max(adm1$date),]
 
 pdf(paste0(output_dir, country, "_map.pdf"), width = 5, height = 5)
 plot(map)
-points(adm1$lon, adm1$lat, col=alpha("darkred", 0.35), 
-       pch=19, cex=0.15*sqrt(adm1$cum_confirmed_cases_imputed))
+points(adm1$lon, adm1$lat, col=alpha("darkred", 0.3), 
+       pch=19, cex=0.1*sqrt(adm1$cum_confirmed_cases_imputed))
 dev.off()
 
 ###############################################################
@@ -706,35 +720,27 @@ dev.off()
 country <- "KOR"
 notify(country)
 
-  policylist <- c("emergency_declaration", 
-                  "no_demonstration",
-                  "social_distance_opt", 
-                  "religious_closure",
-                  "business_closure_opt")
-  legend.list <- c("emergency declaration", 
-                   "no demonstration", 
-                   "social distancing", 
-                   "religious_closure", 
-                   "business closure") #set up legend
-  color.list <- c("darkred", 
-                  "seagreen4", 
-                  "mediumpurple2", 
-                  "orange3", 
-                  "tomato3")
+start <- "2020-02-17"
+end <- cut_dates[cut_dates$tag=="default",]$end_date
+
+policylist <- c("emergency_declaration", 
+                "no_demonstration",
+                "social_distance_opt", 
+                "religious_closure",
+                "business_closure_opt")
+legend.list <- c("emergency declaration", 
+                 "no demonstration", 
+                 "social distancing", 
+                 "religious_closure", 
+                 "business closure") #set up legend
+color.list <- c("darkred", 
+                "seagreen4", 
+                "mediumpurple2", 
+                "orange3", 
+                "tomato3")
 
 adm1 <- read.csv(paste0(data_dir, "processed/adm1/KOR_processed.csv"), stringsAsFactors = F) 
 adm1$date <- as.Date(as.character(adm1$date), format='%Y-%m-%d')
-
-#load latlon
-latlon.agg <- read.csv(paste0(data_dir, "interim/adm/adm1/adm1.csv"), stringsAsFactors = F) %>%
-  dplyr::filter(adm0_name == country) %>%
-  dplyr::select(adm1_name, lat = latitude, lon = longitude)
-
-# merge latlon
-adm1 <- left_join(adm1, latlon.agg, by = c("adm1_name"))
-adm1$lat <- as.numeric(adm1$lat)
-adm1$lon <- as.numeric(adm1$lon)
-
 
 adm1$cum_confirmed_cases_drop <- adm1$cum_confirmed_cases
 adm1[adm1$cum_confirmed_cases < 10,]$cum_confirmed_cases_drop <- 0 
@@ -745,7 +751,7 @@ colnames(national) <- c("date", "cases", "cases_drop", "deaths")
 national$date <- as.character(national$date)
 national$date <- as.Date(national$date, format='%Y-%m-%d')
 national <- arrange(national, date)
-national <- subset(national, date >= "2020-02-17" & date <= "2020-03-18")
+national <- subset(national, date >= start & date <= end)
 
 write.csv(national, paste0(data_dir, "processed/adm0/", country, "_cases_deaths.csv"))
 
@@ -789,7 +795,7 @@ plot(national$date, national$cases, type="l", ylim=c(0,cases_max),
 points(national$date, national$cases, pch=19)
 axis(2, ylim=c(0,cases_max),las=1)  ## las=1 makes horizontal labels
 mtext("Cumulative cases (solid) and deaths (dashed)",side=2,line=4)
-lines(national$date, national$deaths, axes=FALSE,  lty=2, lwd=2) #deaths
+lines(national$date, national$deaths, lty=2, lwd=2) #deaths
 
 ## Allow a second plot on the same graph
 par(new=TRUE)
@@ -827,7 +833,7 @@ dev.off()
 #######################################################################
 
 ### Cases Map ###
-map <- readOGR(paste0(data_dir, "interim/adm/adm1/adm1.shp"))
+suppressWarnings(map <- readOGR(paste0(data_dir, "interim/adm/adm1/adm1.shp")))
 map <- subset(map, adm0_name == country)
 map <- gSimplify(map, tol = 0.005)
 
@@ -838,6 +844,6 @@ adm1 <- adm1[adm1$date==max(adm1$date),]
 
 pdf(paste0(output_dir, country, "_map.pdf"), width = 5, height = 5)
 plot(map)
-points(adm1$lon, adm1$lat, col=alpha("darkred", 0.35), 
-       pch=19, cex=0.15*sqrt(adm1$cum_confirmed_cases))
+points(adm1$lon, adm1$lat, col=alpha("darkred", 0.3), 
+       pch=19, cex=0.1*sqrt(adm1$cum_confirmed_cases))
 dev.off()
