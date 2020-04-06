@@ -7,6 +7,7 @@ pip install -e .
 ## parse flags to not run certain things
 STATA=true
 CENSUS=true
+NUMPROJ=1000
 for arg in "$@"
 do
     case $arg in
@@ -16,6 +17,11 @@ do
         ;;
         -c|--nocensus)
             CENSUS=false
+            shift
+        ;;
+        -p|--num-proj)
+            NUMPROJ="$2"
+            shift
             shift
         ;;
     esac
@@ -99,7 +105,7 @@ fi
 ## SIR model projection
 printf "***Projecting infections***\n"
 python codes/models/get_gamma.py
-Rscript codes/models/run_all_CB_simulations.R
+Rscript codes/models/run_all_CB_simulations.R $NUMPROJ
 
 
 ## Figures and tables
