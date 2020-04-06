@@ -1,7 +1,9 @@
-adm0,policy,suffix,beta,se
-"ITA","p_1","",.026,.054
-"ITA","p_2","",-.045,.05
-"ITA","p_3","",-.077,.031
-"ITA","p_4","",-.089,.08
-"ITA","comb. policy","",-.185,.074
-"ITA","no_policy rate","",.376,.079
+adm0,policy,beta,se
+"ITA","p_1",.083,.037
+"ITA","p_2",-.1,.077
+"ITA","p_3",-.109,.072
+"ITA","p_4",-.237,.164
+"ITA","p_5",.055,.068
+"ITA","p_6",-.074,.05
+"ITA","comb. policy",-.381,.124
+"ITA","no_policy rate",.372,.043
