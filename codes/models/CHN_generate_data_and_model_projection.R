@@ -4,7 +4,11 @@ library(lfe)
 source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
 source("codes/data/multi_country/get_JHU_country_data.R")
+underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
 
+if(!(exists("gamma") & class(gamma) != "function")){
+  gamma = 0.052
+}
 mydata <- read_csv('models/reg_data/CHN_reg_data.csv',                   
                    col_types = cols(
                      .default = col_double(),
@@ -14,11 +18,12 @@ mydata <- read_csv('models/reg_data/CHN_reg_data.csv',
                      date = col_date(format = ""),
                      t = col_character(),
                      adm2_id = col_character(),
-                     adm1_id = col_character()
+                     adm1_id = col_character(),
+                     adm1_adm2_name = col_character(),
+                     day_avg = col_double()
                    )) %>% 
   arrange(adm1_name, adm2_name, date) %>%
-  mutate(adm12_id = factor(adm12_id)) %>%
-  mutate(tmp_id = factor(adm12_id))
+  mutate(tmp_id = factor(adm1_adm2_name))
 
 changed = TRUE
 while(changed){
@@ -59,4 +64,7 @@ main_projection <- compute_predicted_cum_cases(full_data = mydata, model = main_
                                                policy_variables_used = policy_variables_to_use,
                                                other_control_variables = other_control_variables,
                                                time_steps_per_day = 6,
-                                               gamma = gamma)
+                                               gamma = gamma,
+                                               proportion_confirmed = underreporting %>% 
+                                                 filter(country == "China") %>% 
+                                                 pull(underreporting_estimate))

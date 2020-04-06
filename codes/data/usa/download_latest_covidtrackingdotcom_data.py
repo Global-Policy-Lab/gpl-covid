@@ -8,6 +8,72 @@ import codes.utils as cutil
 states_url = 'https://covidtracking.com/api/states/daily'
 path_to_data = cutil.DATA
 
+# rename the states
+state_acronyms_to_names = \
+{"all":"all",
+ "AL":"Alabama",
+ "AK":"Alaska",
+ "AZ":"Arizona",
+ "AR":"Arkansas",
+ "AS":"American Samoa",
+ "CA":"California",
+ "CO":"Colorado",
+ "CT":"Connecticut",
+ "DE":"Delaware",
+ "DC":"District of Columbia",
+ "FL":"Florida",
+ "GA":"Georgia",
+ "GU":"Guam",
+ "HI": "Hawaii",
+ "ID":"Idaho",
+ "IL":"Illinois",             
+ "IN":"Indiana",              
+ "IA":"Iowa",                 
+ "KS":"Kansas" ,
+ "KY":"Kentucky",
+ "LA":"Louisiana",
+ "ME":"Maine",
+ "MD":"Maryland",
+ "MA":"Massachusetts",
+ "MI":"Michigan",
+ "MN":"Minnesota",
+ "MP":"Northern Marianas",
+ "MS":"Mississippi",
+ "MO":"Missouri",
+ "MT":"Montana",
+ "NE":"Nebraska",
+ "NV":"Nevada"  ,            
+ "NH":"New Hampshire",
+ "NJ":"New Jersey"     ,
+ "NM":"New Mexico",
+ "NY":"New York",
+ "NC":"North Carolina",
+ "ND":"North Dakota",
+ "OH":"Ohio",
+ "OK":"Oklahoma",             
+ "OR":"Oregon",
+ "PA":"Pennsylvania",
+ "PR": "Puerto Rico",
+ "RI":"Rhode Island" ,
+ "SC":"South Carolina",
+ "SD":"South Dakota",
+ "TN":"Tennessee",
+ "TX":"Texas",
+ "UT":"Utah",
+ "VT":"Vermont",
+ "VA":"Virginia",
+ "VI":"Virgin Islands",
+ "WA":"Washington",          
+ "WV":"West Virginia",
+ "WI":"Wisconsin",
+ "WY":"Wyoming"   
+}
+
+
+def acc_to_statename(acc):
+    return state_acronyms_to_names[acc]
+
+
 # redo the date
 def format_covid_tracking_date(date):
     date_str = str(date)
@@ -31,13 +97,13 @@ def download_and_save_data_raw(save_locally=True):
 def process_and_save_data_int(states_data_raw, save_locally=True):
 
     # 1. setup dataframe
-    states_columns_to_keep = ['date','adm0_name', 'adm1_name', 'adm_level', 
+    states_columns_to_keep = ['date','adm0_name', 'adm1_name', 
                           'cumulative_confirmed_cases', 'cumulative_tests', 
                           'cumulative_deaths']
 
+
     # rename total to be more descriptive
     states_data = states_data_raw.rename(columns={'total': 'total_inc_pending'})
-    states_data['adm_level'] = 1
 
     # make sure none of the neg cases are nan if previously reported cases aren't nan
     # do this by state!
@@ -69,7 +135,8 @@ def process_and_save_data_int(states_data_raw, save_locally=True):
                             'death':'cumulative_deaths'},
                        inplace=True)
 
-    
+    # rename state names.
+    states_data.loc[:,'adm1_name'] = states_data['adm1_name'].apply(acc_to_statename) 
 
     states_data = states_data[states_columns_to_keep]
 

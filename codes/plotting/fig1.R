@@ -17,11 +17,15 @@ if (!dir.exists(output_dir)){ #make dir if it doesn't exist
   dir.create(output_dir, recursive=TRUE)
 }
 
+notify <- function(country) {
+  message("Plotting map and timeseries for ",country)
+}
+
 #################
 
 # ITALY
 country <- "ITA"
-
+notify(country)
 #################
 
 #### (1) Epidemiological timeseries ####
@@ -158,7 +162,7 @@ dev.off()
 #######################################################################
 
 country <- "IRN"
-
+notify(country)
 #####
 
 #### (1) Epidemiological timeseries ####
@@ -291,6 +295,7 @@ dev.off()
 ######################################################################
 
 country <- "CHN"
+notify(country)
 
 #####
 
@@ -419,6 +424,7 @@ dev.off()
 ##########################################################
 
 country <- "USA"
+notify(country)
   
   policylist <- c("no_gathering_popwt", 
                   "travel_ban_local_popwt", 
@@ -538,6 +544,7 @@ dev.off()
 ##########################################################
 
 country <- "FRA"
+notify(country)
 
 policylist <- c("no_gathering_national_100", 
                 "home_isolation", 
@@ -697,12 +704,13 @@ dev.off()
 ###############################################################
 
 country <- "KOR"
+notify(country)
 
   policylist <- c("emergency_declaration", 
                   "no_demonstration",
                   "social_distance_opt", 
                   "religious_closure",
-                  "business_closure")
+                  "business_closure_opt")
   legend.list <- c("emergency declaration", 
                    "no demonstration", 
                    "social distancing", 

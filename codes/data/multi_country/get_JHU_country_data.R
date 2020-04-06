@@ -24,14 +24,13 @@ get_jhu_data <- function(country = c("US", "Iran", "Korea, South", "Italy", "Chi
                                      "Spain", "Sri Lanka", "Sweden", "Switzerland", "Taiwan*", 
                                      "Thailand", "Togo", "Tunisia", "Turkey", "Ukraine", 
                                      "United Arab Emirates", "United Kingdom", "Vietnam"),
-                         fix_issues = TRUE,
                          province_states_to_include = NULL){
   # This checks that the country is in the above vector
   country <- match.arg(country)
   urls <- c(
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv",
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv"
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
   )
   # Download the 3 csvs direct from the urls into tibbles
   jhu_covid_cases <- urls %>% map(read_csv,
@@ -43,14 +42,14 @@ get_jhu_data <- function(country = c("US", "Iran", "Korea, South", "Italy", "Chi
   
   # add the variable types as a column to each tibble
   jhu_covid_cases <- list(jhu_covid_cases, c("cum_confirmed_cases",
-                          "cum_deaths",
-                          "cum_recoveries")) %>% 
+                                             "cum_deaths",
+                                             "cum_recoveries")) %>% 
     pmap(~{
       .x %>% 
         mutate(variable = .y)
     }) %>% 
     bind_rows()
-    
+  
   
   jhu_covid_cases <- jhu_covid_cases %>% 
     pivot_longer(cols = matches("[0-9]+/[0-9]+/[0-9]+"),
@@ -75,10 +74,10 @@ get_jhu_data <- function(country = c("US", "Iran", "Korea, South", "Italy", "Chi
   
   # Expand to include all dates
   jhu_covid_cases <- jhu_covid_cases %>% 
-    unite(tmp_id, province_state, country_region) %>% 
+    unite(tmp_id, province_state, country_region, remove = FALSE) %>% 
     complete(tmp_id, date)
   jhu_covid_cases %>% 
-    separate(tmp_id, c("province_state", "country_region"), sep = "_")
+    select(-tmp_id)
 }
 
 do_issues_exist <- function(data, variable){
@@ -164,10 +163,20 @@ fix_issues <- function(data){
     }) %>% 
     ungroup()
   
-  data <- data %>% 
-    mutate(cum_recoveries_imputed = cum_recoveries, 
-           cum_confirmed_cases_imputed = cum_confirmed_cases, 
-           cum_deaths_imputed = cum_deaths)
+  if(!"cum_confirmed_cases_imputed" %in% names(data)){
+    data <- data %>% 
+      mutate(cum_confirmed_cases_imputed = cum_confirmed_cases)
+  }
+  
+  if(!"cum_recoveries_imputed" %in% names(data)){
+    data <- data %>% 
+      mutate(cum_recoveries_imputed = cum_recoveries)
+  }
+  
+  if(!"cum_deaths_imputed" %in% names(data)){
+    data <- data %>% 
+      mutate(cum_deaths_imputed = cum_deaths)
+  }
   
   while(do_issues_exist(data, cum_confirmed_cases_imputed)){
     warning("Fixing an issue with cum_confirmed_cases")

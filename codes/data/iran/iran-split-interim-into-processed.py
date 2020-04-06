@@ -11,9 +11,6 @@ import pandas as pd
 import numpy as np
 from codes import utils as cutil
 
-end_of_analysis_date = '2020-03-18'
-
-
 # Define paths
 
 # Project directory
@@ -189,10 +186,6 @@ adm1_df = impute_cumulative_df(adm1_df, src_col, dst_col, 'adm1_name')
 template = pd.read_csv(path_template)
 assert len(set(adm0_df.columns) - set(template.columns)) == 0
 assert len(set(adm1_df.columns) - set(template.columns)) == 0
-
-
-# Check that date does not extend past end of analysis
-assert adm1_df['date'].max() <= pd.to_datetime(end_of_analysis_date)
 
 
 # Output to `IRN_processed.csv` datasets
