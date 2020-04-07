@@ -34,7 +34,7 @@ tsset adm2_id t, daily
 
 // quality control
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
-drop if t < mdy(2,25,2020) // start Feb 25
+drop if t < mdy(2,26,2020) // start Feb 26
 keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 // flag which admin unit has longest series
@@ -68,19 +68,20 @@ replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0
 
 //--------------testing regime changes
 
-// grab each date of any testing regime change
-preserve
-	collapse (min) t, by(testing_regime)
-	sort t //should already be sorted but just in case
-	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
-	levelsof t, local(testing_change_dates)
-restore
-
-// create a dummy for each testing regime change date
-foreach t_chg of local testing_change_dates{
-	local t_str = string(`t_chg', "%td")
-	gen testing_regime_change_`t_str' = t==`t_chg'
-}
+// testing regime change on Feb 26, which is the start of sample so now changes to account for
+// // grab each date of any testing regime change
+// preserve
+// 	collapse (min) t, by(testing_regime)
+// 	sort t //should already be sorted but just in case
+// 	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
+// 	levelsof t, local(testing_change_dates)
+// restore
+//
+// // create a dummy for each testing regime change date
+// foreach t_chg of local testing_change_dates{
+// 	local t_str = string(`t_chg', "%td")
+// 	gen testing_regime_change_`t_str' = t==`t_chg'
+// }
 
 //------------------diagnostic
 
@@ -98,17 +99,39 @@ tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 
 //------------------grouping treatments (based on timing and similarity)
 
-capture: drop p_*
-gen p_1 = (work_from_home_opt_popwt + social_distance_opt_popwt  + home_isolation_popwt + no_gathering_popwt + business_closure_popwt)/5
-gen p_2 = travel_ban_local_popwt
-gen p_3 = pos_cases_quarantine_popwt   
-gen p_4 = school_closure_popwt  
+// capture: drop p_*
+// gen p_1 = (work_from_home_opt_popwt + social_distance_opt_popwt  + home_isolation_popwt + no_gathering_popwt + business_closure_popwt)/5
+// gen p_2 = travel_ban_local_popwt
+// gen p_3 = pos_cases_quarantine_popwt   
+// gen p_4 = school_closure_popwt  
+//
+// lab var p_1 "social distancing, stay home"
+// lab var p_2 "local travel ban"
+// lab var p_3 "quarantine positive cases"
+// lab var p_4 "school closure"
+
+// popwt vars = policy intensity * population weight of respective admin 2 unit or sub admin 2 unit
+
+// combine optional policies with respective mandatory policies
+// weighing optional policies by 1/2
+gen social_distance_comb_popwt = social_distance_popwt + social_distance_opt_popwt * 0.5 
+gen work_from_home_comb_popwt = work_from_home_popwt + work_from_home_opt_popwt * 0.5
+
+
+gen p_1 = (no_gathering_popwt + social_distance_comb_popwt + work_from_home_comb_popwt)/3
+gen p_2 = business_closure_popwt
+gen p_3 = school_closure_popwt  
+gen p_4 = (travel_ban_local_popwt + transit_suspension_popwt)/2 //transit_suspensions all happen on 2/23 with travel_ban_local in respective admin units
+gen p_5 = home_isolation_popwt   
+gen p_6 = pos_cases_quarantine_popwt 
 
 lab var p_1 "social distancing, stay home"
-lab var p_2 "local travel ban"
-lab var p_3 "quarantine positive cases"
-lab var p_4 "school closure"
- 
+lab var p_2 "business closure"
+lab var p_3 "school closure"
+lab var p_4 "local travel ban, transit suspension"
+lab var p_5 "home isolation"
+lab var p_6 "quarantine positive cases"
+
  
 //------------------main estimates
 
@@ -116,7 +139,7 @@ lab var p_4 "school closure"
 outsheet using "models/reg_data/ITA_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+reghdfe D_l_cum_confirmed_cases p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
 
 outreg2 using "results/tables/ITA_estimates_table", word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: Italy")
@@ -128,11 +151,11 @@ coefplot, keep(p_*)
 
 tempfile results_file
 postfile results str18 adm0 str18 policy beta se using `results_file', replace
-foreach var in "p_1" "p_2" "p_3" "p_4"{
+foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6"{
 	post results ("ITA") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 // effect of package of policies (FOR FIG2)
-lincom p_1 + p_2 + p_3 + p_4
+lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
 post results ("ITA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 
@@ -156,20 +179,22 @@ lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
-p_1* _b[p_1] + ///
-p_2* _b[p_2] + ///
-p_3* _b[p_3] + /// 
-p_4* _b[p_4] /// 
+p_1 * _b[p_1] + ///
+p_2 * _b[p_2] + ///
+p_3 * _b[p_3] + /// 
+p_4 * _b[p_4] + /// 
+p_5 * _b[p_5] + /// 
+p_6 * _b[p_6] /// 
 if e(sample)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+predictnl y_counter = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // compute ATE
 preserve
 	keep if e(sample) == 1
 	collapse  D_l_cum_confirmed_cases  p_* 
-	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_3*_b[p_3] + p_4*_b[p_4], ci(LB UB) se(sd) p(pval)
+	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_3*_b[p_3] + p_4*_b[p_4] + p_5*_b[p_5] + p_6*_b[p_6], ci(LB UB) se(sd) p(pval)
 	g adm0 = "ITA"
 	outsheet * using "models/ITA_ATE.csv", comma replace 
 restore
@@ -227,25 +252,20 @@ tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Italy, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22007)) xlabel(21930(10)22007, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/ITA_adm2_conf_cases_growth_rates_fixedx.gph, replace)
 
 
 //-------------------------------Running the model for Lombardy only 
 
-reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_* if adm1_name == "Lombardia", absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+reghdfe D_l_cum_confirmed_cases p_* if adm1_name == "Lombardia", absorb(i.adm2_id i.dow, savefe) cluster(t) resid
 
 // predicted "actual" outcomes with real policies
-predictnl y_actual_lom = ///
-p_1 * _b[p_1] + ///
-p_2 * _b[p_2] + ///
-p_3 * _b[p_3] + /// 
-p_4 * _b[p_4] /// 
-+ _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual_lom ub_y_actual_lom)
+predictnl y_actual_lom = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual_lom ub_y_actual_lom)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter_lom =  _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter_lom ub_counter_lom)
+predictnl y_counter_lom = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter_lom ub_counter_lom)
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars
@@ -275,7 +295,7 @@ tw (rspike ub_y_actual_lom lb_y_actual_lom t_random,  lwidth(vthin) color(blue*.
 (sc day_avg_lom t, color(black)) ///
 if e(sample), ///
 title("Lombardy, Italy", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22007)) xlabel(21930(10)22007, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Lombardy_conf_cases_growth_rates_fixedx.gph, replace)
 
@@ -288,20 +308,13 @@ tab adm2_name if cases_to_pop==cases_to_pop_max //Cremona
 
 foreach province in "Cremona" "Bergamo" "Lodi" {
 
-	reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_* if adm2_name=="`province'", noabsorb
+	reghdfe D_l_cum_confirmed_cases p_* if adm2_name=="`province'", noabsorb
 
 	// predicted "actual" outcomes with real policies
-	predictnl y_actual_`province' = ///
-	p_1 * _b[p_1] + ///
-	p_2 * _b[p_2] + ///
-	p_3 * _b[p_3] + /// 
-	p_4 * _b[p_4] + /// 
-	_b[_cons] if e(sample), ///
-	ci(lb_y_actual_`province' ub_y_actual_`province')
+	predictnl y_actual_`province' = xb() if e(sample), ci(lb_y_actual_`province' ub_y_actual_`province')
 		
 	// predicting counterfactual growth for each obs
-	predictnl y_counter_`province' =  _b[_cons] if e(sample), ///
-	ci(lb_counter_`province' ub_counter_`province')
+	predictnl y_counter_`province' = _b[_cons] if e(sample), ci(lb_counter_`province' ub_counter_`province')
 
 	// quality control: don't want to be forecasting negative growth (not modeling recoveries)
 	// fix so there are no negative growth rates in error bars
@@ -326,7 +339,37 @@ foreach province in "Cremona" "Bergamo" "Lodi" {
 	(sc day_avg_`province' t, color(black)) ///
 	if e(sample), ///
 	title("`title'", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-	xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
+	xscale(range(21930(10)21999)) xlabel(21930(10)21999, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 	saving(results/figures/appendix/sub_natl_growth_rates/`province'_conf_cases_growth_rates_fixedx.gph, replace)
 }
+
+
+//-------------------------------CREATING DAILY LAGS
+
+sum t
+local start_date = `r(min)'
+
+local orig_obs = r(N)
+local set_obs = r(N) + 50
+
+set obs `set_obs'
+replace t = `start_date' - (_n-`orig_obs') if t==.
+
+sum adm2_id if longest_series==1
+replace adm2_id = `r(min)' if _n > `orig_obs'
+fillin adm2_id t
+
+foreach pvar of varlist p_*{
+	gen D_`pvar' = D.`pvar'
+	replace D_`pvar' = 0 if D_`pvar' == .
+	tab D_`pvar', mi
+}
+
+reghdfe D_l_cum_confirmed_cases L(-5/35).(D_p_*), absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+
+br adm1_name adm2_name date cum_confirmed_cases no_gathering_popwt social_distance_comb_popwt work_from_home_comb_popwt D_p_1
+
+reghdfe D_l_cum_confirmed_cases L(-5/27).D_p_1 L(-5/17).D_p_2 L(-3/29).D_p_3 L(-5/20).D_p_4 ///
+L(-5/17).D_p_5 L(-5/6).D_p_6, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+
