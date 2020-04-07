@@ -126,7 +126,7 @@ gen p_5 = home_isolation_popwt
 gen p_6 = pos_cases_quarantine_popwt 
 
 lab var p_1 "social distancing, stay home"
-lab var p_4 "business closure"
+lab var p_2 "business closure"
 lab var p_3 "school closure"
 lab var p_4 "local travel ban, transit suspension"
 lab var p_5 "home isolation"
@@ -343,3 +343,33 @@ foreach province in "Cremona" "Bergamo" "Lodi" {
 	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 	saving(results/figures/appendix/sub_natl_growth_rates/`province'_conf_cases_growth_rates_fixedx.gph, replace)
 }
+
+
+//-------------------------------CREATING DAILY LAGS
+
+sum t
+local start_date = `r(min)'
+
+local orig_obs = r(N)
+local set_obs = r(N) + 50
+
+set obs `set_obs'
+replace t = `start_date' - (_n-`orig_obs') if t==.
+
+sum adm2_id if longest_series==1
+replace adm2_id = `r(min)' if _n > `orig_obs'
+fillin adm2_id t
+
+foreach pvar of varlist p_*{
+	gen D_`pvar' = D.`pvar'
+	replace D_`pvar' = 0 if D_`pvar' == .
+	tab D_`pvar', mi
+}
+
+reghdfe D_l_cum_confirmed_cases L(-5/35).(D_p_*), absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+
+br adm1_name adm2_name date cum_confirmed_cases no_gathering_popwt social_distance_comb_popwt work_from_home_comb_popwt D_p_1
+
+reghdfe D_l_cum_confirmed_cases L(-5/27).D_p_1 L(-5/17).D_p_2 L(-3/29).D_p_3 L(-5/20).D_p_4 ///
+L(-5/17).D_p_5 L(-5/6).D_p_6, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+
