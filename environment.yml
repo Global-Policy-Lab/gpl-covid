@@ -16,6 +16,7 @@ dependencies:
     - pytest=5.4
     - requests=2.23
     - seaborn=0.10
+    - xarray=0.15
     - xlrd=1.2
     - r-base=3.5
 #     - rstudio=1.1
