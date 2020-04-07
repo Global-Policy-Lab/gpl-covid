@@ -376,9 +376,14 @@ df = pd.merge(df, df_policy, how='inner', on=['adm0_name', 'adm1_name', 'adm2_na
 # source:
 # https://english.kyodonews.net/news/2020/02/6982cc1e130f-china-records-2-straight-days-of-fewer-than-1000-new-covid-19-cases.html
 # https://www.worldometers.info/coronavirus/how-to-interpret-feb-12-case-surge/
+# https://www.medrxiv.org/content/10.1101/2020.03.23.20041319v1.full.pdf
 df.loc[:, 'testing_regime'] = (
-    (df['date'] >= pd.Timestamp('2020-02-13')).astype(int) +
-    (df['date'] >= pd.Timestamp('2020-02-20')).astype(int)
+    (df['date'] > pd.Timestamp('2020-01-17')).astype(int) +
+    (df['date'] > pd.Timestamp('2020-01-27')).astype(int) +
+    (df['date'] > pd.Timestamp('2020-02-05')).astype(int) +
+    (df['date'] > pd.Timestamp('2020-02-12')).astype(int) +
+    (df['date'] > pd.Timestamp('2020-02-19')).astype(int) +
+    (df['date'] > pd.Timestamp('2020-03-04')).astype(int)
 )
 
 # df.describe(include='all')  # looks fine
