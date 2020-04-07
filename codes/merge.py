@@ -512,13 +512,14 @@ def calculate_intensities_adm_day_policy(policies_to_date, adm_level):
     result = (total_mandatory_intensity, mandatory_intensity_indicator, total_optional_intensity, optional_intensity_indicator)
     return result
 
-def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
+def get_policy_vals(policies, policy, date, adm, adm1, adm_level, policy_pickle_dict):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
         policies (pandas.DataFrame): table of policies, listed by date and regions affected
         policy (str): name of policy category to be applied
         date (datetime.datetime): date on which policies are applied
         adm (str): name of admin-unit on which policies are applied
+        adm1 (str) name of adm1 unit within which policies are applied (necessary if `adm` is an adm2 unit)
         adm_level (int): level of admin-unit on which policies are applied
         policy_pickle_dict (dict of dicts): Dictionary with keys `adm` and a pickled version of
             `policies_to_date` (computed within this function) to get result if it has already
@@ -530,10 +531,13 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
     """
     adm_name = f'adm{adm_level}_name'
 
+    adm_levels = sorted([int(col[3]) for col in policies.columns if col.startswith('adm') and col.endswith('name')])
+
     policies_to_date = policies[(policies['policy'] == policy) & 
                                 (policies['date_start'] <= date) &
                                 (policies['date_end'] >= date) &
-                                ((policies[adm_name] == adm) | (policies[adm_name].str.lower() == 'all'))
+                                ((policies[adm_name] == adm) | (policies[adm_name].str.lower() == 'all')) &
+                                ((policies['adm1_name'] == adm1) | (policies['adm1_name'].str.lower() == 'all'))
                                ].copy()
 
     if len(policies_to_date) == 0:
@@ -550,6 +554,27 @@ def get_policy_vals(policies, policy, date, adm, adm_level, policy_pickle_dict):
         policy_pickle_dict[adm][psave] = result
 
     return result
+
+def initialize_panel(cases_df, cases_level, policy_list, policy_popwts):
+    date_min = cases_df['date'].min()
+    date_max = cases_df['date'].max()
+    
+    # Initalize panel with same structure as `cases_df`
+    policy_panel = pd.DataFrame(
+        index=pd.MultiIndex.from_product([
+            pd.date_range(date_min, date_max), 
+            sorted(cases_df[f'adm{cases_level}_name'].unique())
+        ]), 
+        columns=policy_list + policy_popwts).reset_index().rename(
+            columns={'level_0':'date', 'level_1':f'adm{cases_level}_name'}
+        ).fillna(0)
+
+    if cases_level == 2:
+        adm2_to_adm1 = cases_df[['adm1_name', 'adm2_name']].drop_duplicates().set_index('adm2_name')['adm1_name']
+        adm1s = policy_panel['adm2_name'].apply(lambda x: adm2_to_adm1.loc[x])
+        policy_panel.insert(1, 'adm1_name', adm1s)
+
+    return policy_panel
 
 def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[], get_latlons=True, errors='raise'):
     """Assign all policy variables from `policies` to `cases_df`
@@ -579,8 +604,8 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
     if errors == 'raise':
         assert len(policies['optional'].unique()) <= 2
     elif errors == 'warn':
-    	if len(policies['optional'].unique()) > 2:
-    		print('there were more than two values for optional: {0}'.format(policies['optional'].unique()))
+        if len(policies['optional'].unique()) > 2:
+            print('there were more than two values for optional: {0}'.format(policies['optional'].unique()))
 
     policies['date_end'] = policies['date_end'].fillna(pd.to_datetime('2099-12-31'))
 
@@ -599,18 +624,7 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
     policy_list = list(policies['policy'].unique())
     policy_popwts = [p + '_popwt' for p in policy_list if p not in exclude_from_popweights]
 
-    date_min = cases_df['date'].min()
-    date_max = cases_df['date'].max()
-
-    # Initalize panel with same structure as `cases_df`
-    policy_panel = pd.DataFrame(
-        index=pd.MultiIndex.from_product([
-            pd.date_range(date_min, date_max), 
-            sorted(cases_df[f'adm{cases_level}_name'].unique())
-        ]), 
-        columns=policy_list + policy_popwts).reset_index().rename(
-            columns={'level_0':'date', 'level_1':f'adm{cases_level}_name'}
-        ).fillna(0)
+    policy_panel = initialize_panel(cases_df, cases_level, policy_list, policy_popwts)
     
     # Assign each policy one-by-one to the panel
     for policy in policy_list:
@@ -618,7 +632,7 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
 
         # Get Series of 4-tuples for mandatory pop-weighted, mandatory indicator,
         # optional pop-weighted, optional indicator
-        tmp = policy_panel.apply(lambda row: get_policy_vals(policies, policy, row['date'], row[f'adm{cases_level}_name'], cases_level, policy_pickle_dict), axis=1)
+        tmp = policy_panel.apply(lambda row: get_policy_vals(policies, policy, row['date'], row[f'adm{cases_level}_name'], row[f'adm1_name'], cases_level, policy_pickle_dict), axis=1)
         
         # Assign regular policy indicator
         policy_panel[policy] = tmp.apply(lambda x: x[1])
@@ -638,6 +652,9 @@ def assign_policies_to_panel(cases_df, policies, cases_level, aggregate_vars=[],
         
     policy_panel = count_policies_enacted(policy_panel, policy_list)
 
+    if cases_level == 2:
+        policy_panel = policy_panel.drop(columns=['adm1_name'])
+        
     # Merge panel with `cases_df`
     merged = pd.merge(cases_df, policy_panel, left_on=['date', f'adm{cases_level}_name'], right_on=['date', f'adm{cases_level}_name'])
     

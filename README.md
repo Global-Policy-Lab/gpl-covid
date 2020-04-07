@@ -151,7 +151,7 @@ Any policy/testing data that was scraped programmatically is formatted similar t
 
 ##### United States
 1. `python codes/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
-2. `jupyter nbconvert --ExecutePreprocessor.timeout=None --ExecutePreprocessor.kernel_name=python3 --execute codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb`: Check that detected testing regime changes make sense and discard any false detections (it is in a notebook so you should manually check the detected changes, but you may run it directly using our choices with the above command).
+2. `python codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py`: Check that detected testing regime changes make sense and discard any false detections. Because this can be an interactive step, there is also a corresponding [Notebook](codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb) that you may run.
 
 #### Epidemiological data
 
@@ -182,6 +182,9 @@ Epi data is downloaded and merged with policy data in one step, described in [th
 ##### South Korea
 1. Korean epi data were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). 
 This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
+
+##### USA
+1. `Rscript codes/data/usa/download_and_clean_usafacts.R`: Downloads county- and state-level data from [usafacts.org](https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/)
 
 #### Merge all data for each country
 Run the following scripts to merge epi, policy, testing, and population data for each country. After completion, you may run [codes/data/multi_country/quality-check-processed-datasets.py](codes/data/multi_country/quality-check-processed-datasets.py), to make sure all of the fully processed datasets are correctly and consistently formatted.

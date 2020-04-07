@@ -12,9 +12,10 @@ parser = argparse.ArgumentParser(
 max_adm = max([int(d[3:]) for d in os.listdir(cutil.DATA_PROCESSED) if d[:3] == 'adm'])
 all_adm = list(range(0, max_adm + 1))
 
-parser.add_argument("--a", choices=all_adm, default=None, type=int, help=f"Adm-level")
-parser.add_argument("--c", choices=sorted(cutil.ISOS), default=None, type=str.upper, help=f"Country ISO code")
-parser.add_argument("--e", choices=["raise", "warn"], default="raise", type=str, help=f"Error behavior")
+parser.add_argument("--a", choices=all_adm, default=None, type=int, help="Adm-level")
+parser.add_argument("--c", choices=sorted(cutil.ISOS), default=None, type=str.upper, help="Country ISO code")
+parser.add_argument("--e", choices=["raise", "warn"], default="raise", type=str, help="Error behavior")
+parser.add_argument("-l", "--no-check-latlons", action="store_true", help="Don't check presence of lat/lon values")
 args = parser.parse_args()
 
 def get_adm_list(adm_input):
@@ -113,9 +114,11 @@ def check_popweights_in_bounds(df, country, adm):
 def check_columns_are_not_null(df, country, adm):
     # Check that no column has null values, except KOR country list and pre-imputed cumulative columns
     for col in df:
-        if 'country_list' in col:
-            continue
-        if col + '_imputed' in df.columns:
+        if (
+            'country_list' in col or
+            col + "_imputed" in df.columns or
+            col in ["lon", "lat"]
+        ):
             continue
         nulls_not_found = df[col].isnull().sum() == 0
         test_condition(nulls_not_found, country, adm, f"Column contains nulls: {col}")
@@ -154,15 +157,22 @@ def check_columns_are_in_data_dictionary(df, country, adm):
     for col in policy_cols:
         for opt in ["", "_opt"]:
             for popwt in ["", "_popwt"]:
-                add_policy_cols.add(col + opt + popwt)
+                varname = col + opt + popwt
+                add_policy_cols.add(varname)
+                if "travel_ban" in col:
+                    add_policy_cols.add(varname + "_country_list")
 
     policy_cols = policy_cols.union(add_policy_cols)
     all_cols = policy_cols.union(health_cols)
     _check_columns_are_in_list(df, country, adm, all_cols, "data dictionary")
 
-def check_opt_and_non_opt_align(df, country, adm):
+def check_opt_and_non_opt_align(df, country, adm, aggregate_vars = ["social_distance"]):
     for col in df.columns:
         if "_opt" in col and col.replace("_opt", "") in df.columns:
+            
+            # ignore if one of the grab bag vars
+            if bool(sum([int(i in col) for i in aggregate_vars])):
+                continue
             nonopt_col = col.replace("_opt", "")
             row_mismatch_len = len(df[df[nonopt_col] + df[col] > 1])
             cols_add_to_one_or_below = row_mismatch_len == 0
@@ -202,14 +212,15 @@ def main():
         for adm in processed[country]:
             df = processed[country][adm]
 
+            if not args.no_check_latlons:
+                check_latlons(df, country, adm)
             check_cutoff_date(df, country, adm, cutoff_date)
             check_balanced_panel(df, country, adm)
-            check_latlons(df, country, adm)
             check_cumulativity(df, country, adm)
             check_popweights_in_bounds(df, country, adm)
             check_columns_are_not_null(df, country, adm)
             check_columns_are_in_template(df, country, adm, template)
-            check_opt_and_non_opt_align(df, country, adm)
+            check_opt_and_non_opt_align(df, country, adm, aggregate_vars = ["social_distance"])
             check_columns_are_in_data_dictionary(df, country, adm)
 
 if __name__=="__main__":
