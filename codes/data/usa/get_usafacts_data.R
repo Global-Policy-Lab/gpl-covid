@@ -1,10 +1,10 @@
 get_usafacts_data <- function(){
   urls <- c(
-    "https://static.usafacts.org/public/data/covid-19/covid_confirmed_usafacts.csv",
-    "https://static.usafacts.org/public/data/covid-19/covid_deaths_usafacts.csv"
+    "https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_confirmed_usafacts.csv",
+    "https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_deaths_usafacts.csv"
   )
-
-  # Download the 3 csvs direct from the urls into tibbles
+  
+  # Download the 2 csvs direct from the urls into tibbles
   usa_facts_covid_cases <- urls %>% map(read_csv,
                                         col_types = cols(
                                           .default = col_number(),
@@ -19,7 +19,9 @@ get_usafacts_data <- function(){
                                              "cum_deaths")) %>% 
     pmap(~{
       .x %>% 
-        mutate(variable = .y)
+        mutate(variable = .y) %>%
+        rename_at(vars(matches("/20$")), 
+                       ~str_replace(.x, "/20$", "/2020"))
     }) %>% 
     bind_rows()
 
@@ -41,9 +43,9 @@ get_usafacts_data <- function(){
     rename(county_fips = `countyFIPS`,
            state_fips = `stateFIPS`,
            adm2_name = `County Name`,
-           adm1_name = `State`) 
+           adm1_name = `State`)
 
-  # check for duplicates
+    # check for duplicates
   duplicates <- usa_facts_covid_cases %>% 
     group_by(county_fips, state_fips, adm2_name, adm1_name, date, variable) %>% 
     arrange(county_fips, state_fips, adm2_name, adm1_name, variable, date) %>% 
