@@ -23,5 +23,5 @@ def facet_hist(estimates, case_type, coef, **kwargs):
     g.axes.flat[0].legend()
     g.set_xlabels("")
     g.set_titles("$\{coord}$ = {value}")
-    g.fig.suptitle(f"LHS: {case_type}; variable: {coef}")
+    g.fig.suptitle(f"LHS: {case_type}; variable: {coef}", va="bottom", y=.99)
     return g
