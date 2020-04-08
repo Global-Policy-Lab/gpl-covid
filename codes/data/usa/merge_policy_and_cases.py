@@ -19,6 +19,15 @@ def main():
 
 	# drop any cases data columns that are all null
 	cases_data = cases_data.dropna(how='all', axis=1)
+	# checker will complain o/w
+	cases_data = cases_data.dropna(how='any', axis=1)
+
+
+	# special case so checker script doesnt get mad
+	#if pd.isna(cases_data['cum_deaths_imputed']).any():
+	#	cases_data = cases_data.drop(['cum_deaths_imputed'], axis=1)
+	
+	print(pd.isna(cases_data).any(axis=0))
 
 	policy_data = pd.read_csv(os.path.join(raw_data_dir,"usa_policy_data_sources.csv"),encoding='latin')
 
