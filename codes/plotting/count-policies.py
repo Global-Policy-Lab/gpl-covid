@@ -9,7 +9,7 @@ import pandas as pd
 import codes.utils as cutil
 
 
-path_data_sources = cutil.HOME / 'references' / 'data_sources_static_20200321.xlsx'
+path_data_sources = cutil.HOME / 'references' / 'data_sources.xlsx'
 
 path_out_csv = cutil.HOME / 'results' / 'tables' / 'table_a1' / 'policy_counts_table_raw.csv'
 path_out_csv.parent.mkdir(parents=True, exist_ok=True)
@@ -20,12 +20,13 @@ countries = ['china', 'france', 'iran', 'italy', 'korea', 'usa']
 policies = dict()
 for country in countries:
     policies[country] = pd.read_excel(path_data_sources, sheet_name='policy_' + country)
+    policies[country] = policies[country].rename(columns={'date':'date_start'})
 
 def get_policy_level(row):
     """Assign row to a policy level by choosing the highest level of specificity of the policy within the row"""
     for level in ['adm3', 'adm2', 'adm1']:
         level_name = level + '_name'
-        if level_name in row and row[level_name] != 'All':
+        if level_name in row and row[level_name] not in ['All', 'all']:
             return level
         
     return 'adm0'
