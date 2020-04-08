@@ -15,13 +15,15 @@ def convert_non_monotonic_to_nan(array):
     keep = np.arange(0, len(array))
     is_monotonic = False
     while not is_monotonic:
-        is_monotonic_array = np.hstack((
-            array[keep][1:] >= array[keep][:-1], np.array(True)))
+        is_monotonic_array = np.hstack(
+            (array[keep][1:] >= array[keep][:-1], np.array(True))
+        )
         is_monotonic = is_monotonic_array.all()
         keep = keep[is_monotonic_array]
     out_array = np.full_like(array.astype(np.float), np.nan)
     out_array[keep] = array[keep]
     return out_array
+
 
 def log_interpolate(array):
     """Interpolates assuming log growth.
@@ -36,8 +38,10 @@ def log_interpolate(array):
     idx = np.arange(0, len(array))
     log_array = np.log(array.astype(np.float32) + 1e-1)
     interp_array = np.interp(
-        x=idx, xp=idx[~np.isnan(array)], fp=log_array[~np.isnan(array)])
+        x=idx, xp=idx[~np.isnan(array)], fp=log_array[~np.isnan(array)]
+    )
     return np.round(np.exp(interp_array)).astype(np.int32)
+
 
 def impute_cumulative_df(df, src_col, dst_col, groupby_col):
     """Calculates imputed columns and returns 
@@ -58,14 +62,14 @@ def impute_cumulative_df(df, src_col, dst_col, groupby_col):
 
     for adm_name in df[groupby_col].unique():
         sub = df.loc[df[groupby_col] == adm_name].copy()
-        
+
         # Set rising-then-falling cumulative counts to null in the original column
         sub.loc[sub[src_col].notnull(), src_col] = convert_non_monotonic_to_nan(
             np.array(sub.loc[sub[src_col].notnull(), src_col])
         )
 
         sub[dst_col] = log_interpolate(sub[src_col])
-        
+
         df.loc[df[groupby_col] == adm_name] = sub
-        
+
     return df
