@@ -1,8 +1,17 @@
+#!/usr/bin/env Rscript
+args = commandArgs(trailingOnly=TRUE)
+
+if(length(args) > 0){
+  times <- args
+} else {
+  times = 1000  
+}
+
 # Full script to run R code for projection:
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lfe))
 set.seed(718)
-times = 1000
+
 underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
 # source("codes/models/calculate_gamma_from_china_and_korea.R")
 gamma = readr::read_csv("models/gamma_est.csv",
