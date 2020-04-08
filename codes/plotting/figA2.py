@@ -75,7 +75,6 @@ def main():
     fig.savefig(out_dir / 'figA2-1.pdf')
 
     df_kor = pd.read_csv(cutil.DATA_INTERIM / 'korea' / 'KOR_JHU_data_comparison.csv')
-    # df_kor = df_kor.iloc[0:56, :].copy()
     df_kor.loc[:, 'date'] = pd.to_datetime(df_kor['date'])
 
     # plot visualization
