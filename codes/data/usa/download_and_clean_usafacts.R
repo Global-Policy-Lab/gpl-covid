@@ -65,14 +65,6 @@ usa_county_data <- usa_county_data %>%
 usa_state_data <- usa_state_data %>% 
   filter(date < max(date))
 
-usa_county_data %>%
-  filter(is.na(cum_confirmed_cases) | is.na(cum_deaths)) %>%
-  select(county_fips, adm1_name, adm2_name) %>%
-  distinct() %>% 
-  group_by(county_fips) %>% 
-  filter(n() > 1)
-
-
 suppressWarnings({
   # Some fiddly manual edits to downwards data revisions 
   usa_county_data <- usa_county_data %>% 
