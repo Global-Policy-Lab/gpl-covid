@@ -95,4 +95,5 @@ out_scale_trimmed_no_policy <- final_df %>%
 final <- (out_scale_down_to_zero | out_scale_trimmed) / 
  (out_scale_trimmed_true | out_scale_trimmed_no_policy)  
 
-ggsave(plot = final, filename = "results/figures/fig4/fig4_total_sensitivity_to_gamma.pdf")
+cowplot::save_plot(plot = final, filename = "results/figures/fig4/fig4_total_sensitivity_to_gamma.pdf",
+                   scale = 2, base_asp = 1.2)
