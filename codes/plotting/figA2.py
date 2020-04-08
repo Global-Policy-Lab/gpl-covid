@@ -10,6 +10,7 @@ import codes.utils as cutil
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['axes.linewidth'] = 2
 
+
 def main():
     out_dir = cutil.HOME / 'results' / 'figures' / 'appendix'
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -21,8 +22,9 @@ def main():
 
     # validate with JHU
     url = (
-        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/'
-        'csse_covid_19_time_series/time_series_19-covid-Confirmed.csv')
+        'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/'
+        'csse_covid_19_data/csse_covid_19_time_series/'
+        'time_series_covid19_confirmed_global.csv')
     try:
         jhu = pd.read_csv(url)
     except HTTPError:
@@ -30,7 +32,7 @@ def main():
         return None
     jhu = jhu.loc[jhu['Country/Region'] == 'China', :]
     jhu = jhu.melt(
-        id_vars=['Province/State', 'Country/Region', 'Lat', 'Long'], 
+        id_vars=['Province/State', 'Country/Region', 'Lat', 'Long'],
         var_name='date',
         value_name='cum_confirmed_jhu')
     jhu.loc[:, 'date'] = pd.to_datetime(jhu['date'])
@@ -50,7 +52,8 @@ def main():
             legend=False)
         df_viz.loc[province_viz, :].plot(
             x='date', y='cum_confirmed_cases_imputed', style='.',
-            alpha=0.7, ax=ax_i, color='black',
+            alpha=1, ax=ax_i, color='dimgray',
+            marker='o', markeredgecolor='none', markersize=3,
             legend=False)
         # df_viz.loc[province_viz, :].plot(x='date', y='cum_recoveries', ax=ax)
         # df_viz.loc[province_viz, :].plot(x='date', y='cum_deaths', ax=ax)
@@ -62,22 +65,18 @@ def main():
         ax_i.spines['bottom'].set_color('dimgray')
         ax_i.spines['left'].set_color('dimgray')
         ax_i.tick_params(direction='out', length=6, width=2, colors='dimgray')
-        x_ticks = [20200110, 20200201, 20200301, 20200318]
-        x_ticklabels = ['Jan 10', 'Feb 1', 'Mar 1', 'Mar 18']
+        x_ticks = [20200110, 20200210, 20200310, 20200407]
+        x_ticklabels = ['Jan 10', 'Feb 10', 'Mar 10', 'Apr 7']
         x_ticks = [datetime.datetime.strptime(str(x), '%Y%m%d') for x in x_ticks]
+        ax_i.minorticks_off()
         ax_i.set_xticks(x_ticks)
         ax_i.set_xticklabels(x_ticklabels)
-        ax_i.minorticks_off()
     fig.tight_layout()
     fig.savefig(out_dir / 'figA2-1.pdf')
 
-
     df_kor = pd.read_csv(cutil.DATA_INTERIM / 'korea' / 'KOR_JHU_data_comparison.csv')
-
-    df_kor = df_kor.iloc[0:56, :].copy()
-
+    # df_kor = df_kor.iloc[0:56, :].copy()
     df_kor.loc[:, 'date'] = pd.to_datetime(df_kor['date'])
-
 
     # plot visualization
     fig, ax_i = plt.subplots(figsize=(4, 3))
@@ -87,7 +86,8 @@ def main():
         legend=False)
     df_kor.plot(
         x='date', y='cum_confirmed_cases_data', style='.',
-        alpha=0.7, ax=ax_i, color='black',
+        alpha=1, ax=ax_i, color='dimgray',
+        marker='o', markeredgecolor='none', markersize=3,
         legend=False)
     # df_viz.loc[province_viz, :].plot(x='date', y='cum_recoveries', ax=ax)
     # df_viz.loc[province_viz, :].plot(x='date', y='cum_deaths', ax=ax)
@@ -99,14 +99,15 @@ def main():
     ax_i.spines['bottom'].set_color('dimgray')
     ax_i.spines['left'].set_color('dimgray')
     ax_i.tick_params(direction='out', length=6, width=2, colors='dimgray')
-    x_ticks = [20200122, 20200201, 20200301, 20200318]
-    x_ticklabels = ['Jan 22', 'Feb 1', 'Mar 1', 'Mar 18']
+    x_ticks = [20200122, 20200220, 20200320, 20200406]
+    x_ticklabels = ['Jan 22', 'Feb 20', 'Mar 20', 'Apr 6']
     x_ticks = [datetime.datetime.strptime(str(x), '%Y%m%d') for x in x_ticks]
     ax_i.set_xticks(x_ticks)
     ax_i.set_xticklabels(x_ticklabels)
     ax_i.minorticks_off()
     fig.tight_layout()
     fig.savefig(out_dir / 'figA2-2.pdf')
+
 
 if __name__ == "__main__":
     main()
