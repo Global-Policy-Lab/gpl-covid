@@ -58,6 +58,7 @@ def process_gadm(in_gdf):
 
     return in_gdf
 
+
 def main():
     # ## Global adm1
 
@@ -424,11 +425,11 @@ def main():
         "51159": ("Virginia", "Richmond County"),
         "02230": ("Alaska", "Skagway Municipality"),
         "02275": ("Alaska", "Wrangell City and Borough"),
-        "02282": ("Alaska", "Yakutat City and Borough")
+        "02282": ("Alaska", "Yakutat City and Borough"),
     }
 
-    for k,v in manual_names.items():
-        us_pops.loc[us_pops.fips==k,['adm1_name','adm2_name']] = v
+    for k, v in manual_names.items():
+        us_pops.loc[us_pops.fips == k, ["adm1_name", "adm2_name"]] = v
     us_pops = us_pops.set_index(["adm0_name", "adm1_name", "adm2_name"])
 
     # save fips xwalk
@@ -436,18 +437,17 @@ def main():
         cutil.DATA_INTERIM / "usa" / "adm2_pop_fips.csv", index=True
     )
 
-
     # ##### Merge back into global adm datasets
     ## adm2
-    adm2_gdf = adm2_gdf.join(us_pops.population, rsuffix='_r', how="outer")
-    adm2_gdf['population'] = adm2_gdf.population.fillna(adm2_gdf.population_r)
-    adm2_gdf = adm2_gdf.drop(columns='population_r')
+    adm2_gdf = adm2_gdf.join(us_pops.population, rsuffix="_r", how="outer")
+    adm2_gdf["population"] = adm2_gdf.population.fillna(adm2_gdf.population_r)
+    adm2_gdf = adm2_gdf.drop(columns="population_r")
 
     ## adm1
-    pop_st = pd.DataFrame(
-        c.acs5.state(("NAME", "B01003_001E"), Census.ALL)
-    )
-    pop_st = pop_st.rename(columns={"NAME": "adm1_name", "B01003_001E":"population_census"}).drop(columns="state")
+    pop_st = pd.DataFrame(c.acs5.state(("NAME", "B01003_001E"), Census.ALL))
+    pop_st = pop_st.rename(
+        columns={"NAME": "adm1_name", "B01003_001E": "population_census"}
+    ).drop(columns="state")
     pop_st["adm0_name"] = "USA"
     pop_st = pop_st.set_index(["adm0_name", "adm1_name"], drop=True)
 
@@ -461,8 +461,10 @@ def main():
     country, pop = [], []
     for e in elements:
         country.append(e[0].text)
-        pop.append(int(e[1].text.replace(",","")))
-    pop_terr = pd.DataFrame({"adm1_name": country, "population_terr": pop, "adm0_name": "USA"}).set_index(["adm0_name", "adm1_name"])
+        pop.append(int(e[1].text.replace(",", "")))
+    pop_terr = pd.DataFrame(
+        {"adm1_name": country, "population_terr": pop, "adm0_name": "USA"}
+    ).set_index(["adm0_name", "adm1_name"])
 
     # included US Virgin Islands in territories
     terr_url = "https://worldpopulationreview.com/countries/united-states-virgin-islands-population/"
@@ -484,7 +486,9 @@ def main():
 
     # merge back into global adm1 dataset
     adm1_gdf = adm1_gdf.join(pop_st, how="outer")
-    adm1_gdf.loc[idx["USA",:],"population"] = adm1_gdf.loc[idx["USA",:], "population_terr"]
+    adm1_gdf.loc[idx["USA", :], "population"] = adm1_gdf.loc[
+        idx["USA", :], "population_terr"
+    ]
     adm1_gdf = adm1_gdf.drop(columns="population_terr")
 
     # ### ITA
@@ -718,7 +722,9 @@ def main():
         out_dir = cutil.DATA_INTERIM / "adm" / fname
         out_dir.mkdir(parents=True, exist_ok=True)
         i.to_file(out_dir / f"{fname}.shp", index=True)
-        i.drop(columns="geometry").to_csv(out_dir / f"{fname}.csv", index=True, float_format="%.3f")
+        i.drop(columns="geometry").to_csv(
+            out_dir / f"{fname}.csv", index=True, float_format="%.3f"
+        )
 
 
 if __name__ == "__main__":
