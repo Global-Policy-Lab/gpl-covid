@@ -266,6 +266,7 @@ def process_raw_and_interim_health():
 
     return adm1_cases, adm2_cases
 
+
 def read_policies():
     policies = pd.read_csv(path_italy_policies)
 
