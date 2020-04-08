@@ -6,5 +6,5 @@ def test_readme():
             for prog in ["python", "Rscript", "stata"]:
                 # skip quality check, which is not in readme
                 if l.startswith(prog) and "quality-check-processed-datasets" not in l:
-                    tocomp = l.rstrip("\n")
+                    tocomp = l.rstrip("\n").split(" $")[0]
                     assert tocomp in readme, tocomp
