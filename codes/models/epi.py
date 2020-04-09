@@ -9,18 +9,21 @@ import statsmodels.formula.api as smf
 from collections import OrderedDict
 
 
-def init_reg_arr(n_samples, n_reg, n_policies, *args):
+def init_reg_arrs(n_samples, n_reg, n_policies, *args):
     dims = [n_samples]
     for a in args:
         dims.append(a)
+    s_mins = np.empty(dims, dtype=np.float32)
+    s_mins_p3 = s_mins.copy()
     dims += [n_reg, n_policies + 1]
     estimates = np.empty(dims, dtype=np.float32)
     estimates.fill(np.nan)
-    return estimates
+
+    return estimates, s_mins, s_mins_p3
 
 
-def init_state_arrays(n_steps, n_arrays):
-    return [np.ones(n_steps) * np.nan for a in range(n_arrays)]
+def init_state_arrays(shp, n_arrays):
+    return [np.ones(shp).squeeze() * np.nan for a in range(n_arrays)]
 
 
 def adjust_timescales_from_daily(tsteps_per_day, *args):
@@ -28,7 +31,7 @@ def adjust_timescales_from_daily(tsteps_per_day, *args):
 
 
 def init_policy_dummies(
-    effects, starts, ends, n_samples, n_steps, steps_per_day, seed=0
+    effects, starts, ends, daily_lag_vals, n_samples, n_steps, steps_per_day, seed=0
 ):
     np.random.seed(seed)
     n_effects = len(effects)
@@ -44,10 +47,29 @@ def init_policy_dummies(
     n_samples = dates.shape[0]
 
     # create policy dummy array
-    out = np.empty((n_samples, n_effects, n_steps), dtype=np.int16)
-    comp = np.repeat(np.arange(out.shape[-1])[:, np.newaxis], dates.shape[1], axis=1)
-    for s in range(out.shape[0]):
-        out[s] = np.where(comp >= dates[s] * steps_per_day, 1, 0).T
+    comp = np.repeat(np.arange(n_steps)[:, np.newaxis], dates.shape[1], axis=1)
+    out = (comp.T[np.newaxis, ...] >= dates[..., np.newaxis] * steps_per_day).astype(
+        float
+    )
+
+    # get lags in appropriate timesteps
+    lags = []
+    for l in daily_lag_vals:
+        this_new_lag = []
+        for i in l:
+            this_new_lag += [i] * steps_per_day
+        lags.append(this_new_lag)
+
+    # adjust for lags
+    p_on = out.argmax(axis=-1)
+    for lx, l in enumerate(lags):
+        out[
+            :, lx,
+        ]
+        for sx in range(out.shape[0]):
+            this_p_on = p_on[sx, lx]
+            out[sx, lx, this_p_on : this_p_on + len(l)] = l
+
     return out.swapaxes(1, 2)
 
 
@@ -82,6 +104,7 @@ def get_stochastic_params(
         beta_noise = np.random.normal(0, beta_noise_sd, beta_det.shape[:2])
     else:
         beta_noise = np.zeros(beta_det.shape[:2])
+    # adjust for at least gamma dimension (SIR)
     beta_noise = beta_noise[..., np.newaxis]
 
     if gamma_noise_on:
@@ -93,11 +116,12 @@ def get_stochastic_params(
     if sigma_to_test is not None:
         assert len(beta_det.shape) == 4
         beta_noise = beta_noise[..., np.newaxis]
+        this_gamma = this_gamma[..., np.newaxis]
         if sigma_noise_on:
             sigma_noise = np.random.normal(0, sigma_noise_sd, beta_det.shape[:2])
         else:
             sigma_noise = np.zeros(beta_det.shape[:2])
-        this_sigma = sigma_noise[..., np.newaxis] + np.array(sigma_to_test)
+        this_sigma = sigma_noise[..., np.newaxis, np.newaxis] + np.array(sigma_to_test)
         sigma_out = [this_sigma]
     else:
         assert len(beta_det.shape) == 3
@@ -112,19 +136,21 @@ def get_stochastic_params(
     return out_vals
 
 
-def run_SEIR(n_steps, E0, I0, R0, beta, gamma, sigma):
+def run_SEIR(E0, I0, R0, beta, gamma, sigma, n_samp=1):
     """
     Simulate SEIR model using forward euler integration. All states are defined as 
     fractions of a population.
     
     Parameters
     ----------
-    n_steps : int
-        Number of timesteps to simulate
     E0, I0, R0 : float
         Initial conditions in fractions (S0 is just 1 minus the sum of these)
     beta, gamma, sigma : :class:`numpy.ndarray`
-        Time-dependent parameters of the model. Must each be arrays of shape (n_steps,).
+        Time-dependent parameters of the model. Must each be 4d-arrays. They should
+        have the following dimensions: (n_steps, n_gamma, n_sigma, n_samples), except 
+        that gamma and beta may have len 1 in the opposite dimension. I.e. gamma could
+        have shape (n_steps, n_gamma, 1, n_samples), because it is not changing with 
+        sigma.
     
     Returns
     -------
@@ -132,7 +158,9 @@ def run_SEIR(n_steps, E0, I0, R0, beta, gamma, sigma):
         State space of the model at all timesteps
     """
 
-    S, E, I, R = init_state_arrays(n_steps, 4)
+    n_steps = beta.shape[0]
+
+    S, E, I, R = init_state_arrays(beta.shape, 4)
 
     # initial conditions
     R[0] = R0
@@ -207,15 +235,19 @@ def run_regressions(cases, LHS_vars, policy_vars, min_cases):
 
 
 def res_arr_to_ds(estimates, reg_to_run, policies_to_include, param_kwargs, **attrs):
-    n_samples = estimates.shape[0]
+    ix_samples = len(param_kwargs)
+    n_samples = estimates.shape[ix_samples]
     ## Convert array to Dataset
-    coords = OrderedDict(sample=range(n_samples))
-    for p, v in param_kwargs.items():
-        coords[p] = v
-
+    coords = param_kwargs.copy()
+    coords["sample"] = range(n_samples)
     coords["case_type"] = reg_to_run
     coords["reg_param"] = ["Intercept"] + policies_to_include
 
-    return xr.DataArray(
+    out = xr.DataArray(
         estimates, coords=coords, dims=coords.keys(), attrs=attrs
     ).to_dataset(dim="reg_param")
+    out["cum_effect"] = (
+        out[policies_to_include].to_array().sum(dim="variable", skipna=False)
+    )
+
+    return out

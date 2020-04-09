@@ -4,30 +4,50 @@ import numpy as np
 import warnings
 
 
-def facet_hist(estimates, case_type, coef, **kwargs):
+def facet_hist(estimates, case_type, coef, n_bins=40, **kwargs):
     true_vals = {
-        "Intercept": "no_policy_growth_rate",
-        "p1": "p1_effect",
-        "p2": "p2_effect",
-        "p3": "p3_effect",
+        "Intercept": estimates.attrs["no_policy_growth_rate"],
+        "p1": estimates.attrs["p1_effect"],
+        "p2": estimates.attrs["p2_effect"],
+        "p3": estimates.attrs["p3_effect"],
     }
-    g = xr.plot.FacetGrid(estimates.sel(case_type=case_type), **kwargs, sharex=True)
+    true_vals["cum_effect"] = true_vals["p1"] + true_vals["p2"] + true_vals["p3"]
+    if true_vals[coef] > 0:
+        min_bin = 0
+        max_bin = true_vals[coef] * 3
+    elif true_vals[coef] < 0:
+        min_bin = true_vals[coef] * 3
+        max_bin = 0
+    g = xr.plot.FacetGrid(estimates.sel(case_type=case_type), **kwargs)
 
     def nowarn_hist(*args, **kwargs):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             return plt.hist(*args, **kwargs)
 
-    g.map(nowarn_hist, coef)
+    g.map(nowarn_hist, coef, bins=np.linspace(min_bin, max_bin, n_bins))
     g.map(
         lambda x: plt.axvline(
             np.nanmean(x), color="r", linestyle="--", label="Mean estimate"
         ),
         coef,
     )
+    g.map(
+        lambda x, y: plt.text(
+            0.03,
+            0.97,
+            f"$min(S)$: {x.min().item():.2f}\n$min(S)_{{p3}}$: {y.min().item():.2f}",
+            horizontalalignment="left",
+            verticalalignment="top",
+            transform=plt.gca().transAxes,
+        ),
+        "S_min",
+        "S_min_p3",
+    )
     for ax in g.axes.flat:
-        ax.axvline(estimates.attrs[true_vals[coef]], color="k", label="True value")
-    g.axes.flat[0].legend()
+        ax.axvline(true_vals[coef], color="k", label="True value")
+        ax.set_xlim(min_bin, max_bin)
+    g.axes.flat[0].legend(loc="upper right")
     g.set_xlabels("")
     g.set_titles("$\{coord}$ = {value}")
     g.fig.suptitle(f"LHS: {case_type}; variable: {coef}", va="bottom", y=0.99)
