@@ -3,6 +3,7 @@ library(tidyverse)
 library(lfe)
 source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
+underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
 
 mydata <- read_csv("models/reg_data/USA_reg_data.csv",
                    col_types = cols(
@@ -16,6 +17,10 @@ mydata <- read_csv("models/reg_data/USA_reg_data.csv",
   arrange(adm1_name, date) %>%
   mutate(tmp_id = factor(adm1_id),
          day_of_week = factor(dow))
+
+mydata <- mydata %>% 
+  mutate_at(vars(matches("testing_regime")),
+            ~if_else(is.na(.x), 0, .x))
 
 policy_variables_to_use <- 
   c(
@@ -45,4 +50,7 @@ main_projection <- compute_predicted_cum_cases(full_data = mydata, model = main_
                                                lhs = "D_l_cum_confirmed_cases",
                                                policy_variables_used = policy_variables_to_use,
                                                other_control_variables = other_control_variables,
-                                               gamma = gamma)
+                                               gamma = gamma,
+                                               proportion_confirmed = underreporting %>% 
+                                                 filter(country == "United States of America") %>% 
+                                                 pull(underreporting_estimate))

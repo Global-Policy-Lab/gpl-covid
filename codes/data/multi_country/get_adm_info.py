@@ -14,7 +14,7 @@ from codes import utils as cutil
 
 idx = pd.IndexSlice
 
-if cutil.API_KEYS["census"] == "API_KEY_STRING":
+if cutil.API_KEYS["census"] == "YOUR_API_KEY":
     raise ValueError(
         """To run this script, you will need a U.S. Census API key, which can be obtained"""
         """here: https://api.census.gov/data/key_signup.html. You will need to save this """
@@ -405,21 +405,91 @@ def main():
     )
     us_gdf = us_gdf[us_gdf.HASC_2.notnull()]
 
-    us_pops = us_gdf.join(us_county_df, on="HASC_2", how="left")
+    us_pops = us_gdf.join(us_county_df, on="HASC_2", how="outer")
     us_pops = us_pops[["NAME_1", "NAME_2", "fips", "population", "area_km2", "capital"]]
     us_pops = us_pops.rename(columns={"NAME_1": "adm1_name", "NAME_2": "adm2_name"})
     us_pops["adm0_name"] = "USA"
+
+    # Manual addition of names that are in the statoids dataset but not the gadm shapes
+    manual_names = {
+        "24005": ("Maryland", "Baltimore County"),
+        "02130": ("Alaska", "Ketchikan Gateway Borough"),
+        "29510": ("Missouri", "City of St. Louis"),
+        "51019": ("Virginia", "Bedford County"),
+        "51059": ("Virginia", "Fairfax County"),
+        "51161": ("Virginia", "Roanoke County"),
+        "51620": ("Virginia", "Franklin City"),
+        "02105": ("Alaska", "Hoonah-Angoon Census Area"),
+        "02195": ("Alaska", "Petersburg Borough"),
+        "02198": ("Alaska", "Prince of Wales-Hyder Census Area"),
+        "51159": ("Virginia", "Richmond County"),
+        "02230": ("Alaska", "Skagway Municipality"),
+        "02275": ("Alaska", "Wrangell City and Borough"),
+        "02282": ("Alaska", "Yakutat City and Borough"),
+    }
+
+    for k, v in manual_names.items():
+        us_pops.loc[us_pops.fips == k, ["adm1_name", "adm2_name"]] = v
     us_pops = us_pops.set_index(["adm0_name", "adm1_name", "adm2_name"])
 
-    # ##### Merge back into global adm datasets
-
-    adm2_gdf = adm2_gdf.fillna(us_pops)
-    st_pops = (
-        adm2_gdf.loc[:, "population"]
-        .groupby(["adm0_name", "adm1_name"])
-        .sum(min_count=1)
+    # save fips xwalk
+    us_pops.reset_index(level="adm0_name", drop=True).to_csv(
+        cutil.DATA_INTERIM / "usa" / "adm2_pop_fips.csv", index=True
     )
-    adm1_gdf["population"] = adm1_gdf.population.fillna(st_pops)
+
+    # ##### Merge back into global adm datasets
+    ## adm2
+    adm2_gdf = adm2_gdf.join(us_pops.population, rsuffix="_r", how="outer")
+    adm2_gdf["population"] = adm2_gdf.population.fillna(adm2_gdf.population_r)
+    adm2_gdf = adm2_gdf.drop(columns="population_r")
+
+    ## adm1
+    pop_st = pd.DataFrame(c.acs5.state(("NAME", "B01003_001E"), Census.ALL))
+    pop_st = pop_st.rename(
+        columns={"NAME": "adm1_name", "B01003_001E": "population_census"}
+    ).drop(columns="state")
+    pop_st["adm0_name"] = "USA"
+    pop_st = pop_st.set_index(["adm0_name", "adm1_name"], drop=True)
+
+    # add territories
+    terr_url = "https://worldpopulationreview.com/countries/united-states-territories/"
+    data = requests.get(terr_url).text
+    text = BeautifulSoup(data, "lxml")
+    table = text.table
+
+    elements = [i.find_all("td") for i in table.tbody.find_all("tr")]
+    country, pop = [], []
+    for e in elements:
+        country.append(e[0].text)
+        pop.append(int(e[1].text.replace(",", "")))
+    pop_terr = pd.DataFrame(
+        {"adm1_name": country, "population_terr": pop, "adm0_name": "USA"}
+    ).set_index(["adm0_name", "adm1_name"])
+
+    # included US Virgin Islands in territories
+    terr_url = "https://worldpopulationreview.com/countries/united-states-virgin-islands-population/"
+    data = requests.get(terr_url).text
+    text = BeautifulSoup(data, "lxml")
+    pop_usvg = pd.Series(
+        [int(text.find(attrs={"class": "popNumber"}).text.replace(",", ""))],
+        index=pd.MultiIndex.from_tuples(
+            (("USA", "US Virgin Islands"),), names=["adm0_name", "adm1_name"]
+        ),
+        name="population_terr",
+    )
+    pop_terr = pop_terr.append(pd.DataFrame(pop_usvg))
+
+    pop_st = pop_st.join(pop_terr, how="outer")
+    # taking population terr b/c more recent than ACS for puerto rico
+    pop_st.population_terr = pop_st.population_terr.fillna(pop_st.population_census)
+    pop_st = pop_st.drop(columns="population_census")
+
+    # merge back into global adm1 dataset
+    adm1_gdf = adm1_gdf.join(pop_st, how="outer")
+    adm1_gdf.loc[idx["USA", :], "population"] = adm1_gdf.loc[
+        idx["USA", :], "population_terr"
+    ]
+    adm1_gdf = adm1_gdf.drop(columns="population_terr")
 
     # ### ITA
 
@@ -464,7 +534,6 @@ def main():
     pop2.name = "population"
 
     provinces_as_regions = pop2.loc[idx[:, ["Bolzano", "Trento"]]]
-    pop2 = pop2.drop(index=["Bolzano", "Trento"], level="adm2_name")
     provinces_as_regions.index = provinces_as_regions.index.set_names(
         "adm1_name", level="adm2_name"
     )
@@ -653,7 +722,9 @@ def main():
         out_dir = cutil.DATA_INTERIM / "adm" / fname
         out_dir.mkdir(parents=True, exist_ok=True)
         i.to_file(out_dir / f"{fname}.shp", index=True)
-        i.drop(columns="geometry").to_csv(out_dir / f"{fname}.csv", index=True)
+        i.drop(columns="geometry").to_csv(
+            out_dir / f"{fname}.csv", index=True, float_format="%.3f"
+        )
 
 
 if __name__ == "__main__":

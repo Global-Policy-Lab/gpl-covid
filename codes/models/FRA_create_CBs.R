@@ -3,10 +3,13 @@ source("codes/models/FRA_generate_data_and_model_projection.R")
 #projection
 out <- compute_bootstrap_replications(full_data = mydata,
                                       policy_variables_to_use = policy_variables_to_use,
-                                      lhs = "D_l_cum_confirmed_cases_imputed",
+                                      lhs = "D_l_cum_confirmed_cases",
                                       other_control_variables = other_control_variables,
                                       times = times,
-                                      gamma = gamma)
+                                      gamma = gamma,
+                                      proportion_confirmed = underreporting %>% 
+                                        filter(country == "France") %>% 
+                                        pull(underreporting_estimate))
 
 
 write_csv(out, path = "data/post_processing/france_bootstrap_projection.csv")

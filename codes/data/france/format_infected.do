@@ -1,22 +1,6 @@
 // Author: Sébastien AP
 // Purpose: clean and reshape the raw infected count data
 
-// ---------SET LAST DATE OF SAMPLE ----------- /Default is march 18 2020
-
-// Please input last date info
-local y = 2020 
-local m = 3 
-local d = 18
-
-// generates locals for last date
-local end_date_num = mdy(`m',`d',`y')
-if `m' < 10 {
-	local m = "0`m'"
-}
-local end_sample = "`y'`m'`d'"
-
-// --------------------------------------------
-
 //Load data
 import delim "data/interim/france/adm2_to_adm1.csv", clear 
 
@@ -71,9 +55,9 @@ preserve
 	keep adm1 date adm0 cumulative
 	tempfile f0
 	save `f0'
-	//iterate for each day after march 13 until the date set at the beginning
+	//iterate for each day after march 13 until last available date
 	local D = mdy(3,13,2020)
-	while `D' <= `end_date_num'{
+	while `D' <= 10e5 {
 		local month_file = month(`D')
 		local day_file = day(`D')
 		if `month_file' < 10 {
@@ -82,18 +66,23 @@ preserve
 		if `day_file' < 10 {
 			local day_file = "0`day_file'"
 		}		
-		import delim "data/raw/france/france_confirmed_cases_by_region_2020`month_file'`day_file'.csv", clear
+		cap import delim "data/raw/france/france_confirmed_cases_by_region_2020`month_file'`day_file'.csv", clear
+		if _rc == 601 {
+			continue, break
+		}
 		drop if cumulative == .
 		keep adm1 date adm0 cumulative
 		tempfile f`D'
 		save `f`D''
 		local D = `D' + 1
 	}
-	
 	use `f0', clear 
 	local D = mdy(3,13,2020)
-	while `D' <= `end_date_num'{
-		append using `f`D''
+	while `D' <= 10e5{
+		cap append using `f`D''
+		if _rc == 198 {
+			continue, break
+		}
 		local D = `D' + 1
 	}
 	replace cum = . if cum == 0

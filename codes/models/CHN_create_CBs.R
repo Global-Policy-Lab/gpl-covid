@@ -5,7 +5,10 @@ out <- compute_bootstrap_replications(full_data = mydata,
                                       other_control_variables = other_control_variables,
                                       times = times,
                                       time_steps_per_day = 6,
-                                      gamma = gamma)
+                                      gamma = gamma,
+                                      proportion_confirmed = underreporting %>% 
+                                        filter(country == "China") %>% 
+                                        pull(underreporting_estimate))
 
 
 write_csv(out, path = "data/post_processing/china_bootstrap_projection.csv")
