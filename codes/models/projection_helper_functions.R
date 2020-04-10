@@ -79,7 +79,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     # Don't want to bother predicting for the first period 
     # because we 
     group_by(tmp_id) %>% 
-    slice(-1) %>% 
+    dplyr::slice(-1) %>% 
     ungroup()
   
   true_data_subset_for_estimation <- true_data %>%
@@ -177,7 +177,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
   # This can uncover instances of missing RHS that shouldn't be missing
   # no_policy_counterfactual_data_storage %>%
   #   group_by(tmp_id) %>% 
-  #   slice(-1) %>% 
+  #   dplyr::slice(-1) %>% 
   #   anti_join(no_policy_counterfactual_data_for_prediction, by = c("tmp_id", "date")) %>% 
   #   select(tmp_id, date, other_control_variables, policy_variables_to_use)
   
@@ -189,7 +189,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
   stopifnot({
     no_policy_counterfactual_data_storage %>% 
       group_by(tmp_id) %>% 
-      slice(1) %>% 
+      dplyr::slice(1) %>% 
       pull(prediction_logdiff) %>% 
       is.na() %>% 
       all()
@@ -199,7 +199,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
   stopifnot({
     no_policy_counterfactual_data_storage %>% 
       group_by(tmp_id) %>% 
-      slice(-1) %>% 
+      dplyr::slice(-1) %>% 
       pull(prediction_logdiff) %>% 
       is.na() %>%
       magrittr::not() %>% 

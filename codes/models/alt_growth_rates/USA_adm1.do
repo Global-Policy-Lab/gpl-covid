@@ -22,7 +22,7 @@ gen year = year(t)
 gen day = day(t)
 
 //clean up
-drop if t < mdy(3,3,2020) // begin sample on March 3, 2020
+keep if t >= mdy(3,3,2020) // start date
 keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 encode adm1, gen(adm1_id)
@@ -33,10 +33,6 @@ tsset adm1_id t, daily
 
 //quality control
 drop if cum_confirmed_cases < 10 
-
-// very short panel of data
-bysort adm1_id: egen total_obs = total((adm1_id~=.))
-drop if total_obs < 4 // drop state if less than 4 obs
 
 // flag which admin unit has longest series
 tab adm1_name if cum_confirmed_cases!=., sort 
@@ -69,6 +65,7 @@ replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0 // cannot hav
 //--------------testing regime changes
 
 // some testing regime changes at the state-level
+*tab testing_regime, mi
 *tab adm1_name t if testing_regime>0
 
 // grab each date of any testing regime change by state
@@ -97,24 +94,34 @@ predict day_avg if longest_series==1 & e(sample) == 1
 
 lab var day_avg "Observed avg. change in log cases"
 
-tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
+*tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 
 
 //------------------grouping treatments (based on timing and similarity)
 
-//paid_sick_leave_popw // not enough follow up data
-//work_from_home_popw // not enough follow up data
+// popwt vars = policy intensity * population weight of respective admin 2 unit or sub admin 2 unit
 
-capture: drop p_*
-gen p_1 = (home_isolation_popw+ no_gathering_popw + social_distance_popw +.5*social_distance_opt_popwt) /3.5
-gen p_2 = (school_closure_popw + .5*school_closure_opt_popwt)/1.5
-gen p_3 = (travel_ban_local_popw + business_closure_popw )/2
+// emergency_declaration on for entire sample
 
-//gen p_3 = (work_from_home_opt_popwt + social_distance_opt_popwt + school_closure_opt_popwt + business_closure_opt_popwt + home_isolation_opt_popwt + paid_sick_leave_opt_popwt)/6
+// combine optional policies with respective mandatory policies
+// weighing optional policies by 1/2
+foreach var of varlist school_closure travel_ban_local business_closure social_distance home_isolation work_from_home pos_cases_quarantine no_gathering paid_sick_leave religious_closure{
+	gen `var'_comb_popwt = `var'_popwt + `var'_opt_popwt * 0.5
+}
 
-lab var p_1 "social distancing"
-lab var p_2 "close schools"
-lab var p_3 "close business + travel ban"
+gen p_1 = (social_distance_comb_popwt + religious_closure_comb_popwt + event_cancel_popwt + no_gathering_comb_popwt + work_from_home_comb_popwt)/5 //the 2 religious_closure policies happen on same day as social_distance policies in respective state
+gen p_2 = (business_closure_popwt + home_isolation_comb_popwt) /2
+gen p_3 = school_closure_comb_popwt  
+gen p_4 = (travel_ban_local_comb_popwt + transit_suspension_popwt)/2 
+gen p_5 = pos_cases_quarantine_comb_popwt 
+gen p_6 = paid_sick_leave_comb_popwt
+
+lab var p_1 "social distance"
+lab var p_2 "business closure, home iso"
+lab var p_3 "school closure"
+lab var p_4 "loc travel ban, susp transit"
+lab var p_5 "quarantine positive cases"
+lab var p_6 "paid sick leave"
 
 
 //------------------main estimates
@@ -123,7 +130,7 @@ lab var p_3 "close business + travel ban"
 outsheet using "models/reg_data/USA_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
 outreg2 using "results/tables/USA_estimates_table", word replace label ///
  addtext(State FE, "YES", Day-of-Week FE, "YES") title("Regression output: United States")
@@ -133,20 +140,43 @@ cap erase "results/tables/USA_estimates_table.txt"
 // export coef
 tempfile results_file
 postfile results str18 adm0 str18 policy beta se using `results_file', replace
-foreach var in "p_1" "p_2" "p_3" {
+foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6" {
 	post results ("USA") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
 // effect of package of policies (FOR FIG2)
-lincom p_1 + p_2 + p_3 
+lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 
 post results ("USA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
-
 //looking at different policies (similar to Fig2)
-coefplot, keep(p_*)
+local comb_policy = round(r(estimate), 0.001)
+local subtitle = "Combined effect = " + string(`comb_policy')
+
+predictnl y_counter = testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
+testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
+testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
+testing_regime_change_19mar2020 * _b[testing_regime_change_19mar2020] + /// 
+testing_regime_change_20mar2020 * _b[testing_regime_change_20mar2020] + /// 
+testing_regime_change_21mar2020 * _b[testing_regime_change_21mar2020] + /// 
+testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+testing_regime_change_23mar2020 * _b[testing_regime_change_23mar2020] + /// 
+testing_regime_change_24mar2020 * _b[testing_regime_change_24mar2020] + /// 
+testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + /// 
+testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
+testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + /// 
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+sum y_counter
+local no_policy = round(r(mean), 0.001)
+local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy')
+drop y_counter
+
+coefplot, keep(p_*) tit("USA: new policy packages") subtitle(`subtitle2') ///
+caption("social distance = (social_dist_comb_popwt + religious_clos_comb_popwt +" " event_cancel_popwt + no_gath_comb_popwt +" " work_from_home_comb_popwt)/5", span) ///
+graphregion(margin(10 5 0 5)) xline(0) name(USA_new, replace)
 
 
-//------------- checking error structure (merge these graphs for APPENDIX FIGURE)
+//------------- checking error structure (for APPENDIX FIGURE)
 
 predict e if e(sample), resid
 
@@ -156,6 +186,8 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_usa, replace)
 
 graph combine hist_usa qn_usa, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_usa.gph, replace)
 graph drop hist_usa qn_usa
+
+outsheet e using "results/source_data/ExtendedDataFigure1_USA_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -170,7 +202,10 @@ lab var y_actual "predicted growth with actual policy"
 gen treatment = ///
 p_1 * _b[p_1] + ///
 p_2 * _b[p_2] + ///
-p_3 * _b[p_3] /// 
+p_3 * _b[p_3] + /// 
+p_4 * _b[p_4] + ///
+p_5 * _b[p_5] + ///
+p_6 * _b[p_6] /// 
 if e(sample)
 
 // predicting counterfactual growth for each obs
@@ -179,13 +214,24 @@ predictnl y_counter = ///
 testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
 testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
 testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
+testing_regime_change_19mar2020 * _b[testing_regime_change_19mar2020] + /// 
+testing_regime_change_20mar2020 * _b[testing_regime_change_20mar2020] + /// 
+testing_regime_change_21mar2020 * _b[testing_regime_change_21mar2020] + /// 
+testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+testing_regime_change_23mar2020 * _b[testing_regime_change_23mar2020] + /// 
+testing_regime_change_24mar2020 * _b[testing_regime_change_24mar2020] + /// 
+testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + /// 
+testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
+testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + /// 
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // compute ATE
 preserve
 	keep if e(sample) == 1
 	collapse  D_l_cum_confirmed_cases p_* 
-	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_3*_b[p_3], ci(LB UB) se(sd) p(pval)
+	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_3*_b[p_3] + p_4*_b[p_4] + ///
+	p_5* _b[p_5] + p_6*_b[p_6], ci(LB UB) se(sd) p(pval)
 	g adm0 = "USA"
 	outsheet * using "models/USA_ATE.csv", comma replace 
 restore
@@ -236,9 +282,26 @@ tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title("United States", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21999)) xlabel(21930(10)21999, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/USA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
+
+egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
+outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
+using "results/source_data/Figure3_USA_data.csv" if miss_ct<8, comma replace
+drop miss_ct
+
+// tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
+// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+// || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+// (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (sc day_avg t, color(black)) ///
+// if e(sample), ///
+// title("United States", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
+// xscale(range(21977(10)22011)) xlabel(21977(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
 
 
 //-------------------------------Running the model for certain states
@@ -287,7 +350,7 @@ foreach state in "Washington" "California" "New York" {
 	(sc day_avg_`state0' t, color(black)) ///
 	if e(sample), ///
 	title("`title'", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-	xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
+	xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 	saving(results/figures/appendix/sub_natl_growth_rates/`state0'_conf_cases_growth_rates_fixedx.gph, replace)
 }
@@ -296,5 +359,54 @@ postclose results
 
 preserve
 	use `results_file', clear
-	outsheet * using "models/USA_coefs.csv", comma replace
+	outsheet * using "results/source_data/Figure2_USA_coefs.csv", comma replace
+restore
+
+
+//-------------------------------Cross-validation
+tempfile results_file_crossV
+postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
+
+*Resave main effect
+reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+
+foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6" {
+	post results ("USA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+}
+lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 
+post results ("USA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+*Estimate same model leaving out one region
+levelsof adm1_name, local(state_list)
+foreach adm in `state_list' {
+	reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_* if adm1_name != "`adm'", absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+	foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6" {
+		post results ("USA") ("`adm'") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+	}
+	lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 
+	post results ("USA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+}
+postclose results
+
+preserve
+	set scheme s1color
+	use `results_file_crossV', clear
+	egen i = group(policy)
+	tw scatter i beta if sample != "New York", xline(0,lc(black) lp(dash)) mc(black*.5)   ///
+	|| scatter i beta if sample == "full_sample", mc(red)  ///
+	|| scatter i beta if sample == "New York", mc(green) m(Oh) ///
+	yscale(range(0.5(0.5)3.5)) ylabel( ///
+	1 "combined effect" ///
+	2 "social distance" ///
+	3 "business closure, home iso" ///
+	4 "school closure" ///
+	5 "local travel ban, transit suspension" ///
+	6 "quarantine positive cases" ///
+	7 "paid sick leave",  angle(0)) ///
+	xtitle("Estimated effect on daily growth rate", height(5)) ///
+	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
+	lab(3 "w/o NY") region(lstyle(none))) ///
+	ytitle("") xscale(range(-0.5(0.1)0.1)) xlabel(#5) xsize(7)
+	graph export results/figures/appendix/cross_valid/USA.pdf, replace
+	graph export results/figures/appendix/cross_valid/USA.png, replace	
 restore

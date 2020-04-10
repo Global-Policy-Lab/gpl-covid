@@ -1,0 +1,12 @@
+adm0,policy,beta,se
+"USA","p_1",-.222,.064
+"USA","p_2",-.067,.024
+"USA","p_3",.061,.025
+"USA","p_4",-.014,.042
+"USA","p_5",-.148,.065
+"USA","p_6",.036,.035
+"USA","comb. policy",-.356,.1
+"USA","no_policy rate",.313,.079
+"USA_Washington","no_policy rate",.348,.06
+"USA_California","no_policy rate",.273,.068
+"USA_NewYork","no_policy rate",.742,.566

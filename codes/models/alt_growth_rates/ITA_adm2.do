@@ -34,7 +34,7 @@ tsset adm2_id t, daily
 
 // quality control
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
-drop if t < mdy(2,26,2020) // start Feb 26
+keep if t >= mdy(2,26,2020) // start date
 keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 // flag which admin unit has longest series
@@ -68,7 +68,7 @@ replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0
 
 //--------------testing regime changes
 
-// testing regime change on Feb 26, which is the start of sample so now changes to account for
+// testing regime change on Feb 26, which is the start of sample so no changes to account for
 // // grab each date of any testing regime change
 // preserve
 // 	collapse (min) t, by(testing_regime)
@@ -89,26 +89,14 @@ replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0
 reg D_l_cum_confirmed_cases
 gen sample_avg = _b[_cons] if longest_series==1
 
-
 reg D_l_cum_confirmed_cases i.t
 predict day_avg if longest_series==1
 lab var day_avg "Observed avg. change in log cases"
 
-tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
+*tw (sc D_l_cum_confirmed_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 
 
 //------------------grouping treatments (based on timing and similarity)
-
-// capture: drop p_*
-// gen p_1 = (work_from_home_opt_popwt + social_distance_opt_popwt  + home_isolation_popwt + no_gathering_popwt + business_closure_popwt)/5
-// gen p_2 = travel_ban_local_popwt
-// gen p_3 = pos_cases_quarantine_popwt   
-// gen p_4 = school_closure_popwt  
-//
-// lab var p_1 "social distancing, stay home"
-// lab var p_2 "local travel ban"
-// lab var p_3 "quarantine positive cases"
-// lab var p_4 "school closure"
 
 // popwt vars = policy intensity * population weight of respective admin 2 unit or sub admin 2 unit
 
@@ -120,19 +108,18 @@ gen work_from_home_comb_popwt = work_from_home_popwt + work_from_home_opt_popwt 
 
 gen p_1 = (no_gathering_popwt + social_distance_comb_popwt + work_from_home_comb_popwt)/3
 gen p_2 = business_closure_popwt
-gen p_3 = school_closure_popwt  
+gen p_3 = home_isolation_popwt  
 gen p_4 = (travel_ban_local_popwt + transit_suspension_popwt)/2 //transit_suspensions all happen on 2/23 with travel_ban_local in respective admin units
-gen p_5 = home_isolation_popwt   
-gen p_6 = pos_cases_quarantine_popwt 
-
-lab var p_1 "social distancing, stay home"
-lab var p_2 "business closure"
-lab var p_3 "school closure"
-lab var p_4 "local travel ban, transit suspension"
-lab var p_5 "home isolation"
-lab var p_6 "quarantine positive cases"
-
+gen p_5 = pos_cases_quarantine_popwt 
+gen p_6 = school_closure_popwt  
  
+lab var p_1 "no gath, soc dist, work home"
+lab var p_2 "business closure"
+lab var p_3 "home isolation"
+lab var p_4 "loc travel ban, suspend transit"
+lab var p_5 "quarantine positive cases"
+lab var p_6 "school closure"
+  
 //------------------main estimates
 
 // output data used for reg
@@ -145,18 +132,18 @@ outreg2 using "results/tables/ITA_estimates_table", word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: Italy")
 cap erase "results/tables/ITA_estimates_table.txt"
 
-
-// looking at different policies (similar to Fig2)
-coefplot, keep(p_*)
-
+// save coef
 tempfile results_file
 postfile results str18 adm0 str18 policy beta se using `results_file', replace
 foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6"{
 	post results ("ITA") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
-// effect of package of policies (FOR FIG2)
-lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
-post results ("ITA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+// check underreporting estimate
+// gen D_l_cum_confirmed_cases_adj = D_l_cum_confirmed_cases
+// 	replace D_l_cum_confirmed_cases_adj = . if ((cum_confirmed_cases/0.054) / population) > 0.01
+//	
+// reghdfe D_l_cum_confirmed_cases_adj p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
 
 
 //------------- checking error structure (appendix)
@@ -169,6 +156,8 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_ita, replace)
 
 graph combine hist_ita qn_ita, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_ita.gph, replace)
 graph drop hist_ita qn_ita
+
+outsheet e using "results/source_data/ExtendedDataFigure1_ITA_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -190,6 +179,13 @@ if e(sample)
 // predicting counterfactual growth for each obs
 predictnl y_counter = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
+// effect of package of policies (FOR FIG2)
+lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
+post results ("ITA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+local comb_policy = round(r(estimate), 0.001)
+local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
+
 // compute ATE
 preserve
 	keep if e(sample) == 1
@@ -208,6 +204,19 @@ foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_
 // the mean here is the avg "biological" rate of initial spread (FOR Fig2)
 sum y_counter
 post results ("ITA") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+
+local no_policy = round(r(mean), 0.001)
+local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
+
+// looking at different policies (similar to Fig2)
+coefplot, keep(p_*) tit("ITA: policy packages") subtitle(`subtitle2') xline(0) name(ITA_policy, replace)
+
+// export coefficients (FOR FIG2)
+postclose results
+preserve
+	use `results_file', clear
+	outsheet * using "results/source_data/Figure2_ITA_coefs.csv", comma replace
+restore
 
 //export predicted counterfactual growth rate
 preserve
@@ -228,13 +237,6 @@ reg y_counter i.t
 predict m_y_counter if longest_series==1
 
 
-postclose results
-
-preserve
-	use `results_file', clear
-	outsheet * using "models/ITA_coefs.csv", comma replace
-restore
-
 // add random noise to time var to create jittered error bars
 set seed 1234
 g t_random = t + rnormal(0,1)/10
@@ -252,9 +254,27 @@ tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Italy, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)22007)) xlabel(21930(10)22007, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/ITA_adm2_conf_cases_growth_rates_fixedx.gph, replace)
+
+egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
+outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
+using "results/source_data/Figure3_ITA_data.csv" if miss_ct<8, comma replace
+drop miss_ct
+
+// tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
+// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+// || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+// (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (sc day_avg t, color(black)) ///
+// if e(sample), ///
+// title(Italy, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
+// xscale(range(21970(10)22011)) xlabel(21970(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) 
+// br if adm2_name=="Isernia"
 
 
 //-------------------------------Running the model for Lombardy only 
@@ -295,7 +315,7 @@ tw (rspike ub_y_actual_lom lb_y_actual_lom t_random,  lwidth(vthin) color(blue*.
 (sc day_avg_lom t, color(black)) ///
 if e(sample), ///
 title("Lombardy, Italy", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22007)) xlabel(21930(10)22007, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Lombardy_conf_cases_growth_rates_fixedx.gph, replace)
 
@@ -339,37 +359,57 @@ foreach province in "Cremona" "Bergamo" "Lodi" {
 	(sc day_avg_`province' t, color(black)) ///
 	if e(sample), ///
 	title("`title'", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-	xscale(range(21930(10)21999)) xlabel(21930(10)21999, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+	xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 	saving(results/figures/appendix/sub_natl_growth_rates/`province'_conf_cases_growth_rates_fixedx.gph, replace)
 }
 
+//-------------------------------Cross-validation
+tempfile results_file_crossV
+postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
-//-------------------------------CREATING DAILY LAGS
+*Resave main effect
+reghdfe D_l_cum_confirmed_cases p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
 
-sum t
-local start_date = `r(min)'
-
-local orig_obs = r(N)
-local set_obs = r(N) + 50
-
-set obs `set_obs'
-replace t = `start_date' - (_n-`orig_obs') if t==.
-
-sum adm2_id if longest_series==1
-replace adm2_id = `r(min)' if _n > `orig_obs'
-fillin adm2_id t
-
-foreach pvar of varlist p_*{
-	gen D_`pvar' = D.`pvar'
-	replace D_`pvar' = 0 if D_`pvar' == .
-	tab D_`pvar', mi
+foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6"{
+	post results ("ITA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
+lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
+post results ("ITA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
-reghdfe D_l_cum_confirmed_cases L(-5/35).(D_p_*), absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+*Estimate same model leaving out one region
+levelsof adm1_name, local(state_list)
+foreach adm in `state_list' {
+	reghdfe D_l_cum_confirmed_cases p_* if adm1_name != "`adm'", absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+	foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6"{
+		post results ("ITA") ("`adm'") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+	}
+	lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
+	post results ("ITA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+}
+postclose results
 
-br adm1_name adm2_name date cum_confirmed_cases no_gathering_popwt social_distance_comb_popwt work_from_home_comb_popwt D_p_1
-
-reghdfe D_l_cum_confirmed_cases L(-5/27).D_p_1 L(-5/17).D_p_2 L(-3/29).D_p_3 L(-5/20).D_p_4 ///
-L(-5/17).D_p_5 L(-5/6).D_p_6, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
-
+preserve
+	set scheme s1color
+	use `results_file_crossV', clear
+	egen i = group(policy)
+	g minCI = beta - 1.96* se
+	g maxCI = beta + 1.96* se
+	tw scatter i beta if sample != "Lombardia", xline(0,lc(black) lp(dash)) mc(black*.5) msize(small)  ///
+	|| scatter i beta if sample == "full_sample", mc(red)  ///
+	|| scatter i beta if sample == "Lombardia", mc(green) m(Oh) ///
+	yscale(range(0.5(0.5)3.5)) ylabel( ///
+	1 "combined effect" ///
+	2 "no gath, soc dist, work home" ///
+	3 "business closure" ///
+	4 "home isolation" ///
+	5 "local travel ban, transit suspension" ///
+	6 "quarantine positive cases" ///
+	7 "school closure",  angle(0)) ///
+	xtitle("Estimated effect on daily growth rate", height(5)) ///
+	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
+	lab(3 "w/o Lombardia") region(lstyle(none)) rows(1)) ///
+	ytitle("") xscale(range(-0.5(0.1)0.1)) xlabel(#5) xsize(7)
+	graph export results/figures/appendix/cross_valid/ITA.pdf, replace
+	graph export results/figures/appendix/cross_valid/ITA.png, replace	
+restore
