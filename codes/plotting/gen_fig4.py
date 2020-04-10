@@ -13,7 +13,7 @@ save_fig = True
 save_data = True
 
 fig_dir = cutil.HOME / "results" / "figures" / "fig4"
-fig_data_dir = cutil.HOME / "results" / "source_data" 
+fig_data_dir = cutil.HOME / "results" / "source_data"
 fig_data_fn = "Figure4_data.csv"
 
 
@@ -50,6 +50,8 @@ country_names = {
 
 start_date = "2020-01-15"
 end_date = "2020-03-18"
+
+
 def color_add_alpha(color, alpha):
     color_rgba = list(matplotlib.colors.to_rgba(color))
     color_rgba[3] = alpha
@@ -304,49 +306,64 @@ def annotate_cases(ax, cases):
 
 def main():
 
-    # initialize the dataframes that will get filled in 
-    dfs_by_country = [pd.DataFrame({'country': country_names[c], 
-    'date': pd.date_range(start_date, end_date, freq='D')}) for c in countries_in_order]
+    # initialize the dataframes that will get filled in
+    dfs_by_country = [
+        pd.DataFrame(
+            {
+                "country": country_names[c],
+                "date": pd.date_range(start_date, end_date, freq="D"),
+            }
+        )
+        for c in countries_in_order
+    ]
 
     # read in all the cases data
     cases_dict = cutil.load_all_cases_deaths(cases_drop=True)
-    
+
     # save that data
     for c, country in enumerate(countries_in_order):
 
         cases_df_this_country = cases_dict[country]
-        #cases_df_this_country['date_datetime'] = pd.to_datetime(cases_df_this_country['date'])
+        # cases_df_this_country['date_datetime'] = pd.to_datetime(cases_df_this_country['date'])
 
-        dfs_by_country[c] = pd.merge(dfs_by_country[c].set_index("date",drop=False),
-                                     cases_df_this_country.set_index('date'), 
-                                     left_index=True, right_index=True, how='left')
+        dfs_by_country[c] = pd.merge(
+            dfs_by_country[c].set_index("date", drop=False),
+            cases_df_this_country.set_index("date"),
+            left_index=True,
+            right_index=True,
+            how="left",
+        )
 
     resampled_dfs_by_country = {}
     for country in countries_in_order:
         print("reading ", fn_template.format(country))
         resampled_dfs_by_country[country] = pd.read_csv(fn_template.format(country))
 
-
     # get central estimates
     model_dfs_by_country = {}
-    for c,country in enumerate(countries_in_order):
+    for c, country in enumerate(countries_in_order):
         model_df_this_country = pd.read_csv(
             fn_template.replace("bootstrap", "model").format(country)
         )
 
         # later on we'll need date to be string so make a second column for saving the data
-        #model_df_this_country['date_datetime'] = pd.to_datetime(model_df_this_country['date'])
+        # model_df_this_country['date_datetime'] = pd.to_datetime(model_df_this_country['date'])
 
         model_dfs_by_country[country] = model_df_this_country
 
-        dfs_by_country[c] = pd.merge(dfs_by_country[c],model_df_this_country.set_index('date'),
-                                     left_index=True, right_index=True, how='left')
+        dfs_by_country[c] = pd.merge(
+            dfs_by_country[c],
+            model_df_this_country.set_index("date"),
+            left_index=True,
+            right_index=True,
+            how="left",
+        )
 
     # get quantile data
     quantiles = [0.025, 0.15, 0.85, 0.975]  # 95% range  # 70% range
 
     quantiles_by_country = {}
-    for c,country in enumerate(countries_in_order):
+    for c, country in enumerate(countries_in_order):
         quantile_this_country = {}
         dates, quantiles_policy, quantiles_no_policy = make_quantiles(
             resampled_dfs_by_country[country], quantiles
@@ -357,17 +374,26 @@ def main():
         quantile_this_country["quantiles_no_policy"] = quantiles_no_policy
         quantiles_by_country[country] = quantile_this_country
 
-
         # make a small df for this quantile so we can merge on date
         quantiles_this_country_dict = {}
         for q, quantile in enumerate(quantiles):
             key_start = "quantile_{0}_".format(quantile)
-            quantiles_this_country_dict[key_start + "policy"] = quantiles_policy[:,q]
-            quantiles_this_country_dict[key_start + "no_policy"] = quantiles_no_policy[:,q]
+            quantiles_this_country_dict[key_start + "policy"] = quantiles_policy[:, q]
+            quantiles_this_country_dict[key_start + "no_policy"] = quantiles_no_policy[
+                :, q
+            ]
 
-        quantile_df = pd.DataFrame(quantiles_this_country_dict, index = pd.to_datetime(dates))
-        
-        dfs_by_country[c] = pd.merge(dfs_by_country[c], quantile_df, how='left', left_index=True, right_index=True)
+        quantile_df = pd.DataFrame(
+            quantiles_this_country_dict, index=pd.to_datetime(dates)
+        )
+
+        dfs_by_country[c] = pd.merge(
+            dfs_by_country[c],
+            quantile_df,
+            how="left",
+            left_index=True,
+            right_index=True,
+        )
 
     # plot
     fig, ax = plt.subplots(
@@ -469,8 +495,7 @@ def main():
 
     leg_ax.axis("off")
 
-    df_all_countries = pd.concat(dfs_by_country).drop(['date_str'],axis=1)
-
+    df_all_countries = pd.concat(dfs_by_country).drop(["date_str"], axis=1)
 
     if save_data:
         out_fn = fig_data_dir / fig_data_fn
