@@ -321,11 +321,6 @@ def main():
                                      cases_df_this_country.set_index('date'), 
                                      left_index=True, right_index=True, how='left')
 
-
-        print(dfs_by_country[c])
-
-    #print(dfs_by_country[0])
-    # get resampled data
     resampled_dfs_by_country = {}
     for country in countries_in_order:
         print("reading ", fn_template.format(country))
@@ -344,8 +339,6 @@ def main():
 
         model_dfs_by_country[country] = model_df_this_country
 
-        # add to the results csv
-        #print(dfs_by_country[c])
         dfs_by_country[c] = pd.merge(dfs_by_country[c],model_df_this_country.set_index('date'),
                                      left_index=True, right_index=True, how='left')
 
@@ -372,7 +365,6 @@ def main():
             quantiles_this_country_dict[key_start + "policy"] = quantiles_policy[:,q]
             quantiles_this_country_dict[key_start + "no_policy"] = quantiles_no_policy[:,q]
 
-            print(quantiles_policy[:,q] == quantiles_no_policy[:,q])
         quantile_df = pd.DataFrame(quantiles_this_country_dict, index = pd.to_datetime(dates))
         
         dfs_by_country[c] = pd.merge(dfs_by_country[c], quantile_df, how='left', left_index=True, right_index=True)
