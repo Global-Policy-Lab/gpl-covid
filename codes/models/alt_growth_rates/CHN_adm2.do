@@ -41,16 +41,41 @@ duplicates report adm12_id t
 // set up panel
 tsset adm12_id t, daily
 
+// drop obs in two cities that lifted local travel ban before 3/5
+tab adm2_name t if D.travel_ban_local==-1
+bysort adm12_id: egen travel_ban_local_lift = min(t) if D.travel_ban_local==-1
+bysort adm12_id: egen travel_ban_local_lift_cut = min(travel_ban_local_lift)
+
+drop if travel_ban_local_lift_cut!=. & t>=travel_ban_local_lift_cut
+drop travel_ban_local_lift travel_ban_local_lift_cut
+
 // quality control
 replace active_cases = . if cum_confirmed_cases < 10 
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 
-// droping cities if they never report when policies are implemented (e.g. could not find due to news censorship)
+// drop cities if they never report when policies are implemented (e.g. could not find due to news censorship)
 bysort adm12_id : egen ever_policy1 = max(home_isolation) 
 bysort adm12_id : egen ever_policy2 = max(travel_ban_local) 
 gen ever_policy = ever_policy1 + ever_policy2
 keep if ever_policy > 0
 
+// count cities with only home_iso but no travel ban
+preserve
+	contract adm1_name adm2_name adm12_id if ever_policy==1 & ever_policy2==0 & cum_confirmed_cases!=.
+	count //80 cities out of 116 cities
+restore
+
+// look at distribution of days pre any policy
+preserve
+	keep if cum_confirmed_cases!=.
+	gen any_policy = (travel_ban_local + home_isolation)>0
+	collapse (min) t, by(adm1_name adm2_name adm12_id any_policy)
+	bysort adm1_name adm2_name adm12_id: egen t_start = min(t)
+	gen t_diff = t - t_start
+
+	hist t_diff if any_policy==1, freq width(1) discrete ///
+	tit(China) xtit(Days til first policy) ytit(Number of cities) lcolor(white) fcolor(navy) xsize(5)	
+restore
 
 // flag which admin unit has longest series
 gen adm1_adm2_name = adm2_name + ", " + adm1_name
@@ -247,6 +272,8 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_chn, replace)
 graph combine hist_chn qn_chn, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_chn.gph, replace)
 graph drop hist_chn qn_chn
 
+outsheet e using "results/source_data/ExtendedDataFigure1_CHN_e.csv" if e(sample), comma replace
+
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
 
@@ -272,9 +299,14 @@ if e(sample)
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
 predictnl y_counter =  ///
+testing_regime_change_18jan2020 * _b[testing_regime_change_18jan2020] + ///
+testing_regime_change_28jan2020 * _b[testing_regime_change_28jan2020] + ///
+testing_regime_change_06feb2020 * _b[testing_regime_change_06feb2020] + ///
 testing_regime_change_13feb2020 * _b[testing_regime_change_13feb2020] + ///
-testing_regime_change_20feb2020 *_b[testing_regime_change_20feb2020] + ///
+testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
 _b[_cons] + __hdfe1__ if e(sample), ci(lb_counter2 ub_counter2)
+    
 
 // compute ATE
 preserve
@@ -329,8 +361,8 @@ set seed 1234
 g t_random = t + rnormal(0,1)/10
 g t_random2 = t + rnormal(0,1)/10
 
-
 // Graph of predicted growth rates
+
 // fixed x-axis across countries
 tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
@@ -341,9 +373,14 @@ tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(China, ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph, replace)
+
+egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
+outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
+using "results/source_data/Figure3_CHN_data.csv" if miss_ct<8, comma replace
+drop miss_ct
 
 // for legend
 tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
@@ -361,21 +398,63 @@ legend(order(6 8 5 7 9) cols(1) ///
 lab(6 "No policy (admin unit)") lab(8 "No policy (national avg)") ///
 lab(5 "Actual with policies (admin unit)") lab(7 "Actual with policies (national avg)")  ///
 region(lcolor(none))) scheme(s1color) xlabel(, format(%tdMon_DD)) ///
-yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8)
+yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) ///
+saving(results/figures/fig3/raw/legend_fig3.pdf, replace)
 
-graph export results/figures/fig3/raw/legend_fig3.pdf, replace
+
+//-------------------------------CREATING DAILY LAGS
+
+// sum t
+// local start_date = `r(min)'
+//
+// local orig_obs = r(N)
+// local set_obs = r(N) + 50
+//
+// set obs `set_obs'
+// replace t = `start_date' - (_n-`orig_obs') if t==.
+//
+// sum adm12_id if longest_series==1
+// replace adm12_id = `r(min)' if _n > `orig_obs'
+// fillin adm12_id t
+//
+// gen D_home_isolation = D.home_isolation
+// replace D_home_isolation = 0 if D_home_isolation == .
+// tab D_home_isolation, mi
+//
+// gen D_travel_ban_local = D.travel_ban_local
+// replace D_travel_ban_local = 0 if D_travel_ban_local == .
+//
+// tab D_travel_ban_local, mi
+// br if D_travel_ban_local==-1
+// br if adm2_name=="Hangzhou"
+// br if adm2_name=="Wenzhou"
+//
+//
+// reghdfe D_l_active_cases testing_regime_change_* L(-5/50).(D_travel_ban_local D_home_isolation), absorb(i.adm12_id, savefe) cluster(t) resid
+//
+// reghdfe D_l_active_cases testing_regime_change_* L(-5/37).D_travel_ban_local ///
+// L(-5/33).D_home_isolation, absorb(i.adm12_id, savefe) cluster(t) resid
+//
+// coefplot, keep(*D_travel_ban_local) vertical xline(6) yline(0) xsize(8) ///
+// tit("China: local travel ban") xlabel(,angle(45)) coeflabels(,truncate(3)) name(travel_ban, replace)
+//
+// coefplot, keep(*D_home_isolation) vertical xline(6) yline(0) xsize(8) ///
+// tit("China: home isolation") xlabel(,angle(45)) coeflabels(,truncate(3)) name(home_iso, replace)
+//
+// graph combine travel_ban home_iso, cols(1)
 
 
 //-------------------------------Running the model for Wuhan only 
 
 reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_* if adm2_name == "Wuhan", noabsorb
 
+// export coefficients (FOR FIG2)
 post results ("CHN_Wuhan") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
-postclose results
 
+postclose results
 preserve
 	use `results_file', clear
-	outsheet * using "models/CHN_coefs.csv", comma replace // for display (figure 2)
+	outsheet * using "results/source_data/Figure2_CHN_coefs.csv", comma replace // for display (figure 2)
 restore
 
 // predicted "actual" outcomes with real policies
@@ -383,8 +462,12 @@ predictnl y_actual_wh = xb() if e(sample), ci(lb_y_actual_wh ub_y_actual_wh)
 
 // predicting counterfactual growth for each obs
 predictnl y_counter_wh =  ///
+testing_regime_change_18jan2020 * _b[testing_regime_change_18jan2020] + ///
+testing_regime_change_28jan2020 * _b[testing_regime_change_28jan2020] + ///
+testing_regime_change_06feb2020 * _b[testing_regime_change_06feb2020] + ///
 testing_regime_change_13feb2020 * _b[testing_regime_change_13feb2020] + ///
-testing_regime_change_20feb2020 *_b[testing_regime_change_20feb2020] + ///
+testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
 _b[_cons] if e(sample), ci(lb_counter_wh ub_counter_wh)
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
@@ -408,7 +491,65 @@ tw (rspike ub_y_actual_wh lb_y_actual_wh t, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg_wh t, color(black)) ///
 if e(sample), ///
 title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)21999)) xlabel(21930(10)21999, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
+
+
+//-------------------------------Cross-validation
+tempfile results_file_crossV
+postfile results str30 adm0 str30 sample str18 policy ite beta se using `results_file_crossV', replace
+
+*Resave main effect
+reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_*, absorb(i.adm12_id, savefe) cluster(t) resid
+
+local i = 10
+foreach var in "home_isolation_L0_to_L7" "home_isolation_L8_to_L14" ///
+"home_isolation_L15_to_L21" "home_isolation_L22_to_L28"  "home_isolation_L29_to_L70" ///
+"travel_ban_local_L0_to_L7" "travel_ban_local_L8_to_L14" "travel_ban_local_L15_to_L21" ///
+"travel_ban_local_L22_to_L28" "travel_ban_local_L29_to_L70"{
+	post results ("CHN") ("full_sample") ("`var'") (`i') (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+	local i = `i' - 1
+}
+
+*Estimate same model leaving out one region
+levelsof adm1_name, local(state_list)
+foreach adm in `state_list' {
+	reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_* if adm1_name != "`adm'", absorb(i.adm12_id, savefe) cluster(t) resid
+	local i = 10
+	foreach var in "home_isolation_L0_to_L7" "home_isolation_L8_to_L14" ///
+	"home_isolation_L15_to_L21" "home_isolation_L22_to_L28"  "home_isolation_L29_to_L70" ///
+	"travel_ban_local_L0_to_L7" "travel_ban_local_L8_to_L14" "travel_ban_local_L15_to_L21" ///
+	"travel_ban_local_L22_to_L28" "travel_ban_local_L29_to_L70"{
+		post results ("CHN") ("`adm'") ("`var'") (`i') (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+		local i = `i' - 1
+	} 
+}
+postclose results
+
+preserve
+	set scheme s1color
+	use `results_file_crossV', clear
+	replace ite = ite + 1 if ite >= 6
+	tw scatter ite beta if sample != "Hubei", xline(0,lc(black) lp(dash)) mc(black*.5)   ///
+	|| scatter ite beta if sample == "full_sample", mc(red)  ///
+	|| scatter ite beta if sample == "Hubei", mc(green) m(Oh) ///
+	yscale(range(0.5(0.5)3.5)) ylabel( ///
+	11 "Days 0-7" ///
+	10 "Days 8-14" ///
+	9 "home isolation         Days 15-21" ///
+	8 "Days 22-28" ///
+	7 "Days 29-70" ///
+	5 "Days 0-7" ///
+	4 "Days 8-14" ///
+	3 "travel ban         Days 15-21" ///
+	2 "Days 22-28" ///
+	1 "Days 29-70",  angle(0)) ///
+	xtitle("Estimated effect on daily growth rate", height(5)) ///
+	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
+	lab(3 "w/o Hubei") region(lstyle(none))) ///
+	ytitle("") xscale(range(-0.3(0.1)0.1)) xlabel(#5) xsize(7)
+	graph export results/figures/appendix/cross_valid/CHN.pdf, replace
+	graph export results/figures/appendix/cross_valid/CHN.png, replace	
+restore
 

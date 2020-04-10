@@ -1,2 +1,2 @@
-D_l_cum_confirmed_cases,school_closure,social_distance,pck_no_gathering,national_lockdown,ATE,sd,pval,LB,UB,adm0
-.2057971,.866667,.4537037,.5111111,.4548148,-.1504525,.0412324,.0002634,-.2312664,-.0696385,"FRA"
+D_l_cum_confirmed_cases,school_closure,pck_social_distance,national_lockdown,ATE,sd,pval,LB,UB,adm0
+.2057971,.866667,.4996296,.4548148,-.1391328,.0383367,.0002843,-.2142714,-.0639942,"FRA"

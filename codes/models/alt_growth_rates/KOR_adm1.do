@@ -33,7 +33,7 @@ tsset adm1_id t, daily
 replace active_cases = . if cum_confirmed_cases < 10 
 replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
 
-drop if t <= mdy(2,18,2020) // start 2/18
+keep if t >= mdy(2,17,2020) // start date
 keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 // flag which admin unit has longest series
@@ -110,47 +110,23 @@ reg D_l_active_cases i.t
 predict day_avg if longest_series==1 & e(sample) == 1
 lab var day_avg "Observed avg. change in log cases"
 
-tw (sc D_l_active_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
-
-
-//------------------disaggregated model
-// reghdfe D_l_active_cases testing_regime_change_* ///
-// business_closure_opt emergency_declaration no_demonstration no_gathering_opt ///
-// pos_cases_quarantine religious_closure school_closure social_distance_opt ///
-// welfare_services_closure work_from_home_opt ///
-// , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
-//
-// coefplot,keep(business_closure_opt emergency_declaration no_demonstration no_gathering_opt ///
-// pos_cases_quarantine religious_closure school_closure social_distance_opt ///
-// welfare_services_closure work_from_home_opt)
+*tw (sc D_l_active_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 
 
 //------------------grouping treatments (based on timing and similarity)
 
-// prev policy packages
-// gen p_1 = (welfare_services_closure + work_from_home_opt)/2
-// gen p_2 = (no_demonstration + religious_closure )/2
-// gen p_3 = social_distance_opt
-// gen p_4 = emergency_declaration 
-//
-// lab var p_1 "closure, stay home"
-// lab var p_2 "no groups"
-// lab var p_3 "social distance"
-// lab var p_4 "emergency declaration"
+gen p_1 = (business_closure_opt + work_from_home_opt + social_distance_opt + no_gathering_opt) / 4
+gen p_2 = (no_demonstration + religious_closure + welfare_services_closure) / 3
+gen p_3 = emergency_declaration
+gen p_4 = pos_cases_quarantine
 
-gen p_1 = (business_closure_opt + work_from_home_opt)/2
-gen p_2 = (no_demonstration + religious_closure)/2
-gen p_3 = (welfare_services_closure + social_distance_opt + no_gathering_opt)/3
-gen p_4 = emergency_declaration 
-gen p_5 = pos_cases_quarantine // started for all provinces 3/22
-
-lab var p_1 "closure, stay home"
-lab var p_2 "no groups"
-lab var p_3 "social distance"
-lab var p_4 "emergency declaration"
-lab var p_5 "quarantine positive cases"
+lab var p_1 "social distance (opt)"
+lab var p_2 "no dem, rel cls, wel serv cls"
+lab var p_3 "emerg declaration (2 adm1)"
+lab var p_4 "quarantine positive cases"
 
 // note all schools are closed for the entire sample period
+// event_cancel policies are enacted for entire sample as well
 
 //------------------main estimates
 
@@ -164,24 +140,14 @@ outreg2 using "results/tables/KOR_estimates_table", word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: South Korea")
 cap erase "results/tables/KOR_estimates_table.txt"
 
-
-// export coef
+// saving coef
 tempfile results_file
 postfile results str18 adm0 str18 policy beta se using `results_file', replace
-foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" {
+foreach var in "p_1" "p_2" "p_3" "p_4" {
 	post results ("KOR") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
-// effect of package of policies (FOR FIG2)
-lincom p_1 + p_2 + p_3 + p_5 // without emergency declaration, which was only in one prov
-lincom p_1 + p_2 + p_3 + p_4 + p_5
-post results ("KOR") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-
-// looking at different policies (similar to Fig2)
-coefplot, keep(p_*)
-
-
-//------------- checking error structure (make fig for appendix)
+//------------- checking residual structure (make appendix fig)
 
 predict e if e(sample), resid
 
@@ -191,6 +157,8 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_kor, replace)
 
 graph combine hist_kor qn_kor, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_kor.gph, replace)
 graph drop hist_kor qn_kor
+
+outsheet e using "results/source_data/ExtendedDataFigure1_KOR_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -202,31 +170,36 @@ lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
-p_1 *_b[p_1] + ///
+p_1 * _b[p_1] + ///
 p_2 * _b[p_2] + ///
 p_3 * _b[p_3] + /// 
-p_4 * _b[p_4] + /// 
-p_5 * _b[p_5] /// 
+p_4 * _b[p_4] /// 
 if e(sample)
 
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
 predictnl y_counter = ///
-testing_regime_change_20feb2020 *_b[testing_regime_change_20feb2020] + ///
+testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
 testing_regime_change_29feb2020 * _b[testing_regime_change_29feb2020] + ///
 testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
 testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
+// effect of all policies combined (FOR FIG2)
+lincom p_1 + p_2 + p_3 + p_4
+post results ("KOR") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+local comb_policy = round(r(estimate), 0.001)
+local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
+
 // compute ATE
 preserve
 	keep if e(sample) == 1
 	collapse  D_l_active_cases p_* 
-	predictnl ATE = p_1*_b[p_1] + p_2*_b[p_2] + p_3*_b[p_3] + p_4*_b[p_4] + p_5*_b[p_5], ci(LB UB) se(sd) p(pval)
+	predictnl ATE = p_1*_b[p_1] + p_2*_b[p_2] + p_3*_b[p_3] + p_4*_b[p_4], ci(LB UB) se(sd) p(pval)
 	g adm0 = "KOR"
 	outsheet * using "models/KOR_ATE.csv", comma replace 
 restore
-
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars
@@ -234,9 +207,24 @@ foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_
 	replace `var' = 0 if `var'<0 & `var'!=.
 }
 
-// the mean here is the avg "biological" rate of initial spread (FOR Fig2)
+// the mean here is the avg "biological" rate of initial spread (FOR FIG2)
 sum y_counter
 post results ("KOR") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+
+local no_policy = round(r(mean), 0.001)
+local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
+
+// looking at different policies (similar to FIG2)
+coefplot, keep(p_*) tit("KOR: new policy packages") subtitle(`subtitle2') ///
+xline(0) name(KOR_policy, replace)
+ 
+
+// export coefficients (FOR FIG2)
+postclose results
+preserve
+	use `results_file', clear
+	outsheet * using "results/source_data/Figure2_KOR_coefs.csv", comma replace 
+restore
 
 //export predicted counterfactual growth rate
 preserve
@@ -257,12 +245,6 @@ reg y_counter i.t
 predict m_y_counter if longest_series==1
 
 
-postclose results
-preserve
-	use `results_file', clear
-	outsheet * using "models/KOR_coefs.csv", comma replace //coefficients for display (fig2)
-restore
-
 // add random noise to time var to create jittered error bars
 set seed 1234
 g t_random = t + rnormal(0,1)/10
@@ -280,32 +262,73 @@ tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
-xscale(range(21930(10)22003)) xlabel(21930(10)22003, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
 
+egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
+outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
+using "results/source_data/Figure3_KOR_data.csv" if miss_ct<8, comma replace
+drop miss_ct
 
-//-------------------------------CREATING DAILY LAGS
+
+// tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
+// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+// || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+// (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (sc day_avg t, color(black)) ///
+// if e(sample), ///
+// title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
+// xscale(range(21960(10)22011)) xlabel(21960(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) 
 
 
-// sum t
-// local start_date = `r(min)'
-//
-// local orig_obs = r(N)
-// local set_obs = r(N) + 50
-//
-// set obs `set_obs'
-// replace t = `start_date' - (_n-`orig_obs') if t==.
-//
-// sum adm1_id if longest_series==1
-// replace adm1_id = `r(min)' if _n > `orig_obs'
-// fillin adm1_id t
-//
-// foreach pvar of varlist p_*{
-// gen D_`pvar' = D.`pvar'
-// replace D_`pvar' = 0 if D_`pvar' == .
-// }
-//
-// reghdfe D_l_active_cases testing_regime_change_* L(-5/35).(D_p_*), absorb(i.adm1_id i.dow, savefe) cluster(t) resid
-//
-// coefplot, keep(*_p_1) vertical xsize(10)
+//-------------------------------Cross-validation
+tempfile results_file_crossV
+postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
+
+*Resave main effect
+reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+
+foreach var in "p_1" "p_2" "p_3" "p_4"{
+	post results ("KOR") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+}
+lincom p_1 + p_2 + p_3 + p_4
+post results ("KOR") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+*Estimate same model leaving out one region
+levelsof adm1_name, local(state_list)
+foreach adm in `state_list' {
+	reghdfe D_l_active_cases testing_regime_change_* p_* if adm1_name != "`adm'", absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+	foreach var in "p_1" "p_2" "p_3" "p_4"{
+		post results ("KOR") ("`adm'") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
+	}
+	lincom p_1 + p_2 + p_3 + p_4 
+	post results ("KOR") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+}
+postclose results
+
+preserve
+	set scheme s1color
+	use `results_file_crossV', clear
+	egen i = group(policy)
+	g minCI = beta - 1.96* se
+	g maxCI = beta + 1.96* se
+	tw scatter i beta if sample != "Seoul", xline(0,lc(black) lp(dash)) mc(black*.5) msize(small)  ///
+	|| scatter i beta if sample == "full_sample", mc(red)  ///
+	|| scatter i beta if sample == "Seoul", mc(green) m(Oh) ///
+	yscale(range(0.5(0.5)3.5)) ylabel( ///
+	1 "combined effect" ///
+	2 "social distance (opt)" ///
+	3 "no dem, rel cls, wel serv cls" ///
+	4 "emergency declaration" ///
+	5 "quarantine positive cases",  angle(0)) ///
+	xtitle("Estimated effect on daily growth rate", height(5)) ///
+	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
+	lab(3 "w/o Seoul") region(lstyle(none)) rows(1)) ///
+	ytitle("") xscale(range(-0.5(0.1)0.1)) xlabel(#5) xsize(7)
+	graph export results/figures/appendix/cross_valid/KOR.pdf, replace
+	graph export results/figures/appendix/cross_valid/KOR.png, replace
+restore
