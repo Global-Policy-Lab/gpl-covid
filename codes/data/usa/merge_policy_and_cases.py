@@ -17,6 +17,7 @@ def main():
 	cases_data = pd.read_csv(os.path.join(int_data_dir,"usa_usafacts_state.csv"))
 	cases_data['date'] = pd.to_datetime(cases_data['date'])
 
+	print
 	# drop any cases data columns that are all null
 	cases_data = cases_data.dropna(how='all', axis=1)
 	# checker will complain o/w
