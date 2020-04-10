@@ -63,9 +63,6 @@ def init_policy_dummies(
     # adjust for lags
     p_on = out.argmax(axis=-1)
     for lx, l in enumerate(lags):
-        out[
-            :, lx,
-        ]
         for sx in range(out.shape[0]):
             this_p_on = p_on[sx, lx]
             out[sx, lx, this_p_on : this_p_on + len(l)] = l

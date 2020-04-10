@@ -4,7 +4,7 @@ import numpy as np
 import warnings
 
 
-def facet_hist(estimates, case_type, coef, n_bins=40, **kwargs):
+def facet_hist(estimates, case_type, coef, n_bins=40, hist_kwargs = {}, **kwargs):
     true_vals = {
         "Intercept": estimates.attrs["no_policy_growth_rate"],
         "p1": estimates.attrs["p1_effect"],
@@ -19,35 +19,34 @@ def facet_hist(estimates, case_type, coef, n_bins=40, **kwargs):
         min_bin = true_vals[coef] * 2
         max_bin = 0
     g = xr.plot.FacetGrid(estimates.sel(case_type=case_type), **kwargs)
-
+    for ax in g.axes.flat:
+        ax.axvline(true_vals[coef], color="k", label="True")
+        ax.set_xlim(min_bin, max_bin)
     def nowarn_hist(*args, **kwargs):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             return plt.hist(*args, **kwargs)
 
-    g.map(nowarn_hist, coef, bins=np.linspace(min_bin, max_bin, n_bins))
+    g.map(nowarn_hist, coef, bins=np.linspace(min_bin, max_bin, n_bins), **hist_kwargs)
     g.map(
         lambda x: plt.axvline(
-            np.nanmean(x), color="r", linestyle="--", label="Mean estimate"
+            np.nanmedian(x), color="r", linestyle="--", label="Median\nestimate"
         ),
         coef,
     )
     g.map(
         lambda x, y: plt.text(
-            0.03,
+            0.97,
             0.97,
             f"$min(S)$: {x.min().item():.2f}\n$min(S)_{{p3}}$: {y.min().item():.2f}",
-            horizontalalignment="left",
+            horizontalalignment="right",
             verticalalignment="top",
             transform=plt.gca().transAxes,
         ),
         "S_min",
         "S_min_p3",
     )
-    for ax in g.axes.flat:
-        ax.axvline(true_vals[coef], color="k", label="True value")
-        ax.set_xlim(min_bin, max_bin)
-    g.axes.flat[0].legend(loc="upper right")
+    g.axes.flat[0].legend(loc="upper left")
     g.set_xlabels("")
     g.set_titles("$\{coord}$ = {value}")
     g.fig.suptitle(f"LHS: {case_type}; variable: {coef}", va="bottom", y=0.99)
