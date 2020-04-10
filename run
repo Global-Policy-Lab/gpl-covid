@@ -136,3 +136,7 @@ python codes/plotting/count-policies.py
 # Figure A2
 printf "***Creating Fig A2***\n"
 python codes/plotting/figA2.py
+
+# Figure AX (Projection with multiple gamma plot - replace this text when numbered)
+printf "***Creating Fig AX***\n"
+Rscript codes/models/run_projection_with_multiple_gammas.R

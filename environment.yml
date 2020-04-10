@@ -30,3 +30,4 @@ dependencies:
     - r-rvest=0.3
     - r-tidyverse=1.3
     - r-tigris=0.9
+    - r-patchwork=1.0

@@ -1,7 +1,7 @@
 #KOR
 # setwd("E:/GPL_covid/")
-library(tidyverse)
-library(lfe)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lfe))
 source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
 underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")

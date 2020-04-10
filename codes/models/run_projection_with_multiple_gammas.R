@@ -1,5 +1,5 @@
-library(tidyverse)
-library(patchwork)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(patchwork))
 list.files("codes/models", full.names = TRUE) %>% 
   str_subset("data_and_model_projection") %>% 
   walk(source)

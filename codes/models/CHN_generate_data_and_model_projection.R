@@ -1,6 +1,6 @@
 # setwd("E:/GPL_covid/")
-library(tidyverse)
-library(lfe)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lfe))
 source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
 source("codes/data/multi_country/get_JHU_country_data.R")
