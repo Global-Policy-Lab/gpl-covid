@@ -14,9 +14,9 @@ def facet_hist(estimates, case_type, coef, n_bins=40, **kwargs):
     true_vals["cum_effect"] = true_vals["p1"] + true_vals["p2"] + true_vals["p3"]
     if true_vals[coef] > 0:
         min_bin = 0
-        max_bin = true_vals[coef] * 3
+        max_bin = true_vals[coef] * 2
     elif true_vals[coef] < 0:
-        min_bin = true_vals[coef] * 3
+        min_bin = true_vals[coef] * 2
         max_bin = 0
     g = xr.plot.FacetGrid(estimates.sel(case_type=case_type), **kwargs)
 

@@ -23,7 +23,7 @@ def init_reg_arrs(n_samples, n_reg, n_policies, *args):
 
 
 def init_state_arrays(shp, n_arrays):
-    return [np.ones(shp).squeeze() * np.nan for a in range(n_arrays)]
+    return [np.ones(shp) * np.nan for a in range(n_arrays)]
 
 
 def adjust_timescales_from_daily(tsteps_per_day, *args):
@@ -161,7 +161,7 @@ def run_SEIR(E0, I0, R0, beta, gamma, sigma, n_samp=1):
     n_steps = beta.shape[0]
 
     S, E, I, R = init_state_arrays(beta.shape, 4)
-
+    
     # initial conditions
     R[0] = R0
     I[0] = I0
