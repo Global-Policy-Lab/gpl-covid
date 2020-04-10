@@ -9,6 +9,7 @@ raw_data_dir = str(cutil.DATA_RAW / "usa")
 int_data_dir = str(cutil.DATA_INTERIM / "usa")
 proc_data_dir = str(cutil.DATA_PROCESSED / "adm1")
 
+
 def main():
 
     add_testing_regime = True
