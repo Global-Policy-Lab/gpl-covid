@@ -73,6 +73,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Alaska,147,147,NA,NA,3,3,NA,NA
 2020-04-03,USA,Alaska,157,157,NA,NA,3,3,NA,NA
 2020-04-04,USA,Alaska,171,171,NA,NA,5,5,NA,NA
+2020-04-05,USA,Alaska,185,185,NA,NA,7,7,NA,NA
+2020-04-06,USA,Alaska,191,191,NA,NA,7,7,NA,NA
 2020-01-22,USA,Alabama,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Alabama,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Alabama,0,0,NA,NA,0,0,NA,NA
@@ -146,7 +148,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-01,USA,Alabama,1106,1106,NA,NA,16,16,NA,NA
 2020-04-02,USA,Alabama,1270,1270,NA,NA,17,17,NA,NA
 2020-04-03,USA,Alabama,1534,1534,NA,NA,21,21,NA,NA
-2020-04-04,USA,Alabama,1633,1633,NA,NA,26,26,NA,NA
+2020-04-04,USA,Alabama,1632,1632,NA,NA,26,26,NA,NA
+2020-04-05,USA,Alabama,1840,1840,NA,NA,31,31,NA,NA
+2020-04-06,USA,Alabama,2003,2003,NA,NA,32,32,NA,NA
 2020-01-22,USA,Arkansas,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Arkansas,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Arkansas,0,0,NA,NA,0,0,NA,NA
@@ -220,7 +224,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-01,USA,Arkansas,621,621,NA,NA,10,10,NA,NA
 2020-04-02,USA,Arkansas,678,678,NA,NA,12,12,NA,NA
 2020-04-03,USA,Arkansas,732,732,NA,NA,12,12,NA,NA
-2020-04-04,USA,Arkansas,740,740,NA,NA,14,14,NA,NA
+2020-04-04,USA,Arkansas,740,740,NA,NA,13,13,NA,NA
+2020-04-05,USA,Arkansas,853,853,NA,NA,15,15,NA,NA
+2020-04-06,USA,Arkansas,927,927,NA,NA,16,16,NA,NA
 2020-01-22,USA,Arizona,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Arizona,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Arizona,0,0,NA,NA,0,0,NA,NA
@@ -295,6 +301,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Arizona,1596,1596,NA,NA,32,32,NA,NA
 2020-04-03,USA,Arizona,1769,1769,NA,NA,41,41,NA,NA
 2020-04-04,USA,Arizona,2018,2018,NA,NA,52,52,NA,NA
+2020-04-05,USA,Arizona,2269,2269,NA,NA,64,64,NA,NA
+2020-04-06,USA,Arizona,2456,2456,NA,NA,65,65,NA,NA
 2020-01-22,USA,California,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,California,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,California,0,0,NA,NA,0,0,NA,NA
@@ -369,6 +377,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,California,11149,11149,NA,NA,243,243,NA,NA
 2020-04-03,USA,California,12542,12542,NA,NA,282,282,NA,NA
 2020-04-04,USA,California,13865,13865,NA,NA,321,321,NA,NA
+2020-04-05,USA,California,15183,15183,NA,NA,351,351,NA,NA
+2020-04-06,USA,California,16335,16335,NA,NA,388,388,NA,NA
 2020-01-22,USA,Colorado,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Colorado,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Colorado,0,0,NA,NA,0,0,NA,NA
@@ -443,6 +453,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Colorado,3724,3724,NA,NA,97,97,NA,NA
 2020-04-03,USA,Colorado,4173,4173,NA,NA,111,111,NA,NA
 2020-04-04,USA,Colorado,4565,4565,NA,NA,126,126,NA,NA
+2020-04-05,USA,Colorado,4950,4950,NA,NA,139,139,NA,NA
+2020-04-06,USA,Colorado,5172,5172,NA,NA,150,150,NA,NA
 2020-01-22,USA,Connecticut,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Connecticut,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Connecticut,0,0,NA,NA,0,0,NA,NA
@@ -517,6 +529,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Connecticut,3824,3824,NA,NA,111,111,NA,NA
 2020-04-03,USA,Connecticut,4915,4915,NA,NA,133,133,NA,NA
 2020-04-04,USA,Connecticut,5276,5276,NA,NA,165,165,NA,NA
+2020-04-05,USA,Connecticut,5675,5675,NA,NA,189,189,NA,NA
+2020-04-06,USA,Connecticut,6906,6906,NA,NA,206,206,NA,NA
 2020-01-22,USA,District of Columbia,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,District of Columbia,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,District of Columbia,0,0,NA,NA,0,0,NA,NA
@@ -591,6 +605,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,District of Columbia,653,653,NA,NA,12,12,NA,NA
 2020-04-03,USA,District of Columbia,757,757,NA,NA,15,15,NA,NA
 2020-04-04,USA,District of Columbia,902,902,NA,NA,21,21,NA,NA
+2020-04-05,USA,District of Columbia,998,998,NA,NA,22,22,NA,NA
+2020-04-06,USA,District of Columbia,1097,1097,NA,NA,22,22,NA,NA
 2020-01-22,USA,Delaware,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Delaware,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Delaware,0,0,NA,NA,0,0,NA,NA
@@ -665,6 +681,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Delaware,393,393,NA,NA,12,12,NA,NA
 2020-04-03,USA,Delaware,450,450,NA,NA,14,14,NA,NA
 2020-04-04,USA,Delaware,593,593,NA,NA,14,14,NA,NA
+2020-04-05,USA,Delaware,673,673,NA,NA,14,14,NA,NA
+2020-04-06,USA,Delaware,783,783,NA,NA,15,15,NA,NA
 2020-01-22,USA,Florida,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Florida,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Florida,0,0,NA,NA,0,0,NA,NA
@@ -739,6 +757,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Florida,9008,9008,NA,NA,144,144,NA,NA
 2020-04-03,USA,Florida,10268,10268,NA,NA,170,170,NA,NA
 2020-04-04,USA,Florida,11544,11544,NA,NA,195,195,NA,NA
+2020-04-05,USA,Florida,12350,12350,NA,NA,221,221,NA,NA
+2020-04-06,USA,Florida,13629,13629,NA,NA,254,254,NA,NA
 2020-01-22,USA,Georgia,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Georgia,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Georgia,0,0,NA,NA,0,0,NA,NA
@@ -807,12 +827,14 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-03-27,USA,Georgia,2197,2197,NA,NA,65,65,NA,NA
 2020-03-28,USA,Georgia,2445,2445,NA,NA,78,78,NA,NA
 2020-03-29,USA,Georgia,2682,2682,NA,NA,82,82,NA,NA
-2020-03-30,USA,Georgia,3025,3025,NA,NA,102,102,NA,NA
-2020-03-31,USA,Georgia,4112,4112,NA,NA,125,125,NA,NA
-2020-04-01,USA,Georgia,4747,4747,NA,NA,154,154,NA,NA
-2020-04-02,USA,Georgia,5443,5443,NA,NA,175,175,NA,NA
-2020-04-03,USA,Georgia,5966,5966,NA,NA,197,197,NA,NA
-2020-04-04,USA,Georgia,6380,6380,NA,NA,207,207,NA,NA
+2020-03-30,USA,Georgia,3024,3024,NA,NA,102,102,NA,NA
+2020-03-31,USA,Georgia,4110,4110,NA,NA,125,125,NA,NA
+2020-04-01,USA,Georgia,4744,4744,NA,NA,154,154,NA,NA
+2020-04-02,USA,Georgia,5440,5440,NA,NA,175,175,NA,NA
+2020-04-03,USA,Georgia,5960,5960,NA,NA,197,197,NA,NA
+2020-04-04,USA,Georgia,6374,6374,NA,NA,207,207,NA,NA
+2020-04-05,USA,Georgia,6731,6731,NA,NA,219,219,NA,NA
+2020-04-06,USA,Georgia,7554,7554,NA,NA,293,293,NA,NA
 2020-01-22,USA,Hawaii,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Hawaii,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Hawaii,0,0,NA,NA,0,0,NA,NA
@@ -887,6 +909,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Hawaii,285,285,NA,NA,2,2,NA,NA
 2020-04-03,USA,Hawaii,319,319,NA,NA,3,3,NA,NA
 2020-04-04,USA,Hawaii,351,351,NA,NA,3,3,NA,NA
+2020-04-05,USA,Hawaii,371,371,NA,NA,4,4,NA,NA
+2020-04-06,USA,Hawaii,387,387,NA,NA,5,5,NA,NA
 2020-01-22,USA,Iowa,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Iowa,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Iowa,0,0,NA,NA,0,0,NA,NA
@@ -961,6 +985,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Iowa,614,614,NA,NA,11,11,NA,NA
 2020-04-03,USA,Iowa,699,699,NA,NA,11,11,NA,NA
 2020-04-04,USA,Iowa,785,785,NA,NA,11,11,NA,NA
+2020-04-05,USA,Iowa,868,868,NA,NA,17,17,NA,NA
+2020-04-06,USA,Iowa,945,945,NA,NA,25,25,NA,NA
 2020-01-22,USA,Idaho,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Idaho,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Idaho,0,0,NA,NA,0,0,NA,NA
@@ -1032,9 +1058,11 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-03-30,USA,Idaho,415,415,NA,NA,7,7,NA,NA
 2020-03-31,USA,Idaho,525,525,NA,NA,9,9,NA,NA
 2020-04-01,USA,Idaho,668,668,NA,NA,9,9,NA,NA
-2020-04-02,USA,Idaho,890,890,NA,NA,9,9,NA,NA
-2020-04-03,USA,Idaho,1012,1012,NA,NA,10,10,NA,NA
-2020-04-04,USA,Idaho,1077,1077,NA,NA,10,10,NA,NA
+2020-04-02,USA,Idaho,889,889,NA,NA,9,9,NA,NA
+2020-04-03,USA,Idaho,1011,1011,NA,NA,10,10,NA,NA
+2020-04-04,USA,Idaho,1076,1076,NA,NA,10,10,NA,NA
+2020-04-05,USA,Idaho,1100,1100,NA,NA,10,10,NA,NA
+2020-04-06,USA,Idaho,1169,1169,NA,NA,13,13,NA,NA
 2020-01-22,USA,Illinois,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Illinois,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Illinois,1,1,NA,NA,0,0,NA,NA
@@ -1109,6 +1137,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Illinois,7678,7678,NA,NA,157,157,NA,NA
 2020-04-03,USA,Illinois,8871,8871,NA,NA,209,209,NA,NA
 2020-04-04,USA,Illinois,10357,10357,NA,NA,244,244,NA,NA
+2020-04-05,USA,Illinois,11254,11254,NA,NA,274,274,NA,NA
+2020-04-06,USA,Illinois,12259,12259,NA,NA,307,307,NA,NA
 2020-01-22,USA,Indiana,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Indiana,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Indiana,0,0,NA,NA,0,0,NA,NA
@@ -1183,6 +1213,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Indiana,3038,3038,NA,NA,78,78,NA,NA
 2020-04-03,USA,Indiana,3436,3436,NA,NA,102,102,NA,NA
 2020-04-04,USA,Indiana,3948,3948,NA,NA,116,116,NA,NA
+2020-04-05,USA,Indiana,4409,4409,NA,NA,127,127,NA,NA
+2020-04-06,USA,Indiana,4942,4942,NA,NA,139,139,NA,NA
 2020-01-22,USA,Kansas,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Kansas,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Kansas,0,0,NA,NA,0,0,NA,NA
@@ -1257,6 +1289,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Kansas,550,550,NA,NA,13,13,NA,NA
 2020-04-03,USA,Kansas,620,620,NA,NA,16,16,NA,NA
 2020-04-04,USA,Kansas,698,698,NA,NA,21,21,NA,NA
+2020-04-05,USA,Kansas,747,747,NA,NA,22,22,NA,NA
+2020-04-06,USA,Kansas,845,845,NA,NA,25,25,NA,NA
 2020-01-22,USA,Kentucky,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Kentucky,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Kentucky,0,0,NA,NA,0,0,NA,NA
@@ -1330,7 +1364,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-01,USA,Kentucky,630,630,NA,NA,20,20,NA,NA
 2020-04-02,USA,Kentucky,721,721,NA,NA,31,31,NA,NA
 2020-04-03,USA,Kentucky,782,782,NA,NA,37,37,NA,NA
-2020-04-04,USA,Kentucky,868,868,NA,NA,40,40,NA,NA
+2020-04-04,USA,Kentucky,878,878,NA,NA,40,40,NA,NA
+2020-04-05,USA,Kentucky,969,969,NA,NA,45,45,NA,NA
+2020-04-06,USA,Kentucky,1054,1054,NA,NA,59,59,NA,NA
 2020-01-22,USA,Louisiana,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Louisiana,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Louisiana,0,0,NA,NA,0,0,NA,NA
@@ -1405,6 +1441,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Louisiana,9094,9094,NA,NA,309,309,NA,NA
 2020-04-03,USA,Louisiana,10169,10169,NA,NA,370,370,NA,NA
 2020-04-04,USA,Louisiana,12493,12493,NA,NA,408,408,NA,NA
+2020-04-05,USA,Louisiana,13010,13010,NA,NA,476,476,NA,NA
+2020-04-06,USA,Louisiana,14866,14866,NA,NA,512,512,NA,NA
 2020-01-22,USA,Massachusetts,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Massachusetts,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Massachusetts,0,0,NA,NA,0,0,NA,NA
@@ -1479,6 +1517,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Massachusetts,8966,8966,NA,NA,154,154,NA,NA
 2020-04-03,USA,Massachusetts,10402,10402,NA,NA,192,192,NA,NA
 2020-04-04,USA,Massachusetts,11736,11736,NA,NA,216,216,NA,NA
+2020-04-05,USA,Massachusetts,12500,12500,NA,NA,231,231,NA,NA
+2020-04-06,USA,Massachusetts,13837,13837,NA,NA,260,260,NA,NA
 2020-01-22,USA,Maryland,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Maryland,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Maryland,0,0,NA,NA,0,0,NA,NA
@@ -1553,6 +1593,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Maryland,2331,2331,NA,NA,35,35,NA,NA
 2020-04-03,USA,Maryland,2758,2758,NA,NA,41,41,NA,NA
 2020-04-04,USA,Maryland,3125,3125,NA,NA,53,53,NA,NA
+2020-04-05,USA,Maryland,3609,3609,NA,NA,67,67,NA,NA
+2020-04-06,USA,Maryland,4045,4045,NA,NA,91,91,NA,NA
 2020-01-22,USA,Maine,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Maine,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Maine,0,0,NA,NA,0,0,NA,NA
@@ -1627,6 +1669,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Maine,376,376,NA,NA,7,7,NA,NA
 2020-04-03,USA,Maine,432,432,NA,NA,9,9,NA,NA
 2020-04-04,USA,Maine,456,456,NA,NA,10,10,NA,NA
+2020-04-05,USA,Maine,470,470,NA,NA,10,10,NA,NA
+2020-04-06,USA,Maine,499,499,NA,NA,10,10,NA,NA
 2020-01-22,USA,Michigan,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Michigan,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Michigan,0,0,NA,NA,0,0,NA,NA
@@ -1701,6 +1745,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Michigan,10790,10790,NA,NA,417,417,NA,NA
 2020-04-03,USA,Michigan,12740,12740,NA,NA,479,479,NA,NA
 2020-04-04,USA,Michigan,14223,14223,NA,NA,540,540,NA,NA
+2020-04-05,USA,Michigan,15714,15714,NA,NA,616,616,NA,NA
+2020-04-06,USA,Michigan,17219,17219,NA,NA,727,727,NA,NA
 2020-01-22,USA,Minnesota,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Minnesota,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Minnesota,0,0,NA,NA,0,0,NA,NA
@@ -1775,6 +1821,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Minnesota,742,742,NA,NA,18,18,NA,NA
 2020-04-03,USA,Minnesota,788,788,NA,NA,22,22,NA,NA
 2020-04-04,USA,Minnesota,863,863,NA,NA,24,24,NA,NA
+2020-04-05,USA,Minnesota,928,928,NA,NA,29,29,NA,NA
+2020-04-06,USA,Minnesota,980,980,NA,NA,30,30,NA,NA
 2020-01-22,USA,Missouri,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Missouri,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Missouri,0,0,NA,NA,0,0,NA,NA
@@ -1849,6 +1897,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Missouri,1833,1833,NA,NA,19,19,NA,NA
 2020-04-03,USA,Missouri,2111,2111,NA,NA,19,19,NA,NA
 2020-04-04,USA,Missouri,2285,2285,NA,NA,23,23,NA,NA
+2020-04-05,USA,Missouri,2369,2369,NA,NA,33,33,NA,NA
+2020-04-06,USA,Missouri,2723,2723,NA,NA,38,38,NA,NA
 2020-01-22,USA,Mississippi,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Mississippi,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Mississippi,0,0,NA,NA,0,0,NA,NA
@@ -1923,6 +1973,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Mississippi,1178,1178,NA,NA,26,26,NA,NA
 2020-04-03,USA,Mississippi,1460,1460,NA,NA,30,30,NA,NA
 2020-04-04,USA,Mississippi,1566,1566,NA,NA,36,36,NA,NA
+2020-04-05,USA,Mississippi,1748,1748,NA,NA,44,44,NA,NA
+2020-04-06,USA,Mississippi,1848,1848,NA,NA,52,52,NA,NA
 2020-01-22,USA,Montana,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Montana,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Montana,0,0,NA,NA,0,0,NA,NA
@@ -1997,6 +2049,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Montana,241,241,NA,NA,5,5,NA,NA
 2020-04-03,USA,Montana,262,262,NA,NA,5,5,NA,NA
 2020-04-04,USA,Montana,281,281,NA,NA,5,5,NA,NA
+2020-04-05,USA,Montana,297,297,NA,NA,5,5,NA,NA
+2020-04-06,USA,Montana,319,319,NA,NA,5,5,NA,NA
 2020-01-22,USA,North Carolina,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,North Carolina,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,North Carolina,0,0,NA,NA,0,0,NA,NA
@@ -2071,6 +2125,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,North Carolina,1855,1855,NA,NA,16,16,NA,NA
 2020-04-03,USA,North Carolina,2093,2093,NA,NA,19,19,NA,NA
 2020-04-04,USA,North Carolina,2402,2402,NA,NA,24,24,NA,NA
+2020-04-05,USA,North Carolina,2585,2585,NA,NA,31,31,NA,NA
+2020-04-06,USA,North Carolina,2870,2870,NA,NA,33,33,NA,NA
 2020-01-22,USA,North Dakota,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,North Dakota,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,North Dakota,0,0,NA,NA,0,0,NA,NA
@@ -2145,6 +2201,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,North Dakota,159,159,NA,NA,3,3,NA,NA
 2020-04-03,USA,North Dakota,173,173,NA,NA,3,3,NA,NA
 2020-04-04,USA,North Dakota,186,186,NA,NA,3,3,NA,NA
+2020-04-05,USA,North Dakota,207,207,NA,NA,3,3,NA,NA
+2020-04-06,USA,North Dakota,225,225,NA,NA,3,3,NA,NA
 2020-01-22,USA,Nebraska,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Nebraska,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Nebraska,0,0,NA,NA,0,0,NA,NA
@@ -2219,6 +2277,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Nebraska,254,254,NA,NA,6,6,NA,NA
 2020-04-03,USA,Nebraska,284,284,NA,NA,6,6,NA,NA
 2020-04-04,USA,Nebraska,318,318,NA,NA,6,6,NA,NA
+2020-04-05,USA,Nebraska,354,354,NA,NA,6,6,NA,NA
+2020-04-06,USA,Nebraska,402,402,NA,NA,6,6,NA,NA
 2020-01-22,USA,New Hampshire,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,New Hampshire,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,New Hampshire,0,0,NA,NA,0,0,NA,NA
@@ -2293,6 +2353,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,New Hampshire,479,479,NA,NA,4,4,NA,NA
 2020-04-03,USA,New Hampshire,540,540,NA,NA,7,7,NA,NA
 2020-04-04,USA,New Hampshire,620,620,NA,NA,9,9,NA,NA
+2020-04-05,USA,New Hampshire,669,669,NA,NA,9,9,NA,NA
+2020-04-06,USA,New Hampshire,715,715,NA,NA,9,9,NA,NA
 2020-01-22,USA,New Jersey,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,New Jersey,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,New Jersey,0,0,NA,NA,0,0,NA,NA
@@ -2367,6 +2429,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,New Jersey,25590,25590,NA,NA,537,537,NA,NA
 2020-04-03,USA,New Jersey,29895,29895,NA,NA,646,646,NA,NA
 2020-04-04,USA,New Jersey,34997,34997,NA,NA,837,837,NA,NA
+2020-04-05,USA,New Jersey,37505,37505,NA,NA,917,917,NA,NA
+2020-04-06,USA,New Jersey,41091,41091,NA,NA,1002,1002,NA,NA
 2020-01-22,USA,New Mexico,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,New Mexico,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,New Mexico,0,0,NA,NA,0,0,NA,NA
@@ -2441,6 +2505,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,New Mexico,403,403,NA,NA,7,7,NA,NA
 2020-04-03,USA,New Mexico,494,494,NA,NA,10,10,NA,NA
 2020-04-04,USA,New Mexico,545,545,NA,NA,11,11,NA,NA
+2020-04-05,USA,New Mexico,626,626,NA,NA,12,12,NA,NA
+2020-04-06,USA,New Mexico,688,688,NA,NA,12,12,NA,NA
 2020-01-22,USA,Nevada,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Nevada,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Nevada,0,0,NA,NA,0,0,NA,NA
@@ -2515,6 +2581,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Nevada,1458,1458,NA,NA,38,38,NA,NA
 2020-04-03,USA,Nevada,1551,1551,NA,NA,43,43,NA,NA
 2020-04-04,USA,Nevada,1752,1752,NA,NA,46,46,NA,NA
+2020-04-05,USA,Nevada,1836,1836,NA,NA,46,46,NA,NA
+2020-04-06,USA,Nevada,1953,1953,NA,NA,58,58,NA,NA
 2020-01-22,USA,New York,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,New York,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,New York,0,0,NA,NA,0,0,NA,NA
@@ -2589,6 +2657,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,New York,90390,90390,NA,NA,2371,2371,NA,NA
 2020-04-03,USA,New York,103652,103652,NA,NA,2934,2934,NA,NA
 2020-04-04,USA,New York,113892,113892,NA,NA,3433,3433,NA,NA
+2020-04-05,USA,New York,122178,122178,NA,NA,4159,4159,NA,NA
+2020-04-06,USA,New York,130830,130830,NA,NA,4758,4758,NA,NA
 2020-01-22,USA,Ohio,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Ohio,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Ohio,0,0,NA,NA,0,0,NA,NA
@@ -2663,6 +2733,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Ohio,2902,2902,NA,NA,81,81,NA,NA
 2020-04-03,USA,Ohio,3312,3312,NA,NA,90,90,NA,NA
 2020-04-04,USA,Ohio,3738,3738,NA,NA,102,102,NA,NA
+2020-04-05,USA,Ohio,4041,4041,NA,NA,119,119,NA,NA
+2020-04-06,USA,Ohio,4442,4442,NA,NA,142,142,NA,NA
 2020-01-22,USA,Oklahoma,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Oklahoma,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Oklahoma,0,0,NA,NA,0,0,NA,NA
@@ -2737,6 +2809,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Oklahoma,877,877,NA,NA,34,34,NA,NA
 2020-04-03,USA,Oklahoma,987,987,NA,NA,38,38,NA,NA
 2020-04-04,USA,Oklahoma,1157,1157,NA,NA,42,42,NA,NA
+2020-04-05,USA,Oklahoma,1252,1252,NA,NA,46,46,NA,NA
+2020-04-06,USA,Oklahoma,1326,1326,NA,NA,51,51,NA,NA
 2020-01-22,USA,Oregon,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Oregon,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Oregon,0,0,NA,NA,0,0,NA,NA
@@ -2811,6 +2885,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Oregon,825,825,NA,NA,21,21,NA,NA
 2020-04-03,USA,Oregon,898,898,NA,NA,22,22,NA,NA
 2020-04-04,USA,Oregon,999,999,NA,NA,26,26,NA,NA
+2020-04-05,USA,Oregon,1067,1067,NA,NA,27,27,NA,NA
+2020-04-06,USA,Oregon,1132,1132,NA,NA,29,29,NA,NA
 2020-01-22,USA,Pennsylvania,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Pennsylvania,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Pennsylvania,0,0,NA,NA,0,0,NA,NA
@@ -2885,6 +2961,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Pennsylvania,7016,7016,NA,NA,90,90,NA,NA
 2020-04-03,USA,Pennsylvania,8420,8420,NA,NA,102,102,NA,NA
 2020-04-04,USA,Pennsylvania,10016,10016,NA,NA,136,136,NA,NA
+2020-04-05,USA,Pennsylvania,11496,11496,NA,NA,150,150,NA,NA
+2020-04-06,USA,Pennsylvania,12973,12973,NA,NA,162,162,NA,NA
 2020-01-22,USA,Rhode Island,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Rhode Island,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Rhode Island,0,0,NA,NA,0,0,NA,NA
@@ -2959,6 +3037,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Rhode Island,651,651,NA,NA,12,12,NA,NA
 2020-04-03,USA,Rhode Island,705,705,NA,NA,14,14,NA,NA
 2020-04-04,USA,Rhode Island,806,806,NA,NA,15,15,NA,NA
+2020-04-05,USA,Rhode Island,922,922,NA,NA,25,25,NA,NA
+2020-04-06,USA,Rhode Island,1082,1082,NA,NA,27,27,NA,NA
 2020-01-22,USA,South Carolina,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,South Carolina,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,South Carolina,0,0,NA,NA,0,0,NA,NA
@@ -3030,9 +3110,11 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-03-30,USA,South Carolina,925,925,NA,NA,18,18,NA,NA
 2020-03-31,USA,South Carolina,1083,1083,NA,NA,22,22,NA,NA
 2020-04-01,USA,South Carolina,1293,1293,NA,NA,26,26,NA,NA
-2020-04-02,USA,South Carolina,1554,1554,NA,NA,32,32,NA,NA
-2020-04-03,USA,South Carolina,1700,1700,NA,NA,35,35,NA,NA
-2020-04-04,USA,South Carolina,1914,1914,NA,NA,41,41,NA,NA
+2020-04-02,USA,South Carolina,1553,1553,NA,NA,32,32,NA,NA
+2020-04-03,USA,South Carolina,1699,1699,NA,NA,35,35,NA,NA
+2020-04-04,USA,South Carolina,1913,1913,NA,NA,41,41,NA,NA
+2020-04-05,USA,South Carolina,2048,2048,NA,NA,45,45,NA,NA
+2020-04-06,USA,South Carolina,2230,2230,NA,NA,49,49,NA,NA
 2020-01-22,USA,South Dakota,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,South Dakota,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,South Dakota,0,0,NA,NA,0,0,NA,NA
@@ -3107,6 +3189,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,South Dakota,165,165,NA,NA,2,2,NA,NA
 2020-04-03,USA,South Dakota,187,187,NA,NA,2,2,NA,NA
 2020-04-04,USA,South Dakota,212,212,NA,NA,2,2,NA,NA
+2020-04-05,USA,South Dakota,240,240,NA,NA,2,2,NA,NA
+2020-04-06,USA,South Dakota,285,285,NA,NA,2,2,NA,NA
 2020-01-22,USA,Tennessee,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Tennessee,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Tennessee,0,0,NA,NA,0,0,NA,NA
@@ -3178,9 +3262,11 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-03-30,USA,Tennessee,1833,1833,NA,NA,13,13,NA,NA
 2020-03-31,USA,Tennessee,2238,2238,NA,NA,22,22,NA,NA
 2020-04-01,USA,Tennessee,2681,2681,NA,NA,24,24,NA,NA
-2020-04-02,USA,Tennessee,2845,2845,NA,NA,31,31,NA,NA
-2020-04-03,USA,Tennessee,3067,3067,NA,NA,37,37,NA,NA
-2020-04-04,USA,Tennessee,3321,3321,NA,NA,43,43,NA,NA
+2020-04-02,USA,Tennessee,2844,2844,NA,NA,31,31,NA,NA
+2020-04-03,USA,Tennessee,3066,3066,NA,NA,37,37,NA,NA
+2020-04-04,USA,Tennessee,3320,3320,NA,NA,43,43,NA,NA
+2020-04-05,USA,Tennessee,3632,3632,NA,NA,45,45,NA,NA
+2020-04-06,USA,Tennessee,3801,3801,NA,NA,65,65,NA,NA
 2020-01-22,USA,Texas,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Texas,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Texas,0,0,NA,NA,0,0,NA,NA
@@ -3249,12 +3335,14 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-03-27,USA,Texas,1915,1915,NA,NA,23,23,NA,NA
 2020-03-28,USA,Texas,2225,2225,NA,NA,30,30,NA,NA
 2020-03-29,USA,Texas,2663,2663,NA,NA,35,35,NA,NA
-2020-03-30,USA,Texas,3088,3088,NA,NA,39,39,NA,NA
-2020-03-31,USA,Texas,3608,3608,NA,NA,50,50,NA,NA
-2020-04-01,USA,Texas,4272,4272,NA,NA,64,64,NA,NA
-2020-04-02,USA,Texas,4959,4959,NA,NA,77,77,NA,NA
-2020-04-03,USA,Texas,5716,5716,NA,NA,90,90,NA,NA
-2020-04-04,USA,Texas,6386,6386,NA,NA,107,107,NA,NA
+2020-03-30,USA,Texas,3085,3085,NA,NA,39,39,NA,NA
+2020-03-31,USA,Texas,3604,3604,NA,NA,50,50,NA,NA
+2020-04-01,USA,Texas,4268,4268,NA,NA,64,64,NA,NA
+2020-04-02,USA,Texas,4954,4954,NA,NA,77,77,NA,NA
+2020-04-03,USA,Texas,5704,5704,NA,NA,90,90,NA,NA
+2020-04-04,USA,Texas,6363,6363,NA,NA,107,107,NA,NA
+2020-04-05,USA,Texas,7007,7007,NA,NA,127,127,NA,NA
+2020-04-06,USA,Texas,7583,7583,NA,NA,141,141,NA,NA
 2020-01-22,USA,Utah,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Utah,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Utah,0,0,NA,NA,0,0,NA,NA
@@ -3329,6 +3417,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Utah,1076,1076,NA,NA,7,7,NA,NA
 2020-04-03,USA,Utah,1244,1244,NA,NA,7,7,NA,NA
 2020-04-04,USA,Utah,1422,1422,NA,NA,8,8,NA,NA
+2020-04-05,USA,Utah,1605,1605,NA,NA,8,8,NA,NA
+2020-04-06,USA,Utah,1675,1675,NA,NA,13,13,NA,NA
 2020-01-22,USA,Virginia,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Virginia,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Virginia,0,0,NA,NA,0,0,NA,NA
@@ -3390,11 +3480,11 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-03-20,USA,Virginia,103,103,NA,NA,2,2,NA,NA
 2020-03-21,USA,Virginia,136,136,NA,NA,3,3,NA,NA
 2020-03-22,USA,Virginia,199,199,NA,NA,6,6,NA,NA
-2020-03-23,USA,Virginia,226,226,NA,NA,6,6,NA,NA
-2020-03-24,USA,Virginia,292,292,NA,NA,6,6,NA,NA
-2020-03-25,USA,Virginia,NA,338,NA,NA,8,8,NA,NA
-2020-03-26,USA,Virginia,391,391,NA,NA,8,8,NA,NA
-2020-03-27,USA,Virginia,604,604,NA,NA,13,13,NA,NA
+2020-03-23,USA,Virginia,226,226,NA,NA,7,7,NA,NA
+2020-03-24,USA,Virginia,292,292,NA,NA,7,7,NA,NA
+2020-03-25,USA,Virginia,NA,338,NA,NA,9,9,NA,NA
+2020-03-26,USA,Virginia,391,391,NA,NA,10,10,NA,NA
+2020-03-27,USA,Virginia,604,604,NA,NA,14,14,NA,NA
 2020-03-28,USA,Virginia,738,738,NA,NA,17,17,NA,NA
 2020-03-29,USA,Virginia,888,888,NA,NA,22,22,NA,NA
 2020-03-30,USA,Virginia,1018,1018,NA,NA,25,25,NA,NA
@@ -3403,6 +3493,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Virginia,1702,1702,NA,NA,41,41,NA,NA
 2020-04-03,USA,Virginia,2009,2009,NA,NA,46,46,NA,NA
 2020-04-04,USA,Virginia,2407,2407,NA,NA,52,52,NA,NA
+2020-04-05,USA,Virginia,2635,2635,NA,NA,51,51,NA,NA
+2020-04-06,USA,Virginia,2876,2876,NA,NA,54,54,NA,NA
 2020-01-22,USA,Vermont,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Vermont,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Vermont,0,0,NA,NA,0,0,NA,NA
@@ -3464,19 +3556,21 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-03-20,USA,Vermont,33,33,NA,NA,2,2,NA,NA
 2020-03-21,USA,Vermont,49,49,NA,NA,2,2,NA,NA
 2020-03-22,USA,Vermont,53,53,NA,NA,2,2,NA,NA
-2020-03-23,USA,Vermont,76,76,NA,NA,5,5,NA,NA
-2020-03-24,USA,Vermont,95,95,NA,NA,7,7,NA,NA
-2020-03-25,USA,Vermont,123,123,NA,NA,8,8,NA,NA
-2020-03-26,USA,Vermont,158,158,NA,NA,9,9,NA,NA
-2020-03-27,USA,Vermont,184,184,NA,NA,10,10,NA,NA
+2020-03-23,USA,Vermont,76,76,NA,NA,4,4,NA,NA
+2020-03-24,USA,Vermont,95,95,NA,NA,6,6,NA,NA
+2020-03-25,USA,Vermont,123,123,NA,NA,7,7,NA,NA
+2020-03-26,USA,Vermont,158,158,NA,NA,8,8,NA,NA
+2020-03-27,USA,Vermont,184,184,NA,NA,9,9,NA,NA
 2020-03-28,USA,Vermont,211,211,NA,NA,12,12,NA,NA
 2020-03-29,USA,Vermont,234,234,NA,NA,12,12,NA,NA
 2020-03-30,USA,Vermont,256,256,NA,NA,12,12,NA,NA
-2020-03-31,USA,Vermont,292,292,NA,NA,13,13,NA,NA
-2020-04-01,USA,Vermont,320,320,NA,NA,16,16,NA,NA
-2020-04-02,USA,Vermont,338,338,NA,NA,17,17,NA,NA
-2020-04-03,USA,Vermont,389,389,NA,NA,17,17,NA,NA
-2020-04-04,USA,Vermont,461,461,NA,NA,20,20,NA,NA
+2020-03-31,USA,Vermont,292,292,NA,NA,10,10,NA,NA
+2020-04-01,USA,Vermont,320,320,NA,NA,13,13,NA,NA
+2020-04-02,USA,Vermont,338,338,NA,NA,14,14,NA,NA
+2020-04-03,USA,Vermont,389,389,NA,NA,14,14,NA,NA
+2020-04-04,USA,Vermont,461,461,NA,NA,16,16,NA,NA
+2020-04-05,USA,Vermont,512,512,NA,NA,18,18,NA,NA
+2020-04-06,USA,Vermont,543,543,NA,NA,19,19,NA,NA
 2020-01-22,USA,Washington,1,1,NA,NA,0,0,NA,NA
 2020-01-23,USA,Washington,1,1,NA,NA,0,0,NA,NA
 2020-01-24,USA,Washington,1,1,NA,NA,0,0,NA,NA
@@ -3551,6 +3645,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Washington,6818,6818,NA,NA,265,265,NA,NA
 2020-04-03,USA,Washington,7119,7119,NA,NA,288,288,NA,NA
 2020-04-04,USA,Washington,7655,7655,NA,NA,310,310,NA,NA
+2020-04-05,USA,Washington,8017,8017,NA,NA,338,338,NA,NA
+2020-04-06,USA,Washington,8384,8384,NA,NA,372,372,NA,NA
 2020-01-22,USA,Wisconsin,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Wisconsin,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Wisconsin,0,0,NA,NA,0,0,NA,NA
@@ -3625,6 +3721,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Wisconsin,1730,1730,NA,NA,31,31,NA,NA
 2020-04-03,USA,Wisconsin,1916,1916,NA,NA,37,37,NA,NA
 2020-04-04,USA,Wisconsin,2112,2112,NA,NA,56,56,NA,NA
+2020-04-05,USA,Wisconsin,2266,2266,NA,NA,68,68,NA,NA
+2020-04-06,USA,Wisconsin,2438,2438,NA,NA,77,77,NA,NA
 2020-01-22,USA,West Virginia,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,West Virginia,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,West Virginia,0,0,NA,NA,0,0,NA,NA
@@ -3698,7 +3796,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-01,USA,West Virginia,189,189,NA,NA,2,2,NA,NA
 2020-04-02,USA,West Virginia,217,217,NA,NA,2,2,NA,NA
 2020-04-03,USA,West Virginia,237,237,NA,NA,2,2,NA,NA
-2020-04-04,USA,West Virginia,282,282,NA,NA,2,2,NA,NA
+2020-04-04,USA,West Virginia,281,281,NA,NA,2,2,NA,NA
+2020-04-05,USA,West Virginia,320,320,NA,NA,3,3,NA,NA
+2020-04-06,USA,West Virginia,345,345,NA,NA,4,4,NA,NA
 2020-01-22,USA,Wyoming,0,0,NA,NA,0,0,NA,NA
 2020-01-23,USA,Wyoming,0,0,NA,NA,0,0,NA,NA
 2020-01-24,USA,Wyoming,0,0,NA,NA,0,0,NA,NA
@@ -3773,3 +3873,5 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,active_
 2020-04-02,USA,Wyoming,153,153,NA,NA,0,0,NA,NA
 2020-04-03,USA,Wyoming,166,166,NA,NA,0,0,NA,NA
 2020-04-04,USA,Wyoming,187,187,NA,NA,0,0,NA,NA
+2020-04-05,USA,Wyoming,199,199,NA,NA,0,0,NA,NA
+2020-04-06,USA,Wyoming,212,212,NA,NA,0,0,NA,NA
