@@ -49,6 +49,11 @@ usa_county_data <- usa_county_data %>%
 
 usa_state_data <- usa_data %>% 
   filter(!(str_detect(adm2_name, "Cruise Ship"))) %>% 
+  # has missing deaths - assume 0. They have low case numbers as of Apr 08
+  mutate(cum_deaths = if_else(adm1_name == "OH" & adm2_name == "Fairfield County" & is.na(cum_deaths),
+                              0 , cum_deaths)) %>%
+  mutate(cum_deaths = if_else(adm1_name == "WY" & adm2_name == "Weston County" & is.na(cum_deaths) & cum_confirmed_cases == 0,
+                              0 , cum_deaths)) %>%
   group_by(state_fips, adm1_name, date) %>%
   select(-county_fips, -adm2_name) %>% 
   summarise_all(sum) %>% 

@@ -146,6 +146,6 @@ notebooks/iwb-sandbox.ipynb
 api_keys.json
 
 # Results folder
-results/
+results/figures/
 
 **/archive/
