@@ -12,6 +12,10 @@ capture mkdir "results/figures/fig3/"
 capture mkdir "results/figures/fig3/raw" 
 capture mkdir "results/figures/appendix/" 
 capture mkdir "results/figures/appendix/error_dist" 
+capture mkdir "results/figures/appendix/cross_valid" 
+capture mkdir "results/figures/appendix/fixed_lag" 
+
+
 
 // run .do files
 do "codes/models/alt_growth_rates/CHN_adm2.do"

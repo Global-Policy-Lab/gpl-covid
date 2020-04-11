@@ -428,12 +428,11 @@ preserve
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
 	lab(3 "w/o NY") region(lstyle(none))) ///
-	ytitle("") xscale(range(-0.5(0.1)0.1)) xlabel(#5) xsize(7)
+	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/USA.pdf, replace
 	graph export results/figures/appendix/cross_valid/USA.png, replace	
 	outsheet * using "results/source_data/extended_cross_validation_USA.csv", replace
 restore
-
 //---------------------------------Fixed lag
 
 preserve
@@ -444,6 +443,7 @@ preserve
 		foreach var in p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 {
 			g `var'_copy = `var'
 			g `var'_fixelag = L`lags'.`var'
+			replace `var'_fixelag = 0 if `var'_fixelag == . 
 			replace `var' = `var'_fixelag
 			
 		}
