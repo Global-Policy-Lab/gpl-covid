@@ -295,7 +295,9 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
     # new_infections <- number_of_infectious_individuals[i - 1]*
     #   exp((prediction_logdiff[i] + gamma)*max(population[1] - out[i - 1], 0)/population[1]) -
     #   number_of_infectious_individuals[i - 1]
-    
+    # if(i == length(cum_confirmed_cases_simulated) | i %in% c(2, 100)){
+    #   browser()
+    # }
     # i_t+1 = i_t exp(beta*S - gamma)
     number_of_infectious_individuals[i] = 
       number_of_infectious_individuals[i - 1]*exp((prediction_logdiff_interpolated[i]/time_steps_per_day + new_gamma)*
@@ -303,6 +305,25 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
                                                     new_gamma)
      
     recoveries <- number_of_infectious_individuals[i - 1]*(exp(new_gamma) - 1)
+
+    number_of_infectious_individuals_new = 
+      number_of_infectious_individuals[i - 1]*exp((prediction_logdiff_interpolated[i]/time_steps_per_day + new_gamma*c(1,2,3,4,5,6,7,8))*
+                                                    number_of_susceptible_individuals[i - 1]/unit_population - 
+                                                    new_gamma*c(1,2,3,4,5,6,7,8))
+    
+    recoveries_all <- number_of_infectious_individuals[i - 1]*(exp(new_gamma*c(1,2,3,4,5,6,7,8)) - 1)
+    recoveries_all <- number_of_infectious_individuals[i - 1]*new_gamma*c(1,2,3,4,5,6,7,8)
+    number_of_recovered_individuals_new <- number_of_recovered_individuals[i - 1] + recoveries_all
+    number_of_susceptible_individuals_new = unit_population - number_of_infectious_individuals_new - 
+      number_of_recovered_individuals_new
+    
+    new_true_infections <- number_of_infectious_individuals_new - number_of_infectious_individuals[i - 1] + recoveries
+    
+    cum_confirmed_cases_simulated_new = cum_confirmed_cases_simulated[i - 1] + new_true_infections*proportion_confirmed
+    
+    if(abs(cum_confirmed_cases_simulated_new[8] - cum_confirmed_cases_simulated_new[1])/cum_confirmed_cases_simulated_new[1] > 0.01){
+      browser()
+    }
     number_of_recovered_individuals[i] <- number_of_recovered_individuals[i - 1] + recoveries
     number_of_susceptible_individuals[i] = unit_population - number_of_infectious_individuals[i] - 
       number_of_recovered_individuals[i]

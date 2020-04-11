@@ -18,8 +18,9 @@ gamma_loop_df <- crossing(
                "D_l_cum_confirmed_cases", "D_l_cum_confirmed_cases", "D_l_cum_confirmed_cases"),
        model = list(china_model, iran_model, korea_model, italy_model, france_model, usa_model)
        ),
-  gamma = c(0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4) 
-    )%>% 
+  gamma = c(0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4),
+  time_steps_per_day = c(6)
+    ) %>% 
   left_join(underreporting, by = c("urcountry" = "country")) 
 pb <- dplyr::progress_estimated(nrow(gamma_loop_df))
 gamma_loop_df <- gamma_loop_df %>% 
@@ -27,13 +28,14 @@ gamma_loop_df <- gamma_loop_df %>%
                            lhs, policy_variables_to_use, 
                            other_control_variables,
                            underreporting_estimate,
-                           gamma) %>% 
+                           gamma,
+                           time_steps_per_day) %>% 
            pmap(~{
              out <- compute_predicted_cum_cases(full_data = ..1, model = ..2,
                                                 lhs = ..3,
                                                 policy_variables_used = ..4,
                                                 other_control_variables = ..5,
-                                                time_steps_per_day = 6,
+                                                time_steps_per_day = ..8,
                                                 gamma = ..7,
                                                 proportion_confirmed = ..6)
              pb$tick()$print()
@@ -41,17 +43,19 @@ gamma_loop_df <- gamma_loop_df %>%
            }))
 
 final_df <- gamma_loop_df %>% 
-  select(country, gamma, projection) %>% 
+  select(country, gamma, time_steps_per_day, projection) %>% 
   unnest(projection) %>% 
-  group_by(country, gamma) %>% 
+  group_by(country, gamma, time_steps_per_day) %>% 
   filter(date == max(date)) %>% 
-  group_by(gamma) %>% 
+  group_by(gamma, time_steps_per_day) %>% 
   summarise(predicted_cum_confirmed_cases_true = sum(predicted_cum_confirmed_cases_true),
             predicted_cum_confirmed_cases_no_policy = sum(predicted_cum_confirmed_cases_no_policy)) %>% 
-  mutate(cases_saved = predicted_cum_confirmed_cases_no_policy - predicted_cum_confirmed_cases_true) 
-out_scale_down_to_zero <- final_df %>% 
+  mutate(cases_saved = predicted_cum_confirmed_cases_no_policy - predicted_cum_confirmed_cases_true) %>% 
+  arrange(time_steps_per_day, gamma)
+
+out_scale_down_to_zero <- final_df %>%
   ggplot() + 
-  aes(x = gamma, y = cases_saved) + 
+  aes(x = gamma, y = cases_saved, group = factor(time_steps_per_day), color = factor(time_steps_per_day)) + 
   scale_y_log10("Confirmed cases delayed",
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x)),
@@ -64,7 +68,7 @@ out_scale_down_to_zero <- final_df %>%
 
 out_scale_trimmed <- final_df %>% 
   ggplot() + 
-  aes(x = gamma, y = cases_saved) + 
+  aes(x = gamma, y = cases_saved, group = factor(time_steps_per_day), color = factor(time_steps_per_day)) + 
   scale_y_continuous("Confirmed cases delayed", labels = scales::comma) +
   geom_point() + 
   theme_classic() + 
@@ -74,7 +78,7 @@ out_scale_trimmed <- final_df %>%
 
 out_scale_trimmed_true <- final_df %>% 
   ggplot() + 
-  aes(x = gamma, y = predicted_cum_confirmed_cases_true) + 
+  aes(x = gamma, y = predicted_cum_confirmed_cases_true, group = factor(time_steps_per_day), color = factor(time_steps_per_day)) + 
   scale_y_continuous("Estimate with-policy confirmed cases", labels = scales::comma) +
   geom_point() + 
   theme_classic() + 
@@ -84,7 +88,7 @@ out_scale_trimmed_true <- final_df %>%
 
 out_scale_trimmed_no_policy <- final_df %>% 
   ggplot() + 
-  aes(x = gamma, y = predicted_cum_confirmed_cases_no_policy) + 
+  aes(x = gamma, y = predicted_cum_confirmed_cases_no_policy, group = factor(time_steps_per_day), color = factor(time_steps_per_day)) + 
   scale_y_continuous("Estimate no-policy confirmed cases", labels = scales::comma) +
   geom_point() + 
   theme_classic() + 
