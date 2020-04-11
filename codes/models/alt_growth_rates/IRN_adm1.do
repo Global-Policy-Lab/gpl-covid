@@ -319,31 +319,32 @@ saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_r
 
 
 // FIXED LAG 
-reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
+preserve
+	reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
-coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
- 
-foreach lags of num 1 2 3 4 5{ 
-	quietly {
-	foreach var in p_1 p_2{
-		g `var'_copy = `var'
-		g `var'_fixelag = L`lags'.`var'
-		replace `var' = `var'_fixelag
+	coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
+	 
+	foreach lags of num 1 2 3 4 5{ 
+		quietly {
+		foreach var in p_1 p_2{
+			g `var'_copy = `var'
+			g `var'_fixelag = L`lags'.`var'
+			replace `var' = `var'_fixelag
+			
+		}
+		drop *_fixelag 
+
+		reghdfe D_l_cum_confirmed_cases p_1 p_2 , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+		coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+		local r2 = e(r2)
+		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
 		
+		foreach var in p_1 p_2{
+			replace `var' = `var'_copy
+			drop `var'_copy
+		}
+		}
 	}
-	drop *_fixelag 
-
-	reghdfe D_l_cum_confirmed_cases p_1 p_2 , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
-	coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
-	local r2 = e(r2)
-	replace L`lags'_at = L`lags'_at - 0.1 *`lags'
-	
-	foreach var in p_1 p_2{
-		replace `var' = `var'_copy
-		drop `var'_copy
-	}
-	}
-}
 
 
 	set scheme s1color
@@ -361,15 +362,29 @@ foreach lags of num 1 2 3 4 5{
 	|| scatter  L5_at L5_b, mc(black*.1) ///		
 	ylabel(1 "trvl ban opt, wrk hme, schl clse" ///
 	2 "home isolation", angle(0)) ///
-	ytitle("") title("USA comparing Fixed Lags models") ///
+	ytitle("") title("Iran - comparing Fixed Lags models") ///
 	legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
 	lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
-graph export results/figures/appendix/fixed_lag/IRN.pdf, replace
-graph export results/figures/appendix/fixed_lag/IRN.png, replace
-
-
+	graph export results/figures/appendix/fixed_lag/IRN.pdf, replace
+	graph export results/figures/appendix/fixed_lag/IRN_FL.png, replace
+	drop if L0_b == .
+	keep *_at *_ll1 *_ul1 *_b
+	egen policy = seq()
+	reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
+	rename *_ *
+	reshape long L, i(temp policy) j(val)
+	tostring policy, replace
+	replace policy = "trvl ban, wrk hme, schl clse" if policy == "1"
+	replace policy = "home isolation" if policy == "2"
+	rename val lag
+	reshape wide L, i(lag policy) j(temp) string
+	sort Lat
+	rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
+	outsheet * using "results/source_data/extended_fixed_lag_IRN.csv", replace	
+restore
+stop
 //------------------------NEW: EVENT STUDY
-*preserve
+preserve
 local policy_study = "p_2"
 
 gen D_`policy_study' = D.`policy_study'
@@ -477,8 +492,9 @@ preserve
 	3 "home isolation", angle(0)) ///
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1) lab(2 "Full sample") lab(1 "Leaving one region out") ///
-	region(lstyle(none)) pos(11) ring(0)) ///
+	region(lstyle(none))) ///
 	ytitle("") xscale(range(-0.5(0.1)0.1)) xlabel(#5) xsize(10)
 	graph export results/figures/appendix/cross_valid/IRN.pdf, replace
 	graph export results/figures/appendix/cross_valid/IRN.png, replace	
+	outsheet * using "results/source_data/extended_cross_validation_IRN.csv", replace
 restore

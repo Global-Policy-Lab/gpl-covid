@@ -1,0 +1,37 @@
+policy	lag	position	beta	lower_CI	upper_CI
+"Social distance"	5	.5	.1340942	.0259473	.2422411
+"Social distance"	4	.6	.1016503	.0017392	.2015613
+"Social distance"	3	.7	.1262881	.0262854	.2262909
+"Social distance"	2	.8	.1186436	-.0125022	.2497895
+"Social distance"	1	.9	.1099094	-.026918	.2467368
+"Social distance"	0	1	.1381553	-.0103834	.286694
+"School closure"	5	1.5	-.0691242	-.1148055	-.0234429
+"School closure"	4	1.6	-.0719837	-.1353694	-.008598
+"School closure"	3	1.7	-.0714501	-.150118	.0072178
+"School closure"	2	1.8	-.0674025	-.1582725	.0234676
+"School closure"	1	1.9	-.0833109	-.2096545	.0430326
+"School closure"	0	2	-.1059604	-.2635855	.0516647
+"Travel ban"	5	2.5	-.0497769	-.2233296	.123776
+"Travel ban"	4	2.6	-.0841637	-.2655922	.0972647
+"Travel ban"	3	2.7	-.1060527	-.2697274	.0576221
+"Travel ban"	2	2.8	-.1607203	-.3053541	-.0160865
+"Travel ban"	1	2.9	-.0490956	-.2612311	.1630398
+"Travel ban"	0	3	-.2949401	-.6275098	.0376295
+"Quarantine positive cases"	5	3.5	-.0614334	-.1249258	.002059
+"Quarantine positive cases"	4	3.6	-.0614072	-.1287601	.0059457
+"Quarantine positive cases"	3	3.7	-.0774447	-.1461223	-.0087671
+"Quarantine positive cases"	2	3.8	-.0898086	-.1705861	-.0090311
+"Quarantine positive cases"	1	3.9	-.1018168	-.1968134	-.0068201
+"Quarantine positive cases"	0	4	-.0724445	-.1888868	.0439978
+"Business closure"	5	4.5	-.2406775	-.3768675	-.1044875
+"Business closure"	4	4.6	-.2259869	-.3659528	-.0860209
+"Business closure"	3	4.7	-.2281	-.3343337	-.1218663
+"Business closure"	2	4.8	-.198393	-.3072996	-.0894865
+"Business closure"	1	4.9	-.2946775	-.4418919	-.147463
+"Business closure"	0	5	-.1376751	-.3712025	.0958523
+"Home isolation"	5	5.5	.0397103	-.0630438	.1424645
+"Home isolation"	4	5.6	.0574051	-.0584139	.1732241
+"Home isolation"	3	5.7	.0798537	-.0262077	.1859152
+"Home isolation"	2	5.8	.0910283	-.0294924	.211549
+"Home isolation"	1	5.9	.1188185	-.0066731	.2443101
+"Home isolation"	0	6	.0595767	-.0783036	.197457

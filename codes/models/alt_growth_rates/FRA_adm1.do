@@ -281,15 +281,87 @@ preserve
 	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
-	tw scatter i beta , xline(0,lc(black) lp(dash)) mc(black*.5)  ///
+	tw scatter i beta if sample != "GrandEst", xline(0,lc(black) lp(dash)) mc(black*.5)  ///
 	|| scatter i beta if sample == "full_sample", mc(red) ///
+	|| scatter i beta if sample == "GrandEst", mc(green) m(Oh) ///
 	yscale(range(0(1)6)) ylabel(1 "combined effect" ///
 	2 "national lockdown" ///
 	3 "school closure" ///
 	4 "social distance", angle(0)) ytitle("") xtitle("Estimated effect on daily growth rate", height(5)) ///
 	xscale(range(-0.4(0.1)0.1)) xlabel(#5) xsize(7) ///
-	legend(order(2 1) lab(2 "Full sample") lab(1 "Leaving one region out") ///
-	region(lstyle(none)) pos(11) ring(0)) 
+	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
+	lab(3 "w/o Grand Est") region(lstyle(none)) pos(11) ring(0)) 
 	graph export results/figures/appendix/cross_valid/FRA.pdf, replace
 	graph export results/figures/appendix/cross_valid/FRA.png, replace	
+	outsheet * using "results/source_data/extended_cross_validation_FRA.csv", replace
+restore
+
+
+//-------------------------------FIXED LAG
+
+preserve
+	reghdfe D_l_cum_confirmed_cases testing pck_social_distance school_closure ///
+	national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+	 
+	coefplot, keep(pck_social_distance school_closure national_lockdown) gen(L0_) title(main model) xline(0) 
+	foreach lags of num 1/5 { 
+		quietly {
+		foreach var in pck_social_distance school_closure national_lockdown{
+			g `var'_copy = `var'
+			g `var'_fixelag = L`lags'.`var'
+			replace `var' = `var'_fixelag
+			
+		}
+		drop *_fixelag 
+
+		reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure ///
+		national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+		coefplot, keep(pck_social_distance school_closure national_lockdown) ///
+		gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
+		
+		foreach var in pck_social_distance school_closure national_lockdown{
+			replace `var' = `var'_copy
+			drop `var'_copy
+		}
+		}
+	}
+
+
+	set scheme s1color
+	tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
+	|| scatter  L0_at L0_b, mc(black) ///
+	|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
+	|| scatter  L1_at L1_b, mc(black*.9) ///
+	|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
+	|| scatter  L2_at L2_b, mc(black*.7) ///
+	|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
+	|| scatter  L3_at L3_b, mc(black*.5) ///
+	|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
+	|| scatter  L4_at L4_b, mc(black*.3) ///
+	|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
+	|| scatter  L5_at L5_b, mc(black*.1) ///	
+	ylabel(1 "social distance" ///
+	2 "school closure" ///
+	3 "lockdown", angle(0)) ///
+	ytitle("") title("France comparing Fixed Lags models") ///
+	legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
+	lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
+	graph export results/figures/appendix/fixed_lag/FRA.pdf, replace
+	graph export results/figures/appendix/fixed_lag/FRA.png, replace
+	drop if L0_b == .
+	keep *_at *_ll1 *_ul1 *_b
+	egen policy = seq()
+	reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
+	rename *_ *
+	reshape long L, i(temp policy) j(val)
+	tostring policy, replace
+	replace policy = "social distance" if policy == "1"
+	replace policy = "school closure" if policy == "2"
+	replace policy = "lockdown" if policy == "3"
+	rename val lag
+	reshape wide L, i(lag policy) j(temp) string
+	sort Lat
+	rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
+	outsheet * using "results/source_data/extended_fixed_lag_FRA.csv", replace
 restore

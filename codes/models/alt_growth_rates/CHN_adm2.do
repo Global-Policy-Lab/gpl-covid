@@ -135,6 +135,9 @@ restore
 foreach t_chg of local testing_change_dates{
 	local t_str = string(`t_chg', "%td")
 	gen testing_regime_change_`t_str' = t==`t_chg'
+	
+	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
+	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
 }
 
 
@@ -155,7 +158,6 @@ tw (sc D_l_active_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 //--------------------gen treatment for home isolation with lags
 
 gen home_isolation_L0_to_L7 = 0
-
 forvalues i = 0/7 {
 	replace home_isolation_L0_to_L7 = 1 if L`i'.D.home_isolation == 1
 }
@@ -179,6 +181,12 @@ gen home_isolation_L29_to_L70 = 0
 forvalues i = 29/70 {
 	replace home_isolation_L29_to_L70 = 1 if L`i'.D.home_isolation == 1
 }
+
+lab var home_isolation_L0_to_L7 "Home isolation, Week 1"
+lab var home_isolation_L8_to_L14 "Home isolation, Week 2"
+lab var home_isolation_L15_to_L21 "Home isolation, Week 3"
+lab var home_isolation_L22_to_L28 "Home isolation, Week 4"
+lab var home_isolation_L29_to_L70 "Home isolation, Week 5"
 
 //--------------------gen treatment for travel ban with lags
 
@@ -207,6 +215,11 @@ forvalues i = 29/70 {
 	replace travel_ban_local_L29_to_L70 = 1 if L`i'.D.travel_ban_local == 1
 }
 
+lab var travel_ban_local_L0_to_L7 "Travel ban, Week 1"
+lab var travel_ban_local_L8_to_L14 "Travel ban, Week 2"
+lab var travel_ban_local_L15_to_L21 "Travel ban, Week 3"
+lab var travel_ban_local_L22_to_L28 "Travel ban, Week 4"
+lab var travel_ban_local_L29_to_L70 "Travel ban, Week 5"
 
 // -----------diagnostic: should be non-overlapping lags
 
@@ -221,10 +234,11 @@ tab t x2
 outsheet using "models/reg_data/CHN_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_*, absorb(i.adm12_id, savefe) cluster(t) resid
+reghdfe D_l_active_cases travel_ban_local_* home_isolation_* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
 
-outreg2 using "results/tables/CHN_estimates_table", word replace label ///
- addtext(City FE, "YES", Day-of-Week FE, "NO") title("Regression output: China")
+outreg2 using "results/tables/CHN_estimates_table", sideway noparen nodepvar word replace label ///
+ addtext(City FE, "YES", Day-of-Week FE, "NO") title(China, "Dependent variable: Growth rate of active cases (\u0916?log per day\'29") ///
+ ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1")
 cap erase "results/tables/CHN_estimates_table.txt"
 
 // export coef
@@ -547,9 +561,10 @@ preserve
 	1 "Days 29-70",  angle(0)) ///
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
-	lab(3 "w/o Hubei") region(lstyle(none))) ///
+	lab(3 "w/o Hubei") region(lstyle(none)) rows(1)) ///
 	ytitle("") xscale(range(-0.3(0.1)0.1)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/CHN.pdf, replace
 	graph export results/figures/appendix/cross_valid/CHN.png, replace	
+	outsheet * using "results/source_data/extended_cross_validation_CHN.csv", replace
 restore
 
