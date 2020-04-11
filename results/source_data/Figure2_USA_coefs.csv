@@ -1,12 +1,15 @@
 adm0,policy,beta,se
-"USA","p_1",-.222,.064
-"USA","p_2",-.067,.024
-"USA","p_3",.061,.025
-"USA","p_4",-.014,.042
-"USA","p_5",-.148,.065
-"USA","p_6",.036,.035
-"USA","comb. policy",-.356,.1
-"USA","no_policy rate",.313,.079
-"USA_Washington","no_policy rate",.348,.06
-"USA_California","no_policy rate",.273,.068
-"USA_NewYork","no_policy rate",.742,.566
+"USA","p_1",-.181,.092
+"USA","p_2",-.138,.044
+"USA","p_3",-.134,.061
+"USA","p_4",.067,.039
+"USA","p_5",.022,.02
+"USA","p_6",.063,.026
+"USA","p_7",.012,.042
+"USA","p_8",-.016,.02
+"USA","p_9",-.06,.019
+"USA","comb. policy",-.363,.1
+"USA","no_policy rate",.349,.075
+"USA_Washington","no_policy rate",.335,.046
+"USA_California","no_policy rate",.312,.08
+"USA_NewYork","no_policy rate",.976,.248

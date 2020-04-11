@@ -1,0 +1,57 @@
+adm0	sample	policy	beta	se	i
+"FRA"	"full_sample"	"national_lockdown"	-.048	.025	2
+"FRA"	"full_sample"	"school_closure"	-.005	.039	4
+"FRA"	"full_sample"	"pck_social_distanc"	-.227	.07	3
+"FRA"	"full_sample"	"comb. policy"	-.279	.058	1
+"FRA"	"AuvergneRhôneAlpe"	"national_lockdown"	-.049	.027	2
+"FRA"	"AuvergneRhôneAlpe"	"school_closure"	.002	.041	4
+"FRA"	"AuvergneRhôneAlpe"	"pck_social_distanc"	-.242	.074	3
+"FRA"	"AuvergneRhôneAlpe"	"comb. policy"	-.289	.06	1
+"FRA"	"BourgogneFrancheCo"	"national_lockdown"	-.056	.024	2
+"FRA"	"BourgogneFrancheCo"	"school_closure"	.013	.043	4
+"FRA"	"BourgogneFrancheCo"	"pck_social_distanc"	-.199	.075	3
+"FRA"	"BourgogneFrancheCo"	"comb. policy"	-.242	.061	1
+"FRA"	"Bretagne"	"national_lockdown"	-.044	.025	2
+"FRA"	"Bretagne"	"school_closure"	-.003	.038	4
+"FRA"	"Bretagne"	"pck_social_distanc"	-.24	.076	3
+"FRA"	"Bretagne"	"comb. policy"	-.287	.065	1
+"FRA"	"Centre"	"national_lockdown"	-.06	.025	2
+"FRA"	"Centre"	"school_closure"	.006	.04	4
+"FRA"	"Centre"	"pck_social_distanc"	-.233	.071	3
+"FRA"	"Centre"	"comb. policy"	-.287	.059	1
+"FRA"	"Corse"	"national_lockdown"	-.035	.025	2
+"FRA"	"Corse"	"school_closure"	-.011	.038	4
+"FRA"	"Corse"	"pck_social_distanc"	-.235	.07	3
+"FRA"	"Corse"	"comb. policy"	-.281	.058	1
+"FRA"	"GrandEst"	"national_lockdown"	-.067	.014	2
+"FRA"	"GrandEst"	"school_closure"	-.047	.035	4
+"FRA"	"GrandEst"	"pck_social_distanc"	-.1	.027	3
+"FRA"	"GrandEst"	"comb. policy"	-.214	.029	1
+"FRA"	"HautsdeFrance"	"national_lockdown"	-.051	.028	2
+"FRA"	"HautsdeFrance"	"school_closure"	.007	.039	4
+"FRA"	"HautsdeFrance"	"pck_social_distanc"	-.252	.104	3
+"FRA"	"HautsdeFrance"	"comb. policy"	-.297	.076	1
+"FRA"	"IledeFrance"	"national_lockdown"	-.035	.028	2
+"FRA"	"IledeFrance"	"school_closure"	-.013	.047	4
+"FRA"	"IledeFrance"	"pck_social_distanc"	-.263	.07	3
+"FRA"	"IledeFrance"	"comb. policy"	-.311	.06	1
+"FRA"	"Normandie"	"national_lockdown"	-.032	.027	2
+"FRA"	"Normandie"	"school_closure"	-.011	.041	4
+"FRA"	"Normandie"	"pck_social_distanc"	-.258	.074	3
+"FRA"	"Normandie"	"comb. policy"	-.3	.066	1
+"FRA"	"NouvelleAquitaine"	"national_lockdown"	-.052	.027	2
+"FRA"	"NouvelleAquitaine"	"school_closure"	.011	.044	4
+"FRA"	"NouvelleAquitaine"	"pck_social_distanc"	-.223	.071	3
+"FRA"	"NouvelleAquitaine"	"comb. policy"	-.263	.062	1
+"FRA"	"Occitanie"	"national_lockdown"	-.051	.028	2
+"FRA"	"Occitanie"	"school_closure"	-.001	.049	4
+"FRA"	"Occitanie"	"pck_social_distanc"	-.21	.075	3
+"FRA"	"Occitanie"	"comb. policy"	-.262	.072	1
+"FRA"	"Paca"	"national_lockdown"	-.045	.027	2
+"FRA"	"Paca"	"school_closure"	-.004	.041	4
+"FRA"	"Paca"	"pck_social_distanc"	-.235	.075	3
+"FRA"	"Paca"	"comb. policy"	-.284	.062	1
+"FRA"	"PaysdelaLoire"	"national_lockdown"	-.045	.024	2
+"FRA"	"PaysdelaLoire"	"school_closure"	-.008	.046	4
+"FRA"	"PaysdelaLoire"	"pck_social_distanc"	-.244	.069	3
+"FRA"	"PaysdelaLoire"	"comb. policy"	-.298	.06	1

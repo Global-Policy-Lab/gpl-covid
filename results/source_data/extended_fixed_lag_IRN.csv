@@ -1,0 +1,13 @@
+policy	lag	position	beta	lower_CI	upper_CI
+"trvl ban, wrk hme, schl clse"	5	.5	-.3322767	-.4427206	-.2218329
+"trvl ban, wrk hme, schl clse"	4	.6	-.4698375	-.5709299	-.3687452
+"trvl ban, wrk hme, schl clse"	3	.7	-.4457655	-.5863162	-.3052148
+"trvl ban, wrk hme, schl clse"	2	.8	-.4248943	-.6340677	-.215721
+"trvl ban, wrk hme, schl clse"	1	.9	-.3321641	-.4621446	-.2021836
+"trvl ban, wrk hme, schl clse"	0	1	-.2852881	-.4493179	-.1212583
+"home isolation"	5	1.5	-.056531	-.091225	-.021837
+"home isolation"	4	1.6	-.0599329	-.084647	-.0352188
+"home isolation"	3	1.7	-.0824123	-.1161775	-.048647
+"home isolation"	2	1.8	-.0973301	-.1371868	-.0574734
+"home isolation"	1	1.9	-.1172838	-.1783491	-.0562185
+"home isolation"	0	2	-.1507055	-.2193363	-.0820748
