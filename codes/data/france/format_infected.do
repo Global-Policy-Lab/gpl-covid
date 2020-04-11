@@ -3,7 +3,6 @@
 
 //Load data
 import delim "data/interim/france/adm2_to_adm1.csv", clear 
-
 // Deal with accents and hyphen
 foreach ite of num 1/10 {
 replace region = subinstr(region, "-", "",1)
@@ -26,6 +25,7 @@ rename region_id adm1
 collapse adm1 (sum) pop, by(adm1_name)
 rename pop adm1_pop
 replace adm1_name = "IledeFrance" if adm1 == 11
+g adm0_name = "France"
 save "data/interim/france/region_ID.dta", replace
 
 
@@ -110,8 +110,6 @@ append using `daily_updates'
 drop if adm1_name == "Francemétropolitaine"
 drop if adm1_name == "TotalMétropole"
 drop if adm1_name == "TotalOutreMer"
-drop appnd last_date
-
 merge m:1 adm1_name using "data/interim/france/region_ID.dta", nogen
 
 replace adm1 = 94 if adm1_name == "Corse" 
@@ -140,9 +138,28 @@ foreach adm1 of num `list' {
 	}
 
 }
-drop L_conf _*
+drop L_conf _* appnd last_date
 
 rename cumulative_f cum_confirmed_cases_imputed
 rename cumulative_confirmed_cases cum_confirmed_cases
 sort adm1 date
+
+// add hospitalization for robustness check
+preserve
+	import delim using "data/raw/france/sursaud-covid19-quotidien-2020-04-07-19h00-region.csv", clear 
+	keep if sursaud_ == "0"
+	g t = date(date,"YMD",2020)
+	keep nbre_hospit_corona reg t
+	format t %td
+	sort reg t
+	by reg: g hospitalization = sum(nbre)
+	rename (reg t) (adm1 date)
+	drop nbre
+	tempfile hospi
+	save `hospi'
+restore
+merge 1:1 date adm1 using `hospi', nogen
+merge m:1 adm1 using "data/interim/france/region_ID.dta", update replace nogen
+replace adm1_name = "Corse" if adm1 == 94
+
 outsheet * using "data/interim/france/france_confirmed_cases_by_region.csv", replace comma
