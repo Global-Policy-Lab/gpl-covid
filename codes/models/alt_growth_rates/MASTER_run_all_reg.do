@@ -52,4 +52,4 @@ foreach fn of local filenames{
 }
 
 graph combine error_chn error_irn error_kor error_fra error_ita error_usa, rows(3)
-graph export results/figures/appendix/ALL_conf_cases_e.png, replace
+graph export results/figures/appendix/error_dist/ALL_conf_cases_e.png, replace
