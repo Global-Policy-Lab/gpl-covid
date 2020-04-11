@@ -562,7 +562,7 @@ preserve
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
 	lab(3 "w/o Hubei") region(lstyle(none)) rows(1)) ///
-	ytitle("") xscale(range(-0.3(0.1)0.1)) xlabel(#5) xsize(7)
+	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/CHN.pdf, replace
 	graph export results/figures/appendix/cross_valid/CHN.png, replace	
 	outsheet * using "results/source_data/extended_cross_validation_CHN.csv", replace

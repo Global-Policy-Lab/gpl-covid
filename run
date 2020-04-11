@@ -92,7 +92,7 @@ python codes/data/usa/merge_policy_and_cases.py
 
 # quality-check processed datasets
 printf "***Checking processed data***\n"
-python codes/data/multi_country/quality-check-processed-datasets.py -l
+python codes/data/multi_country/quality-check-processed-datasets.py
 
 ## regression model estimation
 printf "***Estimating regression model and creating Figure 3 and A1***\n"
