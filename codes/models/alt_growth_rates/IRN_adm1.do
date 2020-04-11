@@ -81,12 +81,16 @@ restore
 foreach t_chg of local testing_change_dates{
 	local t_str = string(`t_chg', "%td")
 	gen testing_regime_change_`t_str' = t==`t_chg'
+		
+	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
+	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
 }
 
 // high_screening_regime in Qom, which transitioned on Mar 6
 // assume rollout completed on Mar 13
 drop testing_regime_change_06mar2020
 gen testing_regime_13mar2020 = t==mdy(3,13,2020)
+lab var testing_regime_13mar2020 "Testing regime change on Mar 13, 2020"
 
 //------------------diagnostic
 
@@ -110,15 +114,15 @@ lab var day_avg "Observed avg. change in log cases"
 // break in the health data (missing cases for 3/2-3/3)
 // so p_1 = 1/3 on 3/1 when opt travel ban enacted, then p_1 = 1 starting 3/5
 gen p_1 = (travel_ban_local_opt + work_from_home + school_closure)/3
-lab var p_1 "trvl ban opt, wrk hme, schl clse"
+lab var p_1 "Travel ban (opt), work from home, school closure"
 
 // home isolation started March 13
 gen p_2 = home_isolation
-lab var p_2 "home isolation"
+lab var p_2 "Home isolation"
 
 // shrines in Qom closed March 17
 // gen p_3 = religious_closure
-// lab var p_3 "religious_closure"
+// lab var p_3 "Religious closure"
 // will not include, insufficient data after enactment
 
 
@@ -128,10 +132,12 @@ lab var p_2 "home isolation"
 outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
+reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
-outreg2 using "results/tables/IRN_estimates_table", word replace label ///
- addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: Iran")
+outreg2 using "results/tables/IRN_estimates_table", sideway noparen nodepvar word replace label ///
+ addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Iran, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ "\'22Travel ban (opt), work from home, school closure\'22 policies were enacted March 1-5, 2020 which overlaps with missing provincial case data in Iran on March 2-3, 2020.")
 cap erase "results/tables/IRN_estimates_table.txt"
 
 // saving coefs
@@ -334,7 +340,7 @@ preserve
 		}
 		drop *_fixelag 
 
-		reghdfe D_l_cum_confirmed_cases p_1 p_2 , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+		reghdfe D_l_cum_confirmed_cases p_1 p_2 testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 		coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
 		local r2 = e(r2)
 		replace L`lags'_at = L`lags'_at - 0.1 *`lags'

@@ -76,20 +76,23 @@ lab var day_avg "Observed avg. change in log cases"
 
 //------------------testing regime changes
 
-g testing_regime = t == mdy(3,15,2020) // start of stade 3, none systematic testing
-lab var testing_regime "Testing Regime Change"
+g testing_regime_13mar2020 = t == mdy(3,15,2020) // start of stade 3, none systematic testing
+lab var testing_regime_13mar2020 "Testing regime change on Mar 15, 2020"
 
 
 //------------------generate policy packages
 
 gen national_lockdown = (business_closure + home_isolation) / 2 // big national lockdown policy
-lab var national_lockdown "Lockdown"
+lab var national_lockdown "National lockdown"
 
 gen no_gathering_5000 = no_gathering_size <= 5000
 gen no_gathering_1000 = no_gathering_size <= 1000
 gen no_gathering_100 = no_gathering_size <= 100
 
 gen pck_social_distance = (no_gathering_1000 + no_gathering_100 + event_cancel + no_gathering_inside + social_distance) / 5
+lab var pck_social_distance "Social distance"
+
+lab var school_closure "School closure"
 
 // gen policy_ct = pck_social_distance + school_closure + national_lockdown
 // sum policy_ct
@@ -100,11 +103,13 @@ gen pck_social_distance = (no_gathering_1000 + no_gathering_100 + event_cancel +
 outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases testing pck_social_distance school_closure ///
-national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure national_lockdown ///
+ testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
  
-outreg2 using "results/tables/FRA_estimates_table", word replace label ///
- addtext(Region FE, "YES", Day-of-Week FE, "YES") title("Regression output: France")
+outreg2 using "results/tables/FRA_estimates_table", sideway noparen nodepvar word replace label ///
+ addtext(Region FE, "YES", Day-of-Week FE, "YES") title(France, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ "\'22National lockdown\'22 policies include business closures and home isolation.")
 cap erase "results/tables/FRA_estimates_table.txt"
 
 // saving coefs
@@ -142,7 +147,7 @@ national_lockdown* _b[national_lockdown] ///
 if e(sample)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter =  testing_regime * _b[testing_regime] + ///
+predictnl y_counter =  testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of all policies combined (FOR FIG2)
@@ -179,8 +184,8 @@ local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefp
 // looking at different policies (similar to FIG2)
 coefplot, keep(pck_social_distance school_closure national_lockdown) ///
 tit("FRA: policy packages") subtitle("`subtitle2'") ///
-caption("pck_social_distance = (no_gath_1000 + no_gath_100 + event_cancel +" " no_gathering_inside + social_distance) / 5" ///
-"Lockdown = (business_closure + home_isolation) / 2", span) ///
+caption("Social distance = (no_gath_1000 + no_gath_100 + event_cancel +" " no_gathering_inside + social_distance) / 5" ///
+"National lockdown = (business_closure + home_isolation) / 2", span) ///
 xline(0) name(FRA_policy, replace) 
 
 
@@ -255,8 +260,8 @@ tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
 *Resave main effect
-reghdfe D_l_cum_confirmed_cases testing pck_social_distance school_closure ///
-national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure ///
+national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 
 foreach var in "national_lockdown" "school_closure" "pck_social_distance" {
 	post results ("FRA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
@@ -267,8 +272,8 @@ post results ("FRA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
-	reghdfe D_l_cum_confirmed_cases testing national_lockdown school_closure ///
-	pck_social_distance if adm1_name != "`adm'" , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+	reghdfe D_l_cum_confirmed_cases national_lockdown school_closure ///
+	pck_social_distance testing_regime_* if adm1_name != "`adm'" , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 	foreach var in "national_lockdown" "school_closure" "pck_social_distance" {
 		post results ("FRA") ("`adm'") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 	}
@@ -285,9 +290,9 @@ preserve
 	|| scatter i beta if sample == "full_sample", mc(red) ///
 	|| scatter i beta if sample == "GrandEst", mc(green) m(Oh) ///
 	yscale(range(0(1)6)) ylabel(1 "combined effect" ///
-	2 "national lockdown" ///
-	3 "school closure" ///
-	4 "social distance", angle(0)) ytitle("") xtitle("Estimated effect on daily growth rate", height(5)) ///
+	2 "National lockdown" ///
+	3 "School closure" ///
+	4 "Social distance", angle(0)) ytitle("") xtitle("Estimated effect on daily growth rate", height(5)) ///
 	xscale(range(-0.4(0.1)0.1)) xlabel(#5) xsize(7) ///
 	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
 	lab(3 "w/o Grand Est") region(lstyle(none)) pos(11) ring(0)) 
@@ -300,8 +305,8 @@ restore
 //-------------------------------FIXED LAG
 
 preserve
-	reghdfe D_l_cum_confirmed_cases testing pck_social_distance school_closure ///
-	national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+	reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure ///
+	national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 	 
 	coefplot, keep(pck_social_distance school_closure national_lockdown) gen(L0_) title(main model) xline(0) 
 	foreach lags of num 1/5 { 
@@ -315,7 +320,7 @@ preserve
 		drop *_fixelag 
 
 		reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure ///
-		national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+		national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 		coefplot, keep(pck_social_distance school_closure national_lockdown) ///
 		gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
 		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
@@ -341,9 +346,9 @@ preserve
 	|| scatter  L4_at L4_b, mc(black*.3) ///
 	|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
 	|| scatter  L5_at L5_b, mc(black*.1) ///	
-	ylabel(1 "social distance" ///
-	2 "school closure" ///
-	3 "lockdown", angle(0)) ///
+	ylabel(1 "Social distance" ///
+	2 "School closure" ///
+	3 "National Lockdown", angle(0)) ///
 	ytitle("") title("France comparing Fixed Lags models") ///
 	legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
 	lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
@@ -356,9 +361,9 @@ preserve
 	rename *_ *
 	reshape long L, i(temp policy) j(val)
 	tostring policy, replace
-	replace policy = "social distance" if policy == "1"
-	replace policy = "school closure" if policy == "2"
-	replace policy = "lockdown" if policy == "3"
+	replace policy = "Social distance" if policy == "1"
+	replace policy = "School closure" if policy == "2"
+	replace policy = "National lockdown" if policy == "3"
 	rename val lag
 	reshape wide L, i(lag policy) j(temp) string
 	sort Lat
