@@ -24,13 +24,13 @@ usa_data <- usa_data %>%
 
 changed = TRUE
 while(changed){
-  new <- mydata %>% 
+  new <- usa_data %>% 
     group_by(tmp_id) %>% 
     filter(!(is.na(cum_confirmed_cases) & date == min(date)))  
-  if(nrow(new) == nrow(mydata)){
+  if(nrow(new) == nrow(usa_data)){
     changed <- FALSE
   }
-  mydata <- new
+  usa_data <- new
 }
 
 usa_policy_variables_to_use <- 
