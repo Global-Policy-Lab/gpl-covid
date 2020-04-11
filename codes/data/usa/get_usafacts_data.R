@@ -27,14 +27,16 @@ get_usafacts_data <- function(){
 
   usa_facts_covid_cases <- usa_facts_covid_cases %>% 
     select(-matches("X[0-9]+"))
-  
+
   usa_facts_covid_cases <- usa_facts_covid_cases %>% 
     mutate(`County Name` = if_else(`County Name` == "Matthews County" & State == "VA",
                                    "Mathews County", `County Name`) %>% 
              str_replace(" city", " City") %>% 
              str_replace("Lac qui ", "Lac Qui ") %>% 
              str_replace("Doña Ana ", "Dona Ana ") %>% 
-             str_replace("Broomfield County and City", "Broomfield County"))
+             str_replace("Broomfield County and City", "Broomfield County"),
+           `County Name` = if_else(countyFIPS == "35013",
+                                   "Dona Ana County", `County Name`))
   
   usa_facts_covid_cases <- usa_facts_covid_cases %>% 
     pivot_longer(cols = matches("[0-9]+/[0-9]+/[0-9]+"),
