@@ -35,7 +35,7 @@ while(changed){
 
 usa_policy_variables_to_use <- 
   c(
-    names(mydata) %>% str_subset('^p_')
+    names(usa_data) %>% str_subset('^p_')
   )  
 
 usa_other_control_variables <-

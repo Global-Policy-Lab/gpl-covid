@@ -33,7 +33,7 @@ while(changed){
 }
 
 italy_policy_variables_to_use <- 
-  names(mydata) %>% 
+  names(italy_data) %>% 
   str_subset("^p_")  
 
 italy_other_control_variables <- 
