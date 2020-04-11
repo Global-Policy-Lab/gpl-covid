@@ -182,5 +182,8 @@ usa_state_data_standardised <- usa_state_data_standardised %>%
   mutate(adm1_name = state.name) %>% 
   select(-state.name)
 
+# These have been causing problems so I drop them here. We do not currently use them.
+usa_state_data_standardised <- usa_state_data_standardised %>% 
+  select(-cum_deaths, -cum_deaths_imputed, -active_cases, -active_cases_imputed, -cum_recoveries, -cum_recoveries_imputed)
 write_csv(usa_county_data_standardised, path = "data/interim/usa/usa_usafacts_county.csv")
 write_csv(usa_state_data_standardised, path = "data/interim/usa/usa_usafacts_state.csv")
