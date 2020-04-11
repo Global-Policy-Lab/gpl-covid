@@ -25,9 +25,9 @@ parser.add_argument(
 )
 parser.add_argument(
     "-l",
-    "--no-check-latlons",
+    "--check-latlons",
     action="store_true",
-    help="Don't check presence of lat/lon values",
+    help="Check presence of lat/lon values",
 )
 args = parser.parse_args()
 
@@ -262,7 +262,7 @@ def main():
         for adm in processed[country]:
             df = processed[country][adm]
 
-            if not args.no_check_latlons:
+            if args.check_latlons:
                 check_latlons(df, country, adm)
             check_cutoff_date(df, country, adm, cutoff_date)
             check_balanced_panel(df, country, adm)

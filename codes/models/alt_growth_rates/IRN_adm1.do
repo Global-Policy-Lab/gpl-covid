@@ -335,6 +335,7 @@ preserve
 		foreach var in p_1 p_2{
 			g `var'_copy = `var'
 			g `var'_fixelag = L`lags'.`var'
+			replace `var'_fixelag = 0 if `var'_fixelag == .
 			replace `var' = `var'_fixelag
 			
 		}
@@ -388,7 +389,7 @@ preserve
 	rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
 	outsheet * using "results/source_data/extended_fixed_lag_IRN.csv", replace	
 restore
-stop
+
 //------------------------NEW: EVENT STUDY
 preserve
 local policy_study = "p_2"
@@ -499,7 +500,7 @@ preserve
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1) lab(2 "Full sample") lab(1 "Leaving one region out") ///
 	region(lstyle(none))) ///
-	ytitle("") xscale(range(-0.5(0.1)0.1)) xlabel(#5) xsize(10)
+	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/IRN.pdf, replace
 	graph export results/figures/appendix/cross_valid/IRN.png, replace	
 	outsheet * using "results/source_data/extended_cross_validation_IRN.csv", replace
