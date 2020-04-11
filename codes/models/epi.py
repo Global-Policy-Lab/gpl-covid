@@ -133,7 +133,48 @@ def get_stochastic_params(
     return out_vals
 
 
-def run_SEIR(E0, I0, R0, beta, gamma, sigma, n_samp=1):
+def run_SIR(I0, R0, beta, gamma):
+    """
+    Simulate SIR model using forward euler integration. All states are defined as 
+    fractions of a population.
+    
+    Parameters
+    ----------
+    I0, R0 : float
+        Initial conditions in fractions (S0 is just 1 minus the sum of these)
+    beta, gamma : :class:`numpy.ndarray`
+        Time-dependent parameters of the model. Must each be 4d-arrays. They should
+        have the following dimensions: (n_steps, n_gamma, n_samples). They should be in
+        units of the timesteps of the simulation. I.e. if there are hourly timesteps,
+        they should refer to hourly rates.
+    
+    Returns
+    -------
+    S, I, R : :class:`numpy.ndarray`
+        State space of the model at all timesteps
+    """
+    
+    n_steps = beta.shape[0]
+
+    S, I, R = init_state_arrays(beta.shape, 3)
+    
+    # initial conditions
+    R[0] = R0
+    I[0] = I0
+    S[0] = 1 - I[0] - R[0]
+
+    for i in range(1, n_steps):
+        new_infected_rate = beta[i - 1] * S[i - 1]
+        new_removed_rate = gamma[i - 1]
+
+        S[i] = S[i - 1] - new_infected_rate * I[i-1]
+        I[i] = I[i - 1] * np.exp(new_infected_rate - new_removed_rate)
+        R[i] = 1 - S[i] - I[i]
+
+    return S, I, R
+
+
+def run_SEIR(E0, I0, R0, beta, gamma, sigma):
     """
     Simulate SEIR model using forward euler integration. All states are defined as 
     fractions of a population.
@@ -147,7 +188,8 @@ def run_SEIR(E0, I0, R0, beta, gamma, sigma, n_samp=1):
         have the following dimensions: (n_steps, n_gamma, n_sigma, n_samples), except 
         that gamma and beta may have len 1 in the opposite dimension. I.e. gamma could
         have shape (n_steps, n_gamma, 1, n_samples), because it is not changing with 
-        sigma.
+        sigma. They should be in units of the timesteps of the simulation. I.e. if 
+        there are hourly timesteps, they should refer to hourly rates.
     
     Returns
     -------
