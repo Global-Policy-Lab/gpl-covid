@@ -122,7 +122,14 @@ fix_issues <- function(data){
       }
     } else {
       # stop("Need to deal with an edge case of cumulative cases declining in the data. Comment out this error then run again and you will be debugging in the right place.")
-      browser()
+      warning("Found an unhandled example of a cumulative variable decreasing.")
+      data <- data %>% 
+        mutate({{variable}} := if_else(tmp_id == first_issue$tmp_id[2] & date == first_issue$date[2],
+                                       NA_real_,
+                                       {{variable}}))
+      print(first_issue %>% 
+              select(tmp_id, date, {{variable}}),
+            width = Inf) 
     }
     data
   }
