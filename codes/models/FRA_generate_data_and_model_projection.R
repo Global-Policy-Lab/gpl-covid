@@ -15,7 +15,11 @@ france_data <- read_csv("models/reg_data/FRA_reg_data.csv",
   arrange(adm1_name, date) %>%
   mutate(tmp_id = factor(adm1_name),
          day_of_week = factor(dow))
-
+if(exists("gamma")){
+  if(class(gamma) == "function"){
+    gamma <- 0.052
+  }
+}
 changed = TRUE
 while(changed){
   new <- france_data %>% 
@@ -30,10 +34,9 @@ while(changed){
 france_policy_variables_to_use <- 
   c(
     "testing_regime",
-    'national_lockdown',
+    'pck_social_distance',
     'school_closure',
-    'social_distance',
-    'pck_no_gathering'
+    'national_lockdown'
   )  
 
 france_other_control_variables <- 'day_of_week'

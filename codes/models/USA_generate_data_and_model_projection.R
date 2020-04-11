@@ -22,9 +22,20 @@ usa_data <- usa_data %>%
   mutate_at(vars(matches("testing_regime")),
             ~if_else(is.na(.x), 0, .x))
 
+changed = TRUE
+while(changed){
+  new <- mydata %>% 
+    group_by(tmp_id) %>% 
+    filter(!(is.na(cum_confirmed_cases) & date == min(date)))  
+  if(nrow(new) == nrow(mydata)){
+    changed <- FALSE
+  }
+  mydata <- new
+}
+
 usa_policy_variables_to_use <- 
   c(
-    'p_1', 'p_2', 'p_3'
+    names(mydata) %>% str_subset('^p_')
   )  
 
 usa_other_control_variables <-
