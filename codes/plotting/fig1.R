@@ -201,10 +201,12 @@ policies <- subset(policies, date >= start & date <= end)
 # Record policy timeseries source data 
 if (c==1){
   policy_source <- policies[,c("date", "diff.1", "diff.2", "diff.3", "diff.4", "diff.5")]
+  colnames(policy_source)[2:6] <- c("p1", "p2", "p3", "p4", "p5")
   policy_source$country <- country
 }
 if (c %in% c(2:5)){
   add_policy <- policies[,c("date", "diff.1", "diff.2", "diff.3", "diff.4", "diff.5")]
+  colnames(add_policy)[2:6] <- c("p1", "p2", "p3", "p4", "p5")
   add_policy$country <- country
   policy_source <- rbind(policy_source, add_policy)
 }
@@ -213,6 +215,7 @@ if (c==6){
   add_policy$diff.3 <- NA
   add_policy$diff.4 <- NA
   add_policy$diff.5 <- NA
+  colnames(add_policy)[2:6] <- c("p1", "p2", "p3", "p4", "p5")
   add_policy$country <- country
   policy_source <- rbind(policy_source, add_policy)
 }
@@ -277,9 +280,11 @@ dev.off()
 
 ### Cases Map ###
 if (country=="USA"){
-  map <- states(cb=TRUE)
+  options(tigris_use_cache = FALSE)
+  map <- tigris::states(cb=TRUE)
   map <- subset(map, !(STATEFP %in% c("15","02","60","72","66", "69", "78")))
 }
+
 if (country=="IRN"){
   suppressWarnings(map <- readOGR(paste0(data_dir, "interim/adm/adm1/adm1.shp")))
   map <- map[map$adm0_name=='IRN',]
@@ -342,10 +347,11 @@ if (country=="CHN"){
   # update col name
   update_col <- is.na(adm$shp_adm1)
   adm$shp_adm1 <- as.character(adm$shp_adm1)
-  adm[update_col, 'shp_adm1'] <- as.character(adm[update_col, 'adm1_name'])
+  suppressWarnings(adm[update_col, 'shp_adm1'] <- as.character(adm[update_col, 'adm1_name']))
   update_col <- is.na(adm$shp_adm2)
   adm$shp_adm2 <- as.character(adm$shp_adm2)
   adm[update_col, 'shp_adm2'] <- as.character(adm[update_col, 'adm2_name'])
+  
   # merge with lon/lat
   suppressWarnings(adm <- merge(units, adm,
                 by.x=c("adm1_name", "adm2_name"),
@@ -399,15 +405,15 @@ if (c %in% c(5,6)){
   map_source <- rbind(map_source, add_map)
 }
 
+} # End loop over countries 
+
 ##########################################################
 
 ## SAVE SOURCE DATA 
+
 write.csv(epi_source, file=paste0(source_dir, "fig1_epi_timeseries.csv"))
 write.csv(policy_source, file=paste0(source_dir, "fig1_policy_timeseries.csv"))
 write.csv(policylist, file=paste0(source_dir, "fig1_policy_list.csv"))
 write.csv(map_source , file=paste0(source_dir, "fig1_case_maps.csv"))
- 
-
-} # End loop over countries 
 
 
