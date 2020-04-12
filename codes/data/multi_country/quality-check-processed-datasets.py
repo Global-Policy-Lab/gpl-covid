@@ -219,7 +219,7 @@ def check_opt_and_non_opt_align(df, country, adm, aggregate_vars=["social_distan
             if bool(sum([int(i in col) for i in aggregate_vars])):
                 continue
             nonopt_col = col.replace("_opt", "")
-            row_mismatch_len = len(df[df[nonopt_col] + df[col] > 1])
+            row_mismatch_len = len(df[df[nonopt_col] + df[col] > 1.0 + 1e-12])
             cols_add_to_one_or_below = row_mismatch_len == 0
             message = f"Sum of fields > 1 in cols {nonopt_col} and {col}, in {row_mismatch_len} cases"
             test_condition(cols_add_to_one_or_below, country, adm, message)
