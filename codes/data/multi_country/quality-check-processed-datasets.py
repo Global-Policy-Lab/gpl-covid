@@ -129,8 +129,8 @@ def check_cumulativity(df, country, adm):
         adm_name = f"adm{adm}_name"
 
         # Make exception for France, where we have confirmed cases up to a point, and then hospitalizations
-        if country == 'FRA':
-            if field == 'cum_confirmed_cases_imputed' or field == 'cum_hospitalized':
+        if country == "FRA":
+            if field == "cum_confirmed_cases_imputed" or field == "cum_hospitalized":
                 continue
 
         column_is_cumulative = (
@@ -164,8 +164,8 @@ def check_columns_are_not_null(df, country, adm):
             continue
 
         # Make exception for France, where we have confirmed cases up to a point, and then hospitalizations
-        if country == 'FRA':
-            if col == 'cum_confirmed_cases_imputed' or col == 'cum_hospitalized':
+        if country == "FRA":
+            if col == "cum_confirmed_cases_imputed" or col == "cum_hospitalized":
                 continue
 
         nulls_not_found = df[col].isnull().sum() == 0
@@ -230,7 +230,7 @@ def check_opt_and_non_opt_align(df, country, adm, aggregate_vars=["social_distan
             if bool(sum([int(i in col) for i in aggregate_vars])):
                 continue
             nonopt_col = col.replace("_opt", "")
-            row_mismatch_len = len(df[df[nonopt_col] + df[col] > 1])
+            row_mismatch_len = len(df[df[nonopt_col] + df[col] > 1.0 + 1e-12])
             cols_add_to_one_or_below = row_mismatch_len == 0
             message = f"Sum of fields > 1 in cols {nonopt_col} and {col}, in {row_mismatch_len} cases"
             test_condition(cols_add_to_one_or_below, country, adm, message)
