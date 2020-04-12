@@ -96,7 +96,9 @@ restore
 foreach t_chg of local testing_change_dates{
 	local t_str = string(`t_chg', "%td")
 	gen testing_regime_change_`t_str' = t==`t_chg'
-	lab var testing_regime_change_`t_str' "Testing regime change `t_str'"
+	
+	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
+	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
 }
 
 //------------------diagnostic
@@ -218,7 +220,7 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (similar to FIG2)
-coefplot, keep(p_*) tit("KOR: new policy packages") subtitle(`subtitle2') ///
+coefplot, keep(p_*) tit("KOR: policy packages") subtitle(`subtitle2') ///
 xline(0) name(KOR_policy, replace)
  
 
