@@ -291,11 +291,11 @@ foreach var of varlist y_actual_thr y_counter_thr lb_y_actual_thr ub_y_actual_th
 
 // effect of package of policies (FOR FIG2)
 lincom p_1 + p_2
-post results ("IRN_Tehran") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+*post results ("IRN_Tehran") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 // the mean here is the avg "biological" rate of initial spread (FOR FIG2)
 sum y_counter_thr
-post results ("IRN_Tehran") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+*post results ("IRN_Tehran") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
 
 // export coefficients (FOR FIG2)
 postclose results
