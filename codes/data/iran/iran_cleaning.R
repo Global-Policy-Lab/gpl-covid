@@ -22,10 +22,10 @@
 
 
 rm(list=ls())
-
-require(dplyr)
-require(ggplot2)
-require(reshape2)
+options (warn = -1)
+suppressPackageStartupMessages(require(dplyr))
+suppressPackageStartupMessages(require(ggplot2))
+suppressPackageStartupMessages(require(reshape2))
 
 # Let's set up Fiona's excellent plotting theme.
 myThemeStuff <- theme(panel.background = element_rect(fill = NA),

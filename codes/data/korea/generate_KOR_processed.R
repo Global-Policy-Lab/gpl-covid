@@ -2,8 +2,9 @@
 rm(list = ls())
 
 #load packages
-suppressWarnings(library(dplyr))
-suppressWarnings(library(magrittr))
+options (warn = -1)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
 
 # set working directory
 dir <- "data/interim/korea/" 
