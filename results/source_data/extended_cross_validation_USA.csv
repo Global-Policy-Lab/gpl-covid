@@ -1,521 +1,521 @@
 adm0	sample	policy	beta	se	i
-"USA"	"full_sample"	"p_1"	-.181	.092	2
-"USA"	"full_sample"	"p_2"	-.138	.044	3
-"USA"	"full_sample"	"p_3"	-.134	.061	4
-"USA"	"full_sample"	"p_4"	.067	.039	5
-"USA"	"full_sample"	"p_5"	.022	.02	6
-"USA"	"full_sample"	"p_6"	.063	.026	7
-"USA"	"full_sample"	"p_7"	.012	.042	8
-"USA"	"full_sample"	"p_8"	-.016	.02	9
-"USA"	"full_sample"	"p_9"	-.06	.019	10
-"USA"	"full_sample"	"comb. policy"	-.363	.1	1
-"USA"	"Alabama"	"p_1"	-.173	.094	2
-"USA"	"Alabama"	"p_2"	-.133	.046	3
-"USA"	"Alabama"	"p_3"	-.113	.066	4
-"USA"	"Alabama"	"p_4"	.065	.038	5
-"USA"	"Alabama"	"p_5"	.02	.021	6
-"USA"	"Alabama"	"p_6"	.061	.025	7
-"USA"	"Alabama"	"p_7"	.012	.042	8
-"USA"	"Alabama"	"p_8"	-.018	.02	9
-"USA"	"Alabama"	"p_9"	-.06	.02	10
-"USA"	"Alabama"	"comb. policy"	-.339	.108	1
-"USA"	"Alaska"	"p_1"	-.181	.092	2
-"USA"	"Alaska"	"p_2"	-.137	.044	3
-"USA"	"Alaska"	"p_3"	-.134	.061	4
-"USA"	"Alaska"	"p_4"	.067	.039	5
-"USA"	"Alaska"	"p_5"	.022	.02	6
-"USA"	"Alaska"	"p_6"	.064	.026	7
-"USA"	"Alaska"	"p_7"	.014	.042	8
-"USA"	"Alaska"	"p_8"	-.018	.02	9
-"USA"	"Alaska"	"p_9"	-.058	.019	10
-"USA"	"Alaska"	"comb. policy"	-.361	.099	1
-"USA"	"Arizona"	"p_1"	-.165	.094	2
-"USA"	"Arizona"	"p_2"	-.132	.044	3
-"USA"	"Arizona"	"p_3"	-.209	.059	4
-"USA"	"Arizona"	"p_4"	.057	.035	5
-"USA"	"Arizona"	"p_5"	.027	.02	6
-"USA"	"Arizona"	"p_6"	.053	.026	7
-"USA"	"Arizona"	"p_7"	.009	.042	8
-"USA"	"Arizona"	"p_8"	-.013	.022	9
-"USA"	"Arizona"	"p_9"	-.063	.021	10
-"USA"	"Arizona"	"comb. policy"	-.435	.097	1
-"USA"	"Arkansas"	"p_1"	-.195	.092	2
-"USA"	"Arkansas"	"p_2"	-.125	.044	3
-"USA"	"Arkansas"	"p_3"	-.142	.061	4
-"USA"	"Arkansas"	"p_4"	.064	.038	5
-"USA"	"Arkansas"	"p_5"	.027	.021	6
-"USA"	"Arkansas"	"p_6"	.068	.026	7
-"USA"	"Arkansas"	"p_7"	.011	.042	8
-"USA"	"Arkansas"	"p_8"	-.013	.02	9
-"USA"	"Arkansas"	"p_9"	-.065	.02	10
-"USA"	"Arkansas"	"comb. policy"	-.369	.099	1
-"USA"	"California"	"p_1"	-.191	.091	2
-"USA"	"California"	"p_2"	-.139	.044	3
-"USA"	"California"	"p_3"	-.129	.062	4
-"USA"	"California"	"p_4"	.07	.038	5
-"USA"	"California"	"p_5"	.019	.02	6
-"USA"	"California"	"p_6"	.064	.026	7
-"USA"	"California"	"p_7"	.018	.042	8
-"USA"	"California"	"p_8"	-.016	.021	9
-"USA"	"California"	"p_9"	-.063	.02	10
-"USA"	"California"	"comb. policy"	-.366	.101	1
-"USA"	"Colorado"	"p_1"	-.182	.092	2
-"USA"	"Colorado"	"p_2"	-.139	.043	3
-"USA"	"Colorado"	"p_3"	-.137	.06	4
-"USA"	"Colorado"	"p_4"	.079	.041	5
-"USA"	"Colorado"	"p_5"	.029	.022	6
-"USA"	"Colorado"	"p_6"	.061	.027	7
-"USA"	"Colorado"	"p_7"	.011	.041	8
-"USA"	"Colorado"	"p_8"	-.023	.02	9
-"USA"	"Colorado"	"p_9"	-.055	.019	10
-"USA"	"Colorado"	"comb. policy"	-.354	.101	1
-"USA"	"Connecticut"	"p_1"	-.175	.093	2
-"USA"	"Connecticut"	"p_2"	-.137	.043	3
-"USA"	"Connecticut"	"p_3"	-.137	.061	4
-"USA"	"Connecticut"	"p_4"	.067	.039	5
-"USA"	"Connecticut"	"p_5"	.024	.021	6
-"USA"	"Connecticut"	"p_6"	.06	.026	7
-"USA"	"Connecticut"	"p_7"	.01	.042	8
-"USA"	"Connecticut"	"p_8"	-.011	.02	9
-"USA"	"Connecticut"	"p_9"	-.063	.019	10
-"USA"	"Connecticut"	"comb. policy"	-.364	.1	1
-"USA"	"Delaware"	"p_1"	-.178	.092	2
-"USA"	"Delaware"	"p_2"	-.138	.045	3
-"USA"	"Delaware"	"p_3"	-.135	.061	4
-"USA"	"Delaware"	"p_4"	.068	.039	5
-"USA"	"Delaware"	"p_5"	.024	.02	6
-"USA"	"Delaware"	"p_6"	.063	.026	7
-"USA"	"Delaware"	"p_7"	.014	.041	8
-"USA"	"Delaware"	"p_8"	-.018	.02	9
-"USA"	"Delaware"	"p_9"	-.062	.02	10
-"USA"	"Delaware"	"comb. policy"	-.361	.1	1
-"USA"	"District of Columb"	"p_1"	-.176	.092	2
-"USA"	"District of Columb"	"p_2"	-.134	.043	3
-"USA"	"District of Columb"	"p_3"	-.136	.061	4
-"USA"	"District of Columb"	"p_4"	.057	.037	5
-"USA"	"District of Columb"	"p_5"	.022	.02	6
-"USA"	"District of Columb"	"p_6"	.066	.025	7
-"USA"	"District of Columb"	"p_7"	.011	.042	8
-"USA"	"District of Columb"	"p_8"	-.017	.021	9
-"USA"	"District of Columb"	"p_9"	-.059	.02	10
-"USA"	"District of Columb"	"comb. policy"	-.366	.1	1
-"USA"	"Florida"	"p_1"	-.189	.092	2
-"USA"	"Florida"	"p_2"	-.128	.047	3
-"USA"	"Florida"	"p_3"	-.139	.061	4
-"USA"	"Florida"	"p_4"	.076	.039	5
-"USA"	"Florida"	"p_5"	.019	.019	6
-"USA"	"Florida"	"p_6"	.067	.025	7
-"USA"	"Florida"	"p_7"	.01	.042	8
-"USA"	"Florida"	"p_8"	-.018	.021	9
-"USA"	"Florida"	"p_9"	-.06	.019	10
-"USA"	"Florida"	"comb. policy"	-.361	.099	1
-"USA"	"Georgia"	"p_1"	-.179	.097	2
-"USA"	"Georgia"	"p_2"	-.139	.043	3
-"USA"	"Georgia"	"p_3"	-.137	.061	4
-"USA"	"Georgia"	"p_4"	.069	.042	5
-"USA"	"Georgia"	"p_5"	.02	.021	6
-"USA"	"Georgia"	"p_6"	.069	.027	7
-"USA"	"Georgia"	"p_7"	.011	.042	8
-"USA"	"Georgia"	"p_8"	-.017	.021	9
-"USA"	"Georgia"	"p_9"	-.059	.02	10
-"USA"	"Georgia"	"comb. policy"	-.361	.101	1
-"USA"	"Hawaii"	"p_1"	-.181	.092	2
-"USA"	"Hawaii"	"p_2"	-.136	.044	3
-"USA"	"Hawaii"	"p_3"	-.135	.061	4
-"USA"	"Hawaii"	"p_4"	.067	.039	5
-"USA"	"Hawaii"	"p_5"	.024	.02	6
-"USA"	"Hawaii"	"p_6"	.062	.026	7
-"USA"	"Hawaii"	"p_7"	.012	.042	8
-"USA"	"Hawaii"	"p_8"	-.016	.021	9
-"USA"	"Hawaii"	"p_9"	-.059	.02	10
-"USA"	"Hawaii"	"comb. policy"	-.362	.1	1
-"USA"	"Idaho"	"p_1"	-.183	.092	2
-"USA"	"Idaho"	"p_2"	-.136	.043	3
-"USA"	"Idaho"	"p_3"	-.136	.061	4
-"USA"	"Idaho"	"p_4"	.066	.038	5
-"USA"	"Idaho"	"p_5"	.023	.021	6
-"USA"	"Idaho"	"p_6"	.067	.027	7
-"USA"	"Idaho"	"p_7"	.002	.038	8
-"USA"	"Idaho"	"p_8"	-.016	.02	9
-"USA"	"Idaho"	"p_9"	-.06	.02	10
-"USA"	"Idaho"	"comb. policy"	-.373	.098	1
-"USA"	"Illinois"	"p_1"	-.176	.092	2
-"USA"	"Illinois"	"p_2"	-.144	.044	3
-"USA"	"Illinois"	"p_3"	-.132	.06	4
-"USA"	"Illinois"	"p_4"	.066	.039	5
-"USA"	"Illinois"	"p_5"	.022	.02	6
-"USA"	"Illinois"	"p_6"	.064	.026	7
-"USA"	"Illinois"	"p_7"	.018	.049	8
-"USA"	"Illinois"	"p_8"	-.016	.02	9
-"USA"	"Illinois"	"p_9"	-.058	.02	10
-"USA"	"Illinois"	"comb. policy"	-.357	.102	1
-"USA"	"Indiana"	"p_1"	-.172	.094	2
-"USA"	"Indiana"	"p_2"	-.129	.043	3
-"USA"	"Indiana"	"p_3"	-.133	.061	4
-"USA"	"Indiana"	"p_4"	.056	.038	5
-"USA"	"Indiana"	"p_5"	.016	.019	6
-"USA"	"Indiana"	"p_6"	.058	.027	7
-"USA"	"Indiana"	"p_7"	.002	.043	8
-"USA"	"Indiana"	"p_8"	-.015	.021	9
-"USA"	"Indiana"	"p_9"	-.063	.019	10
-"USA"	"Indiana"	"comb. policy"	-.379	.098	1
-"USA"	"Iowa"	"p_1"	-.179	.094	2
-"USA"	"Iowa"	"p_2"	-.148	.047	3
-"USA"	"Iowa"	"p_3"	-.129	.062	4
-"USA"	"Iowa"	"p_4"	.064	.04	5
-"USA"	"Iowa"	"p_5"	.025	.021	6
-"USA"	"Iowa"	"p_6"	.063	.025	7
-"USA"	"Iowa"	"p_7"	.013	.042	8
-"USA"	"Iowa"	"p_8"	-.015	.021	9
-"USA"	"Iowa"	"p_9"	-.058	.019	10
-"USA"	"Iowa"	"comb. policy"	-.366	.1	1
-"USA"	"Kansas"	"p_1"	-.182	.092	2
-"USA"	"Kansas"	"p_2"	-.135	.045	3
-"USA"	"Kansas"	"p_3"	-.134	.061	4
-"USA"	"Kansas"	"p_4"	.067	.038	5
-"USA"	"Kansas"	"p_5"	.022	.02	6
-"USA"	"Kansas"	"p_6"	.064	.026	7
-"USA"	"Kansas"	"p_7"	.013	.043	8
-"USA"	"Kansas"	"p_8"	-.017	.02	9
-"USA"	"Kansas"	"p_9"	-.061	.019	10
-"USA"	"Kansas"	"comb. policy"	-.363	.1	1
-"USA"	"Kentucky"	"p_1"	-.184	.094	2
-"USA"	"Kentucky"	"p_2"	-.138	.045	3
-"USA"	"Kentucky"	"p_3"	-.134	.062	4
-"USA"	"Kentucky"	"p_4"	.067	.039	5
-"USA"	"Kentucky"	"p_5"	.022	.021	6
-"USA"	"Kentucky"	"p_6"	.067	.028	7
-"USA"	"Kentucky"	"p_7"	.012	.042	8
-"USA"	"Kentucky"	"p_8"	-.017	.021	9
-"USA"	"Kentucky"	"p_9"	-.059	.02	10
-"USA"	"Kentucky"	"comb. policy"	-.364	.101	1
-"USA"	"Louisiana"	"p_1"	-.183	.091	2
-"USA"	"Louisiana"	"p_2"	-.132	.042	3
-"USA"	"Louisiana"	"p_3"	-.135	.061	4
-"USA"	"Louisiana"	"p_4"	.072	.039	5
-"USA"	"Louisiana"	"p_5"	.019	.021	6
-"USA"	"Louisiana"	"p_6"	.06	.025	7
-"USA"	"Louisiana"	"p_7"	.007	.046	8
-"USA"	"Louisiana"	"p_8"	-.014	.021	9
-"USA"	"Louisiana"	"p_9"	-.057	.021	10
-"USA"	"Louisiana"	"comb. policy"	-.364	.1	1
-"USA"	"Maine"	"p_1"	-.178	.093	2
-"USA"	"Maine"	"p_2"	-.127	.044	3
-"USA"	"Maine"	"p_3"	-.139	.063	4
-"USA"	"Maine"	"p_4"	.066	.039	5
-"USA"	"Maine"	"p_5"	.02	.021	6
-"USA"	"Maine"	"p_6"	.059	.025	7
-"USA"	"Maine"	"p_7"	.018	.041	8
-"USA"	"Maine"	"p_8"	-.011	.021	9
-"USA"	"Maine"	"p_9"	-.067	.017	10
-"USA"	"Maine"	"comb. policy"	-.358	.099	1
-"USA"	"Maryland"	"p_1"	-.17	.092	2
-"USA"	"Maryland"	"p_2"	-.143	.043	3
-"USA"	"Maryland"	"p_3"	-.135	.06	4
-"USA"	"Maryland"	"p_4"	.058	.037	5
-"USA"	"Maryland"	"p_5"	.022	.02	6
-"USA"	"Maryland"	"p_6"	.067	.025	7
-"USA"	"Maryland"	"p_7"	.01	.046	8
-"USA"	"Maryland"	"p_8"	-.017	.021	9
-"USA"	"Maryland"	"p_9"	-.058	.02	10
-"USA"	"Maryland"	"comb. policy"	-.366	.1	1
-"USA"	"Massachusetts"	"p_1"	-.186	.093	2
-"USA"	"Massachusetts"	"p_2"	-.129	.044	3
-"USA"	"Massachusetts"	"p_3"	-.136	.061	4
-"USA"	"Massachusetts"	"p_4"	.076	.037	5
-"USA"	"Massachusetts"	"p_5"	.022	.02	6
-"USA"	"Massachusetts"	"p_6"	.061	.026	7
-"USA"	"Massachusetts"	"p_7"	.023	.042	8
-"USA"	"Massachusetts"	"p_8"	-.019	.022	9
-"USA"	"Massachusetts"	"p_9"	-.062	.019	10
-"USA"	"Massachusetts"	"comb. policy"	-.349	.098	1
-"USA"	"Michigan"	"p_1"	-.193	.091	2
-"USA"	"Michigan"	"p_2"	-.13	.043	3
-"USA"	"Michigan"	"p_3"	-.134	.061	4
-"USA"	"Michigan"	"p_4"	.076	.038	5
-"USA"	"Michigan"	"p_5"	.019	.021	6
-"USA"	"Michigan"	"p_6"	.06	.027	7
-"USA"	"Michigan"	"p_7"	.018	.04	8
-"USA"	"Michigan"	"p_8"	-.015	.021	9
-"USA"	"Michigan"	"p_9"	-.059	.019	10
-"USA"	"Michigan"	"comb. policy"	-.357	.099	1
-"USA"	"Minnesota"	"p_1"	-.187	.091	2
-"USA"	"Minnesota"	"p_2"	-.131	.048	3
-"USA"	"Minnesota"	"p_3"	-.136	.061	4
-"USA"	"Minnesota"	"p_4"	.072	.039	5
-"USA"	"Minnesota"	"p_5"	.021	.02	6
-"USA"	"Minnesota"	"p_6"	.064	.025	7
-"USA"	"Minnesota"	"p_7"	.01	.041	8
-"USA"	"Minnesota"	"p_8"	-.019	.022	9
-"USA"	"Minnesota"	"p_9"	-.055	.02	10
-"USA"	"Minnesota"	"comb. policy"	-.363	.099	1
-"USA"	"Mississippi"	"p_1"	-.178	.093	2
-"USA"	"Mississippi"	"p_2"	-.136	.042	3
-"USA"	"Mississippi"	"p_3"	-.168	.104	4
-"USA"	"Mississippi"	"p_4"	.069	.038	5
-"USA"	"Mississippi"	"p_5"	.018	.02	6
-"USA"	"Mississippi"	"p_6"	.06	.026	7
-"USA"	"Mississippi"	"p_7"	.009	.041	8
-"USA"	"Mississippi"	"p_8"	-.013	.021	9
-"USA"	"Mississippi"	"p_9"	-.06	.02	10
-"USA"	"Mississippi"	"comb. policy"	-.398	.135	1
-"USA"	"Missouri"	"p_1"	-.188	.092	2
-"USA"	"Missouri"	"p_2"	-.13	.043	3
-"USA"	"Missouri"	"p_3"	-.138	.061	4
-"USA"	"Missouri"	"p_4"	.062	.039	5
-"USA"	"Missouri"	"p_5"	.021	.02	6
-"USA"	"Missouri"	"p_6"	.072	.024	7
-"USA"	"Missouri"	"p_7"	.011	.042	8
-"USA"	"Missouri"	"p_8"	-.018	.02	9
-"USA"	"Missouri"	"p_9"	-.059	.02	10
-"USA"	"Missouri"	"comb. policy"	-.368	.099	1
-"USA"	"Montana"	"p_1"	-.181	.092	2
-"USA"	"Montana"	"p_2"	-.138	.045	3
-"USA"	"Montana"	"p_3"	-.134	.061	4
-"USA"	"Montana"	"p_4"	.068	.039	5
-"USA"	"Montana"	"p_5"	.023	.02	6
-"USA"	"Montana"	"p_6"	.063	.026	7
-"USA"	"Montana"	"p_7"	.012	.042	8
-"USA"	"Montana"	"p_8"	-.016	.021	9
-"USA"	"Montana"	"p_9"	-.06	.021	10
-"USA"	"Montana"	"comb. policy"	-.364	.1	1
-"USA"	"Nebraska"	"p_1"	-.185	.095	2
-"USA"	"Nebraska"	"p_2"	-.144	.045	3
-"USA"	"Nebraska"	"p_3"	-.13	.062	4
-"USA"	"Nebraska"	"p_4"	.067	.038	5
-"USA"	"Nebraska"	"p_5"	.024	.021	6
-"USA"	"Nebraska"	"p_6"	.064	.026	7
-"USA"	"Nebraska"	"p_7"	.013	.043	8
-"USA"	"Nebraska"	"p_8"	-.015	.021	9
-"USA"	"Nebraska"	"p_9"	-.059	.019	10
-"USA"	"Nebraska"	"comb. policy"	-.365	.101	1
-"USA"	"Nevada"	"p_1"	-.192	.094	2
-"USA"	"Nevada"	"p_2"	-.14	.046	3
-"USA"	"Nevada"	"p_3"	-.131	.061	4
-"USA"	"Nevada"	"p_4"	.076	.038	5
-"USA"	"Nevada"	"p_5"	.024	.02	6
-"USA"	"Nevada"	"p_6"	.061	.024	7
-"USA"	"Nevada"	"p_7"	.014	.04	8
-"USA"	"Nevada"	"p_8"	-.015	.02	9
-"USA"	"Nevada"	"p_9"	-.06	.019	10
-"USA"	"Nevada"	"comb. policy"	-.363	.099	1
-"USA"	"New Hampshire"	"p_1"	-.178	.094	2
-"USA"	"New Hampshire"	"p_2"	-.135	.043	3
-"USA"	"New Hampshire"	"p_3"	-.136	.062	4
-"USA"	"New Hampshire"	"p_4"	.067	.039	5
-"USA"	"New Hampshire"	"p_5"	.022	.02	6
-"USA"	"New Hampshire"	"p_6"	.062	.026	7
-"USA"	"New Hampshire"	"p_7"	.011	.042	8
-"USA"	"New Hampshire"	"p_8"	-.016	.021	9
-"USA"	"New Hampshire"	"p_9"	-.06	.019	10
-"USA"	"New Hampshire"	"comb. policy"	-.363	.1	1
-"USA"	"New Jersey"	"p_1"	-.189	.09	2
-"USA"	"New Jersey"	"p_2"	-.14	.044	3
-"USA"	"New Jersey"	"p_3"	-.134	.06	4
-"USA"	"New Jersey"	"p_4"	.067	.04	5
-"USA"	"New Jersey"	"p_5"	.025	.02	6
-"USA"	"New Jersey"	"p_6"	.067	.026	7
-"USA"	"New Jersey"	"p_7"	.011	.043	8
-"USA"	"New Jersey"	"p_8"	-.015	.02	9
-"USA"	"New Jersey"	"p_9"	-.058	.021	10
-"USA"	"New Jersey"	"comb. policy"	-.367	.099	1
-"USA"	"New Mexico"	"p_1"	-.181	.094	2
-"USA"	"New Mexico"	"p_2"	-.138	.044	3
-"USA"	"New Mexico"	"p_3"	-.133	.06	4
-"USA"	"New Mexico"	"p_4"	.069	.039	5
-"USA"	"New Mexico"	"p_5"	.024	.02	6
-"USA"	"New Mexico"	"p_6"	.06	.027	7
-"USA"	"New Mexico"	"p_7"	.013	.041	8
-"USA"	"New Mexico"	"p_8"	-.017	.022	9
-"USA"	"New Mexico"	"p_9"	-.06	.021	10
-"USA"	"New Mexico"	"comb. policy"	-.362	.1	1
-"USA"	"New York"	"p_1"	-.167	.072	2
-"USA"	"New York"	"p_2"	-.155	.04	3
-"USA"	"New York"	"p_3"	-.067	.064	4
-"USA"	"New York"	"p_4"	.072	.038	5
-"USA"	"New York"	"p_5"	.026	.023	6
-"USA"	"New York"	"p_6"	.055	.025	7
-"USA"	"New York"	"p_7"	.006	.041	8
-"USA"	"New York"	"p_8"	-.008	.021	9
-"USA"	"New York"	"p_9"	-.06	.019	10
-"USA"	"New York"	"comb. policy"	-.298	.098	1
-"USA"	"North Carolina"	"p_1"	-.171	.094	2
-"USA"	"North Carolina"	"p_2"	-.139	.042	3
-"USA"	"North Carolina"	"p_3"	-.135	.062	4
-"USA"	"North Carolina"	"p_4"	.064	.038	5
-"USA"	"North Carolina"	"p_5"	.023	.022	6
-"USA"	"North Carolina"	"p_6"	.06	.025	7
-"USA"	"North Carolina"	"p_7"	.011	.043	8
-"USA"	"North Carolina"	"p_8"	-.016	.02	9
-"USA"	"North Carolina"	"p_9"	-.06	.019	10
-"USA"	"North Carolina"	"comb. policy"	-.362	.1	1
-"USA"	"North Dakota"	"p_1"	-.181	.092	2
-"USA"	"North Dakota"	"p_2"	-.137	.044	3
-"USA"	"North Dakota"	"p_3"	-.134	.061	4
-"USA"	"North Dakota"	"p_4"	.067	.039	5
-"USA"	"North Dakota"	"p_5"	.022	.02	6
-"USA"	"North Dakota"	"p_6"	.064	.026	7
-"USA"	"North Dakota"	"p_7"	.012	.042	8
-"USA"	"North Dakota"	"p_8"	-.016	.02	9
-"USA"	"North Dakota"	"p_9"	-.06	.02	10
-"USA"	"North Dakota"	"comb. policy"	-.364	.1	1
-"USA"	"Ohio"	"p_1"	-.172	.093	2
-"USA"	"Ohio"	"p_2"	-.14	.044	3
-"USA"	"Ohio"	"p_3"	-.136	.061	4
-"USA"	"Ohio"	"p_4"	.066	.039	5
-"USA"	"Ohio"	"p_5"	.026	.021	6
-"USA"	"Ohio"	"p_6"	.061	.024	7
-"USA"	"Ohio"	"p_7"	.013	.042	8
-"USA"	"Ohio"	"p_8"	-.019	.021	9
-"USA"	"Ohio"	"p_9"	-.057	.02	10
-"USA"	"Ohio"	"comb. policy"	-.358	.101	1
-"USA"	"Oklahoma"	"p_1"	-.183	.092	2
-"USA"	"Oklahoma"	"p_2"	-.144	.045	3
-"USA"	"Oklahoma"	"p_3"	-.129	.063	4
-"USA"	"Oklahoma"	"p_4"	.07	.039	5
-"USA"	"Oklahoma"	"p_5"	.022	.02	6
-"USA"	"Oklahoma"	"p_6"	.065	.025	7
-"USA"	"Oklahoma"	"p_7"	.014	.043	8
-"USA"	"Oklahoma"	"p_8"	-.02	.019	9
-"USA"	"Oklahoma"	"p_9"	-.055	.019	10
-"USA"	"Oklahoma"	"comb. policy"	-.361	.1	1
-"USA"	"Oregon"	"p_1"	-.184	.093	2
-"USA"	"Oregon"	"p_2"	-.134	.043	3
-"USA"	"Oregon"	"p_3"	-.131	.061	4
-"USA"	"Oregon"	"p_4"	.066	.041	5
-"USA"	"Oregon"	"p_5"	.013	.022	6
-"USA"	"Oregon"	"p_6"	.066	.027	7
-"USA"	"Oregon"	"p_7"	0	.044	8
-"USA"	"Oregon"	"p_8"	-.015	.02	9
-"USA"	"Oregon"	"p_9"	-.062	.019	10
-"USA"	"Oregon"	"comb. policy"	-.381	.104	1
-"USA"	"Pennsylvania"	"p_1"	-.182	.092	2
-"USA"	"Pennsylvania"	"p_2"	-.138	.043	3
-"USA"	"Pennsylvania"	"p_3"	-.132	.061	4
-"USA"	"Pennsylvania"	"p_4"	.071	.04	5
-"USA"	"Pennsylvania"	"p_5"	.023	.021	6
-"USA"	"Pennsylvania"	"p_6"	.06	.028	7
-"USA"	"Pennsylvania"	"p_7"	.011	.041	8
-"USA"	"Pennsylvania"	"p_8"	-.018	.02	9
-"USA"	"Pennsylvania"	"p_9"	-.058	.021	10
-"USA"	"Pennsylvania"	"comb. policy"	-.362	.099	1
-"USA"	"Rhode Island"	"p_1"	-.18	.095	2
-"USA"	"Rhode Island"	"p_2"	-.139	.046	3
-"USA"	"Rhode Island"	"p_3"	-.133	.061	4
-"USA"	"Rhode Island"	"p_4"	.07	.038	5
-"USA"	"Rhode Island"	"p_5"	.023	.02	6
-"USA"	"Rhode Island"	"p_6"	.06	.028	7
-"USA"	"Rhode Island"	"p_7"	.009	.043	8
-"USA"	"Rhode Island"	"p_8"	-.015	.02	9
-"USA"	"Rhode Island"	"p_9"	-.059	.019	10
-"USA"	"Rhode Island"	"comb. policy"	-.365	.1	1
-"USA"	"South Carolina"	"p_1"	-.189	.093	2
-"USA"	"South Carolina"	"p_2"	-.134	.046	3
-"USA"	"South Carolina"	"p_3"	-.132	.063	4
-"USA"	"South Carolina"	"p_4"	.061	.039	5
-"USA"	"South Carolina"	"p_5"	.019	.02	6
-"USA"	"South Carolina"	"p_6"	.066	.026	7
-"USA"	"South Carolina"	"p_7"	.012	.042	8
-"USA"	"South Carolina"	"p_8"	-.014	.021	9
-"USA"	"South Carolina"	"p_9"	-.059	.019	10
-"USA"	"South Carolina"	"comb. policy"	-.37	.1	1
-"USA"	"South Dakota"	"p_1"	-.169	.093	2
-"USA"	"South Dakota"	"p_2"	-.158	.046	3
-"USA"	"South Dakota"	"p_3"	-.129	.06	4
-"USA"	"South Dakota"	"p_4"	.069	.039	5
-"USA"	"South Dakota"	"p_5"	.016	.021	6
-"USA"	"South Dakota"	"p_6"	.066	.026	7
-"USA"	"South Dakota"	"p_7"	.002	.045	8
-"USA"	"South Dakota"	"p_8"	-.013	.02	9
-"USA"	"South Dakota"	"p_9"	-.056	.02	10
-"USA"	"South Dakota"	"comb. policy"	-.371	.102	1
-"USA"	"Tennessee"	"p_1"	-.177	.093	2
-"USA"	"Tennessee"	"p_2"	-.129	.044	3
-"USA"	"Tennessee"	"p_3"	-.144	.061	4
-"USA"	"Tennessee"	"p_4"	.057	.039	5
-"USA"	"Tennessee"	"p_5"	.034	.019	6
-"USA"	"Tennessee"	"p_6"	.068	.025	7
-"USA"	"Tennessee"	"p_7"	.014	.042	8
-"USA"	"Tennessee"	"p_8"	-.022	.02	9
-"USA"	"Tennessee"	"p_9"	-.062	.02	10
-"USA"	"Tennessee"	"comb. policy"	-.361	.1	1
-"USA"	"Texas"	"p_1"	-.187	.093	2
-"USA"	"Texas"	"p_2"	-.142	.042	3
-"USA"	"Texas"	"p_3"	-.128	.062	4
-"USA"	"Texas"	"p_4"	.068	.039	5
-"USA"	"Texas"	"p_5"	.026	.02	6
-"USA"	"Texas"	"p_6"	.06	.028	7
-"USA"	"Texas"	"p_7"	.029	.041	8
-"USA"	"Texas"	"p_8"	-.017	.021	9
-"USA"	"Texas"	"p_9"	-.061	.02	10
-"USA"	"Texas"	"comb. policy"	-.352	.099	1
-"USA"	"Utah"	"p_1"	-.176	.093	2
-"USA"	"Utah"	"p_2"	-.143	.045	3
-"USA"	"Utah"	"p_3"	-.133	.061	4
-"USA"	"Utah"	"p_4"	.068	.038	5
-"USA"	"Utah"	"p_5"	.022	.02	6
-"USA"	"Utah"	"p_6"	.06	.026	7
-"USA"	"Utah"	"p_7"	.01	.041	8
-"USA"	"Utah"	"p_8"	-.012	.021	9
-"USA"	"Utah"	"p_9"	-.059	.022	10
-"USA"	"Utah"	"comb. policy"	-.363	.1	1
-"USA"	"Vermont"	"p_1"	-.183	.092	2
-"USA"	"Vermont"	"p_2"	-.137	.044	3
-"USA"	"Vermont"	"p_3"	-.133	.061	4
-"USA"	"Vermont"	"p_4"	.067	.039	5
-"USA"	"Vermont"	"p_5"	.021	.02	6
-"USA"	"Vermont"	"p_6"	.064	.026	7
-"USA"	"Vermont"	"p_7"	.009	.042	8
-"USA"	"Vermont"	"p_8"	-.02	.021	9
-"USA"	"Vermont"	"p_9"	-.052	.02	10
-"USA"	"Vermont"	"comb. policy"	-.363	.1	1
-"USA"	"Virginia"	"p_1"	-.185	.091	2
-"USA"	"Virginia"	"p_2"	-.156	.044	3
-"USA"	"Virginia"	"p_3"	-.128	.061	4
-"USA"	"Virginia"	"p_4"	.072	.038	5
-"USA"	"Virginia"	"p_5"	.029	.021	6
-"USA"	"Virginia"	"p_6"	.067	.026	7
-"USA"	"Virginia"	"p_7"	.023	.043	8
-"USA"	"Virginia"	"p_8"	-.018	.021	9
-"USA"	"Virginia"	"p_9"	-.065	.02	10
-"USA"	"Virginia"	"comb. policy"	-.36	.099	1
-"USA"	"Washington"	"p_1"	-.169	.094	2
-"USA"	"Washington"	"p_2"	-.146	.045	3
-"USA"	"Washington"	"p_3"	-.13	.062	4
-"USA"	"Washington"	"p_4"	.076	.038	5
-"USA"	"Washington"	"p_5"	.018	.02	6
-"USA"	"Washington"	"p_6"	.07	.026	7
-"USA"	"Washington"	"p_7"	.008	.042	8
-"USA"	"Washington"	"p_8"	-.018	.022	9
-"USA"	"Washington"	"p_9"	-.058	.019	10
-"USA"	"Washington"	"comb. policy"	-.349	.1	1
-"USA"	"West Virginia"	"p_1"	-.182	.092	2
-"USA"	"West Virginia"	"p_2"	-.14	.044	3
-"USA"	"West Virginia"	"p_3"	-.135	.061	4
-"USA"	"West Virginia"	"p_4"	.064	.039	5
-"USA"	"West Virginia"	"p_5"	.022	.02	6
-"USA"	"West Virginia"	"p_6"	.069	.024	7
-"USA"	"West Virginia"	"p_7"	.012	.042	8
-"USA"	"West Virginia"	"p_8"	-.017	.02	9
-"USA"	"West Virginia"	"p_9"	-.059	.02	10
-"USA"	"West Virginia"	"comb. policy"	-.365	.1	1
-"USA"	"Wisconsin"	"p_1"	-.18	.094	2
-"USA"	"Wisconsin"	"p_2"	-.137	.044	3
-"USA"	"Wisconsin"	"p_3"	-.134	.061	4
-"USA"	"Wisconsin"	"p_4"	.067	.039	5
-"USA"	"Wisconsin"	"p_5"	.021	.021	6
-"USA"	"Wisconsin"	"p_6"	.063	.026	7
-"USA"	"Wisconsin"	"p_7"	.012	.042	8
-"USA"	"Wisconsin"	"p_8"	-.015	.02	9
-"USA"	"Wisconsin"	"p_9"	-.058	.02	10
-"USA"	"Wisconsin"	"comb. policy"	-.363	.1	1
-"USA"	"Wyoming"	"p_1"	-.182	.093	2
-"USA"	"Wyoming"	"p_2"	-.132	.043	3
-"USA"	"Wyoming"	"p_3"	-.135	.062	4
-"USA"	"Wyoming"	"p_4"	.067	.04	5
-"USA"	"Wyoming"	"p_5"	.024	.02	6
-"USA"	"Wyoming"	"p_6"	.064	.025	7
-"USA"	"Wyoming"	"p_7"	.008	.044	8
-"USA"	"Wyoming"	"p_8"	-.021	.021	9
-"USA"	"Wyoming"	"p_9"	-.058	.019	10
-"USA"	"Wyoming"	"comb. policy"	-.366	.102	1
+"USA"	"full_sample"	"p_1"	-.103	.064	2
+"USA"	"full_sample"	"p_2"	-.121	.04	3
+"USA"	"full_sample"	"p_3"	-.102	.029	4
+"USA"	"full_sample"	"p_4"	.07	.037	5
+"USA"	"full_sample"	"p_5"	.013	.017	6
+"USA"	"full_sample"	"p_6"	.032	.021	7
+"USA"	"full_sample"	"p_7"	-.011	.024	8
+"USA"	"full_sample"	"p_8"	-.049	.025	9
+"USA"	"full_sample"	"p_9"	-.069	.015	10
+"USA"	"full_sample"	"comb. policy"	-.339	.058	1
+"USA"	"Alabama"	"p_1"	-.107	.064	2
+"USA"	"Alabama"	"p_2"	-.131	.039	3
+"USA"	"Alabama"	"p_3"	-.084	.033	4
+"USA"	"Alabama"	"p_4"	.069	.036	5
+"USA"	"Alabama"	"p_5"	.015	.017	6
+"USA"	"Alabama"	"p_6"	.037	.022	7
+"USA"	"Alabama"	"p_7"	-.005	.025	8
+"USA"	"Alabama"	"p_8"	-.046	.025	9
+"USA"	"Alabama"	"p_9"	-.073	.016	10
+"USA"	"Alabama"	"comb. policy"	-.325	.062	1
+"USA"	"Alaska"	"p_1"	-.102	.065	2
+"USA"	"Alaska"	"p_2"	-.123	.039	3
+"USA"	"Alaska"	"p_3"	-.102	.029	4
+"USA"	"Alaska"	"p_4"	.07	.037	5
+"USA"	"Alaska"	"p_5"	.017	.018	6
+"USA"	"Alaska"	"p_6"	.03	.022	7
+"USA"	"Alaska"	"p_7"	-.007	.025	8
+"USA"	"Alaska"	"p_8"	-.049	.025	9
+"USA"	"Alaska"	"p_9"	-.069	.015	10
+"USA"	"Alaska"	"comb. policy"	-.335	.06	1
+"USA"	"Arizona"	"p_1"	-.083	.064	2
+"USA"	"Arizona"	"p_2"	-.118	.04	3
+"USA"	"Arizona"	"p_3"	-.127	.028	4
+"USA"	"Arizona"	"p_4"	.059	.036	5
+"USA"	"Arizona"	"p_5"	.013	.018	6
+"USA"	"Arizona"	"p_6"	.022	.021	7
+"USA"	"Arizona"	"p_7"	-.01	.025	8
+"USA"	"Arizona"	"p_8"	-.052	.026	9
+"USA"	"Arizona"	"p_9"	-.066	.016	10
+"USA"	"Arizona"	"comb. policy"	-.362	.059	1
+"USA"	"Arkansas"	"p_1"	-.111	.064	2
+"USA"	"Arkansas"	"p_2"	-.123	.039	3
+"USA"	"Arkansas"	"p_3"	-.106	.029	4
+"USA"	"Arkansas"	"p_4"	.069	.036	5
+"USA"	"Arkansas"	"p_5"	.017	.017	6
+"USA"	"Arkansas"	"p_6"	.035	.021	7
+"USA"	"Arkansas"	"p_7"	-.013	.024	8
+"USA"	"Arkansas"	"p_8"	-.04	.025	9
+"USA"	"Arkansas"	"p_9"	-.074	.015	10
+"USA"	"Arkansas"	"comb. policy"	-.346	.058	1
+"USA"	"California"	"p_1"	-.103	.069	2
+"USA"	"California"	"p_2"	-.134	.041	3
+"USA"	"California"	"p_3"	-.098	.03	4
+"USA"	"California"	"p_4"	.067	.035	5
+"USA"	"California"	"p_5"	.016	.018	6
+"USA"	"California"	"p_6"	.035	.021	7
+"USA"	"California"	"p_7"	-.015	.024	8
+"USA"	"California"	"p_8"	-.051	.026	9
+"USA"	"California"	"p_9"	-.07	.015	10
+"USA"	"California"	"comb. policy"	-.352	.062	1
+"USA"	"Colorado"	"p_1"	-.112	.065	2
+"USA"	"Colorado"	"p_2"	-.117	.04	3
+"USA"	"Colorado"	"p_3"	-.102	.028	4
+"USA"	"Colorado"	"p_4"	.086	.04	5
+"USA"	"Colorado"	"p_5"	.017	.019	6
+"USA"	"Colorado"	"p_6"	.028	.021	7
+"USA"	"Colorado"	"p_7"	-.012	.024	8
+"USA"	"Colorado"	"p_8"	-.048	.025	9
+"USA"	"Colorado"	"p_9"	-.069	.015	10
+"USA"	"Colorado"	"comb. policy"	-.33	.06	1
+"USA"	"Connecticut"	"p_1"	-.1	.064	2
+"USA"	"Connecticut"	"p_2"	-.114	.041	3
+"USA"	"Connecticut"	"p_3"	-.12	.039	4
+"USA"	"Connecticut"	"p_4"	.068	.037	5
+"USA"	"Connecticut"	"p_5"	.013	.017	6
+"USA"	"Connecticut"	"p_6"	.035	.02	7
+"USA"	"Connecticut"	"p_7"	-.01	.024	8
+"USA"	"Connecticut"	"p_8"	-.052	.025	9
+"USA"	"Connecticut"	"p_9"	-.069	.015	10
+"USA"	"Connecticut"	"comb. policy"	-.35	.061	1
+"USA"	"Delaware"	"p_1"	-.104	.065	2
+"USA"	"Delaware"	"p_2"	-.122	.041	3
+"USA"	"Delaware"	"p_3"	-.101	.029	4
+"USA"	"Delaware"	"p_4"	.072	.037	5
+"USA"	"Delaware"	"p_5"	.013	.017	6
+"USA"	"Delaware"	"p_6"	.032	.021	7
+"USA"	"Delaware"	"p_7"	-.01	.025	8
+"USA"	"Delaware"	"p_8"	-.049	.025	9
+"USA"	"Delaware"	"p_9"	-.069	.015	10
+"USA"	"Delaware"	"comb. policy"	-.338	.059	1
+"USA"	"District of Columb"	"p_1"	-.096	.064	2
+"USA"	"District of Columb"	"p_2"	-.122	.04	3
+"USA"	"District of Columb"	"p_3"	-.103	.029	4
+"USA"	"District of Columb"	"p_4"	.06	.035	5
+"USA"	"District of Columb"	"p_5"	.012	.017	6
+"USA"	"District of Columb"	"p_6"	.035	.021	7
+"USA"	"District of Columb"	"p_7"	-.011	.025	8
+"USA"	"District of Columb"	"p_8"	-.049	.025	9
+"USA"	"District of Columb"	"p_9"	-.07	.015	10
+"USA"	"District of Columb"	"comb. policy"	-.344	.059	1
+"USA"	"Florida"	"p_1"	-.092	.067	2
+"USA"	"Florida"	"p_2"	-.115	.042	3
+"USA"	"Florida"	"p_3"	-.105	.029	4
+"USA"	"Florida"	"p_4"	.073	.04	5
+"USA"	"Florida"	"p_5"	.009	.016	6
+"USA"	"Florida"	"p_6"	.033	.021	7
+"USA"	"Florida"	"p_7"	-.007	.024	8
+"USA"	"Florida"	"p_8"	-.052	.026	9
+"USA"	"Florida"	"p_9"	-.071	.015	10
+"USA"	"Florida"	"comb. policy"	-.326	.061	1
+"USA"	"Georgia"	"p_1"	-.101	.072	2
+"USA"	"Georgia"	"p_2"	-.122	.039	3
+"USA"	"Georgia"	"p_3"	-.103	.029	4
+"USA"	"Georgia"	"p_4"	.072	.043	5
+"USA"	"Georgia"	"p_5"	.011	.017	6
+"USA"	"Georgia"	"p_6"	.031	.021	7
+"USA"	"Georgia"	"p_7"	-.012	.025	8
+"USA"	"Georgia"	"p_8"	-.047	.025	9
+"USA"	"Georgia"	"p_9"	-.07	.016	10
+"USA"	"Georgia"	"comb. policy"	-.34	.058	1
+"USA"	"Hawaii"	"p_1"	-.103	.064	2
+"USA"	"Hawaii"	"p_2"	-.117	.04	3
+"USA"	"Hawaii"	"p_3"	-.103	.029	4
+"USA"	"Hawaii"	"p_4"	.069	.036	5
+"USA"	"Hawaii"	"p_5"	.015	.017	6
+"USA"	"Hawaii"	"p_6"	.035	.021	7
+"USA"	"Hawaii"	"p_7"	-.01	.024	8
+"USA"	"Hawaii"	"p_8"	-.052	.026	9
+"USA"	"Hawaii"	"p_9"	-.069	.015	10
+"USA"	"Hawaii"	"comb. policy"	-.335	.059	1
+"USA"	"Idaho"	"p_1"	-.103	.063	2
+"USA"	"Idaho"	"p_2"	-.123	.041	3
+"USA"	"Idaho"	"p_3"	-.102	.029	4
+"USA"	"Idaho"	"p_4"	.068	.034	5
+"USA"	"Idaho"	"p_5"	.014	.018	6
+"USA"	"Idaho"	"p_6"	.037	.021	7
+"USA"	"Idaho"	"p_7"	-.018	.026	8
+"USA"	"Idaho"	"p_8"	-.051	.025	9
+"USA"	"Idaho"	"p_9"	-.069	.015	10
+"USA"	"Idaho"	"comb. policy"	-.347	.056	1
+"USA"	"Illinois"	"p_1"	-.105	.065	2
+"USA"	"Illinois"	"p_2"	-.118	.04	3
+"USA"	"Illinois"	"p_3"	-.102	.029	4
+"USA"	"Illinois"	"p_4"	.073	.038	5
+"USA"	"Illinois"	"p_5"	.012	.017	6
+"USA"	"Illinois"	"p_6"	.029	.022	7
+"USA"	"Illinois"	"p_7"	-.005	.026	8
+"USA"	"Illinois"	"p_8"	-.048	.025	9
+"USA"	"Illinois"	"p_9"	-.07	.015	10
+"USA"	"Illinois"	"comb. policy"	-.334	.058	1
+"USA"	"Indiana"	"p_1"	-.089	.066	2
+"USA"	"Indiana"	"p_2"	-.116	.04	3
+"USA"	"Indiana"	"p_3"	-.101	.028	4
+"USA"	"Indiana"	"p_4"	.055	.039	5
+"USA"	"Indiana"	"p_5"	.006	.016	6
+"USA"	"Indiana"	"p_6"	.03	.02	7
+"USA"	"Indiana"	"p_7"	-.016	.026	8
+"USA"	"Indiana"	"p_8"	-.049	.024	9
+"USA"	"Indiana"	"p_9"	-.07	.015	10
+"USA"	"Indiana"	"comb. policy"	-.351	.057	1
+"USA"	"Iowa"	"p_1"	-.102	.065	2
+"USA"	"Iowa"	"p_2"	-.131	.044	3
+"USA"	"Iowa"	"p_3"	-.097	.029	4
+"USA"	"Iowa"	"p_4"	.068	.039	5
+"USA"	"Iowa"	"p_5"	.017	.018	6
+"USA"	"Iowa"	"p_6"	.029	.023	7
+"USA"	"Iowa"	"p_7"	-.007	.024	8
+"USA"	"Iowa"	"p_8"	-.052	.025	9
+"USA"	"Iowa"	"p_9"	-.066	.015	10
+"USA"	"Iowa"	"comb. policy"	-.341	.059	1
+"USA"	"Kansas"	"p_1"	-.103	.064	2
+"USA"	"Kansas"	"p_2"	-.122	.043	3
+"USA"	"Kansas"	"p_3"	-.101	.029	4
+"USA"	"Kansas"	"p_4"	.07	.036	5
+"USA"	"Kansas"	"p_5"	.013	.018	6
+"USA"	"Kansas"	"p_6"	.033	.021	7
+"USA"	"Kansas"	"p_7"	-.011	.025	8
+"USA"	"Kansas"	"p_8"	-.05	.027	9
+"USA"	"Kansas"	"p_9"	-.068	.016	10
+"USA"	"Kansas"	"comb. policy"	-.339	.059	1
+"USA"	"Kentucky"	"p_1"	-.104	.065	2
+"USA"	"Kentucky"	"p_2"	-.124	.041	3
+"USA"	"Kentucky"	"p_3"	-.1	.03	4
+"USA"	"Kentucky"	"p_4"	.073	.037	5
+"USA"	"Kentucky"	"p_5"	.014	.017	6
+"USA"	"Kentucky"	"p_6"	.032	.023	7
+"USA"	"Kentucky"	"p_7"	-.008	.025	8
+"USA"	"Kentucky"	"p_8"	-.051	.025	9
+"USA"	"Kentucky"	"p_9"	-.068	.014	10
+"USA"	"Kentucky"	"comb. policy"	-.337	.059	1
+"USA"	"Louisiana"	"p_1"	-.11	.062	2
+"USA"	"Louisiana"	"p_2"	-.113	.04	3
+"USA"	"Louisiana"	"p_3"	-.106	.028	4
+"USA"	"Louisiana"	"p_4"	.073	.034	5
+"USA"	"Louisiana"	"p_5"	.008	.017	6
+"USA"	"Louisiana"	"p_6"	.039	.019	7
+"USA"	"Louisiana"	"p_7"	-.018	.027	8
+"USA"	"Louisiana"	"p_8"	-.046	.026	9
+"USA"	"Louisiana"	"p_9"	-.068	.015	10
+"USA"	"Louisiana"	"comb. policy"	-.341	.058	1
+"USA"	"Maine"	"p_1"	-.101	.064	2
+"USA"	"Maine"	"p_2"	-.121	.039	3
+"USA"	"Maine"	"p_3"	-.104	.03	4
+"USA"	"Maine"	"p_4"	.069	.037	5
+"USA"	"Maine"	"p_5"	.011	.017	6
+"USA"	"Maine"	"p_6"	.029	.02	7
+"USA"	"Maine"	"p_7"	-.009	.024	8
+"USA"	"Maine"	"p_8"	-.043	.024	9
+"USA"	"Maine"	"p_9"	-.072	.014	10
+"USA"	"Maine"	"comb. policy"	-.34	.059	1
+"USA"	"Maryland"	"p_1"	-.094	.063	2
+"USA"	"Maryland"	"p_2"	-.124	.042	3
+"USA"	"Maryland"	"p_3"	-.102	.029	4
+"USA"	"Maryland"	"p_4"	.063	.034	5
+"USA"	"Maryland"	"p_5"	.012	.017	6
+"USA"	"Maryland"	"p_6"	.032	.019	7
+"USA"	"Maryland"	"p_7"	-.009	.024	8
+"USA"	"Maryland"	"p_8"	-.049	.025	9
+"USA"	"Maryland"	"p_9"	-.07	.016	10
+"USA"	"Maryland"	"comb. policy"	-.34	.056	1
+"USA"	"Massachusetts"	"p_1"	-.092	.062	2
+"USA"	"Massachusetts"	"p_2"	-.108	.04	3
+"USA"	"Massachusetts"	"p_3"	-.104	.029	4
+"USA"	"Massachusetts"	"p_4"	.075	.038	5
+"USA"	"Massachusetts"	"p_5"	.011	.016	6
+"USA"	"Massachusetts"	"p_6"	.029	.022	7
+"USA"	"Massachusetts"	"p_7"	-.001	.025	8
+"USA"	"Massachusetts"	"p_8"	-.053	.026	9
+"USA"	"Massachusetts"	"p_9"	-.074	.015	10
+"USA"	"Massachusetts"	"comb. policy"	-.318	.058	1
+"USA"	"Michigan"	"p_1"	-.115	.062	2
+"USA"	"Michigan"	"p_2"	-.117	.04	3
+"USA"	"Michigan"	"p_3"	-.114	.037	4
+"USA"	"Michigan"	"p_4"	.08	.034	5
+"USA"	"Michigan"	"p_5"	.009	.018	6
+"USA"	"Michigan"	"p_6"	.035	.021	7
+"USA"	"Michigan"	"p_7"	-.011	.025	8
+"USA"	"Michigan"	"p_8"	-.046	.026	9
+"USA"	"Michigan"	"p_9"	-.069	.014	10
+"USA"	"Michigan"	"comb. policy"	-.347	.064	1
+"USA"	"Minnesota"	"p_1"	-.112	.064	2
+"USA"	"Minnesota"	"p_2"	-.11	.042	3
+"USA"	"Minnesota"	"p_3"	-.104	.029	4
+"USA"	"Minnesota"	"p_4"	.075	.036	5
+"USA"	"Minnesota"	"p_5"	.011	.018	6
+"USA"	"Minnesota"	"p_6"	.039	.023	7
+"USA"	"Minnesota"	"p_7"	-.014	.024	8
+"USA"	"Minnesota"	"p_8"	-.053	.025	9
+"USA"	"Minnesota"	"p_9"	-.067	.015	10
+"USA"	"Minnesota"	"comb. policy"	-.335	.058	1
+"USA"	"Mississippi"	"p_1"	-.096	.065	2
+"USA"	"Mississippi"	"p_2"	-.122	.041	3
+"USA"	"Mississippi"	"p_3"	-.087	.033	4
+"USA"	"Mississippi"	"p_4"	.07	.037	5
+"USA"	"Mississippi"	"p_5"	.008	.018	6
+"USA"	"Mississippi"	"p_6"	.029	.02	7
+"USA"	"Mississippi"	"p_7"	-.009	.025	8
+"USA"	"Mississippi"	"p_8"	-.048	.025	9
+"USA"	"Mississippi"	"p_9"	-.071	.015	10
+"USA"	"Mississippi"	"comb. policy"	-.326	.059	1
+"USA"	"Missouri"	"p_1"	-.107	.065	2
+"USA"	"Missouri"	"p_2"	-.127	.038	3
+"USA"	"Missouri"	"p_3"	-.103	.029	4
+"USA"	"Missouri"	"p_4"	.065	.037	5
+"USA"	"Missouri"	"p_5"	.011	.017	6
+"USA"	"Missouri"	"p_6"	.041	.02	7
+"USA"	"Missouri"	"p_7"	-.013	.024	8
+"USA"	"Missouri"	"p_8"	-.047	.023	9
+"USA"	"Missouri"	"p_9"	-.069	.015	10
+"USA"	"Missouri"	"comb. policy"	-.348	.056	1
+"USA"	"Montana"	"p_1"	-.103	.064	2
+"USA"	"Montana"	"p_2"	-.12	.04	3
+"USA"	"Montana"	"p_3"	-.101	.029	4
+"USA"	"Montana"	"p_4"	.071	.037	5
+"USA"	"Montana"	"p_5"	.014	.017	6
+"USA"	"Montana"	"p_6"	.032	.021	7
+"USA"	"Montana"	"p_7"	-.003	.025	8
+"USA"	"Montana"	"p_8"	-.051	.025	9
+"USA"	"Montana"	"p_9"	-.071	.015	10
+"USA"	"Montana"	"comb. policy"	-.332	.058	1
+"USA"	"Nebraska"	"p_1"	-.101	.064	2
+"USA"	"Nebraska"	"p_2"	-.139	.044	3
+"USA"	"Nebraska"	"p_3"	-.106	.029	4
+"USA"	"Nebraska"	"p_4"	.071	.038	5
+"USA"	"Nebraska"	"p_5"	.015	.017	6
+"USA"	"Nebraska"	"p_6"	.032	.021	7
+"USA"	"Nebraska"	"p_7"	-.009	.025	8
+"USA"	"Nebraska"	"p_8"	-.047	.025	9
+"USA"	"Nebraska"	"p_9"	-.068	.015	10
+"USA"	"Nebraska"	"comb. policy"	-.351	.06	1
+"USA"	"Nevada"	"p_1"	-.109	.065	2
+"USA"	"Nevada"	"p_2"	-.118	.038	3
+"USA"	"Nevada"	"p_3"	-.1	.03	4
+"USA"	"Nevada"	"p_4"	.08	.036	5
+"USA"	"Nevada"	"p_5"	.013	.017	6
+"USA"	"Nevada"	"p_6"	.027	.021	7
+"USA"	"Nevada"	"p_7"	-.011	.023	8
+"USA"	"Nevada"	"p_8"	-.048	.026	9
+"USA"	"Nevada"	"p_9"	-.068	.015	10
+"USA"	"Nevada"	"comb. policy"	-.334	.058	1
+"USA"	"New Hampshire"	"p_1"	-.1	.065	2
+"USA"	"New Hampshire"	"p_2"	-.117	.04	3
+"USA"	"New Hampshire"	"p_3"	-.104	.029	4
+"USA"	"New Hampshire"	"p_4"	.069	.037	5
+"USA"	"New Hampshire"	"p_5"	.012	.017	6
+"USA"	"New Hampshire"	"p_6"	.031	.021	7
+"USA"	"New Hampshire"	"p_7"	-.012	.025	8
+"USA"	"New Hampshire"	"p_8"	-.047	.024	9
+"USA"	"New Hampshire"	"p_9"	-.071	.014	10
+"USA"	"New Hampshire"	"comb. policy"	-.339	.058	1
+"USA"	"New Jersey"	"p_1"	-.119	.059	2
+"USA"	"New Jersey"	"p_2"	-.112	.04	3
+"USA"	"New Jersey"	"p_3"	-.102	.029	4
+"USA"	"New Jersey"	"p_4"	.073	.034	5
+"USA"	"New Jersey"	"p_5"	.016	.018	6
+"USA"	"New Jersey"	"p_6"	.035	.02	7
+"USA"	"New Jersey"	"p_7"	-.011	.025	8
+"USA"	"New Jersey"	"p_8"	-.05	.024	9
+"USA"	"New Jersey"	"p_9"	-.069	.015	10
+"USA"	"New Jersey"	"comb. policy"	-.338	.057	1
+"USA"	"New Mexico"	"p_1"	-.104	.066	2
+"USA"	"New Mexico"	"p_2"	-.121	.04	3
+"USA"	"New Mexico"	"p_3"	-.1	.029	4
+"USA"	"New Mexico"	"p_4"	.073	.037	5
+"USA"	"New Mexico"	"p_5"	.009	.017	6
+"USA"	"New Mexico"	"p_6"	.03	.021	7
+"USA"	"New Mexico"	"p_7"	-.01	.024	8
+"USA"	"New Mexico"	"p_8"	-.046	.026	9
+"USA"	"New Mexico"	"p_9"	-.072	.015	10
+"USA"	"New Mexico"	"comb. policy"	-.341	.059	1
+"USA"	"New York"	"p_1"	-.111	.061	2
+"USA"	"New York"	"p_2"	-.108	.04	3
+"USA"	"New York"	"p_3"	-.079	.027	4
+"USA"	"New York"	"p_4"	.079	.036	5
+"USA"	"New York"	"p_5"	.018	.017	6
+"USA"	"New York"	"p_6"	.028	.022	7
+"USA"	"New York"	"p_7"	-.015	.024	8
+"USA"	"New York"	"p_8"	-.051	.024	9
+"USA"	"New York"	"p_9"	-.067	.015	10
+"USA"	"New York"	"comb. policy"	-.306	.054	1
+"USA"	"North Carolina"	"p_1"	-.098	.065	2
+"USA"	"North Carolina"	"p_2"	-.12	.039	3
+"USA"	"North Carolina"	"p_3"	-.103	.029	4
+"USA"	"North Carolina"	"p_4"	.065	.037	5
+"USA"	"North Carolina"	"p_5"	.013	.018	6
+"USA"	"North Carolina"	"p_6"	.034	.021	7
+"USA"	"North Carolina"	"p_7"	-.01	.026	8
+"USA"	"North Carolina"	"p_8"	-.05	.027	9
+"USA"	"North Carolina"	"p_9"	-.07	.015	10
+"USA"	"North Carolina"	"comb. policy"	-.339	.059	1
+"USA"	"North Dakota"	"p_1"	-.101	.064	2
+"USA"	"North Dakota"	"p_2"	-.127	.041	3
+"USA"	"North Dakota"	"p_3"	-.108	.029	4
+"USA"	"North Dakota"	"p_4"	.069	.037	5
+"USA"	"North Dakota"	"p_5"	.014	.017	6
+"USA"	"North Dakota"	"p_6"	.034	.021	7
+"USA"	"North Dakota"	"p_7"	-.01	.024	8
+"USA"	"North Dakota"	"p_8"	-.048	.025	9
+"USA"	"North Dakota"	"p_9"	-.069	.015	10
+"USA"	"North Dakota"	"comb. policy"	-.347	.059	1
+"USA"	"Ohio"	"p_1"	-.099	.065	2
+"USA"	"Ohio"	"p_2"	-.119	.04	3
+"USA"	"Ohio"	"p_3"	-.105	.029	4
+"USA"	"Ohio"	"p_4"	.066	.037	5
+"USA"	"Ohio"	"p_5"	.018	.018	6
+"USA"	"Ohio"	"p_6"	.036	.022	7
+"USA"	"Ohio"	"p_7"	-.009	.025	8
+"USA"	"Ohio"	"p_8"	-.053	.025	9
+"USA"	"Ohio"	"p_9"	-.068	.015	10
+"USA"	"Ohio"	"comb. policy"	-.333	.059	1
+"USA"	"Oklahoma"	"p_1"	-.107	.064	2
+"USA"	"Oklahoma"	"p_2"	-.127	.039	3
+"USA"	"Oklahoma"	"p_3"	-.101	.03	4
+"USA"	"Oklahoma"	"p_4"	.072	.036	5
+"USA"	"Oklahoma"	"p_5"	.012	.017	6
+"USA"	"Oklahoma"	"p_6"	.033	.02	7
+"USA"	"Oklahoma"	"p_7"	-.007	.025	8
+"USA"	"Oklahoma"	"p_8"	-.046	.025	9
+"USA"	"Oklahoma"	"p_9"	-.07	.015	10
+"USA"	"Oklahoma"	"comb. policy"	-.342	.057	1
+"USA"	"Oregon"	"p_1"	-.112	.068	2
+"USA"	"Oregon"	"p_2"	-.12	.04	3
+"USA"	"Oregon"	"p_3"	-.097	.029	4
+"USA"	"Oregon"	"p_4"	.07	.038	5
+"USA"	"Oregon"	"p_5"	.003	.018	6
+"USA"	"Oregon"	"p_6"	.035	.021	7
+"USA"	"Oregon"	"p_7"	-.018	.025	8
+"USA"	"Oregon"	"p_8"	-.048	.026	9
+"USA"	"Oregon"	"p_9"	-.07	.015	10
+"USA"	"Oregon"	"comb. policy"	-.356	.062	1
+"USA"	"Pennsylvania"	"p_1"	-.108	.061	2
+"USA"	"Pennsylvania"	"p_2"	-.121	.041	3
+"USA"	"Pennsylvania"	"p_3"	-.1	.029	4
+"USA"	"Pennsylvania"	"p_4"	.074	.034	5
+"USA"	"Pennsylvania"	"p_5"	.013	.017	6
+"USA"	"Pennsylvania"	"p_6"	.031	.021	7
+"USA"	"Pennsylvania"	"p_7"	-.013	.025	8
+"USA"	"Pennsylvania"	"p_8"	-.051	.026	9
+"USA"	"Pennsylvania"	"p_9"	-.066	.015	10
+"USA"	"Pennsylvania"	"comb. policy"	-.34	.058	1
+"USA"	"Rhode Island"	"p_1"	-.109	.065	2
+"USA"	"Rhode Island"	"p_2"	-.118	.041	3
+"USA"	"Rhode Island"	"p_3"	-.1	.029	4
+"USA"	"Rhode Island"	"p_4"	.078	.036	5
+"USA"	"Rhode Island"	"p_5"	.017	.017	6
+"USA"	"Rhode Island"	"p_6"	.028	.021	7
+"USA"	"Rhode Island"	"p_7"	-.016	.025	8
+"USA"	"Rhode Island"	"p_8"	-.047	.024	9
+"USA"	"Rhode Island"	"p_9"	-.073	.015	10
+"USA"	"Rhode Island"	"comb. policy"	-.34	.058	1
+"USA"	"South Carolina"	"p_1"	-.104	.065	2
+"USA"	"South Carolina"	"p_2"	-.118	.044	3
+"USA"	"South Carolina"	"p_3"	-.104	.03	4
+"USA"	"South Carolina"	"p_4"	.062	.038	5
+"USA"	"South Carolina"	"p_5"	.01	.017	6
+"USA"	"South Carolina"	"p_6"	.033	.022	7
+"USA"	"South Carolina"	"p_7"	-.012	.025	8
+"USA"	"South Carolina"	"p_8"	-.044	.025	9
+"USA"	"South Carolina"	"p_9"	-.071	.015	10
+"USA"	"South Carolina"	"comb. policy"	-.347	.059	1
+"USA"	"South Dakota"	"p_1"	-.099	.064	2
+"USA"	"South Dakota"	"p_2"	-.142	.037	3
+"USA"	"South Dakota"	"p_3"	-.099	.029	4
+"USA"	"South Dakota"	"p_4"	.07	.036	5
+"USA"	"South Dakota"	"p_5"	.007	.017	6
+"USA"	"South Dakota"	"p_6"	.034	.02	7
+"USA"	"South Dakota"	"p_7"	-.017	.026	8
+"USA"	"South Dakota"	"p_8"	-.043	.025	9
+"USA"	"South Dakota"	"p_9"	-.066	.015	10
+"USA"	"South Dakota"	"comb. policy"	-.356	.06	1
+"USA"	"Tennessee"	"p_1"	-.097	.066	2
+"USA"	"Tennessee"	"p_2"	-.119	.041	3
+"USA"	"Tennessee"	"p_3"	-.105	.029	4
+"USA"	"Tennessee"	"p_4"	.063	.039	5
+"USA"	"Tennessee"	"p_5"	.019	.017	6
+"USA"	"Tennessee"	"p_6"	.033	.02	7
+"USA"	"Tennessee"	"p_7"	-.011	.026	8
+"USA"	"Tennessee"	"p_8"	-.049	.025	9
+"USA"	"Tennessee"	"p_9"	-.072	.015	10
+"USA"	"Tennessee"	"comb. policy"	-.338	.059	1
+"USA"	"Texas"	"p_1"	-.109	.062	2
+"USA"	"Texas"	"p_2"	-.123	.039	3
+"USA"	"Texas"	"p_3"	-.1	.029	4
+"USA"	"Texas"	"p_4"	.074	.034	5
+"USA"	"Texas"	"p_5"	.014	.017	6
+"USA"	"Texas"	"p_6"	.031	.023	7
+"USA"	"Texas"	"p_7"	-.001	.024	8
+"USA"	"Texas"	"p_8"	-.05	.026	9
+"USA"	"Texas"	"p_9"	-.068	.015	10
+"USA"	"Texas"	"comb. policy"	-.332	.057	1
+"USA"	"Utah"	"p_1"	-.101	.065	2
+"USA"	"Utah"	"p_2"	-.123	.041	3
+"USA"	"Utah"	"p_3"	-.096	.03	4
+"USA"	"Utah"	"p_4"	.071	.037	5
+"USA"	"Utah"	"p_5"	.012	.017	6
+"USA"	"Utah"	"p_6"	.028	.021	7
+"USA"	"Utah"	"p_7"	-.01	.027	8
+"USA"	"Utah"	"p_8"	-.044	.024	9
+"USA"	"Utah"	"p_9"	-.07	.014	10
+"USA"	"Utah"	"comb. policy"	-.334	.059	1
+"USA"	"Vermont"	"p_1"	-.105	.065	2
+"USA"	"Vermont"	"p_2"	-.125	.038	3
+"USA"	"Vermont"	"p_3"	-.1	.029	4
+"USA"	"Vermont"	"p_4"	.072	.037	5
+"USA"	"Vermont"	"p_5"	.012	.017	6
+"USA"	"Vermont"	"p_6"	.032	.021	7
+"USA"	"Vermont"	"p_7"	-.007	.025	8
+"USA"	"Vermont"	"p_8"	-.05	.024	9
+"USA"	"Vermont"	"p_9"	-.066	.015	10
+"USA"	"Vermont"	"comb. policy"	-.337	.058	1
+"USA"	"Virginia"	"p_1"	-.103	.064	2
+"USA"	"Virginia"	"p_2"	-.138	.042	3
+"USA"	"Virginia"	"p_3"	-.097	.029	4
+"USA"	"Virginia"	"p_4"	.074	.036	5
+"USA"	"Virginia"	"p_5"	.018	.017	6
+"USA"	"Virginia"	"p_6"	.034	.02	7
+"USA"	"Virginia"	"p_7"	-.01	.025	8
+"USA"	"Virginia"	"p_8"	-.054	.027	9
+"USA"	"Virginia"	"p_9"	-.066	.016	10
+"USA"	"Virginia"	"comb. policy"	-.343	.059	1
+"USA"	"Washington"	"p_1"	-.082	.064	2
+"USA"	"Washington"	"p_2"	-.137	.041	3
+"USA"	"Washington"	"p_3"	-.1	.029	4
+"USA"	"Washington"	"p_4"	.076	.037	5
+"USA"	"Washington"	"p_5"	.007	.017	6
+"USA"	"Washington"	"p_6"	.033	.021	7
+"USA"	"Washington"	"p_7"	-.018	.025	8
+"USA"	"Washington"	"p_8"	-.045	.025	9
+"USA"	"Washington"	"p_9"	-.069	.015	10
+"USA"	"Washington"	"comb. policy"	-.335	.057	1
+"USA"	"West Virginia"	"p_1"	-.101	.065	2
+"USA"	"West Virginia"	"p_2"	-.114	.039	3
+"USA"	"West Virginia"	"p_3"	-.103	.029	4
+"USA"	"West Virginia"	"p_4"	.069	.038	5
+"USA"	"West Virginia"	"p_5"	.014	.017	6
+"USA"	"West Virginia"	"p_6"	.031	.021	7
+"USA"	"West Virginia"	"p_7"	-.006	.024	8
+"USA"	"West Virginia"	"p_8"	-.051	.025	9
+"USA"	"West Virginia"	"p_9"	-.071	.015	10
+"USA"	"West Virginia"	"comb. policy"	-.332	.058	1
+"USA"	"Wisconsin"	"p_1"	-.103	.064	2
+"USA"	"Wisconsin"	"p_2"	-.118	.042	3
+"USA"	"Wisconsin"	"p_3"	-.103	.029	4
+"USA"	"Wisconsin"	"p_4"	.068	.037	5
+"USA"	"Wisconsin"	"p_5"	.011	.017	6
+"USA"	"Wisconsin"	"p_6"	.036	.021	7
+"USA"	"Wisconsin"	"p_7"	-.012	.025	8
+"USA"	"Wisconsin"	"p_8"	-.049	.025	9
+"USA"	"Wisconsin"	"p_9"	-.069	.015	10
+"USA"	"Wisconsin"	"comb. policy"	-.34	.06	1
+"USA"	"Wyoming"	"p_1"	-.105	.066	2
+"USA"	"Wyoming"	"p_2"	-.117	.04	3
+"USA"	"Wyoming"	"p_3"	-.102	.029	4
+"USA"	"Wyoming"	"p_4"	.071	.038	5
+"USA"	"Wyoming"	"p_5"	.013	.017	6
+"USA"	"Wyoming"	"p_6"	.034	.021	7
+"USA"	"Wyoming"	"p_7"	-.015	.025	8
+"USA"	"Wyoming"	"p_8"	-.051	.024	9
+"USA"	"Wyoming"	"p_9"	-.069	.014	10
+"USA"	"Wyoming"	"comb. policy"	-.34	.059	1
