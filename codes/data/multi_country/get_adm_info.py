@@ -346,27 +346,9 @@ def main():
     # ### US
     print("Downloading USA population data from US Census...")
     c = Census(cutil.API_KEYS["census"])
-    pop_city = pd.DataFrame(
-        c.acs5.state_place(("NAME", "B01003_001E"), Census.ALL, Census.ALL)
-    )
     pop_cty = pd.DataFrame(
         c.acs5.state_county(("NAME", "B01003_001E"), Census.ALL, Census.ALL)
     )
-
-    # #### Place-level
-
-    # save the place-level populations
-    pop_city[["adm3_name", "adm1_name"]] = pd.DataFrame(
-        pop_city.NAME.str.split(", ").values.tolist(), index=pop_city.index
-    )
-    pop_city = pop_city.rename(columns={"B01003_001E": "pop"}).drop(columns="NAME")
-    pop_city = pop_city.set_index(["adm3_name", "adm1_name"])
-
-    out_dir = cutil.DATA / "interim" / "usa"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    pop_city.to_csv(out_dir / "adm3_pop.csv", index=True)
-
-    # #### County-level
 
     ## get county-level populations
     hasc_fips_url = "http://www.statoids.com/yus.html"
