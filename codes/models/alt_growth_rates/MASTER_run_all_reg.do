@@ -12,6 +12,10 @@ capture mkdir "results/figures/fig3/"
 capture mkdir "results/figures/fig3/raw" 
 capture mkdir "results/figures/appendix/" 
 capture mkdir "results/figures/appendix/error_dist" 
+capture mkdir "results/figures/appendix/cross_valid" 
+capture mkdir "results/figures/appendix/fixed_lag" 
+
+
 
 // run .do files
 do "codes/models/alt_growth_rates/CHN_adm2.do"
@@ -48,4 +52,4 @@ foreach fn of local filenames{
 }
 
 graph combine error_chn error_irn error_kor error_fra error_ita error_usa, rows(3)
-graph export results/figures/appendix/ALL_conf_cases_e.png, replace
+graph export results/figures/appendix/error_dist/ALL_conf_cases_e.png, replace

@@ -96,7 +96,9 @@ restore
 foreach t_chg of local testing_change_dates{
 	local t_str = string(`t_chg', "%td")
 	gen testing_regime_change_`t_str' = t==`t_chg'
-	lab var testing_regime_change_`t_str' "Testing regime change `t_str'"
+	
+	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
+	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
 }
 
 //------------------diagnostic
@@ -218,7 +220,7 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (similar to FIG2)
-coefplot, keep(p_*) tit("KOR: new policy packages") subtitle(`subtitle2') ///
+coefplot, keep(p_*) tit("KOR: policy packages") subtitle(`subtitle2') ///
 xline(0) name(KOR_policy, replace)
  
 
@@ -319,7 +321,7 @@ preserve
 	egen i = group(policy)
 	g minCI = beta - 1.96* se
 	g maxCI = beta + 1.96* se
-	tw scatter i beta if sample != "Seoul", xline(0,lc(black) lp(dash)) mc(black*.5) msize(small)  ///
+	tw scatter i beta if sample != "Seoul", xline(0,lc(black) lp(dash)) mc(black*.5) ///
 	|| scatter i beta if sample == "full_sample", mc(red)  ///
 	|| scatter i beta if sample == "Seoul", mc(green) m(Oh) ///
 	yscale(range(0.5(0.5)3.5)) ylabel( ///
@@ -331,7 +333,7 @@ preserve
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
 	lab(3 "w/o Seoul") region(lstyle(none)) rows(1)) ///
-	ytitle("") xscale(range(-0.5(0.1)0.1)) xlabel(#5) xsize(7)
+	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/KOR.pdf, replace
 	graph export results/figures/appendix/cross_valid/KOR.png, replace
 	outsheet * using "results/source_data/extended_cross_validation_KOR.csv", replace	
@@ -347,6 +349,7 @@ preserve
 		foreach var in p_1 p_2 p_3 p_4{
 			g `var'_copy = `var'
 			g `var'_fixelag = L`lags'.`var'
+			replace `var'_fixelag = 0 if `var'_fixelag  == .
 			replace `var' = `var'_fixelag
 			
 		}

@@ -346,27 +346,9 @@ def main():
     # ### US
     print("Downloading USA population data from US Census...")
     c = Census(cutil.API_KEYS["census"])
-    pop_city = pd.DataFrame(
-        c.acs5.state_place(("NAME", "B01003_001E"), Census.ALL, Census.ALL)
-    )
     pop_cty = pd.DataFrame(
         c.acs5.state_county(("NAME", "B01003_001E"), Census.ALL, Census.ALL)
     )
-
-    # #### Place-level
-
-    # save the place-level populations
-    pop_city[["adm3_name", "adm_1_name"]] = pd.DataFrame(
-        pop_city.NAME.str.split(", ").values.tolist(), index=pop_city.index
-    )
-    pop_city = pop_city.rename(columns={"B01003_001E": "pop"}).drop(columns="NAME")
-    pop_city = pop_city.set_index(["adm3_name", "adm_1_name"])
-
-    out_dir = cutil.DATA / "interim" / "usa"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    pop_city.to_csv(out_dir / "adm3_pop.csv", index=True)
-
-    # #### County-level
 
     ## get county-level populations
     hasc_fips_url = "http://www.statoids.com/yus.html"
@@ -400,10 +382,44 @@ def main():
 
     # ##### Merge in us adm2 dataset
 
-    us_gdf = in_gdf = gpd.read_file(
+    us_gdf = gpd.read_file(
         cutil.zipify_path(cutil.get_adm_zip_path("USA", datestamp) / "gadm36_USA.gpkg")
     )
+
+    # drop water bodies
     us_gdf = us_gdf[us_gdf.HASC_2.notnull()]
+    us_gdf = us_gdf[us_gdf.TYPE_2 != "Water body"]
+
+    # drop old adm2 units no longer valid
+    gadm_drop_old = [("US.VA.BD", "Bedford City"), ("US.VA.CF", "Clifton Forge City")]
+    us_gdf = (
+        us_gdf.set_index(["HASC_2", "NAME_2"])
+        .drop(index=gadm_drop_old)
+        .reset_index(drop=False)
+    )
+
+    # fix names and drop gemoetry b/c the diffs are often due to shuffling/incorporation
+    # of other counties
+    gadm_census_fix = {
+        ("US.AK.KT", "Ketchikan Gateway"): ("US.AK.KG", "Ketchikan Gateway"),
+        ("US.AK.PR", "Prince of Wales-Outer Ketchi"): (
+            "US.AK.PH",
+            "Prince of Wales-Hyder",
+        ),
+        ("US.AK.SK", "Skagway-Yakutat-Angoon"): ("US.AK.SW", "Skagway"),
+        ("US.AK.WR", "Wrangell-Petersburg"): ("US.AK.WG", "Wrangell"),
+        ("US.VA.FC", "Fairfax"): ("US.VA.FX", "Fairfax"),
+        ("US.VA.BD", "Bedford"): ("US.VA.BF", "Bedford"),
+        ("US.VA.RO", "Roanoke"): ("US.VA.RE", "Roanoke"),
+    }
+    for k, v in gadm_census_fix.items():
+        us_gdf.loc[
+            (us_gdf.HASC_2 == k[0]) & (us_gdf.NAME_2 == k[1]),
+            ["HASC_2", "NAME_2", "geometry"],
+        ] = list(v) + [None]
+
+    # make sure HASC is now a unique identifier
+    assert us_gdf.HASC_2.is_unique
 
     us_pops = us_gdf.join(us_county_df, on="HASC_2", how="outer")
     us_pops = us_pops[["NAME_1", "NAME_2", "fips", "population", "area_km2", "capital"]]
@@ -413,20 +429,14 @@ def main():
     # Manual addition of names that are in the statoids dataset but not the gadm shapes
     manual_names = {
         "24005": ("Maryland", "Baltimore County"),
-        "02130": ("Alaska", "Ketchikan Gateway Borough"),
         "29510": ("Missouri", "City of St. Louis"),
-        "51019": ("Virginia", "Bedford County"),
-        "51059": ("Virginia", "Fairfax County"),
-        "51161": ("Virginia", "Roanoke County"),
         "51620": ("Virginia", "Franklin City"),
         "02105": ("Alaska", "Hoonah-Angoon Census Area"),
         "02195": ("Alaska", "Petersburg Borough"),
-        "02198": ("Alaska", "Prince of Wales-Hyder Census Area"),
         "51159": ("Virginia", "Richmond County"),
-        "02230": ("Alaska", "Skagway Municipality"),
-        "02275": ("Alaska", "Wrangell City and Borough"),
         "02282": ("Alaska", "Yakutat City and Borough"),
     }
+    assert len(manual_names) == us_pops.adm1_name.isnull().sum()
 
     for k, v in manual_names.items():
         us_pops.loc[us_pops.fips == k, ["adm1_name", "adm2_name"]] = v

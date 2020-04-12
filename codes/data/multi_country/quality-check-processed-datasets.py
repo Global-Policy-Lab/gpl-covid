@@ -25,9 +25,9 @@ parser.add_argument(
 )
 parser.add_argument(
     "-l",
-    "--no-check-latlons",
+    "--check-latlons",
     action="store_true",
-    help="Don't check presence of lat/lon values",
+    help="Check presence of lat/lon values",
 )
 args = parser.parse_args()
 
@@ -128,6 +128,11 @@ def check_cumulativity(df, country, adm):
 
         adm_name = f"adm{adm}_name"
 
+        # Make exception for France, where we have confirmed cases up to a point, and then hospitalizations
+        if country == "FRA":
+            if field == "cum_confirmed_cases_imputed" or field == "cum_hospitalized":
+                continue
+
         column_is_cumulative = (
             df.groupby([adm_name])[field]
             .apply(lambda x: np.all(np.diff(np.array(x)) < 0))
@@ -157,6 +162,12 @@ def check_columns_are_not_null(df, country, adm):
             or col in ["lon", "lat"]
         ):
             continue
+
+        # Make exception for France, where we have confirmed cases up to a point, and then hospitalizations
+        if country == "FRA":
+            if col == "cum_confirmed_cases_imputed" or col == "cum_hospitalized":
+                continue
+
         nulls_not_found = df[col].isnull().sum() == 0
         test_condition(nulls_not_found, country, adm, f"Column contains nulls: {col}")
 
@@ -219,7 +230,7 @@ def check_opt_and_non_opt_align(df, country, adm, aggregate_vars=["social_distan
             if bool(sum([int(i in col) for i in aggregate_vars])):
                 continue
             nonopt_col = col.replace("_opt", "")
-            row_mismatch_len = len(df[df[nonopt_col] + df[col] > 1])
+            row_mismatch_len = len(df[df[nonopt_col] + df[col] > 1.0 + 1e-12])
             cols_add_to_one_or_below = row_mismatch_len == 0
             message = f"Sum of fields > 1 in cols {nonopt_col} and {col}, in {row_mismatch_len} cases"
             test_condition(cols_add_to_one_or_below, country, adm, message)
@@ -262,7 +273,7 @@ def main():
         for adm in processed[country]:
             df = processed[country][adm]
 
-            if not args.no_check_latlons:
+            if args.check_latlons:
                 check_latlons(df, country, adm)
             check_cutoff_date(df, country, adm, cutoff_date)
             check_balanced_panel(df, country, adm)
