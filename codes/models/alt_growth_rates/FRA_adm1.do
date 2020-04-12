@@ -26,7 +26,7 @@ xtset adm1_id t
 
 // quality control
 drop if cum_confirmed_cases < 10  
-keep if t >= date("20200228","YMD") // Non stable growth before that point & missing data, only one region with +10 but no growth
+keep if t >= date("20200229","YMD") // Non stable growth before that point & missing data, only one region with +10 but no growth
 keep if t <= date("`end_sample'","YMD") // to match other country end dates
 
 
@@ -56,6 +56,13 @@ lab var l_cum_confirmed_cases "log(cum_confirmed_cases)"
 gen D_l_cum_confirmed_cases = D.l_cum_confirmed_cases 
 lab var D_l_cum_confirmed_cases "change in log(cum. confirmed cases)"
 
+g l_hospitalization = log(hospitalization)
+lab var l_hospitalization "log(hospitalization)"
+
+g D_l_hospitalization = D.l_hospi
+lab var D_l_hospitalization "change in log(hospitalization)"
+
+
 // quality control: cannot have negative changes in cumulative values
 replace D_l_cum_confirmed_cases = . if D_l_cum_confirmed_cases < 0 //0 negative changes for France
 
@@ -76,20 +83,23 @@ lab var day_avg "Observed avg. change in log cases"
 
 //------------------testing regime changes
 
-g testing_regime = t == mdy(3,15,2020) // start of stade 3, none systematic testing
-lab var testing_regime "Testing Regime Change"
+g testing_regime_13mar2020 = t == mdy(3,15,2020) // start of stade 3, none systematic testing
+lab var testing_regime_13mar2020 "Testing regime change on Mar 15, 2020"
 
 
 //------------------generate policy packages
 
 gen national_lockdown = (business_closure + home_isolation) / 2 // big national lockdown policy
-lab var national_lockdown "Lockdown"
+lab var national_lockdown "National lockdown"
 
 gen no_gathering_5000 = no_gathering_size <= 5000
 gen no_gathering_1000 = no_gathering_size <= 1000
 gen no_gathering_100 = no_gathering_size <= 100
 
 gen pck_social_distance = (no_gathering_1000 + no_gathering_100 + event_cancel + no_gathering_inside + social_distance) / 5
+lab var pck_social_distance "Social distance"
+
+lab var school_closure "School closure"
 
 // gen policy_ct = pck_social_distance + school_closure + national_lockdown
 // sum policy_ct
@@ -100,11 +110,13 @@ gen pck_social_distance = (no_gathering_1000 + no_gathering_100 + event_cancel +
 outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases testing pck_social_distance school_closure ///
-national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure national_lockdown ///
+ testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
  
-outreg2 using "results/tables/FRA_estimates_table", word replace label ///
- addtext(Region FE, "YES", Day-of-Week FE, "YES") title("Regression output: France")
+outreg2 using "results/tables/FRA_estimates_table", sideway noparen nodepvar word replace label ///
+ addtext(Region FE, "YES", Day-of-Week FE, "YES") title(France, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ "\'22National lockdown\'22 policies include business closures and home isolation.")
 cap erase "results/tables/FRA_estimates_table.txt"
 
 // saving coefs
@@ -142,7 +154,7 @@ national_lockdown* _b[national_lockdown] ///
 if e(sample)
 
 // predicting counterfactual growth for each obs
-predictnl y_counter =  testing_regime * _b[testing_regime] + ///
+predictnl y_counter =  testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of all policies combined (FOR FIG2)
@@ -179,8 +191,8 @@ local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefp
 // looking at different policies (similar to FIG2)
 coefplot, keep(pck_social_distance school_closure national_lockdown) ///
 tit("FRA: policy packages") subtitle("`subtitle2'") ///
-caption("pck_social_distance = (no_gath_1000 + no_gath_100 + event_cancel +" " no_gathering_inside + social_distance) / 5" ///
-"Lockdown = (business_closure + home_isolation) / 2", span) ///
+caption("Social distance = (no_gath_1000 + no_gath_100 + event_cancel +" " no_gathering_inside + social_distance) / 5" ///
+"National lockdown = (business_closure + home_isolation) / 2", span) ///
 xline(0) name(FRA_policy, replace) 
 
 
@@ -255,8 +267,8 @@ tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
 *Resave main effect
-reghdfe D_l_cum_confirmed_cases testing pck_social_distance school_closure ///
-national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure ///
+national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 
 foreach var in "national_lockdown" "school_closure" "pck_social_distance" {
 	post results ("FRA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
@@ -267,8 +279,8 @@ post results ("FRA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
-	reghdfe D_l_cum_confirmed_cases testing national_lockdown school_closure ///
-	pck_social_distance if adm1_name != "`adm'" , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+	reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure national_lockdown ///
+	 testing_regime_* if adm1_name != "`adm'" , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 	foreach var in "national_lockdown" "school_closure" "pck_social_distance" {
 		post results ("FRA") ("`adm'") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 	}
@@ -277,19 +289,121 @@ foreach adm in `state_list' {
 }
 postclose results
 
-preserve
+*preserve
 	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
-	tw scatter i beta , xline(0,lc(black) lp(dash)) mc(black*.5)  ///
+	tw scatter i beta if sample != "GrandEst", xline(0,lc(black) lp(dash)) mc(black*.5)  ///
 	|| scatter i beta if sample == "full_sample", mc(red) ///
+	|| scatter i beta if sample == "GrandEst", mc(green) m(Oh) ///
 	yscale(range(0(1)6)) ylabel(1 "combined effect" ///
-	2 "national lockdown" ///
-	3 "school closure" ///
-	4 "social distance", angle(0)) ytitle("") xtitle("Estimated effect on daily growth rate", height(5)) ///
-	xscale(range(-0.4(0.1)0.1)) xlabel(#5) xsize(7) ///
-	legend(order(2 1) lab(2 "Full sample") lab(1 "Leaving one region out") ///
-	region(lstyle(none)) pos(11) ring(0)) 
+	2 "Social distance" ///
+	3 "School closure" ///
+	4 "National lockdown", angle(0)) ytitle("") xtitle("Estimated effect on daily growth rate", height(5)) ///
+	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7) ///
+	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
+	lab(3 "w/o Grand Est") region(lstyle(none)) pos(11) ring(0)) 
 	graph export results/figures/appendix/cross_valid/FRA.pdf, replace
 	graph export results/figures/appendix/cross_valid/FRA.png, replace	
+	outsheet * using "results/source_data/extended_cross_validation_FRA.csv", replace
+restore
+
+
+//-------------------------------FIXED LAG
+
+preserve
+	reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure ///
+	national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+	coefplot, keep(pck_social_distance school_closure national_lockdown) gen(L0_) title(main model) xline(0) 
+	
+	reghdfe D_l_hospi testing pck_social_distance school_closure ///
+	national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 	 
+	coefplot, keep(pck_social_distance school_closure national_lockdown) gen(H0_) title(main model) xline(0) 
+	replace H0_at = H0_at - 0.04
+
+	foreach lags of num 1/5 { 
+		quietly {
+		foreach var in pck_social_distance school_closure national_lockdown{
+			g `var'_copy = `var'
+			g `var'_fixelag = L`lags'.`var'
+			replace `var'_fixelag = 0 if `var'_fixelag == .
+			replace `var' = `var'_fixelag
+			
+		}
+		drop *_fixelag 
+
+		reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure ///
+		national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+		coefplot, keep(pck_social_distance school_closure national_lockdown) ///
+		gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
+		
+		reghdfe D_l_hospi testing pck_social_distance school_closure ///
+		national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+		coefplot, keep(pck_social_distance school_closure national_lockdown) ///
+		gen(H`lags'_) title (with fixed lag (4 days)) xline(0)
+		replace H`lags'_at = H`lags'_at - 0.1 *`lags' - 0.04	
+		
+		foreach var in pck_social_distance school_closure national_lockdown{
+			replace `var' = `var'_copy
+			drop `var'_copy
+		}
+		}
+	}
+
+
+	set scheme s1color
+	tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
+	|| scatter  L0_at L0_b, mc(black) ///
+	|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
+	|| scatter  L1_at L1_b, mc(black*.9) ///
+	|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
+	|| scatter  L2_at L2_b, mc(black*.7) ///
+	|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
+	|| scatter  L3_at L3_b, mc(black*.5) ///
+	|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
+	|| scatter  L4_at L4_b, mc(black*.3) ///
+	|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
+	|| scatter  L5_at L5_b, mc(black*.1) ///	
+	|| rspike H0_ll1 H0_ul1 H0_at , hor xline(0) lc(ebblue) lw(thin) ///
+	|| scatter  H0_at H0_b, mc(ebblue)  ///
+	|| rspike H1_ll1 H1_ul1 H1_at , hor xline(0) lc(ebblue*.9) lw(thin) ///
+	|| scatter  H1_at H1_b, mc(ebblue*.9) ///
+	|| rspike H2_ll1 H2_ul1 H2_at , hor xline(0) lc(ebblue*.7) lw(thin) ///
+	|| scatter  H2_at H2_b, mc(ebblue*.7) ///
+	|| rspike H3_ll1 H3_ul1 H3_at , hor xline(0) lc(ebblue*.5) lw(thin) ///
+	|| scatter  H3_at H3_b, mc(ebblue*.5) ///
+	|| rspike H4_ll1 H4_ul1 H4_at , hor xline(0) lc(ebblue*.3) lw(thin) ///
+	|| scatter  H4_at H4_b, mc(ebblue*.3) ///
+	|| rspike H5_ll1 H5_ul1 H5_at , hor xline(0) lc(ebblue*.1) lw(thin) ///
+	|| scatter  H5_at H5_b, mc(ebblue*.1) ///	
+	ylabel(1 "Social distance" ///
+	2 "School closure" ///
+	3 "National lockdown", angle(0)) ///
+	ytitle("") title("France comparing Fixed Lags models") ///
+	legend(order(2 4 6 8 10 12 14 16 18 20 22 24) lab(2 "Conf. cases (end 03/25)")  ///
+	lab(4 "L1") lab(6 "L2") lab(8 "L3") lab(10 "L4") lab(12 "L5") ///
+	lab(14 "Hospitalization (end 04/06)") lab(16 "L1") lab(18 "L2") lab(20 "L3") ///
+	lab(22 "L4") lab(24 "L5")  cols(6) region(lstyle(none))) 
+	graph export results/figures/appendix/fixed_lag/FRA.pdf, replace
+	graph export results/figures/appendix/fixed_lag/FRA.png, replace
+	drop if L0_b == .
+	keep *_at *_ll1 *_ul1 *_b
+	egen policy = seq()
+	reshape long L0_ L1_ L2_ L3_ L4_ L5_ H0_ H1_ H2_ H3_ H4_ H5_, i(policy) j(temp) string
+	rename *_ *
+	reshape long L H, i(temp policy) j(val)
+	tostring policy, replace
+	replace policy = "Social distance" if policy == "1"
+	replace policy = "School closure" if policy == "2"
+	replace policy = "National lockdown" if policy == "3"
+	rename val lag
+	reshape wide L H, i(lag policy) j(temp) string
+	sort Lat
+	rename (Lat Lb Lll1 Lul1 Hat Hb Hll1 Hul1) (atL bL ll1L ul1L atH bH ll1H ul1H)
+	reshape long at b ll1 ul1, i(policy lag) j(hosp) string
+	replace hosp = "0" if hosp == "L"
+	replace hosp = "1" if hosp == "H"
+	destring hosp, replace
+	outsheet * using "results/source_data/extended_fixed_lag_FRA.csv", replace
 restore

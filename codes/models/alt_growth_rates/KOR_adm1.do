@@ -63,10 +63,9 @@ g l_cum_confirmed_cases = log(cum_confirmed_cases)
 lab var l_active_cases "log(cum_confirmed_cases)"
 
 gen D_l_active_cases = D.l_active_cases 
-lab var D_l_active_cases "change in log(active_cases)"
+*lab var D_l_active_cases "change in log(active_cases)"
+lab var D_l_active_cases "Growth rate of active cases (\u0916?log per day)"
 
-gen D_l_cum_confirmed_cases = D.l_cum_confirmed_cases
-lab var D_l_active_cases "change in log(cum_confirmed_cases)"
 
 //------------------------------------------------------------------------ ACTIVE CASES ADJUSTMENT
 
@@ -97,6 +96,9 @@ restore
 foreach t_chg of local testing_change_dates{
 	local t_str = string(`t_chg', "%td")
 	gen testing_regime_change_`t_str' = t==`t_chg'
+	
+	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
+	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
 }
 
 //------------------diagnostic
@@ -120,10 +122,10 @@ gen p_2 = (no_demonstration + religious_closure + welfare_services_closure) / 3
 gen p_3 = emergency_declaration
 gen p_4 = pos_cases_quarantine
 
-lab var p_1 "social distance (opt)"
-lab var p_2 "no dem, rel cls, wel serv cls"
-lab var p_3 "emerg declaration (2 adm1)"
-lab var p_4 "quarantine positive cases"
+lab var p_1 "Social distance (optional)"
+lab var p_2 "Social distance (mandatory)"
+lab var p_3 "Emergency declaration"
+lab var p_4 "Quarantine positive cases"
 
 // note all schools are closed for the entire sample period
 // event_cancel policies are enacted for entire sample as well
@@ -134,10 +136,13 @@ lab var p_4 "quarantine positive cases"
 outsheet using "models/reg_data/KOR_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+reghdfe D_l_active_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
-outreg2 using "results/tables/KOR_estimates_table", word replace label ///
- addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: South Korea")
+outreg2 using "results/tables/KOR_estimates_table", sideway noparen nodepvar word replace label ///
+ addtext(Province FE, "YES", Day-of-Week FE, "YES") title(South Korea, "Dependent variable: Growth rate of active cases (\u0916?log per day\'29") ///
+ ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ "\'22Social distance (optional)\'22 includes recommended policies related to social distancing, e.g. no gathering, work from home, and closing businesses such as karaoke and cyber cafes." "" ///
+ "\'22Social distance (mandatory)\'22 includes prohibiting rallies, closing churches, and closing welfare service facilities.")
 cap erase "results/tables/KOR_estimates_table.txt"
 
 // saving coef
@@ -215,7 +220,7 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (similar to FIG2)
-coefplot, keep(p_*) tit("KOR: new policy packages") subtitle(`subtitle2') ///
+coefplot, keep(p_*) tit("KOR: policy packages") subtitle(`subtitle2') ///
 xline(0) name(KOR_policy, replace)
  
 
@@ -316,19 +321,162 @@ preserve
 	egen i = group(policy)
 	g minCI = beta - 1.96* se
 	g maxCI = beta + 1.96* se
-	tw scatter i beta if sample != "Seoul", xline(0,lc(black) lp(dash)) mc(black*.5) msize(small)  ///
+	tw scatter i beta if sample != "Seoul", xline(0,lc(black) lp(dash)) mc(black*.5) ///
 	|| scatter i beta if sample == "full_sample", mc(red)  ///
 	|| scatter i beta if sample == "Seoul", mc(green) m(Oh) ///
 	yscale(range(0.5(0.5)3.5)) ylabel( ///
 	1 "combined effect" ///
-	2 "social distance (opt)" ///
-	3 "no dem, rel cls, wel serv cls" ///
-	4 "emergency declaration" ///
-	5 "quarantine positive cases",  angle(0)) ///
+	2 "Social distance (optional)" ///
+	3 "Social distance (mandatory)" ///
+	4 "Emergency declaration" ///
+	5 "Quarantine positive cases",  angle(0)) ///
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
 	lab(3 "w/o Seoul") region(lstyle(none)) rows(1)) ///
-	ytitle("") xscale(range(-0.5(0.1)0.1)) xlabel(#5) xsize(7)
+	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/KOR.pdf, replace
 	graph export results/figures/appendix/cross_valid/KOR.png, replace
+	outsheet * using "results/source_data/extended_cross_validation_KOR.csv", replace	
 restore
+
+//---------------------------------Fixed Lag
+preserve
+	reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+	coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
+	 
+	foreach lags of num 1/5 { 
+		quietly {
+		foreach var in p_1 p_2 p_3 p_4{
+			g `var'_copy = `var'
+			g `var'_fixelag = L`lags'.`var'
+			replace `var'_fixelag = 0 if `var'_fixelag  == .
+			replace `var' = `var'_fixelag
+			
+		}
+		drop *_fixelag 
+
+		reghdfe D_l_active_cases testing_regime_change_* p_1 p_2 p_3 p_4, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+		coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+		local r2 = e(r2)
+		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
+		
+		foreach var in p_1 p_2 p_3 p_4{
+			replace `var' = `var'_copy
+			drop `var'_copy
+		}
+		}
+		di `r2'
+	}
+
+	set scheme s1color
+	tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
+	|| scatter  L0_at L0_b, mc(black) ///
+	|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
+	|| scatter  L1_at L1_b, mc(black*.9) ///
+	|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
+	|| scatter  L2_at L2_b, mc(black*.7) ///
+	|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
+	|| scatter  L3_at L3_b, mc(black*.5) ///
+	|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
+	|| scatter  L4_at L4_b, mc(black*.3) ///
+	|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
+	|| scatter  L5_at L5_b, mc(black*.1) ///	
+	ylabel( ///
+	1 "Social distance (optional)" ///
+	2 "Social distance (mandatory)" ///
+	3 "Emergency declaration" ///
+	4 "Quarantine positive cases", angle(0)) ///
+	ytitle("") title("South Korea comparing fixed lags models") ///
+	legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
+	lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
+	graph export results/figures/appendix/fixed_lag/KOR.pdf, replace
+	graph export results/figures/appendix/fixed_lag/KOR.png, replace
+	
+	drop if L0_b == .
+	keep *_at *_ll1 *_ul1 *_b
+	egen policy = seq()
+	reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
+	rename *_ *
+	reshape long L, i(temp policy) j(val)
+	tostring policy, replace
+	replace policy = "social distance" if policy == "1"
+	replace policy = "no dem, rel cls, wel serv cls" if policy == "2"
+	replace policy = "emerg declaration" if policy == "3"
+	replace policy = "quarantine positive cases" if policy == "4"
+	rename val lag
+	reshape wide L, i(lag policy) j(temp) string
+	sort Lat
+	rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
+	outsheet * using "results/source_data/extended_fixed_lag_KOR.csv", replace
+restore
+
+//------------------------NEW: EVENT STUDY
+preserve
+	local policy_study = "p_1"
+
+	gen D_`policy_study' = D.`policy_study'
+
+	egen other_policy = rowtotal(p_1 p_2 p_3 p_4)
+
+	replace other_policy = other_policy - `policy_study'
+
+	xtset adm1_id t
+	g moveave = (F3.other_policy ///
+	+ F2.other_policy + F1.other_policy + other_policy + L1.other_policy ///
+	+ L2.other_policy + L3.other_policy + L4.other_policy) / 8
+
+	g stable = other_policy == moveave
+	//create a dummy variable if keeping in the event study
+	g event_sample_`policy_study' = 0
+
+	//identify observations that could potentially go into the event study sample (nearby enough to event and not contaminated by travel ban)
+	replace event_sample_`policy_study' = 1 if D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
+	replace event_sample_`policy_study' = 1 if L1.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
+	replace event_sample_`policy_study' = 1 if L2.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
+	replace event_sample_`policy_study' = 1 if L3.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
+	replace event_sample_`policy_study' = 1 if L4.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
+
+	replace event_sample_`policy_study' = 1 if F1.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
+	replace event_sample_`policy_study' = 1 if F2.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
+	replace event_sample_`policy_study' = 1 if F3.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
+
+	bysort adm1_id: egen event_count = total(event_sample_`policy_study')
+	tab event_count
+	keep if event_count > 8 & event_sample == 1
+
+	//create dummy vars for the days relative to the event
+	gen f1 = F1.D_`policy_study'
+	gen f2 = F2.D_`policy_study'
+	gen f3 = F3.D_`policy_study'
+
+	gen l0 = D_`policy_study' 
+	gen l1 = L1.D_`policy_study' 
+	gen l2 = L2.D_`policy_study' 
+	gen l3 = L3.D_`policy_study' 
+	gen l4 = L4.D_`policy_study' 
+
+
+	foreach var in f1 f2 f3 l0 l1 l2 l3 l4 {
+		replace `var' = 0 if `var' == .
+	}
+
+
+	//this is just a binary if pre-treatment
+	gen pre_treat = f3 +  f2 + f1
+
+	//computing the pre-treatment mean
+	sum D_l_active_cases if pre_treat > 0
+	loc pre_treat_val = r(mean)
+
+
+	//event study regression
+	reg D_l_active_cases f3 f2 f1 l0 l1 l2 l3 l4 testing_regime_change*, cluster(adm1_id) nocons
+
+	**alternative
+	lincom (f3 + f2 + f1) / 3
+	loc pre_treat_val = r(estimate)
+	coefplot , vertical keep(f3 f2 f1 l0 l1 l2 l3 l4) yline(`pre_treat_val') ///
+	title("South Korea - Event study - social distance")  xline(3.5, lc(black) lp(dash))
+	graph export results/figures/appendix/KOR_event_study.png, replace
+restore
+

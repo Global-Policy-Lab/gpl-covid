@@ -81,12 +81,16 @@ restore
 foreach t_chg of local testing_change_dates{
 	local t_str = string(`t_chg', "%td")
 	gen testing_regime_change_`t_str' = t==`t_chg'
+		
+	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
+	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
 }
 
 // high_screening_regime in Qom, which transitioned on Mar 6
 // assume rollout completed on Mar 13
 drop testing_regime_change_06mar2020
 gen testing_regime_13mar2020 = t==mdy(3,13,2020)
+lab var testing_regime_13mar2020 "Testing regime change on Mar 13, 2020"
 
 //------------------diagnostic
 
@@ -110,15 +114,15 @@ lab var day_avg "Observed avg. change in log cases"
 // break in the health data (missing cases for 3/2-3/3)
 // so p_1 = 1/3 on 3/1 when opt travel ban enacted, then p_1 = 1 starting 3/5
 gen p_1 = (travel_ban_local_opt + work_from_home + school_closure)/3
-lab var p_1 "trvl ban opt, wrk hme, schl clse"
+lab var p_1 "Travel ban (opt), work from home, school closure"
 
 // home isolation started March 13
 gen p_2 = home_isolation
-lab var p_2 "home isolation"
+lab var p_2 "Home isolation"
 
 // shrines in Qom closed March 17
 // gen p_3 = religious_closure
-// lab var p_3 "religious_closure"
+// lab var p_3 "Religious closure"
 // will not include, insufficient data after enactment
 
 
@@ -128,10 +132,12 @@ lab var p_2 "home isolation"
 outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
+reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
-outreg2 using "results/tables/IRN_estimates_table", word replace label ///
- addtext(Province FE, "YES", Day-of-Week FE, "YES") title("Regression output: Iran")
+outreg2 using "results/tables/IRN_estimates_table", sideway noparen nodepvar word replace label ///
+ addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Iran, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ "\'22Travel ban (opt), work from home, school closure\'22 policies were enacted March 1-5, 2020 which overlaps with missing provincial case data in Iran on March 2-3, 2020.")
 cap erase "results/tables/IRN_estimates_table.txt"
 
 // saving coefs
@@ -285,11 +291,11 @@ foreach var of varlist y_actual_thr y_counter_thr lb_y_actual_thr ub_y_actual_th
 
 // effect of package of policies (FOR FIG2)
 lincom p_1 + p_2
-post results ("IRN_Tehran") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+*post results ("IRN_Tehran") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 // the mean here is the avg "biological" rate of initial spread (FOR FIG2)
 sum y_counter_thr
-post results ("IRN_Tehran") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+*post results ("IRN_Tehran") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
 
 // export coefficients (FOR FIG2)
 postclose results
@@ -319,31 +325,33 @@ saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_r
 
 
 // FIXED LAG 
-reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
+preserve
+	reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
-coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
- 
-foreach lags of num 1 2 3 4 5{ 
-	quietly {
-	foreach var in p_1 p_2{
-		g `var'_copy = `var'
-		g `var'_fixelag = L`lags'.`var'
-		replace `var' = `var'_fixelag
+	coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
+	 
+	foreach lags of num 1 2 3 4 5{ 
+		quietly {
+		foreach var in p_1 p_2{
+			g `var'_copy = `var'
+			g `var'_fixelag = L`lags'.`var'
+			replace `var'_fixelag = 0 if `var'_fixelag == .
+			replace `var' = `var'_fixelag
+			
+		}
+		drop *_fixelag 
+
+		reghdfe D_l_cum_confirmed_cases p_1 p_2 testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+		coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+		local r2 = e(r2)
+		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
 		
+		foreach var in p_1 p_2{
+			replace `var' = `var'_copy
+			drop `var'_copy
+		}
+		}
 	}
-	drop *_fixelag 
-
-	reghdfe D_l_cum_confirmed_cases p_1 p_2 , absorb(i.adm1_id i.dow, savefe) cluster(t) resid
-	coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
-	local r2 = e(r2)
-	replace L`lags'_at = L`lags'_at - 0.1 *`lags'
-	
-	foreach var in p_1 p_2{
-		replace `var' = `var'_copy
-		drop `var'_copy
-	}
-	}
-}
 
 
 	set scheme s1color
@@ -361,15 +369,29 @@ foreach lags of num 1 2 3 4 5{
 	|| scatter  L5_at L5_b, mc(black*.1) ///		
 	ylabel(1 "trvl ban opt, wrk hme, schl clse" ///
 	2 "home isolation", angle(0)) ///
-	ytitle("") title("USA comparing Fixed Lags models") ///
+	ytitle("") title("Iran - comparing Fixed Lags models") ///
 	legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
 	lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
-graph export results/figures/appendix/fixed_lag/IRN.pdf, replace
-graph export results/figures/appendix/fixed_lag/IRN.png, replace
-
+	graph export results/figures/appendix/fixed_lag/IRN.pdf, replace
+	graph export results/figures/appendix/fixed_lag/IRN_FL.png, replace
+	drop if L0_b == .
+	keep *_at *_ll1 *_ul1 *_b
+	egen policy = seq()
+	reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
+	rename *_ *
+	reshape long L, i(temp policy) j(val)
+	tostring policy, replace
+	replace policy = "trvl ban, wrk hme, schl clse" if policy == "1"
+	replace policy = "home isolation" if policy == "2"
+	rename val lag
+	reshape wide L, i(lag policy) j(temp) string
+	sort Lat
+	rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
+	outsheet * using "results/source_data/extended_fixed_lag_IRN.csv", replace	
+restore
 
 //------------------------NEW: EVENT STUDY
-*preserve
+preserve
 local policy_study = "p_2"
 
 gen D_`policy_study' = D.`policy_study'
@@ -477,8 +499,9 @@ preserve
 	3 "home isolation", angle(0)) ///
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1) lab(2 "Full sample") lab(1 "Leaving one region out") ///
-	region(lstyle(none)) pos(11) ring(0)) ///
-	ytitle("") xscale(range(-0.5(0.1)0.1)) xlabel(#5) xsize(10)
+	region(lstyle(none))) ///
+	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/IRN.pdf, replace
 	graph export results/figures/appendix/cross_valid/IRN.png, replace	
+	outsheet * using "results/source_data/extended_cross_validation_IRN.csv", replace
 restore
