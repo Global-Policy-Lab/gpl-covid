@@ -4,12 +4,12 @@
 rm(list = ls())
 
 #load packages
-library(dplyr)
-library(magrittr)
-library(ggplot2)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(ggplot2))
 
 # set working directory
-dir <- "models/"
+dir <- "results/source_data/"
 output_dir <- "results/figures/fig2/"
 
 if (!dir.exists(output_dir)){ #make dir if it doesn't exist
@@ -24,7 +24,7 @@ countrylist <- c("CHN", "KOR", "ITA", "IRN", "FRA", "USA")
 
 df <- c() #load all coeff cvs & combine data into a df
 for (c in countrylist){
-  iso <- read.csv(paste0(dir, c, "_coefs.csv"), header = T, stringsAsFactors = F)
+  iso <- read.csv(paste0(dir, "Figure2_", c, "_coefs.csv"), header = T, stringsAsFactors = F)
   df <- rbind(df, iso)
   rm(iso)
 }
