@@ -26,6 +26,9 @@ def main():
         os.path.join(raw_data_dir, "usa_policy_data_sources.csv"), encoding="latin"
     )
 
+    # drop any rows which are all nan
+    policy_data = policy_data.dropna(how='all', axis=0)
+
     policy_data = policy_data.rename(columns={"Optional": "optional"})
     policy_data = policy_data.rename(columns={"date": "date_start"})
 
