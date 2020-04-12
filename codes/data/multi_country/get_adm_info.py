@@ -403,35 +403,42 @@ def main():
     us_gdf = gpd.read_file(
         cutil.zipify_path(cutil.get_adm_zip_path("USA", datestamp) / "gadm36_USA.gpkg")
     )
-    
+
     # drop water bodies
     us_gdf = us_gdf[us_gdf.HASC_2.notnull()]
-    us_gdf = us_gdf[us_gdf.TYPE_2!="Water body"]
+    us_gdf = us_gdf[us_gdf.TYPE_2 != "Water body"]
 
     # drop old adm2 units no longer valid
-    gadm_drop_old = [
-        ("US.VA.BD", "Bedford City"),
-        ("US.VA.CF", "Clifton Forge City")
-    ]
-    us_gdf = us_gdf.set_index(["HASC_2", "NAME_2"]).drop(index=gadm_drop_old).reset_index(drop=False)
-    
+    gadm_drop_old = [("US.VA.BD", "Bedford City"), ("US.VA.CF", "Clifton Forge City")]
+    us_gdf = (
+        us_gdf.set_index(["HASC_2", "NAME_2"])
+        .drop(index=gadm_drop_old)
+        .reset_index(drop=False)
+    )
+
     # fix names and drop gemoetry b/c the diffs are often due to shuffling/incorporation
     # of other counties
     gadm_census_fix = {
         ("US.AK.KT", "Ketchikan Gateway"): ("US.AK.KG", "Ketchikan Gateway"),
-        ("US.AK.PR", "Prince of Wales-Outer Ketchi"): ("US.AK.PH", "Prince of Wales-Hyder"),
+        ("US.AK.PR", "Prince of Wales-Outer Ketchi"): (
+            "US.AK.PH",
+            "Prince of Wales-Hyder",
+        ),
         ("US.AK.SK", "Skagway-Yakutat-Angoon"): ("US.AK.SW", "Skagway"),
-        ("US.AK.WR","Wrangell-Petersburg"): ("US.AK.WG", "Wrangell"),
+        ("US.AK.WR", "Wrangell-Petersburg"): ("US.AK.WG", "Wrangell"),
         ("US.VA.FC", "Fairfax"): ("US.VA.FX", "Fairfax"),
         ("US.VA.BD", "Bedford"): ("US.VA.BF", "Bedford"),
-        ("US.VA.RO", "Roanoke"): ("US.VA.RE", "Roanoke")
+        ("US.VA.RO", "Roanoke"): ("US.VA.RE", "Roanoke"),
     }
-    for k,v in gadm_census_fix.items():
-        us_gdf.loc[(us_gdf.HASC_2==k[0]) & (us_gdf.NAME_2==k[1]),["HASC_2","NAME_2","geometry"]] = list(v) + [None]
-    
+    for k, v in gadm_census_fix.items():
+        us_gdf.loc[
+            (us_gdf.HASC_2 == k[0]) & (us_gdf.NAME_2 == k[1]),
+            ["HASC_2", "NAME_2", "geometry"],
+        ] = list(v) + [None]
+
     # make sure HASC is now a unique identifier
     assert us_gdf.HASC_2.is_unique
-    
+
     us_pops = us_gdf.join(us_county_df, on="HASC_2", how="outer")
     us_pops = us_pops[["NAME_1", "NAME_2", "fips", "population", "area_km2", "capital"]]
     us_pops = us_pops.rename(columns={"NAME_1": "adm1_name", "NAME_2": "adm2_name"})
@@ -452,7 +459,7 @@ def main():
     for k, v in manual_names.items():
         us_pops.loc[us_pops.fips == k, ["adm1_name", "adm2_name"]] = v
     us_pops = us_pops.set_index(["adm0_name", "adm1_name", "adm2_name"])
-    
+
     # save fips xwalk
     us_pops.reset_index(level="adm0_name", drop=True).to_csv(
         cutil.DATA_INTERIM / "usa" / "adm2_pop_fips.csv", index=True
