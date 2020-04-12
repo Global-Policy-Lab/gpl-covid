@@ -108,6 +108,7 @@ merge m:1 adm1 using "data/interim/france/region_ID.dta", keep(1 3) keepusing(ad
 replace adm1_name = "Corse" if adm1 == 94
 replace adm1_pop = 327283 if adm1 == 94
 
+drop adm0_name
 rename adm0 adm0_name
 order adm0_name adm1 adm1_name date cum_c* 
 sort adm1 date

@@ -1,4 +1,3 @@
-
 #clean environment
 rm(list = ls())
 
@@ -33,6 +32,12 @@ df$date <- as.Date(df$date, "%m/%d/%y")
 #generate active cases column
 df$active_cases <- df$cum_confirmed_cases - df$cum_recoveries - df$cum_deaths 
 
+#the number of new cases since the previous date
+df <- df %>%
+      group_by(adm1_name) %>%
+      mutate(active_cases_new = cum_confirmed_cases - lag(cum_confirmed_cases))
+df$active_cases_new <- ifelse(is.na(df$active_cases_new), 0, df$active_cases_new)
+      
 #merge pop data
 df <- left_join(df, pop, by = c("adm1_name"))
 rm(pop)
@@ -74,11 +79,18 @@ for (t in 1:nrow(testing)){
 df$testing_regime[df$date >= testing$date_start[t]]  <- t
 }
 
+# pos_cases_quarantine which has different policy intensities
+pos_cases_quarantine <- filter(pol, policy == "pos_cases_quarantine")
+df$pos_cases_quarantine <- 0
+for (q in 1:nrow(pos_cases_quarantine)){
+  df$pos_cases_quarantine[df$date >= pos_cases_quarantine$date_start[q]]  <- q/(nrow(pos_cases_quarantine))
+}
+
 # travel ban country list
 df$travel_ban_intl_in_opt_country_list <- NA
-intl_in <- filter(pol, policy == "travel_ban_intl_in") 
+intl_in <- filter(pol, policy == "travel_ban_intl_in_opt") 
 for (j in 1:nrow(intl_in)){
-  df$travel_ban_intl_in_opt_country_list[df$travel_ban_intl_in == 1 & df$date >= intl_in$date_start[j]] <- intl_in$travel_ban_intl_in_country_list[j]
+  df$travel_ban_intl_in_opt_country_list[df$travel_ban_intl_in_opt == 1 & df$date >= intl_in$date_start[j]] <- intl_in$travel_ban_intl_in_opt_country_list[j]
 }
 
 df$travel_ban_intl_out_opt_country_list <- NA
@@ -87,11 +99,16 @@ for (o in 1:nrow(intl_out)){
   df$travel_ban_intl_out_opt_country_list[df$travel_ban_intl_out_opt == 1 & df$date >= intl_out$date_start[o]] <- intl_out$travel_ban_intl_out_opt_country_list[o]
 }
 
+# policies enacted 
+pol.list <- as.vector(unique(pol$policy)) # create list of policies (excluding testing_regime)
+pol.list <- pol.list[pol.list!="testing_regime"]
+df$policies_enacted <- rowSums(df[, pol.list]) # sum across policies
+df$policies_enacted <- ceiling(df$policies_enacted) # round up to nearest integer due to policy_intensity variable
 
 # Check that all columns are in template
 stopifnot(names(df) %in% names(template)) 
 
+
 #write csv
 print("writing output file")
 write.csv(df, paste0(output.dir), row.names = F)
-
