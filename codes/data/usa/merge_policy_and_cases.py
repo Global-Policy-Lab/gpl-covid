@@ -27,7 +27,7 @@ def main():
     )
 
     # drop any rows which are all nan
-    policy_data = policy_data.dropna(how='all', axis=0)
+    policy_data = policy_data.dropna(how="all", axis=0)
 
     policy_data = policy_data.rename(columns={"Optional": "optional"})
     policy_data = policy_data.rename(columns={"date": "date_start"})
