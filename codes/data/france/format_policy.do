@@ -107,6 +107,7 @@ drop adm1_name //reload region name, corrupted accent due to import csv above
 merge m:1 adm1 using "data/interim/france/region_ID.dta", keep(1 3) keepusing(adm1_name adm1_pop) nogen update
 replace adm1_name = "Corse" if adm1 == 94
 replace adm1_pop = 327283 if adm1 == 94
+replace adm0 = "France" if adm1 == 94
 
 rename adm0 adm0_name
 order adm0_name adm1 adm1_name date cum_c* 
@@ -148,7 +149,7 @@ drop if adm1 < 10
 format date %tdCCYY-NN-DD
 rename (adm1_pop adm1) (population adm1_id)	
 rename *_popw *_popwt
-
+rename hospitalization cum_hospitalized
 outsheet * using "data/processed/adm1/FRA_processed.csv", replace comma
 
 
