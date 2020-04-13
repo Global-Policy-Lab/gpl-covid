@@ -85,6 +85,9 @@ if (country == "CHN"){
   adm <- read.csv(paste0(data_dir, "processed/adm1/", country, "_processed.csv"))
 }
 adm$date <- as.Date(as.character(adm$date), format='%Y-%m-%d')
+if (country=="FRA"){
+  adm <- subset(adm, date <= "2020-03-25")
+}
 
 # Tag observations that are droped bc have less than 10 obs
 if (country=="KOR"){
@@ -92,7 +95,7 @@ if (country=="KOR"){
   adm[adm$cum_confirmed_cases_imputed < 10,]$cum_confirmed_cases_imputed_drop <- 0 
 } else {
   adm$cum_confirmed_cases_imputed_drop <- adm$cum_confirmed_cases_imputed
-  adm[adm$cum_confirmed_cases_imputed < 10,]$cum_confirmed_cases_imputed_drop <- 0 
+  adm[adm$cum_confirmed_cases_imputed_drop < 10,]$cum_confirmed_cases_imputed_drop <- 0 
 }
 
 # Aggregate cases and deaths to national level timeseries
@@ -223,7 +226,8 @@ if (c==6){
 ## Make timeseries panel 
 pdf(paste0(output_dir, country, "_timeseries.pdf"), width = 8, height = 5)
 par(mar=c(4, 8, 4, 8) + 0.1)
-cases_max <- max(national$cases) + round(max(national$cases)/25)
+cases_max <- max(national$cases, na.rm = TRUE) + round(max(national$cases, na.rm=TRUE)/25)
+
 policies_max <- max(policies$diff.1, 
                     policies$diff.2, 
                     policies$diff.3, 
@@ -340,18 +344,17 @@ if (country=="CHN"){
   map <- map[map$adm0_name == 'CHN', ]
   units <- as.data.frame(map[,c("adm1_name", "adm2_name", "longitude", "latitude")])
   # incorporate manual matching
-  adm <- merge(adm, match_city_names,
+  suppressWarnings(adm <- merge(adm, match_city_names,
                 by.x=c("adm1_name", "adm2_name"),
                 by.y=c("epi_adm1", "epi_adm2"),
-                all=TRUE)
+                all=TRUE))
   # update col name
   update_col <- is.na(adm$shp_adm1)
   adm$shp_adm1 <- as.character(adm$shp_adm1)
-  suppressWarnings(adm[update_col, 'shp_adm1'] <- as.character(adm[update_col, 'adm1_name']))
+  adm[update_col, 'shp_adm1'] <- as.character(adm[update_col, 'adm1_name'])
   update_col <- is.na(adm$shp_adm2)
   adm$shp_adm2 <- as.character(adm$shp_adm2)
   adm[update_col, 'shp_adm2'] <- as.character(adm[update_col, 'adm2_name'])
-  
   # merge with lon/lat
   suppressWarnings(adm <- merge(units, adm,
                 by.x=c("adm1_name", "adm2_name"),
@@ -360,6 +363,7 @@ if (country=="CHN"){
 }
 
 map <- gSimplify(map, tol = 0.005)
+adm <- subset(adm, date <= cut_dates[cut_dates$tag=="default",]$end_date)
 adm <- adm[adm$date==max(adm$date),]
 map_date <- unique(adm$date)
 

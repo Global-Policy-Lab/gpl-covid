@@ -7,6 +7,7 @@ pip install -e .
 ## parse flags to not run certain things
 STATA=true
 CENSUS=true
+NUMPROJ=1000
 for arg in "$@"
 do
     case $arg in
@@ -16,6 +17,11 @@ do
         ;;
         -c|--nocensus)
             CENSUS=false
+            shift
+        ;;
+        -p|--num-proj)
+            NUMPROJ="$2"
+            shift
             shift
         ;;
     esac
@@ -57,36 +63,36 @@ Rscript codes/data/usa/download_and_clean_usafacts.R
 
 ### Dataset merging
 #### CHN
-printf "***Processing CHN data***\n"
+printf "***Processing and merging CHN data***\n"
 python codes/data/china/collate_data.py
 
 #### FRA
-printf "***Processing FRA data***\n"
+printf "***Merging FRA data***\n"
 if $STATA
 then
     stata -b do codes/data/france/format_policy.do
 fi
 
 # IRN
-printf "***Processing IRN data***\n"
+printf "***Processing  and merging IRN data***\n"
 Rscript codes/data/iran/iran_cleaning.R
 python codes/data/iran/iran-split-interim-into-processed.py
 
 # ITA
-printf "***Processing ITA data***\n"
+printf "***Processing  and merging ITA data***\n"
 python codes/data/italy/italy-download-cases-merge-policies.py
 
 # KOR
-printf "***Processing KOR data***\n"
+printf "***Processing  and merging KOR data***\n"
 Rscript codes/data/korea/generate_KOR_processed.R
 
 # USA
-printf "***Processing USA data***\n"
+printf "***Merging USA data***\n"
 python codes/data/usa/merge_policy_and_cases.py
 
 # quality-check processed datasets
 printf "***Checking processed data***\n"
-python codes/data/multi_country/quality-check-processed-datasets.py -l
+python codes/data/multi_country/quality-check-processed-datasets.py
 
 ## regression model estimation
 printf "***Estimating regression model and creating Figure 3 and A1***\n"
@@ -99,7 +105,7 @@ fi
 ## SIR model projection
 printf "***Projecting infections***\n"
 python codes/models/get_gamma.py
-Rscript codes/models/run_all_CB_simulations.R
+Rscript codes/models/run_all_CB_simulations.R $NUMPROJ
 
 
 ## Figures and tables

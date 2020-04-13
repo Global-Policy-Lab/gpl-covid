@@ -1,0 +1,25 @@
+policy	lag	position	beta	lower_CI	upper_CI
+"social distance"	5	.5	.0115271	-.0495158	.0725699
+"social distance"	4	.6	-.0086844	-.0621578	.0447891
+"social distance"	3	.7	-.0310612	-.0728993	.010777
+"social distance"	2	.8	-.063823	-.1092853	-.0183608
+"social distance"	1	.9	-.0592558	-.1142586	-.004253
+"social distance"	0	1	-.0831519	-.1588659	-.0074379
+"no dem, rel cls, wel serv cls"	5	1.5	-.2880397	-.4363339	-.1397455
+"no dem, rel cls, wel serv cls"	4	1.6	-.3127549	-.471692	-.1538178
+"no dem, rel cls, wel serv cls"	3	1.7	-.3257091	-.4882545	-.1631636
+"no dem, rel cls, wel serv cls"	2	1.8	-.3069629	-.4926436	-.1212822
+"no dem, rel cls, wel serv cls"	1	1.9	-.3276156	-.5517595	-.1034716
+"no dem, rel cls, wel serv cls"	0	2	-.3038246	-.6069323	-.0007168
+"emerg declaration"	5	2.5	-.1184217	-.2013095	-.035534
+"emerg declaration"	4	2.6	-.1204533	-.2035834	-.0373232
+"emerg declaration"	3	2.7	-.1222434	-.2094307	-.0350562
+"emerg declaration"	2	2.8	-.1218593	-.211532	-.0321866
+"emerg declaration"	1	2.9	-.1254679	-.2181255	-.0328104
+"emerg declaration"	0	3	-.1274557	-.2208805	-.0340309
+"quarantine positive cases"	5	3.5	.0011743	-.0365198	.0388683
+"quarantine positive cases"	4	3.6	.021169	-.0165816	.0589196
+"quarantine positive cases"	3	3.7	.0232472	-.0113515	.057846
+"quarantine positive cases"	2	3.8	.0267194	-.0171895	.0706282
+"quarantine positive cases"	1	3.9	.0206467	-.0176025	.0588958
+"quarantine positive cases"	0	4	.02018	-.0181057	.0584658

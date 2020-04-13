@@ -1,10 +1,10 @@
 get_usafacts_data <- function(){
   urls <- c(
-    "https://static.usafacts.org/public/data/covid-19/covid_confirmed_usafacts.csv",
-    "https://static.usafacts.org/public/data/covid-19/covid_deaths_usafacts.csv"
+    "https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_confirmed_usafacts.csv",
+    "https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_deaths_usafacts.csv"
   )
-
-  # Download the 3 csvs direct from the urls into tibbles
+  
+  # Download the 2 csvs direct from the urls into tibbles
   usa_facts_covid_cases <- urls %>% map(read_csv,
                                         col_types = cols(
                                           .default = col_number(),
@@ -19,20 +19,24 @@ get_usafacts_data <- function(){
                                              "cum_deaths")) %>% 
     pmap(~{
       .x %>% 
-        mutate(variable = .y)
+        mutate(variable = .y) %>%
+        rename_at(vars(matches("/20$")), 
+                       ~str_replace(.x, "/20$", "/2020"))
     }) %>% 
     bind_rows()
 
   usa_facts_covid_cases <- usa_facts_covid_cases %>% 
     select(-matches("X[0-9]+"))
-  
+
   usa_facts_covid_cases <- usa_facts_covid_cases %>% 
     mutate(`County Name` = if_else(`County Name` == "Matthews County" & State == "VA",
                                    "Mathews County", `County Name`) %>% 
              str_replace(" city", " City") %>% 
              str_replace("Lac qui ", "Lac Qui ") %>% 
              str_replace("Doña Ana ", "Dona Ana ") %>% 
-             str_replace("Broomfield County and City", "Broomfield County"))
+             str_replace("Broomfield County and City", "Broomfield County"),
+           `County Name` = if_else(countyFIPS == "35013",
+                                   "Dona Ana County", `County Name`))
   
   usa_facts_covid_cases <- usa_facts_covid_cases %>% 
     pivot_longer(cols = matches("[0-9]+/[0-9]+/[0-9]+"),
@@ -41,9 +45,9 @@ get_usafacts_data <- function(){
     rename(county_fips = `countyFIPS`,
            state_fips = `stateFIPS`,
            adm2_name = `County Name`,
-           adm1_name = `State`) 
+           adm1_name = `State`)
 
-  # check for duplicates
+    # check for duplicates
   duplicates <- usa_facts_covid_cases %>% 
     group_by(county_fips, state_fips, adm2_name, adm1_name, date, variable) %>% 
     arrange(county_fips, state_fips, adm2_name, adm1_name, variable, date) %>% 
@@ -120,7 +124,14 @@ fix_issues <- function(data){
       }
     } else {
       # stop("Need to deal with an edge case of cumulative cases declining in the data. Comment out this error then run again and you will be debugging in the right place.")
-      browser()
+      warning("Found an unhandled example of a cumulative variable decreasing.")
+      data <- data %>% 
+        mutate({{variable}} := if_else(tmp_id == first_issue$tmp_id[2] & date == first_issue$date[2],
+                                       NA_real_,
+                                       {{variable}}))
+      print(first_issue %>% 
+              select(tmp_id, date, {{variable}}),
+            width = Inf) 
     }
     data
   }

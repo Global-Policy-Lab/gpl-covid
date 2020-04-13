@@ -33,9 +33,8 @@ while(changed){
 }
 
 policy_variables_to_use <- 
-  c(
-    'p_1', 'p_2', 'p_3', 'p_4'
-  )  
+  names(mydata) %>% 
+  str_subset("^p_")  
 
 other_control_variables <- 
   c(
