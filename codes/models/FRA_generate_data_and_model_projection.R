@@ -33,7 +33,7 @@ while(changed){
 
 france_policy_variables_to_use <- 
   c(
-    "testing_regime",
+    "testing_regime_13mar2020",
     'pck_social_distance',
     'school_closure',
     'national_lockdown'
