@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 import shlex
 import subprocess
-from shutil import copytree
+from shutil import copytree, rmtree
 
 
 def test_readme():
@@ -20,9 +20,15 @@ def test_readme():
 def test_pipeline(tmp_path):
     copytree("data", tmp_path / "data")
     copytree("models", tmp_path / "models")
+
+    # don't check raw data
+    rmtree(tmp_path / "data" / "raw")
+
+    # run pipeline
     cmd = shlex.split("bash run --nostata --nocensus --num-proj 2")
     process = subprocess.run(cmd, check=True)
 
+    # check that interim/processed/post_processing data and models match
     with open("tests/ignore_comparison.txt", "r") as f:
         to_skip = f.readlines()
     to_skip = [Path(tmp_path) / p for p in to_skip]
