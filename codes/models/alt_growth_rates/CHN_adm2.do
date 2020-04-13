@@ -505,7 +505,7 @@ tw (rspike ub_y_actual_wh lb_y_actual_wh t, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg_wh t, color(black)) ///
 if e(sample), ///
 title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
 
