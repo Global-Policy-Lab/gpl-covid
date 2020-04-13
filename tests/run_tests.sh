@@ -6,5 +6,5 @@ set -e
 black . --check
 
 # run tests
-pytest tests/tests.py
 bash run --nostata --nocensus --num-proj 2
+pytest tests/post_run_tests.py
