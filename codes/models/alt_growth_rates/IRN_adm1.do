@@ -319,7 +319,7 @@ tw (rspike ub_y_actual_thr lb_y_actual_thr t, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg_thr t, color(black)) ///
 if e(sample), ///
 title("Tehran, Iran", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
 

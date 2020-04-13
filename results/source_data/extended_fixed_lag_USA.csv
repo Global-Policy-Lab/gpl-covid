@@ -1,55 +1,55 @@
 policy	lag	position	beta	lower_CI	upper_CI
-"No gathering, event cancel"	5	.5	-.0573159	-.1080435	-.0065883
-"No gathering, event cancel"	4	.6	-.0321185	-.1178405	.0536035
-"No gathering, event cancel"	3	.7	-.0438675	-.1023598	.0146249
-"No gathering, event cancel"	2	.8	-.0357448	-.1191749	.0476852
-"No gathering, event cancel"	1	.9	.0144684	-.0780675	.1070043
-"No gathering, event cancel"	0	1	-.1083636	-.2413669	.0246396
-"Social distance"	5	1.5	-.0409965	-.1094606	.0274675
-"Social distance"	4	1.6	-.0791742	-.1611675	.0028192
-"Social distance"	3	1.7	-.1067768	-.1874256	-.026128
-"Social distance"	2	1.8	-.0482598	-.1333246	.0368049
-"Social distance"	1	1.9	-.1124163	-.1849947	-.0398378
-"Social distance"	0	2	-.1195417	-.200752	-.0383314
-"Quarantine positive cases"	5	2.5	-.0582387	-.1217275	.0052502
-"Quarantine positive cases"	4	2.6	-.0879336	-.1523724	-.0234949
-"Quarantine positive cases"	3	2.7	-.1138956	-.1629678	-.0648235
-"Quarantine positive cases"	2	2.8	-.1361421	-.1939013	-.0783829
-"Quarantine positive cases"	1	2.9	-.1330768	-.1965558	-.0695978
-"Quarantine positive cases"	0	3	-.1124601	-.1738223	-.0510979
-"Paid sick leave"	5	3.5	.0690044	.0198041	.1182046
-"Paid sick leave"	4	3.6	.0431677	-.0142889	.1006244
-"Paid sick leave"	3	3.7	.0445542	-.0057011	.0948096
-"Paid sick leave"	2	3.8	.0453359	-.0352963	.1259682
-"Paid sick leave"	1	3.9	.0026572	-.087498	.0928125
-"Paid sick leave"	0	4	.0749269	-.0028199	.1526737
-"Work from home"	5	4.5	-.0121608	-.0489691	.0246475
-"Work from home"	4	4.6	.0005938	-.0378955	.0390831
-"Work from home"	3	4.7	.0066938	-.0299306	.0433182
-"Work from home"	2	4.8	.0097838	-.0294928	.0490604
-"Work from home"	1	4.9	.012536	-.0260374	.0511094
-"Work from home"	0	5	.0132678	-.0213099	.0478455
-"School closure"	5	5.5	-.0472816	-.0884873	-.0060758
-"School closure"	4	5.6	-.0318909	-.0875398	.023758
-"School closure"	3	5.7	-.004825	-.0485943	.0389443
-"School closure"	2	5.8	-.0154812	-.0675558	.0365935
-"School closure"	1	5.9	.012474	-.0375644	.0625124
-"School closure"	0	6	.0359021	-.0065439	.0783482
-"Travel ban"	5	6.5	-.0059645	-.0473245	.0353956
-"Travel ban"	4	6.6	-.003902	-.0460176	.0382137
-"Travel ban"	3	6.7	-.0050112	-.0595811	.0495586
-"Travel ban"	2	6.8	-.0224757	-.0775786	.0326271
-"Travel ban"	1	6.9	-.0229341	-.0777656	.0318974
-"Travel ban"	0	7	-.0127793	-.0629675	.037409
-"Business closure"	5	7.5	-.084354	-.112153	-.0565549
-"Business closure"	4	7.6	-.0734368	-.1091652	-.0377084
-"Business closure"	3	7.7	-.0679978	-.0987542	-.0372415
-"Business closure"	2	7.8	-.068657	-.0985177	-.0387963
-"Business closure"	1	7.9	-.0645719	-.1076214	-.0215223
-"Business closure"	0	8	-.0498046	-.0994901	-.000119
-"Home isolation"	5	8.5	-.0298277	-.0548758	-.0047797
-"Home isolation"	4	8.6	-.0485182	-.0742446	-.0227919
-"Home isolation"	3	8.7	-.0564439	-.0774265	-.0354613
-"Home isolation"	2	8.8	-.0650534	-.0872235	-.0428833
-"Home isolation"	1	8.9	-.0698949	-.0940631	-.0457268
-"Home isolation"	0	9	-.0717971	-.0998253	-.043769
+"No gathering, event cancel"	5	.5	-.0567502	-.1078779	-.0056225
+"No gathering, event cancel"	4	.6	-.0309364	-.1171477	.0552748
+"No gathering, event cancel"	3	.7	-.0419458	-.1014609	.0175692
+"No gathering, event cancel"	2	.8	-.0335702	-.117256	.0501157
+"No gathering, event cancel"	1	.9	.0170907	-.0752465	.1094279
+"No gathering, event cancel"	0	1	-.1057926	-.2391355	.0275503
+"Social distance"	5	1.5	-.0438748	-.1130865	.0253369
+"Social distance"	4	1.6	-.0803206	-.1631917	.0025504
+"Social distance"	3	1.7	-.1062213	-.1862723	-.0261703
+"Social distance"	2	1.8	-.0463498	-.1314373	.0387377
+"Social distance"	1	1.9	-.109389	-.1822024	-.0365756
+"Social distance"	0	2	-.1168545	-.1977127	-.0359963
+"Quarantine positive cases"	5	2.5	-.0583805	-.1225126	.0057516
+"Quarantine positive cases"	4	2.6	-.0873654	-.152157	-.0225737
+"Quarantine positive cases"	3	2.7	-.1128461	-.1618029	-.0638894
+"Quarantine positive cases"	2	2.8	-.1345615	-.1924446	-.0766784
+"Quarantine positive cases"	1	2.9	-.1310595	-.1945853	-.0675337
+"Quarantine positive cases"	0	3	-.1109938	-.1719805	-.050007
+"Paid sick leave"	5	3.5	.0695737	.0199443	.1192032
+"Paid sick leave"	4	3.6	.0434039	-.0140009	.1008087
+"Paid sick leave"	3	3.7	.0442811	-.0059779	.0945401
+"Paid sick leave"	2	3.8	.0450868	-.0350841	.1252577
+"Paid sick leave"	1	3.9	.0029225	-.0867248	.0925699
+"Paid sick leave"	0	4	.0750104	-.0027996	.1528203
+"Work from home"	5	4.5	-.0108087	-.0475522	.0259348
+"Work from home"	4	4.6	.0021781	-.0364453	.0408015
+"Work from home"	3	4.7	.0084603	-.0280633	.0449838
+"Work from home"	2	4.8	.0118018	-.0272896	.0508931
+"Work from home"	1	4.9	.0148416	-.023847	.0535301
+"Work from home"	0	5	.015074	-.0198742	.0500222
+"School closure"	5	5.5	-.0476124	-.0881031	-.0071216
+"School closure"	4	5.6	-.0314188	-.0864666	.0236291
+"School closure"	3	5.7	-.0037278	-.0469463	.0394907
+"School closure"	2	5.8	-.0139148	-.0657349	.0379054
+"School closure"	1	5.9	.0142409	-.0353351	.0638168
+"School closure"	0	6	.0374636	-.0050767	.0800039
+"Travel ban"	5	6.5	-.0054958	-.0468922	.0359006
+"Travel ban"	4	6.6	-.0029368	-.0452413	.0393677
+"Travel ban"	3	6.7	-.0037934	-.0584392	.0508525
+"Travel ban"	2	6.8	-.0208403	-.0758695	.034189
+"Travel ban"	1	6.9	-.0206578	-.0753922	.0340766
+"Travel ban"	0	7	-.0110842	-.0610853	.0389168
+"Business closure"	5	7.5	-.0849259	-.1144702	-.0553816
+"Business closure"	4	7.6	-.0772111	-.1148469	-.0395754
+"Business closure"	3	7.7	-.074037	-.1062166	-.0418575
+"Business closure"	2	7.8	-.0765378	-.1073174	-.0457582
+"Business closure"	1	7.9	-.0737812	-.118039	-.0295233
+"Business closure"	0	8	-.0572746	-.1096748	-.0048744
+"Home isolation"	5	8.5	-.0300994	-.0557076	-.0044912
+"Home isolation"	4	8.6	-.0476861	-.0733366	-.0220356
+"Home isolation"	3	8.7	-.0550323	-.0760573	-.0340072
+"Home isolation"	2	8.8	-.0633144	-.0851766	-.0414523
+"Home isolation"	1	8.9	-.0680389	-.0916061	-.0444717
+"Home isolation"	0	9	-.0703433	-.0982806	-.0424061

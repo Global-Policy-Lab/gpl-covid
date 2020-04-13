@@ -145,7 +145,7 @@ gen p_4 = paid_sick_leave_comb_popwt
 gen p_5 = work_from_home_comb_popwt
 gen p_6 = school_closure_comb_popwt
 gen p_7 = (travel_ban_local_comb_popwt + transit_suspension_popwt) / 2 
-gen p_8 = business_closure_popwt
+gen p_8 = business_closure_comb_popwt
 gen p_9 = home_isolation_comb_popwt
 
 lab var p_1 "No gathering, event cancel"
@@ -364,6 +364,9 @@ foreach state in "Washington" "California" "New York" {
 		replace `var' = 0 if `var'<0 & `var'!=.
 	}
 
+	
+	coefplot, keep(p_*) tit("`state0': policy packages") xline(0) name(`state0'_policy, replace)
+	
 	// Observed avg change in log cases
 	reg D_l_cum_confirmed_cases i.t if adm1_name=="`state'"
 	predict day_avg_`state0' if adm1_name=="`state'" & e(sample) == 1
