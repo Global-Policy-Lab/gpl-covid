@@ -6,7 +6,8 @@ import pandas as pd
 import numpy as np
 
 # range of delays between "no longer infectious" and "confirmed recovery" to test
-RECOVERY_DELAYS = range(0,7)
+RECOVERY_DELAYS = range(0, 7)
+
 
 def main():
 
@@ -53,7 +54,7 @@ def main():
 
     out = pd.DataFrame(
         index=pd.Index(["CHN", "KOR", "pooled"], name="adm0_name"),
-        columns = [f"removal_delay_{i}" for i in RECOVERY_DELAYS]
+        columns=[f"removal_delay_{i}" for i in RECOVERY_DELAYS],
     )
 
     for l in RECOVERY_DELAYS:
@@ -61,7 +62,10 @@ def main():
         # shift recoveries making sure we deal with any missing days
         this_recoveries = new_recovered.reindex(
             pd.MultiIndex.from_arrays(
-                [new_recovered.index.get_level_values("name"),new_recovered.index.get_level_values("date").shift(-l, "D")]
+                [
+                    new_recovered.index.get_level_values("name"),
+                    new_recovered.index.get_level_values("date").shift(-l, "D"),
+                ]
             )
         ).values
         this_recoveries = pd.Series(this_recoveries, index=new_recovered.index)
@@ -70,7 +74,7 @@ def main():
 
         # filter out 0 gammas (assume not reliable data e.g. from small case numbers)
         # and filter out where we have missing dates between obs
-        gamma_filter = (gammas_bd > 0)
+        gamma_filter = gammas_bd > 0
         gammas_bd_filtered = gammas_bd[gamma_filter]
 
         # if you want to weight by active cases
@@ -83,10 +87,14 @@ def main():
 
         g_chn, g_kor = (
             gammas_bd_filtered[
-                gammas_bd_filtered.index.get_level_values("name").map(lambda x: "CHN" in x)
+                gammas_bd_filtered.index.get_level_values("name").map(
+                    lambda x: "CHN" in x
+                )
             ].median(),
             gammas_bd_filtered[
-                gammas_bd_filtered.index.get_level_values("name").map(lambda x: "KOR" in x)
+                gammas_bd_filtered.index.get_level_values("name").map(
+                    lambda x: "KOR" in x
+                )
             ].median(),
         )
 
