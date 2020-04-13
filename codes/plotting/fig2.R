@@ -40,17 +40,17 @@ df$effectsize <- paste0(round(df$beta, 2), " (", round(df$lb,2), ", ", round(df$
 #calculate percentage growth
 df$growth <- as.character(round((exp(df$beta) - 1), 4)*100)
 
-#Order countries
-df$order[df$adm0 == "CHN"] <- 63
-df$order[df$adm0 == "CHN_Wuhan"] <- 62.5
-df$order[df$adm0 == "KOR"] <- 31
-df$order[df$adm0 == "ITA"] <- 23
-df$order[df$adm0 == "IRN"] <- 21
-df$order[df$adm0 == "FRA"] <- 20.5
-df$order[df$adm0 == "USA"] <- 10
-df$order[df$adm0 == "USA_Washington"] <- 9.99
-df$order[df$adm0 == "USA_California"] <- 9.97
-df$order[df$adm0 == "USA_NewYork"] <- 9.98
+#Order countries for plotting
+df$order[df$adm0 == "CHN"] <- 6
+df$order[df$adm0 == "CHN_Wuhan"] <- 5.9
+df$order[df$adm0 == "KOR"] <- 5
+df$order[df$adm0 == "ITA"] <- 4
+df$order[df$adm0 == "IRN"] <- 3
+df$order[df$adm0 == "FRA"] <- 2
+df$order[df$adm0 == "USA"] <- 1
+df$order[df$adm0 == "USA_Washington"] <- 0.99
+df$order[df$adm0 == "USA_California"] <- 0.97
+df$order[df$adm0 == "USA_NewYork"] <- 0.98
 
 #Panel 1: Infection growth rate without policy
 df.no <- filter(df, df$policy == "no_policy rate") 
