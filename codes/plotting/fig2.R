@@ -14,7 +14,7 @@ dir <- "results/source_data/"
 output_dir <- "results/figures/fig2/"
 
 if (!dir.exists(output_dir)){ #make dir if it doesn't exist
-  dir.create(output_dir)
+  dir.create(output_dir, recursive=TRUE)
 }
 
 countrylist <- c("CHN", "KOR", "ITA", "IRN", "FRA", "USA")
@@ -252,10 +252,9 @@ betas.combined <- ggplot(data = df.combined) +
 eff.size.comb <- ggplot(data = df.combined) + 
   geom_point(aes(x=beta, y=effectsize), color = "royalblue4", size=3, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.combined$effectsize), position = "left") +
-  xlab("Effect size (deltalog per day)") +
   theme_fig2() +
   coord_cartesian(xlim =c(-0.6,0.6))  +
-  xlab("As percent growth (% per day)") + ylab("") +
+  xlab("Effect size (deltalog per day)") + ylab("") +
   ggtitle("") 
 
 #growth plot
