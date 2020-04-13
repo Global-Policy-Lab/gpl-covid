@@ -33,6 +33,7 @@ def test_pipeline(tmp_path):
         to_skip = f.readlines()
     to_skip = [Path(tmp_path) / p for p in to_skip]
 
+    bad_files = []
     for d in ["data", "models"]:
         path = tmp_path / d
         len_path = len(tmp_path.parts)
@@ -45,3 +46,7 @@ def test_pipeline(tmp_path):
                     )
                 except UnicodeDecodeError:
                     pass
+                except AssertionError:
+                    bad_files.append(str(other_file))
+    if len(bad_files) > 0:
+        raise AssertionError, f"The folowing files produced by this code do not match the version saved in the repo: {bad_files}"
