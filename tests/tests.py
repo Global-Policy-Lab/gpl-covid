@@ -19,7 +19,7 @@ def test_readme():
 
 def test_pipeline(tmp_path):
     tmp_model_path = tmp_path / "models"
-    
+
     copytree("models", tmp_model_path)
 
     # run pipeline
@@ -33,9 +33,7 @@ def test_pipeline(tmp_path):
         if p.suffix == ".csv" and "bootstrap" not in p.name:
             other_file = Path("").joinpath(*p.parts[len_path:])
             try:
-                pd.testing.assert_frame_equal(
-                    pd.read_csv(p), pd.read_csv(other_file)
-                )
+                pd.testing.assert_frame_equal(pd.read_csv(p), pd.read_csv(other_file))
             except UnicodeDecodeError:
                 pass
             except:
