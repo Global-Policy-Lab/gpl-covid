@@ -66,5 +66,5 @@ foreach fn of local filenames{
 }
 graph combine Wuhan_active_fix Tehran_conf_fix Cremona_conf_fix ///
 Washington_conf_fix NewYork_conf_fix California_conf_fix, cols(1) imargin(tiny) ysize(18) xsize(10)
-graph combine Washington_conf_fix NewYork_conf_fix California_conf_fix, cols(1) imargin(tiny) ysize(10) xsize(10)
+graph export results/figures/appendix/sub_natl_growth_rates/COMBINED_sub_natl.png, replace
 

@@ -134,7 +134,7 @@ lab var day_avg "Observed avg. change in log cases"
 
 // combine optional policies with respective mandatory policies
 // weighing optional policies by 1/2
-foreach var of varlist school_closure travel_ban_local business_closure social_distance home_isolation work_from_home pos_cases_quarantine no_gathering paid_sick_leave religious_closure{
+foreach var of varlist school_closure travel_ban_local business_closure social_distance home_isolation work_from_home pos_cases_quarantine no_gathering paid_sick_leave transit_suspension religious_closure{
 	gen `var'_comb_popwt = `var'_popwt + `var'_opt_popwt * 0.5
 }
 
@@ -144,7 +144,7 @@ gen p_3 = pos_cases_quarantine_comb_popwt
 gen p_4 = paid_sick_leave_comb_popwt
 gen p_5 = work_from_home_comb_popwt
 gen p_6 = school_closure_comb_popwt
-gen p_7 = (travel_ban_local_comb_popwt + transit_suspension_popwt) / 2 
+gen p_7 = (travel_ban_local_comb_popwt + transit_suspension_comb_popwt) / 2 
 gen p_8 = business_closure_comb_popwt
 gen p_9 = home_isolation_comb_popwt
 
