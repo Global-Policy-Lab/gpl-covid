@@ -64,17 +64,34 @@ def main():
     for l in RECOVERY_DELAYS:
 
         # shift recoveries making sure we deal with any missing days
+        # this gives us the number of confirmed recoveries at t+l,
+        # which is equivalent to the number of people we assume are leaving
+        # the infectious group at time t
         this_recoveries = new_recovered.reindex(
             pd.MultiIndex.from_arrays(
                 [
                     new_recovered.index.get_level_values("name"),
-                    new_recovered.index.get_level_values("date").shift(-l, "D"),
+                    new_recovered.index.get_level_values("date").shift(l, "D"),
                 ]
             )
         ).values
         this_recoveries = pd.Series(this_recoveries, index=new_recovered.index)
 
-        gammas_bd = this_recoveries / cases_I_midpoint
+        # remove any confirmed recoveries that occur between now and t+l from the
+        # denominator (active cases) b/c we assume they have already recovered
+        fut_recovered = df.cum_recoveries.reindex(
+            pd.MultiIndex.from_arrays(
+                [
+                    df.index.get_level_values("name"),
+                    df.index.get_level_values("date").shift(l, "D"),
+                ]
+            )
+        ).values
+        fut_recovered = pd.Series(fut_recovered, index=df.index)
+        cases_already_removed = fut_recovered - df.cum_recoveries
+        this_cases = cases_I_midpoint - (cases_already_removed)
+
+        gammas_bd = this_recoveries / this_cases
 
         # filter out 0 gammas (assume not reliable data e.g. from small case numbers)
         # and filter out where we have missing dates between obs
