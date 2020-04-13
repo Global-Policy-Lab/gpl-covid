@@ -33,7 +33,7 @@ matplotlib.rcParams["font.family"] = "sans-serif"
 pred_no_pol_key = "predicted_cum_confirmed_cases_no_policy"
 pred_pol_key = "predicted_cum_confirmed_cases_true"
 
-data_dir = cutil.DATA / "post_processing"
+data_dir = cutil.MODELS / "projections"
 fn_template = os.path.join(data_dir, "{0}_bootstrap_projection.csv")
 
 countries_in_order = ["china", "korea", "italy", "iran", "france", "usa"]

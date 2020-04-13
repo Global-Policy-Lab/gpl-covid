@@ -19,6 +19,7 @@ def test_readme():
 
 def test_pipeline(tmp_path):
     tmp_model_path = tmp_path / "models"
+    
     copytree("models", tmp_model_path)
 
     # run pipeline
@@ -28,7 +29,8 @@ def test_pipeline(tmp_path):
     bad_files = []
     len_path = len(tmp_path.parts)
     for p in tmp_model_path.rglob("*"):
-        if p.suffix == ".csv":
+        # skip for bootstrap samples which may have different num of bootstraps
+        if p.suffix == ".csv" and "bootstrap" not in p.name:
             other_file = Path("").joinpath(*p.parts[len_path:])
             try:
                 pd.testing.assert_frame_equal(
