@@ -52,9 +52,13 @@ def main():
     cases_I_midpoint = cases_I_midpoint[tstep_bd == 1]
     new_recovered = bds.cum_recoveries + bds.cum_deaths
 
-    out = pd.DataFrame(
-        index=pd.Index(["CHN", "KOR", "pooled"], name="adm0_name"),
-        columns=[f"removal_delay_{i}" for i in RECOVERY_DELAYS],
+    out = pd.Series(
+        index=pd.MultiIndex.from_product(
+            (("CHN", "KOR", "pooled"), RECOVERY_DELAYS),
+            names=["adm0_name", "recovery_delay"],
+        ),
+        name="gamma",
+        dtype=np.float64,
     )
 
     for l in RECOVERY_DELAYS:
@@ -99,7 +103,9 @@ def main():
         )
 
         g_pooled = gammas_bd_filtered.median()
-        out[f"removal_delay_{l}"] = [g_chn, g_kor, g_pooled]
+        out.loc["CHN", l] = g_chn
+        out.loc["KOR", l] = g_kor
+        out.loc["pooled", l] = g_pooled
 
     out.to_csv(cutil.MODELS / "gamma_est.csv", index=True)
 
