@@ -40,7 +40,7 @@ df$effectsize <- paste0(round(df$beta, 2), " (", round(df$lb,2), ", ", round(df$
 #calculate percentage growth
 df$growth <- as.character(round((exp(df$beta) - 1), 4)*100)
 
-#Order countries for plotting
+#Order countries
 df$order[df$adm0 == "CHN"] <- 6
 df$order[df$adm0 == "CHN_Wuhan"] <- 5.9
 df$order[df$adm0 == "KOR"] <- 5
@@ -209,7 +209,7 @@ betas.no <- ggplot(data = df.no) +
   geom_text(aes(x = 0.55, y = 9.5), size = 2, label= paste0("Average = ", average.beta, " (",average.beta.percent,"%)")) + 
   scale_y_discrete(limits = rev(df.no$policy), position = "left") +
   theme_fig2() + 
-  coord_cartesian(xlim =c(-0.6,0.6))  +
+  coord_cartesian(xlim =c(-0.9,0.9))  +
   xlab("Estimated daily growth rate") + ylab("") +
   ggtitle("Infection growth rate without policy") 
 
@@ -218,7 +218,7 @@ eff.size.no <- ggplot(data = df.no) +
   scale_y_discrete(limits = rev(df.no$effectsize), position = "left") +
   xlab("Effect size (deltalog per day)") + ylab("") +
   theme_fig2() +
-  coord_cartesian(xlim =c(-0,0.6))  +
+  coord_cartesian(xlim =c(-0.9,0.9))  +
   ggtitle("") 
 
 #growth plot
@@ -227,13 +227,13 @@ growth.no <- ggplot(data = df.no) +
   scale_y_discrete(limits = rev(df.no$growth), position = "left") +
   xlab("As percent growth (% per day)") + ylab("") +
   theme_fig2() +
-  coord_cartesian(xlim =c(-0.6,0.6))  +
+  coord_cartesian(xlim =c(-0.9,0.9))  +
   ggtitle("") 
 
 #combine 3 plots into 1 figure
 all.plot.no <- grid.arrange(betas.no, eff.size.no, growth.no, ncol=3)
 ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 20, height = 6)
-
+ 
 #---------------------------------------------------------
 # Panel B: Effect of all policies combined
 
@@ -244,7 +244,7 @@ betas.combined <- ggplot(data = df.combined) +
   geom_hline(yintercept= 0.5, colour="grey50", linetype="dotted", size = 0.5) + 
   scale_y_discrete(limits = rev(df.combined$policy), position = "left") +
   theme_fig2() + 
-  coord_cartesian(xlim =c(-0.6,0.6))  +
+  coord_cartesian(xlim =c(-0.9,0.9))  +
   xlab("Estimated effect on daily growth rate") + ylab("") +
   ggtitle("Effect of all policies combined") 
 
@@ -252,8 +252,9 @@ betas.combined <- ggplot(data = df.combined) +
 eff.size.comb <- ggplot(data = df.combined) + 
   geom_point(aes(x=beta, y=effectsize), color = "royalblue4", size=3, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.combined$effectsize), position = "left") +
+  xlab("Effect size (deltalog per day)") +
   theme_fig2() +
-  coord_cartesian(xlim =c(-0.6,0.6))  +
+  coord_cartesian(xlim =c(-0.9,0.9))  +
   xlab("Effect size (deltalog per day)") + ylab("") +
   ggtitle("") 
 
@@ -263,12 +264,12 @@ growth.comb <- ggplot(data = df.combined) +
   scale_y_discrete(limits = rev(df.combined$growth), position = "left") +
   xlab("As percent growth (% per day)") + ylab("") +
   theme_fig2() +
-  coord_cartesian(xlim =c(-0.6,0.6))  +
+  coord_cartesian(xlim =c(-0.9,0.9))  +
   ggtitle("") 
 
 #combine 3 plots into 1 figure
 all.plot.comb <- grid.arrange(betas.combined, eff.size.comb, growth.comb, ncol=3)
-ggsave(all.plot.comb, file = paste0(output_dir,"Fig2B_comb.pdf"), width = 20, height = 6)
+ggsave(all.plot.comb, file = paste0(output_dir,"Fig2B_comb.pdf"), width = 18, height = 6)
   
 #---------------------------------------------------------
 # Panel C: Individual policies
@@ -282,7 +283,7 @@ betas <- ggplot(data = df) +
                       breaks=c("China","France","Iran", "Italy", "South Korea", "United States"), 
                       values=c("China"="salmon", "France"="#655643", "Iran"="#78bea2", "Italy"="paleturquoise4", "South Korea"="#e6ac27", "United States"="#bb7693")) + #retro
    scale_y_discrete(limits = rev(df$policy), position = "left") +
-  coord_cartesian(xlim =c(-0.6,0.6))  +
+  coord_cartesian(xlim =c(-0.9,0.9))  +
   theme_fig2() + 
   ggtitle("Effect of individual policies") +
   xlab("Estimated effect on daily growth rate") + ylab("")  
@@ -292,7 +293,7 @@ eff.size <- ggplot(data = df) +
   geom_point(aes(x=beta, y=effectsize, group = country), color = "grey", size=3, alpha = 0.9) +
   scale_y_discrete(limits = rev(df$effectsize), position = "left") +
   ggtitle("") +
-  coord_cartesian(xlim =c(-0.6,0.6))  +
+  coord_cartesian(xlim =c(-0.9,0.9))  +
   xlab("Effect size (deltalog per day)") + ylab("") +
   theme_fig2() 
 
@@ -301,12 +302,12 @@ growth <- ggplot(data = df) +
   geom_point(aes(x=beta, y=growth, group = country), color = "grey",  size=3, alpha = 0.9) +
   scale_y_discrete(limits = rev(as.character(df$growth)), position = "left") +
   ggtitle("") +
-  coord_cartesian(xlim =c(-0.6,0.6))  +
+  coord_cartesian(xlim =c(-0.9,0.9))  +
   xlab("As percent growth (% per day)") + ylab("") +
   theme_fig2() 
 
 #combine 3 plots into 1 figure
 all.plot.ind <- grid.arrange(betas, eff.size, growth, ncol=3)
-ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 24, height = 10)
+ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 28, height = 10)
 
 
