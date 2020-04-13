@@ -399,10 +399,10 @@ preserve
 	rename *_ *
 	reshape long L, i(temp policy) j(val)
 	tostring policy, replace
-	replace policy = "social distance" if policy == "1"
-	replace policy = "no dem, rel cls, wel serv cls" if policy == "2"
-	replace policy = "emerg declaration" if policy == "3"
-	replace policy = "quarantine positive cases" if policy == "4"
+	replace policy = "Social distance (optional)" if policy == "1"
+	replace policy = "Social distance (mandatory)" if policy == "2"
+	replace policy = "Emergency declaration" if policy == "3"
+	replace policy = "Quarantine positive cases" if policy == "4"
 	rename val lag
 	reshape wide L, i(lag policy) j(temp) string
 	sort Lat
