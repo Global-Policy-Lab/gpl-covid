@@ -49,4 +49,6 @@ def test_pipeline(tmp_path):
                 except AssertionError:
                     bad_files.append(str(other_file))
     if len(bad_files) > 0:
-        raise AssertionError, f"The folowing files produced by this code do not match the version saved in the repo: {bad_files}"
+        raise AssertionError(
+            f"The folowing files produced by this code do not match the version saved in the repo: {bad_files}"
+        )
