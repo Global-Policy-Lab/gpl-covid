@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 import shlex
 import subprocess
-from shutil import copytree, rmtree
+from shutil import copytree
 
 
 def test_readme():
@@ -24,7 +24,7 @@ def test_pipeline(tmp_path):
 
     # run pipeline
     cmd = shlex.split("bash run --nostata --nocensus --num-proj 2")
-    process = subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True)
 
     bad_files = []
     len_path = len(tmp_path.parts)

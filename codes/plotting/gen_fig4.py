@@ -71,7 +71,7 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
     quantiles_no_policy = quantiles_dict["quantiles_no_policy"]
     quantiles_policy = quantiles_dict["quantiles_policy"]
 
-    if not model is None:
+    if model is not None:
         dates_model = pd.to_datetime(model["date"])
         preds_policy = model["predicted_cum_confirmed_cases_true"]
         preds_no_policy = model["predicted_cum_confirmed_cases_no_policy"]
@@ -83,9 +83,8 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
 
     # inner to outer - hardcode for now
     alphas_fc = [0.2, 0.5]
-    alphas_ec = [0.4, 0.9]
 
-    if not model is None:
+    if model is not None:
         model_no_pol = ax.plot(
             dates_model, preds_no_policy, color=no_policy_color, lw=5, ls="--"
         )
@@ -116,7 +115,7 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
         lower_idx += 1
         upper_idx -= 1
 
-    if not model is None:
+    if model is not None:
         model_pol = ax.plot(
             dates_model, preds_policy, color=policy_color, lw=5, ls="--"
         )
@@ -286,7 +285,6 @@ def annotate_cases(ax, cases):
         cases_last / 100.0,
     )
 
-    formatter = mdates.DateFormatter("%b %d")
     annot_date = cases_date.strftime("%b %d")
 
     annot = "{0}: {1:,d} \nconfirmed cases".format(annot_date, int(cases_last))
@@ -328,7 +326,6 @@ def main():
     for c, country in enumerate(countries_in_order):
 
         cases_df_this_country = cases_dict[country]
-        # cases_df_this_country['date_datetime'] = pd.to_datetime(cases_df_this_country['date'])
 
         dfs_by_country[c] = pd.merge(
             dfs_by_country[c].set_index("date", drop=False),
@@ -349,9 +346,6 @@ def main():
         model_df_this_country = pd.read_csv(
             fn_template.replace("bootstrap", "model").format(country)
         )
-
-        # later on we'll need date to be string so make a second column for saving the data
-        # model_df_this_country['date_datetime'] = pd.to_datetime(model_df_this_country['date'])
 
         model_dfs_by_country[country] = model_df_this_country
 
