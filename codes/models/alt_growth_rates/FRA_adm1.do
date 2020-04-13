@@ -56,11 +56,11 @@ lab var l_cum_confirmed_cases "log(cum_confirmed_cases)"
 gen D_l_cum_confirmed_cases = D.l_cum_confirmed_cases 
 lab var D_l_cum_confirmed_cases "change in log(cum. confirmed cases)"
 
-g l_hospitalization = log(hospitalization)
-lab var l_hospitalization "log(hospitalization)"
+gen l_cum_hospitalized = log(cum_hospitalized)
+lab var l_cum_hospitalized "log(cum_hospitalized)"
 
-g D_l_hospitalization = D.l_hospi
-lab var D_l_hospitalization "change in log(hospitalization)"
+gen D_l_cum_hospitalized = D.l_cum_hospitalized
+lab var D_l_cum_hospitalized "change in log(cum_hospitalized)"
 
 
 // quality control: cannot have negative changes in cumulative values
@@ -132,7 +132,7 @@ predict e if e(sample), resid
 
 hist e, bin(30) tit(France) lcolor(white) fcolor(navy) xsize(5) name(hist_fra, replace)
 
-qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_fra, replace)
+qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_fra, replace) yscale(titlegap(*-37))
 
 graph combine hist_fra qn_fra, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_fra.gph, replace)
 graph drop hist_fra qn_fra
@@ -289,7 +289,7 @@ foreach adm in `state_list' {
 }
 postclose results
 
-*preserve
+preserve
 	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
@@ -316,7 +316,7 @@ preserve
 	national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 	coefplot, keep(pck_social_distance school_closure national_lockdown) gen(L0_) title(main model) xline(0) 
 	
-	reghdfe D_l_hospi testing pck_social_distance school_closure ///
+	reghdfe D_l_cum_hospitalized testing pck_social_distance school_closure ///
 	national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 	 
 	coefplot, keep(pck_social_distance school_closure national_lockdown) gen(H0_) title(main model) xline(0) 
 	replace H0_at = H0_at - 0.04
@@ -338,7 +338,7 @@ preserve
 		gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
 		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
 		
-		reghdfe D_l_hospi testing pck_social_distance school_closure ///
+		reghdfe D_l_cum_hospitalized testing pck_social_distance school_closure ///
 		national_lockdown, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 		coefplot, keep(pck_social_distance school_closure national_lockdown) ///
 		gen(H`lags'_) title (with fixed lag (4 days)) xline(0)
