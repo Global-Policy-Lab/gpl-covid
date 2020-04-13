@@ -4,7 +4,7 @@ import numpy as np
 import warnings
 
 
-def facet_hist(estimates, case_type, coef, n_bins=40, hist_kwargs = {}, **kwargs):
+def facet_hist(estimates, case_type, coef, n_bins=40, hist_kwargs={}, **kwargs):
     true_vals = {
         "Intercept": estimates.attrs["no_policy_growth_rate"],
         "p1": estimates.attrs["p1_effect"],
@@ -22,6 +22,7 @@ def facet_hist(estimates, case_type, coef, n_bins=40, hist_kwargs = {}, **kwargs
     for ax in g.axes.flat:
         ax.axvline(true_vals[coef], color="k", label="True")
         ax.set_xlim(min_bin, max_bin)
+
     def nowarn_hist(*args, **kwargs):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")

@@ -153,11 +153,11 @@ def run_SIR(I0, R0, beta, gamma):
     S, I, R : :class:`numpy.ndarray`
         State space of the model at all timesteps
     """
-    
+
     n_steps = beta.shape[0]
 
     S, I, R = init_state_arrays(beta.shape, 3)
-    
+
     # initial conditions
     R[0] = R0
     I[0] = I0
@@ -167,7 +167,7 @@ def run_SIR(I0, R0, beta, gamma):
         new_infected_rate = beta[i - 1] * S[i - 1]
         new_removed_rate = gamma[i - 1]
 
-        S[i] = S[i - 1] - new_infected_rate * I[i-1]
+        S[i] = S[i - 1] - new_infected_rate * I[i - 1]
         I[i] = I[i - 1] * np.exp(new_infected_rate - new_removed_rate)
         R[i] = 1 - S[i] - I[i]
 
@@ -200,7 +200,7 @@ def run_SEIR(E0, I0, R0, beta, gamma, sigma):
     n_steps = beta.shape[0]
 
     S, E, I, R = init_state_arrays(beta.shape, 4)
-    
+
     # initial conditions
     R[0] = R0
     I[0] = I0
