@@ -31,8 +31,8 @@ def test_pipeline(tmp_path):
     # check that interim/processed/post_processing data and models match
     with open("tests/ignore_comparison.txt", "r") as f:
         to_skip = f.readlines()
-    to_skip = [Path(tmp_path) / p for p in to_skip]
-
+    to_skip = [Path(tmp_path) / p.strip() for p in to_skip]
+    print(to_skip)
     bad_files = []
     for d in ["data", "models"]:
         path = tmp_path / d
@@ -46,9 +46,10 @@ def test_pipeline(tmp_path):
                     )
                 except UnicodeDecodeError:
                     pass
-                except AssertionError:
+                except:
                     bad_files.append(str(other_file))
     if len(bad_files) > 0:
         raise AssertionError(
-            f"The folowing files produced by this code do not match the version saved in the repo: {bad_files}"
+            "The folowing files produced by this code do not match the version saved "
+            f"in the repo: {bad_files}"
         )
