@@ -1,5 +1,12 @@
 from pathlib import Path
 import pandas as pd
+import shlex
+import subprocess
+
+
+def test_pipeline():
+    cmd = shlex.split("bash run --nostata --nocensus --num-proj 2")
+    process = subprocess.run(cmd, check=True)
 
 
 def test_readme():
