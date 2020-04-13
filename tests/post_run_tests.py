@@ -15,10 +15,10 @@ def test_readme():
 
                     
 def test_no_data_change():
-    path = Path("tests/test_data")
+    path = Path("tests/comparison_files")
     for p in path.rglob("*"):
         if p.is_file() and not any([l.startswith(".") for l in p.parts]):
-            other_file = Path("data").joinpath(*p.parts[2:])
+            other_file = Path("").joinpath(*p.parts[2:])
             try:
                 pd.testing.assert_frame_equal(pd.read_csv(p), pd.read_csv(other_file))
             except UnicodeDecodeError:
