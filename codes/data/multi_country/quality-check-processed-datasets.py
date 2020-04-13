@@ -129,8 +129,8 @@ def check_cumulativity(df, country, adm):
         adm_name = f"adm{adm}_name"
 
         # Make exception for France, where we have confirmed cases up to a point, and then hospitalizations
-        if country == 'FRA':
-            if field == 'cum_confirmed_cases_imputed' or field == 'cum_hospitalized':
+        if country == "FRA":
+            if field == "cum_confirmed_cases_imputed" or field == "cum_hospitalized":
                 continue
 
         column_is_cumulative = (
@@ -164,8 +164,8 @@ def check_columns_are_not_null(df, country, adm):
             continue
 
         # Make exception for France, where we have confirmed cases up to a point, and then hospitalizations
-        if country == 'FRA':
-            if col == 'cum_confirmed_cases_imputed' or col == 'cum_hospitalized':
+        if country == "FRA":
+            if col == "cum_confirmed_cases_imputed" or col == "cum_hospitalized":
                 continue
 
         nulls_not_found = df[col].isnull().sum() == 0

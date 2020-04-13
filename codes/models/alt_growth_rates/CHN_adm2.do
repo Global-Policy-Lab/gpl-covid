@@ -416,6 +416,60 @@ yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) ///
 saving(results/figures/fig3/raw/legend_fig3.pdf, replace)
 
 
+preserve 
+
+gen D_home_isolation = D.home_isolation
+
+//create a dummy variable if keeping in the event study
+gen event_sample_home_isolation = 0
+
+//identify observations that could potentially go into the event study sample (nearby enough to event and not contaminated by travel ban)
+replace event_sample_home_isolation = 1 if D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+replace event_sample_home_isolation = 1 if L1.D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+replace event_sample_home_isolation = 1 if L2.D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+replace event_sample_home_isolation = 1 if L3.D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+replace event_sample_home_isolation = 1 if L4.D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+
+replace event_sample_home_isolation = 1 if F1.D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+replace event_sample_home_isolation = 1 if F2.D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+replace event_sample_home_isolation = 1 if F3.D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+replace event_sample_home_isolation = 1 if F4.D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+replace event_sample_home_isolation = 1 if F5.D_home_isolation ==1 & D_l_active_cases ~=. & travel_ban_local == 0
+
+//only keep a balanced panel (need 10 consecutive obs) for the event study (drop adm that have spotty coverage)
+bysort adm12_id: egen event_count = total(event_sample_home_isolation)
+tab event_count
+tab date
+keep if event_count == 10 & event_sample_home_isolation == 1
+duplicates report  adm12_id 
+//create dummy vars for the days relative to the event
+xtset adm12 t
+gen f1 = (F1.D_home_isolation ==1)
+gen f2 = (F2.D_home_isolation ==1)
+gen f3 = (F3.D_home_isolation ==1)
+gen f4 = (F4.D_home_isolation ==1)
+gen f5 = (F5.D_home_isolation ==1)
+
+gen l0 = (D_home_isolation ==1)
+gen l1 = (L1.D_home_isolation ==1)
+gen l2 = (L2.D_home_isolation ==1)
+gen l3 = (L3.D_home_isolation ==1)
+gen l4 = (L4.D_home_isolation ==1)
+
+//this is just a binary if pre-treatment
+gen pre_treat = f5 + f4 + f3 +  f2 + f1
+
+//computing the pre-treatment mean
+sum D_l_active_cases if pre_treat == 1
+loc pre_treat_val = r(mean)
+
+//event study regression
+reg D_l_active_cases f5 f4 f3 f2 f1 l0 l1 l2 l3 l4 testing_regime_change*, cluster(adm12_id) nocons
+coefplot , vertical keep(f5 f4 f3 f2 f1 l0 l1 l2 l3 l4) yline(`pre_treat_val') tit(event study for 36 cities with unconfounded home isolation)
+graph export results/figures/appendix/CHN_event_study.pdf, replace
+restore
+
+
 //-------------------------------CREATING DAILY LAGS
 
 // sum t
@@ -505,7 +559,7 @@ tw (rspike ub_y_actual_wh lb_y_actual_wh t, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg_wh t, color(black)) ///
 if e(sample), ///
 title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
 
