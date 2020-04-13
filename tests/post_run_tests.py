@@ -13,7 +13,7 @@ def test_readme():
                     tocomp = l.rstrip("\n").split(" $")[0]
                     assert tocomp in readme, tocomp
 
-                    
+
 def test_no_data_change():
     path = Path("tests/comparison_files")
     for p in path.rglob("*"):
