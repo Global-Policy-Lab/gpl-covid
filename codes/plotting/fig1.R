@@ -6,13 +6,14 @@
 # by hdruckenmiller
 
 rm(list=ls())
-library(dplyr)
-library(rgdal)
-library(rgeos)
-library(scales)
-library(magrittr)
-library(ggplot2)
-library(tigris)
+options (warn = -1)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(rgdal))
+suppressPackageStartupMessages(library(rgeos))
+suppressPackageStartupMessages(library(scales))
+suppressPackageStartupMessages(library(magrittr))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(tigris))
 
 ##########################
 
