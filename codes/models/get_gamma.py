@@ -13,12 +13,12 @@ def main():
 
     print("Estimating removal rate (gamma) from CHN and KOR timeseries...")
     ## load korea from regression-ready data
-    df_kor = pd.read_csv(cutil.REG_DATA / "KOR_reg_data.csv", parse_dates=["date"])
+    df_kor = pd.read_csv(cutil.DATA_PROCESSED / "adm1" / "KOR_processed.csv", parse_dates=["date"])
     df_kor["name"] = df_kor.adm0_name + "_" + df_kor.adm1_name
     df_kor = df_kor.set_index(["name", "date"])
 
     ## load china from regression-ready data
-    df_chn = pd.read_csv(cutil.REG_DATA / "CHN_reg_data.csv", parse_dates=["date"])
+    df_chn = pd.read_csv(cutil.DATA_PROCESSED / "adm2" / "CHN_processed.csv", parse_dates=["date"])
     df_chn["name"] = df_chn.adm0_name + "_" + df_chn.adm1_name + "_" + df_chn.adm2_name
     df_chn = df_chn.set_index(["name", "date"])
 
@@ -48,6 +48,7 @@ def main():
         df["active_cases"] + df.groupby(level="name")["active_cases"].shift(1)
     ) / 2
 
+    # filter where the timestep was not 1 day
     bds = bds[tstep_bd == 1]
     cases_I_midpoint = cases_I_midpoint[tstep_bd == 1]
     new_recovered = bds.cum_recoveries + bds.cum_deaths
@@ -94,7 +95,6 @@ def main():
         gammas_bd = this_recoveries / this_cases
 
         # filter out 0 gammas (assume not reliable data e.g. from small case numbers)
-        # and filter out where we have missing dates between obs
         gamma_filter = gammas_bd > 0
         gammas_bd_filtered = gammas_bd[gamma_filter]
 
@@ -108,14 +108,10 @@ def main():
 
         g_chn, g_kor = (
             gammas_bd_filtered[
-                gammas_bd_filtered.index.get_level_values("name").map(
-                    lambda x: "CHN" in x
-                )
+                gammas_bd_filtered.index.get_level_values("name").map(lambda x: "CHN" in x)
             ].median(),
             gammas_bd_filtered[
-                gammas_bd_filtered.index.get_level_values("name").map(
-                    lambda x: "KOR" in x
-                )
+                gammas_bd_filtered.index.get_level_values("name").map(lambda x: "KOR" in x)
             ].median(),
         )
 
