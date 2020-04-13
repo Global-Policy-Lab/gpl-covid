@@ -1,13 +1,13 @@
 policy	lag	position	beta	lower_CI	upper_CI
-"trvl ban, wrk hme, schl clse"	5	.5	-.3161529	-.3719711	-.2603347
-"trvl ban, wrk hme, schl clse"	4	.6	-.3854219	-.4479136	-.3229302
-"trvl ban, wrk hme, schl clse"	3	.7	-.3727408	-.4449499	-.3005317
-"trvl ban, wrk hme, schl clse"	2	.8	-.3694116	-.4984754	-.2403478
-"trvl ban, wrk hme, schl clse"	1	.9	-.3019469	-.4213557	-.1825381
-"trvl ban, wrk hme, schl clse"	0	1	-.2852881	-.4493179	-.1212583
-"home isolation"	5	1.5	-.0740108	-.1101785	-.0378432
-"home isolation"	4	1.6	-.0780511	-.1049218	-.0511804
-"home isolation"	3	1.7	-.1011102	-.1400517	-.0621686
-"home isolation"	2	1.8	-.1157478	-.1590777	-.0724179
-"home isolation"	1	1.9	-.1391206	-.202968	-.0752732
-"home isolation"	0	2	-.1507055	-.2193363	-.0820748
+"Travel ban (opt), work from home, school closure"	5	.5	-.3161529	-.3719711	-.2603347
+"Travel ban (opt), work from home, school closure"	4	.6	-.3854219	-.4479136	-.3229302
+"Travel ban (opt), work from home, school closure"	3	.7	-.3727408	-.4449499	-.3005317
+"Travel ban (opt), work from home, school closure"	2	.8	-.3694116	-.4984754	-.2403478
+"Travel ban (opt), work from home, school closure"	1	.9	-.3019469	-.4213557	-.1825381
+"Travel ban (opt), work from home, school closure"	0	1	-.2852881	-.4493179	-.1212583
+"Home isolation"	5	1.5	-.0740108	-.1101785	-.0378432
+"Home isolation"	4	1.6	-.0780511	-.1049218	-.0511804
+"Home isolation"	3	1.7	-.1011102	-.1400517	-.0621686
+"Home isolation"	2	1.8	-.1157478	-.1590777	-.0724179
+"Home isolation"	1	1.9	-.1391206	-.202968	-.0752732
+"Home isolation"	0	2	-.1507055	-.2193363	-.0820748

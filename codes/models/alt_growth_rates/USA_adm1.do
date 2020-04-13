@@ -108,7 +108,7 @@ foreach lbl of local test_var_lbl{
 	gen testing_regime_change_`t_str' = t==`t_chg' * D.testing_regime
 	lab var testing_regime_change_`t_str' "`lbl'"
 }
-order testing_regime_change_*mar*, before(testing_regime_change_*apr*)
+*order testing_regime_change_*mar*, before(testing_regime_change_*apr*)
 
 
 //------------------diagnostic
@@ -145,7 +145,7 @@ gen p_4 = paid_sick_leave_comb_popwt
 gen p_5 = work_from_home_comb_popwt
 gen p_6 = school_closure_comb_popwt
 gen p_7 = (travel_ban_local_comb_popwt + transit_suspension_popwt) / 2 
-gen p_8 = business_closure_popwt
+gen p_8 = business_closure_comb_popwt
 gen p_9 = home_isolation_comb_popwt
 
 lab var p_1 "No gathering, event cancel"
@@ -231,7 +231,6 @@ testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + ///
 testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
 testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
 testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + /// 
-testing_regime_change_05apr2020 * _b[testing_regime_change_05apr2020] + /// 
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of all policies combined (FOR FIG2)
@@ -356,7 +355,6 @@ foreach state in "Washington" "California" "New York" {
 	testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
 	testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
 	testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + ///  
-	testing_regime_change_05apr2020 * _b[testing_regime_change_05apr2020] + /// 
 	_b[_cons] if e(sample), ///
 	ci(lb_counter_`state0' ub_counter_`state0')
 
@@ -366,6 +364,9 @@ foreach state in "Washington" "California" "New York" {
 		replace `var' = 0 if `var'<0 & `var'!=.
 	}
 
+	
+	coefplot, keep(p_*) tit("`state0': policy packages") xline(0) name(`state0'_policy, replace)
+	
 	// Observed avg change in log cases
 	reg D_l_cum_confirmed_cases i.t if adm1_name=="`state'"
 	predict day_avg_`state0' if adm1_name=="`state'" & e(sample) == 1
@@ -512,15 +513,15 @@ preserve
 	rename *_ *
 	reshape long L, i(temp policy) j(val)
 	tostring policy, replace
-	replace policy = "no gathering, event cancel" if policy == "1"
-	replace policy = "social distance, rel closure" if policy == "2"
-	replace policy = "quarantine positive cases"  if policy == "3"
-	replace policy = "paid sick leave" if policy == "4"
-	replace policy = "work from home" if policy == "5"
-	replace policy = "school closure" if policy == "6"
-	replace policy = "loc travel ban, susp transit" if policy == "7"
-	replace policy = "business closure" if policy == "8"
-	replace policy = "home isolation" if policy == "9"
+	replace policy = "No gathering, event cancel" if policy == "1"
+	replace policy = "Social distance" if policy == "2"
+	replace policy = "Quarantine positive cases"  if policy == "3"
+	replace policy = "Paid sick leave" if policy == "4"
+	replace policy = "Work from home" if policy == "5"
+	replace policy = "School closure" if policy == "6"
+	replace policy = "Travel ban" if policy == "7"
+	replace policy = "Business closure" if policy == "8"
+	replace policy = "Home isolation" if policy == "9"
 	rename val lag
 	reshape wide L, i(lag policy) j(temp) string
 	sort Lat
