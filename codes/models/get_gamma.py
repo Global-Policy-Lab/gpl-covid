@@ -13,12 +13,16 @@ def main():
 
     print("Estimating removal rate (gamma) from CHN and KOR timeseries...")
     ## load korea from regression-ready data
-    df_kor = pd.read_csv(cutil.DATA_PROCESSED / "adm1" / "KOR_processed.csv", parse_dates=["date"])
+    df_kor = pd.read_csv(
+        cutil.DATA_PROCESSED / "adm1" / "KOR_processed.csv", parse_dates=["date"]
+    )
     df_kor["name"] = df_kor.adm0_name + "_" + df_kor.adm1_name
     df_kor = df_kor.set_index(["name", "date"])
 
     ## load china from regression-ready data
-    df_chn = pd.read_csv(cutil.DATA_PROCESSED / "adm2" / "CHN_processed.csv", parse_dates=["date"])
+    df_chn = pd.read_csv(
+        cutil.DATA_PROCESSED / "adm2" / "CHN_processed.csv", parse_dates=["date"]
+    )
     df_chn["name"] = df_chn.adm0_name + "_" + df_chn.adm1_name + "_" + df_chn.adm2_name
     df_chn = df_chn.set_index(["name", "date"])
 
@@ -108,10 +112,14 @@ def main():
 
         g_chn, g_kor = (
             gammas_bd_filtered[
-                gammas_bd_filtered.index.get_level_values("name").map(lambda x: "CHN" in x)
+                gammas_bd_filtered.index.get_level_values("name").map(
+                    lambda x: "CHN" in x
+                )
             ].median(),
             gammas_bd_filtered[
-                gammas_bd_filtered.index.get_level_values("name").map(lambda x: "KOR" in x)
+                gammas_bd_filtered.index.get_level_values("name").map(
+                    lambda x: "KOR" in x
+                )
             ].median(),
         )
 
