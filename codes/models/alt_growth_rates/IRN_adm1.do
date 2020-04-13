@@ -367,8 +367,8 @@ preserve
 	|| scatter  L4_at L4_b, mc(black*.3) ///
 	|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
 	|| scatter  L5_at L5_b, mc(black*.1) ///		
-	ylabel(1 "trvl ban opt, wrk hme, schl clse" ///
-	2 "home isolation", angle(0)) ///
+	ylabel(1 "Travel ban (opt), work from home, school closure" ///
+	2 "Home isolation", angle(0)) ///
 	ytitle("") title("Iran - comparing Fixed Lags models") ///
 	legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
 	lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
@@ -381,8 +381,8 @@ preserve
 	rename *_ *
 	reshape long L, i(temp policy) j(val)
 	tostring policy, replace
-	replace policy = "trvl ban, wrk hme, schl clse" if policy == "1"
-	replace policy = "home isolation" if policy == "2"
+	replace policy = "Travel ban (opt), work from home, school closure" if policy == "1"
+	replace policy = "Home isolation" if policy == "2"
 	rename val lag
 	reshape wide L, i(lag policy) j(temp) string
 	sort Lat
@@ -495,8 +495,8 @@ preserve
 	tw scatter i beta , xline(0,lc(black) lp(dash)) mc(black*.5)   ///
 	|| scatter i beta if sample == "full_sample", mc(red)  ///
 	yscale(range(0.5(0.5)3.5)) ylabel(1 "combined effect" ///
-	2  "school clo. , travel ban , work from home" ///
-	3 "home isolation", angle(0)) ///
+	2  "Travel ban (opt), work from home, school closure" ///
+	3 "Home isolation", angle(0)) ///
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1) lab(2 "Full sample") lab(1 "Leaving one region out") ///
 	region(lstyle(none))) ///
