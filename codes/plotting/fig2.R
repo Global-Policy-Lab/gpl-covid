@@ -232,7 +232,7 @@ growth.no <- ggplot(data = df.no) +
 
 #combine 3 plots into 1 figure
 all.plot.no <- grid.arrange(betas.no, eff.size.no, growth.no, ncol=3)
-ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 20, height = 6)
+ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 20, height = 5)
  
 #---------------------------------------------------------
 # Panel B: Effect of all policies combined
@@ -269,7 +269,7 @@ growth.comb <- ggplot(data = df.combined) +
 
 #combine 3 plots into 1 figure
 all.plot.comb <- grid.arrange(betas.combined, eff.size.comb, growth.comb, ncol=3)
-ggsave(all.plot.comb, file = paste0(output_dir,"Fig2B_comb.pdf"), width = 18, height = 6)
+ggsave(all.plot.comb, file = paste0(output_dir,"Fig2B_comb.pdf"), width = 18, height = 5)
   
 #---------------------------------------------------------
 # Panel C: Individual policies
