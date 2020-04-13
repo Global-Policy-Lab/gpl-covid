@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 # range of delays between "no longer infectious" and "confirmed recovery" to test
-RECOVERY_DELAYS = range(0, 7)
+RECOVERY_DELAYS = range(15)
 
 
 def main():
