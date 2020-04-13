@@ -42,3 +42,9 @@ data/raw/italy/italy-cases-by-region.csv
 data/raw/italy/italy_policy_static_20200318.csv
 data/raw/italy/ITA_policy_data_sources.csv
 data/raw/iran/IRN_policy_data_sources.csv
+data/post_processing/china_bootstrap_projection.csv
+data/post_processing/france_bootstrap_projection.csv
+data/post_processing/iran_bootstrap_projection.csv
+data/post_processing/italy_bootstrap_projection.csv
+data/post_processing/korea_bootstrap_projection.csv
+data/post_processing/usa_bootstrap_projection.csv
