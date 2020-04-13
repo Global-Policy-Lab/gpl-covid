@@ -5,6 +5,8 @@ from codes import utils as cutil
 import pandas as pd
 import numpy as np
 
+# range of delays between "no longer infectious" and "confirmed recovery" to test
+RECOVERY_DELAYS = range(0,7)
 
 def main():
 
@@ -41,42 +43,57 @@ def main():
     tstep_bd = tstep.insert(0, np.nan)
 
     bds = df.groupby(level="name").diff(1)
-
-    bd_cases_I_midpoint = (
+    cases_I_midpoint = (
         df["active_cases"] + df.groupby(level="name")["active_cases"].shift(1)
     ) / 2
 
-    gammas_bd = (bds["cum_confirmed_cases"] - bds.active_cases) / bd_cases_I_midpoint
+    bds = bds[tstep_bd == 1]
+    cases_I_midpoint = cases_I_midpoint[tstep_bd == 1]
+    new_recovered = bds.cum_recoveries + bds.cum_deaths
 
-    # filter out 0 gammas (assume not reliable data e.g. from small case numbers)
-    # and filter out where we have missing dates between obs
-    gamma_filter = (gammas_bd > 0) & (tstep_bd == 1)
-    gammas_bd_filtered = gammas_bd[gamma_filter]
-
-    # if you want to weight by active cases
-    # (decided not to to avoid potential bias in giving longer duration cases more weight)
-    # weights = df["active_cases"]
-    # weights_bd = (weights + weights.groupby(level="name").shift(1)) / 2
-    # weights_bd = weights_bd[gamma_filter]
-    # weights_bd = weights_bd / weights_bd.mean()
-    # gammas_bd_filtered = gammas_bd_filtered * weights_bd * n_samples
-
-    g_chn, g_kor = (
-        gammas_bd_filtered[
-            gammas_bd_filtered.index.get_level_values("name").map(lambda x: "CHN" in x)
-        ].median(),
-        gammas_bd_filtered[
-            gammas_bd_filtered.index.get_level_values("name").map(lambda x: "KOR" in x)
-        ].median(),
+    out = pd.DataFrame(
+        index=pd.Index(["CHN", "KOR", "pooled"], name="adm0_name"),
+        columns = [f"removal_delay_{i}" for i in RECOVERY_DELAYS]
     )
 
-    g_pooled = gammas_bd_filtered.median()
+    for l in RECOVERY_DELAYS:
 
-    pd.Series(
-        [g_chn, g_kor, g_pooled],
-        index=pd.Index(["CHN", "KOR", "pooled"], name="adm0_name"),
-        name="gamma_est",
-    ).to_csv(cutil.MODELS / "gamma_est.csv", index=True)
+        # shift recoveries making sure we deal with any missing days
+        this_recoveries = new_recovered.reindex(
+            pd.MultiIndex.from_arrays(
+                [new_recovered.index.get_level_values("name"),new_recovered.index.get_level_values("date").shift(-l, "D")]
+            )
+        ).values
+        this_recoveries = pd.Series(this_recoveries, index=new_recovered.index)
+
+        gammas_bd = this_recoveries / cases_I_midpoint
+
+        # filter out 0 gammas (assume not reliable data e.g. from small case numbers)
+        # and filter out where we have missing dates between obs
+        gamma_filter = (gammas_bd > 0)
+        gammas_bd_filtered = gammas_bd[gamma_filter]
+
+        # if you want to weight by active cases
+        # (decided not to to avoid potential bias in giving longer duration cases more weight)
+        # weights = df["active_cases"]
+        # weights_bd = (weights + weights.groupby(level="name").shift(1)) / 2
+        # weights_bd = weights_bd[gamma_filter]
+        # weights_bd = weights_bd / weights_bd.mean()
+        # gammas_bd_filtered = gammas_bd_filtered * weights_bd * n_samples
+
+        g_chn, g_kor = (
+            gammas_bd_filtered[
+                gammas_bd_filtered.index.get_level_values("name").map(lambda x: "CHN" in x)
+            ].median(),
+            gammas_bd_filtered[
+                gammas_bd_filtered.index.get_level_values("name").map(lambda x: "KOR" in x)
+            ].median(),
+        )
+
+        g_pooled = gammas_bd_filtered.median()
+        out[f"removal_delay_{l}"] = [g_chn, g_kor, g_pooled]
+
+    out.to_csv(cutil.MODELS / "gamma_est.csv", index=True)
 
 
 if __name__ == "__main__":
