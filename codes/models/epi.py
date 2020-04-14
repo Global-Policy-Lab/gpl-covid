@@ -40,12 +40,11 @@ def adjust_timescales_from_daily(ds):
     tstep = ds.t[1] - ds.t[0]
     for k, v in ds.variables.items():
         # only adjust variables, not coordinates
-        if len(k.split("_")) > 1 and k.split("_")[0] in [
-            "lambda",
-            "beta",
-            "gamma",
-            "sigma",
-        ]:
+        if (
+            len(k.split("_")) > 1
+            and k.split("_")[0] in ["lambda", "beta", "gamma", "sigma",]
+            and k not in ds.coords.keys()
+        ):
             out[k] = out[k] * tstep
     return out
 
@@ -122,50 +121,50 @@ def get_stochastic_params(
     sigma_noise_on=False,
 ):
 
-    if "sample" not in estimates_ds:
-        estimates_ds = estimates_ds.expand_dims("sample")
+    out = estimates_ds.copy()
+    if "sample" not in out.dims:
+        out = out.expand_dims("sample")
 
-    sampXtime = (len(estimates_ds.sample), len(estimates_ds.t))
+    for param in ["gamma", "sigma"]:
+        if f"{param}_deterministic" not in out:
+            out[f"{param}_deterministic"] = out[param].copy()
+
+    sampXtime = (len(out.sample), len(out.t))
     out_vars = ["beta_stoch", "gamma_stoch"]
     if beta_noise_on:
-        estimates_ds["beta_stoch"] = (
+        out["beta_stoch"] = (
             ("sample", "t"),
             np.random.normal(0, beta_noise_sd, sampXtime),
         )
-        estimates_ds["beta_stoch"] = (
-            estimates_ds.beta_deterministic + estimates_ds["beta_stoch"]
-        )
+        out["beta_stoch"] = out.beta_deterministic + out["beta_stoch"]
     else:
-        estimates_ds["beta_stoch"] = estimates_ds.beta_deterministic.copy()
-
+        out["beta_stoch"] = out.beta_deterministic.copy()
     if gamma_noise_on:
-        estimates_ds["gamma_stoch"] = (
+        out["gamma_stoch"] = (
             ("sample", "t"),
             np.random.normal(0, gamma_noise_sd, sampXtime),
         )
-        estimates_ds["gamma_stoch"] = estimates_ds.gamma + estimates_ds["gamma_stoch"]
+        out["gamma_stoch"] = out.gamma_deterministic + out["gamma_stoch"]
     else:
-        estimates_ds["gamma_stoch"] = estimates_ds.gamma.copy()
+        out["gamma_stoch"] = out.gamma_deterministic.copy()
 
-    if "sigma" in estimates_ds.dims:
+    if "sigma" in out.dims:
         out_vars.append("sigma_stoch")
         if sigma_noise_on:
-            estimates_ds["sigma_stoch"] = (
+            out["sigma_stoch"] = (
                 ("sample", "t"),
                 np.random.normal(0, sigma_noise_sd, sampXtime),
             )
-            estimates_ds["sigma_stoch"] = (
-                estimates_ds.sigma + estimates_ds["sigma_stoch"]
-            )
+            out["sigma_stoch"] = out.sigma_deterministic + out["sigma_stoch"]
         else:
-            estimates_ds["sigma_stoch"] = estimates_ds.sigma.copy()
+            out["sigma_stoch"] = out.sigma_deterministic.copy()
 
     # make sure none are non-positive
-    estimates_ds = estimates_ds.drop(out_vars).merge(
-        estimates_ds[out_vars].where(estimates_ds[out_vars] > 0, 0)
+    out = out.drop(out_vars).merge(
+        out[out_vars].where((out[out_vars] > 0) | (out[out_vars].isnull()), 0)
     )
 
-    return estimates_ds.squeeze()
+    return out.squeeze()
 
 
 def run_SIR(I0, R0, ds):
@@ -195,7 +194,7 @@ def run_SIR(I0, R0, ds):
         R[i] = 1 - S[i] - I[i]
 
     out = ds.copy()
-    for ox, o in enumerate([S, E, I, R]):
+    for ox, o in enumerate([S, I, R]):
         name = "SIR"[ox]
         out[name] = (new_dims, o)
 
