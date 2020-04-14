@@ -230,16 +230,10 @@ To generate the four figures in the paper, run the following scripts. Figure 1 o
 
 #### Figure 2
 
-`Rscript codes/plotting/fig2.R`: Generates 9 outputs that constitute Figure 2, in `results/figures/fig2`:
-- *A1*: `Fig2_nopolicy.pdf`: Main figure for Panel A
-- *A2*: `Fig2_effectsize_nopolicy.pdf`: Effect size values for Panel A
-- *A3*: `Fig2_growth_nopolicy.pdf`: Effect size as percent growth values for Panel A
-- *B1*: `Fig2_comb.pdf`: Main figure for Panel B 
-- *B2*: `Fig2_effectsize_comb.pdf`: Effect size values for Panel B
-- *B3*: `Fig2_growth_comb.pdf`: Effect size as percent growth values for Panel B
-- *C1*: `Fig2_ind.pdf`: Main figure for Panel C 
-- *C2*: `Fig2_effectsize_ind.pdf`: Effect size values for Panel C
-- *C3*: `Fig2_growth_ind.pdf`: Effect size as percent growth values for Panel C
+`Rscript codes/plotting/fig2.R`: Generates 3 outputs that constitute Figure 2, in `results/figures/fig2`:
+- *Panel A*: `Fig2A_nopolicy.pdf`
+- *Panel B*: `Fig2B_comb.pdf`
+- *Panel C*: `Fig2C_ind.pdf`
 
 #### Figure 3
 

@@ -11,5 +11,5 @@ out <- compute_bootstrap_replications(full_data = china_data,
                                         pull(underreporting_estimate))
 
 
-write_csv(out, path = "data/post_processing/china_bootstrap_projection.csv")
-write_csv(main_projection, path = "data/post_processing/china_model_projection.csv")
+write_csv(out, path = "models/projections/china_bootstrap_projection.csv")
+write_csv(main_projection, path = "models/projections/china_model_projection.csv")

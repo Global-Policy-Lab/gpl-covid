@@ -12,6 +12,7 @@ usa_data <- read_csv("models/reg_data/USA_reg_data.csv",
                      adm1_name = col_character(),
                      date = col_date(format = ""),
                      adm1_id = col_character(),
+                     adm1_abb = col_character(),
                      t = col_character()
                    )) %>% 
   arrange(adm1_name, date) %>%
