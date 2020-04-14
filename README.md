@@ -220,6 +220,7 @@ Once the regression coefficients have been estimated in the above models, run th
 
 1. `python codes/models/get_gamma.py`: Estimates removal rate to use in projections from data that contains both cumulative cases and active cases.
 2. `Rscript codes/models/run_all_CB_simulations.R`: Generates the csv inputs for Figure 4.
+3. `Rscript codes/models/output_underlying_projection_output.R`: outputs the raw projection output if you wish to examine the underlying output.
 
 ### Figure creation
 To generate the four figures in the paper, run the following scripts. Figure 1 only requires the data collection steps to be complete. Figures 2 and 3 require the regression step to be complete, and Figure 4 requires the projection step to be complete.

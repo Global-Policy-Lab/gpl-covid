@@ -73,7 +73,7 @@ out_scale_down_to_zero <- final_df %>%
   theme_classic() + 
   theme(axis.text = element_text(color = "black")) + 
   xlab(expression(gamma)) + 
-  ggtitle("Cases delayed (log scale down to 0)") 
+  ggtitle("Cases delayed (log scale)") 
 
 xpos_1_1 <- (gamma_estimates %>% 
            filter(recovery_delay == 0) %>% 

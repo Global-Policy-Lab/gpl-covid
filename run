@@ -107,6 +107,8 @@ printf "***Projecting infections***\n"
 python codes/models/get_gamma.py
 Rscript codes/models/run_all_CB_simulations.R $NUMPROJ
 
+# This one outputs all the raw projection output for diagnostic purposes.
+Rscript codes/models/output_underlying_projection_output.R
 
 ## Figures and tables
 

@@ -59,7 +59,8 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
 compute_predicted_cum_cases <- function(full_data, model, policy_variables_used, other_control_variables, 
                                         lhs, filter_spec = TRUE, gamma = 1/3,
                                         time_steps_per_day = 6, mmat_actual = NULL,
-                                        proportion_confirmed = 1){
+                                        proportion_confirmed = 1,
+                                        return_no_policy_projection_output = FALSE){
   if(!"population" %in% names(full_data)){
     stop("\"population\" variable required. If unavailable, please add a column using full_data <- full_data %>% mutate(population = 1e+8)")
   }
@@ -215,17 +216,39 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       all()
   })
   
+  if(return_no_policy_projection_output){
+    out <- 
+      no_policy_counterfactual_data_storage %>% 
+      group_by(tmp_id) %>% 
+      summarise(projection_output = {
+        list(calculate_projection_for_one_unit(
+          cum_confirmed_cases_first = cum_confirmed_cases[1],
+          prediction_logdiff = prediction_logdiff,
+          time_steps_per_day = time_steps_per_day,
+          daily_gamma = gamma,
+          unit_population = population[1],
+          proportion_confirmed = proportion_confirmed,
+          all = TRUE
+        ))
+      }) %>% 
+      unnest(projection_output)
+    return(out)
+  }
+  
   no_policy_counterfactual_data_storage <- 
     no_policy_counterfactual_data_storage %>% 
     group_by(tmp_id) %>% 
-    mutate(predicted_cum_confirmed_cases = calculate_projection_for_one_unit(
-      cum_confirmed_cases_first = cum_confirmed_cases[1],
-      prediction_logdiff = prediction_logdiff,
-      time_steps_per_day = time_steps_per_day,
-      daily_gamma = gamma,
-      unit_population = population[1],
-      proportion_confirmed = proportion_confirmed
-    ))
+    mutate(predicted_cum_confirmed_cases = {
+      calculate_projection_for_one_unit(
+        cum_confirmed_cases_first = cum_confirmed_cases[1],
+        prediction_logdiff = prediction_logdiff,
+        time_steps_per_day = time_steps_per_day,
+        daily_gamma = gamma,
+        unit_population = population[1],
+        proportion_confirmed = proportion_confirmed
+      )
+    })
+  
   
   true_predict <- predict.felm(model, newdata = mmat_actual_for_prediction)
   true_predict_df <- true_data_subset_for_prediction %>% 
@@ -236,14 +259,16 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     ungroup() %>% 
     left_join(true_predict_df, by = c("tmp_id", "date")) %>% 
     group_by(tmp_id) %>% 
-    mutate(predicted_cum_confirmed_cases = calculate_projection_for_one_unit(
-      cum_confirmed_cases_first = cum_confirmed_cases[1],
-      prediction_logdiff = prediction_logdiff,
-      time_steps_per_day = time_steps_per_day,
-      daily_gamma = gamma,
-      unit_population = population[1],
-      proportion_confirmed = proportion_confirmed
-    ))
+    mutate(predicted_cum_confirmed_cases = {
+      calculate_projection_for_one_unit(
+        cum_confirmed_cases_first = cum_confirmed_cases[1],
+        prediction_logdiff = prediction_logdiff,
+        time_steps_per_day = time_steps_per_day,
+        daily_gamma = gamma,
+        unit_population = population[1],
+        proportion_confirmed = proportion_confirmed
+      )
+    })
   
   out <- true_data_storage %>% 
     filter({{filter_spec}}) %>% 
@@ -317,7 +342,8 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
   if (all){
     out <- tibble(number_of_susceptible_individuals = number_of_susceptible_individuals, 
                   number_of_infectious_individuals = number_of_infectious_individuals, 
-                  number_of_recovered_individuals = number_of_recovered_individuals)
+                  number_of_recovered_individuals = number_of_recovered_individuals,
+                  share_of_susceptible_individuals = number_of_susceptible_individuals / unit_population)
   } else {
     out <- cum_confirmed_cases_simulated[seq(1, length(cum_confirmed_cases_simulated), by = time_steps_per_day)]
   }
