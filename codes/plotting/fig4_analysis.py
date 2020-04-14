@@ -50,7 +50,7 @@ def main():
     cases_dict = cutil.load_all_cases_deaths(cases_drop=False)
 
     # 2. read in the central model estimates and the resampled trials
-    data_dir = cutil.DATA / "post_processing"
+    data_dir = cutil.MODELS / "projections"
     fn_template = os.path.join(data_dir, "{0}_bootstrap_projection.csv")
 
     countries = ["china", "korea", "italy", "iran", "france", "usa"]
