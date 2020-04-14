@@ -10,6 +10,7 @@ DATA_RAW = DATA / "raw"
 DATA_PROCESSED = DATA / "processed"
 DATA_INTERIM = DATA / "interim"
 MODELS = HOME / "models"
+RESULTS = HOME / "results"
 REG_DATA = MODELS / "reg_data"
 CODES = HOME / "codes"
 
