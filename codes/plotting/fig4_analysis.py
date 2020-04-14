@@ -50,7 +50,7 @@ def main():
     cases_dict = cutil.load_all_cases_deaths(cases_drop=False)
 
     # 2. read in the central model estimates and the resampled trials
-    data_dir = cutil.DATA / "post_processing"
+    data_dir = cutil.MODELS / "projections"
     fn_template = os.path.join(data_dir, "{0}_bootstrap_projection.csv")
 
     countries = ["china", "korea", "italy", "iran", "france", "usa"]
@@ -126,37 +126,38 @@ def main():
         )
 
     # total across countries
-    print()
-    est_diffs_with_reported_cases = modeled_no_policy - cases_confirmed
+    # don't actually print this since the predictions end on different days
+    # print()
+    # est_diffs_with_reported_cases = modeled_no_policy - cases_confirmed
 
-    print("the estimated total reduction is {0:,}".format(int(est_diffs.sum())))
-    print(
-        "using actual case (black dots) baseline this number would be {0:,}".format(
-            int(est_diffs_with_reported_cases.sum())
-        )
-    )
+    # print("the estimated total reduction is {0:,}".format(int(est_diffs.sum())))
 
-    print()
-    est_diffs = modeled_no_policy - modeled_with_policy
-    print("checking on predictions vs actual reported cases:")
-    for c, country in enumerate(countries):
-        print("in {0},".format(country), end=" ")
-        print("at day {0},".format(latest_dates[c]), end=" ")
-        print(
-            "we predict {0:,} cumulative cases; in total there were {1:,}".format(
-                int(modeled_with_policy[c, 0]), cases_confirmed[c, 0]
-            )
-        )
-    print()
-    print("estimated cumulative cases had there been no policies:")
-    for c, country in enumerate(countries):
-        print("in {0},".format(country), end=" ")
-        print("at day {0},".format(latest_dates[c]), end=" ")
-        print(
-            "we predict there would have been {0:,} had no policies been enacted".format(
-                int(modeled_no_policy[c, 0])
-            )
-        )
+    # print(
+    #     "using actual case (black dots) baseline this number would be {0:,}".format(
+    #         int(est_diffs_with_reported_cases.sum()))
+    # )
+
+    # print()
+    # est_diffs = modeled_no_policy - modeled_with_policy
+    # print("checking on predictions vs actual reported cases:")
+    # for c, country in enumerate(countries):
+    #     print("in {0},".format(country), end=" ")
+    #     print("at day {0},".format(latest_dates[c]), end=" ")
+    #     print(
+    #         "we predict {0:,} cumulative cases; in total there were {1:,}".format(
+    #             int(modeled_with_policy[c, 0]), cases_confirmed[c, 0]
+    #         )
+    #     )
+    # print()
+    # print("estimated cumulative cases had there been no policies:")
+    # for c, country in enumerate(countries):
+    #     print("in {0},".format(country), end=" ")
+    #     print("at day {0},".format(latest_dates[c]), end=" ")
+    #     print(
+    #         "we predict there would have been {0:,} had no policies been enacted".format(
+    #             int(modeled_no_policy[c, 0])
+    #         )
+    #    )
 
     # 4. use resampled predictions to get intervals
     df_no_pol_pred = aggregate_preds_by_country(
