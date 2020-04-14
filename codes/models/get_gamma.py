@@ -72,16 +72,17 @@ def main():
         # this gives us the number of confirmed recoveries at t+l,
         # which is equivalent to the number of people we assume are leaving
         # the infectious group at time t
-        this_recoveries = new_recovered.reindex(
+        recoveries_lag = bds.cum_recoveries.reindex(
             pd.MultiIndex.from_arrays(
                 [
-                    new_recovered.index.get_level_values("name"),
-                    new_recovered.index.get_level_values("date").shift(l, "D"),
+                    bds.cum_recoveries.index.get_level_values("name"),
+                    bds.cum_recoveries.index.get_level_values("date").shift(l, "D"),
                 ]
             )
         ).values
-        this_recoveries = pd.Series(this_recoveries, index=new_recovered.index)
-
+        recoveries_lag = pd.Series(recoveries_lag, index=bds.cum_recoveries.index)
+        numerator = bds.cum_deaths + recoveries_lag
+        
         # remove any confirmed recoveries that occur between now and t+l from the
         # denominator (active cases) b/c we assume they have already recovered
         fut_recovered = df.cum_recoveries.reindex(
@@ -96,7 +97,7 @@ def main():
         cases_already_removed = fut_recovered - df.cum_recoveries
         this_cases = cases_I_midpoint - (cases_already_removed)
 
-        gammas_bd = this_recoveries / this_cases
+        gammas_bd = numerator / this_cases
 
         # filter out 0 gammas (assume not reliable data e.g. from small case numbers)
         gamma_filter = gammas_bd > 0
