@@ -276,4 +276,6 @@ suppressWarnings({
   
   cowplot::save_plot(plot = final, filename = "results/figures/fig4/fig4_total_sensitivity_to_gamma.pdf",
                      scale = 2, base_asp = 1.2)
+  cowplot::save_plot(plot = final, filename = "results/figures/fig4/fig4_total_sensitivity_to_gamma.jpg",
+                     scale = 2, base_asp = 1.2, dpi = 600)
 })
