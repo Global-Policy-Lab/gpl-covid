@@ -83,4 +83,4 @@ country_counts_df["total"] = country_counts_df.sum(axis=1)
 country_counts_df = country_counts_df.append(
     country_counts_df.sum(axis=0).rename("total")
 ).astype(int)
-country_counts_df.to_csv(path_out_csv, index=True)
+country_counts_df.to_csv(path_out_csv, index=False)
