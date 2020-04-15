@@ -6,3 +6,4 @@ cfr_data <- cfr_data %>%
 
 dir.create("data/interim/multi_country/", showWarnings = FALSE)
 write_rds(cfr_data, "data/interim/multi_country/under_reporting.rds")
+write_csv(cfr_data, "data/interim/multi_country/under_reporting.csv")
