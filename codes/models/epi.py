@@ -111,6 +111,10 @@ def get_beta_SEIR(lambdas, gammas, sigmas):
     return (lambdas + gammas) * (lambdas + sigmas) / sigmas
 
 
+def get_beta_SIR(lambdas, gammas, *args):
+    return lambdas + gammas
+
+
 def get_stochastic_params(
     estimates_ds,
     beta_noise_sd,
@@ -164,7 +168,7 @@ def get_stochastic_params(
         out[out_vars].where((out[out_vars] > 0) | (out[out_vars].isnull()), 0)
     )
 
-    return out.squeeze()
+    return out
 
 
 def run_SIR(I0, R0, ds):
@@ -240,10 +244,7 @@ def run_SEIR(E0, I0, R0, ds):
     return out
 
 
-def simulate_regress_SEIR(
-    E0,
-    I0,
-    R0,
+def simulate_and_regress(
     pop,
     no_policy_growth_rate,
     p_effects,
@@ -255,15 +256,19 @@ def simulate_regress_SEIR(
     n_samples,
     LHS_vars,
     reg_lag_days,
-    sigma_to_test,
     gamma_to_test,
     beta_noise_sd,
     beta_noise_on,
     gamma_noise_sd,
     gamma_noise_on,
-    sigma_noise_sd,
-    sigma_noise_on,
     min_cases,
+    sigma_noise_sd=0,
+    sigma_noise_on=False,
+    kind="SEIR",
+    E0=1,
+    I0=0,
+    R0=0,
+    sigma_to_test=[np.nan],
     save_dir=None,
 ):
 
@@ -275,17 +280,31 @@ def simulate_regress_SEIR(
         min_cases=min_cases,
         beta_noise_on=int(beta_noise_on),
         gamma_noise_on=int(gamma_noise_on),
-        sigma_noise_on=int(sigma_noise_on),
         beta_noise_sd=beta_noise_sd,
         gamma_noise_sd=gamma_noise_sd,
-        sigma_noise_sd=sigma_noise_sd,
         no_policy_growth_rate=no_policy_growth_rate,
         tsteps_per_day=tsteps_per_day,
+        p_effects=p_effects,
     )
 
     E0 = E0 / pop
     I0 = I0 / pop
     R0 = R0 / pop
+
+    ## setup
+    if kind == "SEIR":
+        attrs["sigma_noise_on"] = int(sigma_noise_on)
+        attrs["sigma_noise_sd"] = sigma_noise_sd
+        sim_engine = run_SEIR
+        get_beta = get_beta_SEIR
+        ics = [E0, I0, R0]
+    elif kind == "SIR":
+        sigma_to_test = [np.nan]
+        sigma_noise_on = False
+        sim_engine = run_SIR
+        get_beta = get_beta_SIR
+        ics = [I0, R0]
+        LHS_vars = [l for l in LHS_vars if "E" not in l]
 
     # store policy info
     policies = xr.Dataset(
@@ -326,7 +345,7 @@ def simulate_regress_SEIR(
     estimates_ds["lambda_deterministic"] = (
         np.ones_like(t) * no_policy_growth_rate + policy_effect_timeseries
     )
-    estimates_ds["beta_deterministic"] = get_beta_SEIR(
+    estimates_ds["beta_deterministic"] = get_beta(
         estimates_ds.lambda_deterministic, estimates_ds.gamma, estimates_ds.sigma
     )
 
@@ -345,12 +364,13 @@ def simulate_regress_SEIR(
     estimates_ds = adjust_timescales_from_daily(estimates_ds)
 
     # run simulation
-    estimates_ds = run_SEIR(E0, I0, R0, estimates_ds)
+    estimates_ds = sim_engine(*ics, estimates_ds)
 
     # add on other potentially observable quantities
-    estimates_ds["EI"] = estimates_ds["E"] + estimates_ds["I"]
     estimates_ds["IR"] = estimates_ds["R"] + estimates_ds["I"]
-    estimates_ds["EIR"] = estimates_ds["EI"] + estimates_ds["R"]
+    if kind == "SEIR":
+        estimates_ds["EI"] = estimates_ds["E"] + estimates_ds["I"]
+        estimates_ds["EIR"] = estimates_ds["EI"] + estimates_ds["R"]
 
     # get minimum S for each simulation
     # at end and when p3 turns on
@@ -365,7 +385,6 @@ def simulate_regress_SEIR(
     daily_ds = estimates_ds.sel(
         t=slice(0, None, int(np.round(1 / (estimates_ds.t[1] - estimates_ds.t[0]))))
     )
-
     # prep regression LHS vars (logdiff)
     new = (
         np.log(daily_ds[daily_ds.LHS.values])
@@ -374,6 +393,8 @@ def simulate_regress_SEIR(
         .to_array(dim="LHS")
     )
     daily_ds["logdiff"] = new
+    if "sigma" not in daily_ds.logdiff.dims:
+        daily_ds["logdiff"] = daily_ds.logdiff.expand_dims("sigma")
 
     ## run regressions
     estimates = np.empty(
@@ -399,6 +420,9 @@ def simulate_regress_SEIR(
 
     # Apply min cum_cases threshold used in regressions
     valid_reg = daily_ds.I >= min_cases / pop
+    if "sigma" not in valid_reg.dims:
+        valid_reg = valid_reg.expand_dims("sigma")
+        valid_reg["sigma"] = [np.nan]
 
     # only run regression if we have at least one "no-policy" day
     no_pol_on_regday0 = (RHS_old > 0).max(dim="policy").argmax(
@@ -448,7 +472,18 @@ def simulate_regress_SEIR(
     daily_ds.attrs = attrs
 
     if save_dir is not None:
+        save_dir.mkdir(exist_ok=True, parents=True)
         fname = f"pop_{int(pop)}_lag_{'-'.join([str(s) for s in reg_lag_days])}.nc"
         daily_ds.to_netcdf(save_dir / fname)
 
     return daily_ds
+
+
+def load_reg_results(res_dir):
+    reg_ncs = [f for f in res_dir.iterdir() if f.name[0] != "."]
+    pops = [int(f.name.split("_")[1]) for f in reg_ncs]
+    reg_res = xr.concat([xr.open_dataset(f) for f in reg_ncs], dim="pop")
+    reg_res["pop"] = pops
+    reg_res["t"] = reg_res.t.astype(int)
+    reg_res = reg_res.sortby("pop")
+    return reg_res
