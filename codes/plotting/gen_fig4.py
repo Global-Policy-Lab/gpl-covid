@@ -257,8 +257,9 @@ def plot_bracket(ax, model_df):
     ax.arrow(end_cap[0], end_cap[1], end[0] - end_cap[0], 0, lw=2, clip_on=False)
 
     # rounds to the nearest 1,000
-    num_rounded = int(round(end[1] - start[1], -3))
-    annot = "{0:,d} fewer\nestimated cases".format(num_rounded)
+    #num_rounded = int(round(end[1] - start[1], -3))
+    num_rounded = int(float("{0:.2}".format(end[1] - start[1])))
+    annot = "~{0:,d} fewer\nestimated cases".format(num_rounded)
     # put text
     ax.annotate(
         annot,
