@@ -17,11 +17,11 @@ underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
 gamma = readr::read_csv("models/gamma_est.csv",
                         col_types = 
                           cols(
-                            adm0_name = col_character(),
-                            gamma_est = col_double()
+                            recovery_delay = col_double(),
+                            gamma = col_double()
                           )) %>% 
-  filter(adm0_name %in% c("CHN", "KOR")) %>% 
-  pull(gamma_est) %>% 
+  filter(adm0_name %in% c("CHN", "KOR"), recovery_delay == 0) %>% 
+  pull(gamma) %>% 
   mean()
 
 dir.create("models/projections", recursive=TRUE, showWarnings=FALSE)
