@@ -34,11 +34,13 @@ usa_county_adm_data <- usa_county_adm_data %>%
   filter(!is.na(fips))
 suppressWarnings(usa_data <- get_usafacts_data())
 
-# trim off trailing NAs
 usa_data <- usa_data %>% 
   arrange(adm1_name, adm2_name, date) %>% 
   group_by(adm1_name, adm2_name) %>% 
-  filter(rev(cumsum(rev(!is.na(cum_confirmed_cases)))) > 0)
+  # trim off trailing NAs
+  filter(rev(cumsum(rev(!is.na(cum_confirmed_cases)))) > 0) %>%
+  # Remove today as it can get updated slowly
+  filter(date < max(date))
 
 usa_county_data <- usa_data %>% 
   filter(!(str_detect(adm2_name, "Statewide Unallocated"))) %>% 
@@ -54,6 +56,9 @@ usa_state_data <- usa_data %>%
                               0 , cum_deaths)) %>%
   mutate(cum_deaths = if_else(adm1_name == "WY" & adm2_name == "Weston County" & is.na(cum_deaths) & cum_confirmed_cases == 0,
                               0 , cum_deaths)) %>%
+  # This is problematic as there are missing deaths here with positive cases in this category.
+  mutate(cum_deaths = if_else(adm1_name == "NY" & adm2_name == "New York City Unallocated/Probable" & is.na(cum_deaths),
+                              0 , cum_deaths))%>% 
   group_by(state_fips, adm1_name, date) %>%
   select(-county_fips, -adm2_name) %>% 
   summarise_all(sum) %>% 
@@ -63,9 +68,7 @@ usa_county_data <- usa_county_data %>%
   mutate(cum_recoveries = NA_real_) %>% 
   unite(tmp_id, county_fips, state_fips, adm1_name, adm2_name, remove = FALSE) 
 
-# Remove today as it can get updated slowly
 usa_county_data <- usa_county_data %>% 
-  filter(date < max(date)) %>% 
   filter(!str_detect(tmp_id, "Unallocated"))
 usa_state_data <- usa_state_data %>% 
   filter(date < max(date))
