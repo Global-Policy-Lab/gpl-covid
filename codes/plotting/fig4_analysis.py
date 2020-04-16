@@ -117,7 +117,6 @@ def main():
 
     est_diffs_modeled = modeled_no_policy - modeled_with_policy
 
-
     # 4. use resampled predictions to get intervals
     df_no_pol_pred = aggregate_preds_by_country(
         countries, resampled_dfs_by_country, pred_no_pol_key, latest_dates
@@ -158,15 +157,16 @@ def main():
 
     print()
     print("we estimate that there would be:", end="\n")
-    
+
     c_all = len(countries)
-    print("{0:,} (95% resample range [{1:,} to {2:,}]) more cases ".format(
-                int(est_diffs_modeled[:, 0].sum()),
-                int(np.floor(small_ends[c_all])),
-                int(np.ceil(big_ends[c_all]))
-          ),
-            end=""
-       )
+    print(
+        "{0:,} (95% resample range [{1:,} to {2:,}]) more cases ".format(
+            int(est_diffs_modeled[:, 0].sum()),
+            int(np.floor(small_ends[c_all])),
+            int(np.ceil(big_ends[c_all])),
+        ),
+        end="",
+    )
     print("across countries (accumulated over the specific dates for each countries)")
 
 
