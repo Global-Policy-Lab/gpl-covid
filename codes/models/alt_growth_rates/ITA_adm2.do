@@ -189,15 +189,6 @@ post results ("ITA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 
 local comb_policy = round(r(estimate), 0.001)
 local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
 
-// compute ATE
-preserve
-	keep if e(sample) == 1
-	collapse  D_l_cum_confirmed_cases  p_* 
-	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_3*_b[p_3] + p_4*_b[p_4] + p_5*_b[p_5] + p_6*_b[p_6], ci(LB UB) se(sd) p(pval)
-	g adm0 = "ITA"
-	outsheet * using "models/ITA_ATE.csv", comma replace 
-restore
-
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix lb_y_actual so there are no negative growth rates in error bars
 foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_counter{
@@ -420,75 +411,111 @@ restore
 
 //-------------------------------Fixed lag
 
+tempfile base_data
+save `base_data'
+
+
+reghdfe D_l_cum_confirmed_cases p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
+local r2 = e(r2)
+
+ 
 preserve
-	reghdfe D_l_cum_confirmed_cases p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
-	coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
-	 
-	foreach lags of num 1/5 { 
-		quietly {
-		foreach var in p_1 p_2 p_3 p_4 p_5 p_6 {
-			g `var'_copy = `var'
-			g `var'_fixelag = L`lags'.`var'
-			replace `var'_fixelag = 0 if `var'_fixelag  == .
-			replace `var' = `var'_fixelag
-			
-		}
-		drop *_fixelag 
-
-		reghdfe D_l_cum_confirmed_cases p_1 p_2 p_3 p_4 p_5 p_6 , absorb(i.adm2_id i.dow, savefe) cluster(t) resid
-		coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
-		local r2 = e(r2)
-		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
+	keep if e(sample) == 1
+	collapse  D_l_cum_confirmed_cases  p_* 
+	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_3*_b[p_3] + p_4*_b[p_4] + p_5*_b[p_5] + p_6*_b[p_6], ci(LB UB) se(sd) p(pval)
+	keep ATE LB UB sd pval 
+	g lag = 0
+	g r2 = `r2'
+	tempfile f0
+	save `f0'
+restore	 
+ 
+ 
+ 
+foreach lags of num 1 2 3 4 5 10 15 { 
+	quietly {
+	foreach var in p_1 p_2 p_3 p_4 p_5 p_6 {
+		g `var'_copy = `var'
+		g `var'_fixelag = L`lags'.`var'
+		replace `var'_fixelag = 0 if `var'_fixelag  == .
+		replace `var' = `var'_fixelag
 		
-		foreach var in p_1 p_2 p_3 p_4 p_5 p_6 {
-			replace `var' = `var'_copy
-			drop `var'_copy
-		}
-		}
-		di `r2'
 	}
+	drop *_fixelag 
 
+	reghdfe D_l_cum_confirmed_cases p_1 p_2 p_3 p_4 p_5 p_6 , absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+	coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+	local r2 = e(r2)
 	
-	set scheme s1color
-	tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
-	|| scatter  L0_at L0_b, mc(black) ///
-	|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
-	|| scatter  L1_at L1_b, mc(black*.9) ///
-	|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
-	|| scatter  L2_at L2_b, mc(black*.7) ///
-	|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
-	|| scatter  L3_at L3_b, mc(black*.5) ///
-	|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
-	|| scatter  L4_at L4_b, mc(black*.3) ///
-	|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
-	|| scatter  L5_at L5_b, mc(black*.1) ///	
-	ylabel(1 "Social distance" ///
-	2 "School closure" ///
-	3 "Travel ban" ///
-	4 "Quarantine positive cases" ///
-	5 "Business closure" ///
-	6 "Home isolation", angle(0)) ///
-	ytitle("") title("Italy comparing Fixed Lags models") ///
-	legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
-	lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
-	graph export results/figures/appendix/fixed_lag/ITA.pdf, replace
-	graph export results/figures/appendix/fixed_lag/ITA.png, replace	
-	drop if L0_b == .
-	keep *_at *_ll1 *_ul1 *_b
-	egen policy = seq()
-	reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
-	rename *_ *
-	reshape long L, i(temp policy) j(val)
-	tostring policy, replace
-	replace policy = "Social distance" if policy == "1"
-	replace policy = "School closure" if policy == "2"
-	replace policy = "Travel ban" if policy == "3"
-	replace policy = "Quarantine positive cases" if policy == "4"
-	replace policy = "Business closure" if policy == "5"
-	replace policy = "Home isolation" if policy == "6"	
-	rename val lag
-	reshape wide L, i(lag policy) j(temp) string
-	sort Lat
-	rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-	outsheet * using "results/source_data/extended_fixed_lag_ITA.csv", replace
-restore
+	preserve
+		keep if e(sample) == 1
+		collapse  D_l_cum_confirmed_cases  p_* 
+		predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] + p_3*_b[p_3] + p_4*_b[p_4] + p_5*_b[p_5] + p_6*_b[p_6], ci(LB UB) se(sd) p(pval)
+		keep ATE LB UB sd pval 
+		g lag = `lags'
+		g r2 = `r2'
+		tempfile f`lags'
+		save `f`lags''
+	restore	 	
+	
+	replace L`lags'_at = L`lags'_at - 0.1 *`lags'
+	foreach var in p_1 p_2 p_3 p_4 p_5 p_6 {
+		replace `var' = `var'_copy
+		drop `var'_copy
+	}
+	}
+}
+
+
+set scheme s1color
+tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
+|| scatter  L0_at L0_b, mc(black) ///
+|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
+|| scatter  L1_at L1_b, mc(black*.9) ///
+|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
+|| scatter  L2_at L2_b, mc(black*.7) ///
+|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
+|| scatter  L3_at L3_b, mc(black*.5) ///
+|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
+|| scatter  L4_at L4_b, mc(black*.3) ///
+|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
+|| scatter  L5_at L5_b, mc(black*.1) ///	
+ylabel(1 "Social distance" ///
+2 "School closure" ///
+3 "Travel ban" ///
+4 "Quarantine positive cases" ///
+5 "Business closure" ///
+6 "Home isolation", angle(0)) ///
+ytitle("") title("Italy comparing Fixed Lags models") ///
+legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
+lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
+graph export results/figures/appendix/fixed_lag/ITA.pdf, replace
+graph export results/figures/appendix/fixed_lag/ITA.png, replace	
+drop if L0_b == .
+keep *_at *_ll1 *_ul1 *_b
+egen policy = seq()
+reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
+rename *_ *
+reshape long L, i(temp policy) j(val)
+tostring policy, replace
+replace policy = "Social distance" if policy == "1"
+replace policy = "School closure" if policy == "2"
+replace policy = "Travel ban" if policy == "3"
+replace policy = "Quarantine positive cases" if policy == "4"
+replace policy = "Business closure" if policy == "5"
+replace policy = "Home isolation" if policy == "6"	
+rename val lag
+reshape wide L, i(lag policy) j(temp) string
+sort Lat
+rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
+outsheet * using "results/source_data/extended_fixed_lag_ITA.csv", replace
+
+
+use `f0', clear
+foreach L of num 1 2 3 4 5 10 15 {
+	append using `f`L''
+}
+g adm0 = "ITA"
+outsheet * using "models/ITA_ATE.csv", comma replace 
+use `base_data', clear
