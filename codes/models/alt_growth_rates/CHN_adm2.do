@@ -235,7 +235,7 @@ outsheet using "models/reg_data/CHN_reg_data.csv", comma replace
 
 // main regression model
 reghdfe D_l_active_cases travel_ban_local_* home_isolation_* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
-
+local r2 = e(r2)
 outreg2 using "results/tables/CHN_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(City FE, "YES", Day-of-Week FE, "NO") title(China, "Dependent variable: Growth rate of active cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1")
@@ -336,8 +336,10 @@ preserve
 	travel_ban_local_L22_to_L28*_b[travel_ban_local_L22_to_L28] + ///
 	home_isolation_L29_to_L70*_b[home_isolation_L29_to_L70] + ///
 	travel_ban_local_L29_to_L70*_b[travel_ban_local_L29_to_L70], ci(LB UB) se(sd) p(pval)
-	g adm0 = "CHN"
-	outsheet * using "models/CHN_ATE.csv", comma replace 
+	keep ATE LB UB sd pval 
+	g r2 = `r2'
+	tempfile ATE
+	save `ATE'
 restore
 
 
@@ -622,3 +624,64 @@ preserve
 	outsheet * using "results/source_data/extended_cross_validation_CHN.csv", replace
 restore
 
+
+// FIXED LAG 
+tempfile base_data
+save `base_data'
+
+g p_1 = home_isolation
+g p_2 = travel_ban_local
+
+reghdfe D_l_active_cases testing_regime_change_* p_1 p_2, absorb(i.adm12_id, savefe) cluster(t) resid
+local r2=e(r2)
+preserve
+	keep if e(sample) == 1
+	collapse  D_l_active_cases  p_* 
+	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] , ci(LB UB) se(sd) p(pval)
+	keep ATE LB UB sd pval 
+	g lag = 0
+	g r2 = `r2'
+	tempfile f0
+	save `f0'
+restore	 
+ 
+foreach lags of num 1 2 3 4 5 10 15{ 
+	quietly {
+	foreach var in p_1 p_2{
+		g `var'_copy = `var'
+		g `var'_fixelag = L`lags'.`var'
+		replace `var'_fixelag = 0 if `var'_fixelag == .
+		replace `var' = `var'_fixelag
+		
+	}
+	drop *_fixelag 
+
+	reghdfe D_l_active_cases p_1 p_2 testing_regime_*, absorb(i.adm12_id, savefe) cluster(t) resid
+	local r2 = e(r2)
+	preserve
+		keep if e(sample) == 1
+		collapse  D_l_active_cases  p_* 
+		predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] , ci(LB UB) se(sd) p(pval)
+		keep ATE LB UB sd pval 
+		g lag = `lags'
+		g r2 = `r2'
+		tempfile f`lags'
+		save `f`lags''
+	restore	 
+ 	
+		
+	foreach var in p_1 p_2{
+		replace `var' = `var'_copy
+		drop `var'_copy
+	}
+	}
+}
+
+use `ATE' , clear
+foreach L of num 0 1 2 3 4 5 10 15 {
+	append using `f`L''
+}
+g adm0 = "CHN"
+outsheet * using "models/CHN_ATE.csv", comma replace 
+
+use `base_data', clear
