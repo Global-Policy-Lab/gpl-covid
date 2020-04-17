@@ -369,17 +369,21 @@ preserve
 	using "results/source_data/ExtendedDataFigure9c_FRA_hosp_data.csv" if miss_ct<9 & e(sample), comma replace
 	drop miss_ct
 
-// 	tw (rspike ub_y_actual_hosp lb_y_actual_hosp t_random, lwidth(vthin) color(blue*.5)) ///
-// 	(rspike ub_counter_hosp lb_counter_hosp t_random2, lwidth(vthin) color(red*.5)) ///
-// 	|| (scatter y_actual_hosp t_random, msize(tiny) color(blue*.5) ) ///
-// 	(scatter y_counter_hosp t_random2, msize(tiny) color(red*.5)) ///
-// 	(connect m_y_actual_hosp t, color(blue) m(square) lpattern(solid)) ///
-// 	(connect m_y_counter_hosp t, color(red) lpattern(dash) m(Oh)) ///
-// 	(sc day_avg_hosp t, color(black)) ///
-// 	if e(sample), ///
-// 	title(France, ring(0)) ytit("Growth rate of" "hospitalizations" "({&Delta}log per day)") ///
-// 	xscale(range(21970(10)22011)) xlabel(21970(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-// 	plotregion(m(b=0))
+	// for legend
+	set scheme s1color
+	tw (rspike ub_y_actual_hosp lb_y_actual_hosp t_random, lwidth(vthin) color(blue*.5)) ///
+	(rspike ub_counter_hosp lb_counter_hosp t_random2, lwidth(vthin) color(red*.5)) ///
+	|| (scatter y_actual_hosp t_random, msize(tiny) color(blue*.5) ) ///
+	(scatter y_counter_hosp t_random2, msize(tiny) color(red*.5)) ///
+	(connect m_y_actual_hosp t, color(blue) m(square) lpattern(solid)) ///
+	(connect m_y_counter_hosp t, color(red) lpattern(dash) m(Oh)) ///
+	(sc day_avg_hosp t, color(black) m(Dh)) ///
+	if e(sample), ///
+	title(France Hospitalizations, ring(0)) ytit("Growth rate of" "hospitalizations" "({&Delta}log per day)") ///
+	legend(order(7) cols(1) lab(7 "Observed change in log hospitalizations national avg") ///
+	region(lcolor(none))) scheme(s1color) xlabel(, format(%tdMon_DD)) ///
+	yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) 
+	graph export results/figures/appendix/legend_edfig9.pdf, replace
 
 restore
 

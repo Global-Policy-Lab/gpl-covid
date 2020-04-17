@@ -399,6 +399,7 @@ using "results/source_data/Figure3_CHN_data.csv" if miss_ct<9 & e(sample), comma
 drop miss_ct
 
 // for legend
+set scheme s1color
 tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
@@ -411,11 +412,12 @@ tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 if e(sample), ///
 tit(China) ytit(Growth rate of active confirmed cases) ///
 legend(order(6 8 5 7 9) cols(1) ///
-lab(6 "No policy (admin unit)") lab(8 "No policy (national avg)") ///
-lab(5 "Actual with policies (admin unit)") lab(7 "Actual with policies (national avg)")  ///
+lab(6 "No policy scenario admin unit") lab(8 "No policy scenario national avg") ///
+lab(5 "Actual policies (predicted) admin unit") lab(7 "Actual policies (predicted) national avg") ///
+lab(7 "Observed change in log cases national avg") ///
 region(lcolor(none))) scheme(s1color) xlabel(, format(%tdMon_DD)) ///
-yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) ///
-saving(results/figures/fig3/raw/legend_fig3.pdf, replace)
+yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) 
+graph export results/figures/fig3/raw/legend_fig3.pdf, replace
 
 
 //-------------------------------EVENT STUDY
@@ -516,6 +518,7 @@ predict day_avg_wh if adm2_name  == "Wuhan" & e(sample) == 1
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
+cap set scheme covid19_fig3 // optional scheme for graphs
 tw (rspike ub_y_actual_wh lb_y_actual_wh t_random, lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter_wh lb_counter_wh t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual_wh t, msize(tiny) color(blue*.5) ) ///
