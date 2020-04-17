@@ -536,11 +536,38 @@ drop miss_ct
 
 
 //-------------------------------Cross-validation
+tempvar counter_CV
 tempfile results_file_crossV
 postfile results str30 adm0 str30 sample str18 policy ite beta se using `results_file_crossV', replace
 
 *Resave main effect
 reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_*, absorb(i.adm12_id, savefe) cluster(t) resid
+
+*weekly combined effect
+lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 		// first week
+post results ("CHN") ("full_sample") ("first week (home+travel)") (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L8_to_L14 + travel_ban_local_L8_to_L14 	// second week
+post results ("CHN") ("full_sample") ("second week (home+travel)") (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L15_to_L21 + travel_ban_local_L15_to_L21 	// third week
+post results ("CHN") ("full_sample") ("third week (home+travel)") (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L22_to_L28 + travel_ban_local_L22_to_L28 	// fourth week
+post results ("CHN") ("full_sample") ("fourth week (home+travel)") (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L29_to_L70 + travel_ban_local_L29_to_L70 	// fifth week and after
+post results ("CHN") ("full_sample") ("fifth week (home+travel)") (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+
+*no-policy growth rate
+predictnl `counter_CV' =  ///
+testing_regime_change_18jan2020 * _b[testing_regime_change_18jan2020] + ///
+testing_regime_change_28jan2020 * _b[testing_regime_change_28jan2020] + ///
+testing_regime_change_06feb2020 * _b[testing_regime_change_06feb2020] + ///
+testing_regime_change_13feb2020 * _b[testing_regime_change_13feb2020] + ///
+testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
+_b[_cons] + __hdfe1__ if e(sample)
+sum `counter_CV'
+post results ("CHN") ("full_sample") ("no_policy rate") (0) (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+drop `counter_CV'
 
 local i = 10
 foreach var in "home_isolation_L0_to_L7" "home_isolation_L8_to_L14" ///
@@ -563,6 +590,31 @@ foreach adm in `state_list' {
 		post results ("CHN") ("`adm'") ("`var'") (`i') (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 		local i = `i' - 1
 	} 
+
+	lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 		// first week
+	post results ("CHN") ("`adm'") ("first week (home+travel)") (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	lincom home_isolation_L8_to_L14 + travel_ban_local_L8_to_L14 	// second week
+	post results ("CHN") ("`adm'") ("second week (home+travel)") (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	lincom home_isolation_L15_to_L21 + travel_ban_local_L15_to_L21 	// third week
+	post results ("CHN") ("`adm'") ("third week (home+travel)") (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	lincom home_isolation_L22_to_L28 + travel_ban_local_L22_to_L28 	// fourth week
+	post results ("CHN") ("`adm'") ("fourth week (home+travel)") (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	lincom home_isolation_L29_to_L70 + travel_ban_local_L29_to_L70 	// fifth week and after
+	post results ("CHN") ("`adm'") ("fifth week (home+travel)")  (0) (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	
+	
+	predictnl `counter_CV' =  ///
+	testing_regime_change_18jan2020 * _b[testing_regime_change_18jan2020] + ///
+	testing_regime_change_28jan2020 * _b[testing_regime_change_28jan2020] + ///
+	testing_regime_change_06feb2020 * _b[testing_regime_change_06feb2020] + ///
+	testing_regime_change_13feb2020 * _b[testing_regime_change_13feb2020] + ///
+	testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+	testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
+	_b[_cons] + __hdfe1__ if e(sample)
+	sum `counter_CV'
+	post results ("CHN") ("`adm'") ("no_policy rate") (0) (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+	drop `counter_CV'	
+	
 }
 postclose results
 

@@ -368,6 +368,8 @@ drop miss_ct
 
 
 //-------------------------------Cross-validation
+
+tempvar counter_CV
 tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
@@ -380,6 +382,11 @@ foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6"{
 lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
 post results ("ITA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
+// predicting counterfactual growth for each obs
+predictnl `counter_CV' = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+sum `counter_CV'
+post results ("ITA") ("full_sample") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+drop `counter_CV'
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
@@ -389,6 +396,13 @@ foreach adm in `state_list' {
 	}
 	lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
 	post results ("ITA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	
+	predictnl `counter_CV' = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+	sum `counter_CV'
+	post results ("ITA") ("`adm'") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+	drop `counter_CV'
+			
+	
 }
 postclose results
 
