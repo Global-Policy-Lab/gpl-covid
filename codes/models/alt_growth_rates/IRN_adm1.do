@@ -245,9 +245,9 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick))
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
-egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
-outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
-using "results/source_data/Figure3_IRN_data.csv" if miss_ct<8, comma replace
+egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
+outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/Figure3_IRN_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
 // tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
@@ -306,8 +306,8 @@ predict day_avg_thr if adm1_name  == "Tehran" & e(sample) == 1
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
-tw (rspike ub_y_actual_thr lb_y_actual_thr t, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_thr lb_counter_thr t, lwidth(vthin) color(red*.5)) ///
+tw (rspike ub_y_actual_thr lb_y_actual_thr t_random, lwidth(vthin) color(blue*.5)) ///
+(rspike ub_counter_thr lb_counter_thr t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual_thr t, msize(tiny) color(blue*.5) ) ///
 (scatter y_counter_thr t, msize(tiny) color(red*.5)) ///
 (connect y_actual_thr t, color(blue) m(square) lpattern(solid)) ///
@@ -315,17 +315,17 @@ tw (rspike ub_y_actual_thr lb_y_actual_thr t, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg_thr t, color(black)) ///
 if e(sample), ///
 title("Tehran, Iran", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
+yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+saving(results/figures/appendix/subnatl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
 
-egen miss_ct = rowmiss(y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr)
-outsheet t y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr ///
-using "results/source_data/ExtendedDataFigure9_Tehran_data.csv" if miss_ct<6, comma replace
+egen miss_ct = rowmiss(y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr day_avg_thr)
+outsheet t y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr day_avg_thr ///
+using "results/source_data/ExtendedDataFigure9b_Tehran_data.csv" if miss_ct<7, comma replace
 drop miss_ct
 
 
-//-------------------------------FIXED LAG 
+//----------------------------------------------FIXED LAG 
 tempfile base_data
 save `base_data'
 

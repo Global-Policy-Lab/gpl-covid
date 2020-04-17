@@ -33,7 +33,7 @@ while(changed){
 
 policy_variables_to_use <- 
   c(
-    "testing_regime_13mar2020",
+    "testing_regime_15mar2020",
     'pck_social_distance',
     'school_closure',
     'national_lockdown'

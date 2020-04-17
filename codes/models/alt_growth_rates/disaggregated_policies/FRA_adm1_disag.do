@@ -83,8 +83,8 @@ lab var day_avg "Observed avg. change in log cases"
 
 //------------------testing regime changes
 
-g testing_regime_13mar2020 = t == mdy(3,15,2020) // start of stade 3, none systematic testing
-lab var testing_regime_13mar2020 "Testing regime change on Mar 15, 2020"
+g testing_regime_15mar2020 = t == mdy(3,15,2020) // start of stade 3, none systematic testing
+lab var testing_regime_15mar2020 "Testing regime change on Mar 15, 2020"
 
 
 //------------------disaggregated model
@@ -94,9 +94,8 @@ gen no_gathering_1000 = no_gathering_size <= 1000
 gen no_gathering_100 = no_gathering_size <= 100
 gen no_gathering_comb = (no_gathering_100 + no_gathering_1000 + no_gathering_inside) / 3
 
-reghdfe D_l_cum_confirmed_cases testing_regime_13mar2020 event_cancel social_distance ///
-no_gathering_comb school_closure ///
-business_closure home_isolation, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+reghdfe D_l_cum_confirmed_cases event_cancel social_distance no_gathering_comb ///
+school_closure business_closure home_isolation testing_regime_15mar2020, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -106,7 +105,7 @@ predictnl y_actual = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual u
 lab var y_actual "predicted growth with actual policy"
 
 // predicting counterfactual growth for each obs
-predictnl y_counter =  testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+predictnl y_counter =  testing_regime_15mar2020 * _b[testing_regime_15mar2020] + ///
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of all policies combined (FOR FIG2)
@@ -182,9 +181,9 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick))
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/disaggregated_policies/FRA_disag.gph, replace)
 
-egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
-outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
-using "results/source_data/ExtendedDataFigure8_FRA_data.csv" if miss_ct<8, comma replace
+egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
+outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/ExtendedDataFigure9a_FRA_data.csv" if miss_ct<9 & e(sample), comma replace
 
 // tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 // (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
