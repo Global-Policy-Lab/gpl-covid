@@ -167,11 +167,11 @@ outsheet using "models/reg_data/USA_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
-outreg2 using "results/tables/USA_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/USA_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(State FE, "YES", Day-of-Week FE, "YES") title(United States, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
  "\'22Social distance\'22 includes policies such as closing libraries, maintaining 6 feet distance from others in public, and limiting visits to long term care facilities.")
-cap erase "results/tables/USA_estimates_table.txt"
+cap erase "results/tables/reg_results/USA_estimates_table.txt"
 
 // saving coef
 tempfile results_file
@@ -317,6 +317,11 @@ drop miss_ct
 
 //-------------------------------Running the model for certain states
 
+// gen cases_to_pop = cum_confirmed_cases / population
+// collapse (max) cases_to_pop cum_confirmed_cases, by(adm1_name)
+// sort cum_confirmed_cases
+// sort cases_to_pop
+
 foreach state in "Washington" "California" "New York" {
 
 	reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_* if adm1_name=="`state'", noabsorb
@@ -377,6 +382,11 @@ foreach state in "Washington" "California" "New York" {
 	xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 	saving(results/figures/appendix/sub_natl_growth_rates/`state0'_conf_cases_growth_rates_fixedx.gph, replace)
+	
+	egen miss_ct = rowmiss(y_actual_`state0' lb_y_actual_`state0' ub_y_actual_`state0' y_counter_`state0' lb_counter_`state0' ub_counter_`state0')
+	outsheet t y_actual_`state0' lb_y_actual_`state0' ub_y_actual_`state0' y_counter_`state0' lb_counter_`state0' ub_counter_`state0' ///
+	using "results/source_data/ExtendedDataFigure9_`state0'_data.csv" if miss_ct<6, comma replace
+	drop miss_ct
 }
 
 // export coefficients (FOR FIG2)
@@ -477,7 +487,7 @@ preserve
 	outsheet * using "results/source_data/extended_cross_validation_USA.csv", replace
 restore
 
-//---------------------------------Fixed lag
+//------------------------------------FIXED LAG 
 
 tempfile base_data
 save `base_data'

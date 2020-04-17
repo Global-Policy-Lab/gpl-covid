@@ -129,11 +129,11 @@ outsheet using "models/reg_data/ITA_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
 
-outreg2 using "results/tables/ITA_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/ITA_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Italy, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
  "\'22Social distance\'22 includes policies for working from home, maintaining 1 meter distance from others in public, and prohibiting public and private events.")
-cap erase "results/tables/ITA_estimates_table.txt"
+cap erase "results/tables/reg_results/ITA_estimates_table.txt"
 
 // save coef
 tempfile results_file
@@ -316,11 +316,14 @@ saving(results/figures/appendix/sub_natl_growth_rates/Lombardy_conf_cases_growth
 
 //-------------------------------Running the model for certain provinces
 
-gen cases_to_pop = cum_confirmed_cases / population
-egen cases_to_pop_max = max(cases_to_pop)
-tab adm2_name if cases_to_pop==cases_to_pop_max //Cremona
+// gen cases_to_pop = cum_confirmed_cases / population
+// egen cases_to_pop_max = max(cases_to_pop)
+// tab adm2_name if cases_to_pop==cases_to_pop_max //Cremona
+// collapse (max) cases_to_pop cum_confirmed_cases, by(adm2_name)
+// sort cum_confirmed_cases
+// sort cases_to_pop
 
-foreach province in "Cremona" "Bergamo" "Lodi" {
+foreach province in "Cremona" "Milano" {
 
 	reghdfe D_l_cum_confirmed_cases p_* if adm2_name=="`province'", noabsorb
 
@@ -357,6 +360,12 @@ foreach province in "Cremona" "Bergamo" "Lodi" {
 	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 	saving(results/figures/appendix/sub_natl_growth_rates/`province'_conf_cases_growth_rates_fixedx.gph, replace)
 }
+
+egen miss_ct = rowmiss(y_actual_Milano lb_y_actual_Milano ub_y_actual_Milano y_counter_Milano lb_counter_Milano ub_counter_Milano)
+outsheet t y_actual_Milano lb_y_actual_Milano ub_y_actual_Milano y_counter_Milano lb_counter_Milano ub_counter_Milano ///
+using "results/source_data/ExtendedDataFigure9_Milano_data.csv" if miss_ct<6, comma replace
+drop miss_ct
+
 
 //-------------------------------Cross-validation
 
@@ -423,7 +432,7 @@ preserve
 	outsheet * using "results/source_data/extended_cross_validation_ITA.csv", replace	
 restore
 
-//-------------------------------Fixed lag
+//------------------------------------FIXED LAG 
 
 tempfile base_data
 save `base_data'

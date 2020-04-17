@@ -138,12 +138,12 @@ outsheet using "models/reg_data/KOR_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_active_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
-outreg2 using "results/tables/KOR_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/KOR_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title(South Korea, "Dependent variable: Growth rate of active cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
  "\'22Social distance (optional)\'22 includes recommended policies related to social distancing, e.g. no gathering, work from home, and closing businesses such as karaoke and cyber cafes." "" ///
  "\'22Social distance (mandatory)\'22 includes prohibiting rallies, closing churches, and closing welfare service facilities.")
-cap erase "results/tables/KOR_estimates_table.txt"
+cap erase "results/tables/reg_results/KOR_estimates_table.txt"
 
 // saving coef
 tempfile results_file
@@ -351,7 +351,7 @@ restore
 tempfile base_data
 save `base_data'
 
-//---------------------------------Fixed Lag
+//------------------------------------FIXED LAG 
 
 reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
@@ -455,7 +455,7 @@ outsheet * using "models/KOR_ATE.csv", comma replace
 
 use `base_data', clear
 
-//------------------------NEW: EVENT STUDY
+//------------------------EVENT STUDY
 preserve
 	local policy_study = "p_1"
 
