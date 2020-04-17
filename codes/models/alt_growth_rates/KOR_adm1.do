@@ -138,12 +138,12 @@ outsheet using "models/reg_data/KOR_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_active_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
-outreg2 using "results/tables/KOR_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/KOR_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title(South Korea, "Dependent variable: Growth rate of active cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
  "\'22Social distance (optional)\'22 includes recommended policies related to social distancing, e.g. no gathering, work from home, and closing businesses such as karaoke and cyber cafes." "" ///
  "\'22Social distance (mandatory)\'22 includes prohibiting rallies, closing churches, and closing welfare service facilities.")
-cap erase "results/tables/KOR_estimates_table.txt"
+cap erase "results/tables/reg_results/KOR_estimates_table.txt"
 
 // saving coef
 tempfile results_file
@@ -282,6 +282,7 @@ drop miss_ct
 
 
 //-------------------------------Cross-validation
+tempvar counter_CV
 tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
@@ -293,7 +294,15 @@ foreach var in "p_1" "p_2" "p_3" "p_4"{
 }
 lincom p_1 + p_2 + p_3 + p_4
 post results ("KOR") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-
+predictnl `counter_CV' = ///
+testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+testing_regime_change_29feb2020 * _b[testing_regime_change_29feb2020] + ///
+testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+sum `counter_CV'
+post results ("KOR") ("full_sample") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+drop `counter_CV'
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
@@ -303,6 +312,15 @@ foreach adm in `state_list' {
 	}
 	lincom p_1 + p_2 + p_3 + p_4 
 	post results ("KOR") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	predictnl `counter_CV' = ///
+	testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+	testing_regime_change_29feb2020 * _b[testing_regime_change_29feb2020] + ///
+	testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+	testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+	_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+	sum `counter_CV'
+	post results ("KOR") ("`adm'") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+	drop `counter_CV'	
 }
 postclose results
 
@@ -333,7 +351,7 @@ restore
 tempfile base_data
 save `base_data'
 
-//---------------------------------Fixed Lag
+//------------------------------------FIXED LAG 
 
 reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
@@ -437,7 +455,7 @@ outsheet * using "models/KOR_ATE.csv", comma replace
 
 use `base_data', clear
 
-//------------------------NEW: EVENT STUDY
+//------------------------EVENT STUDY
 preserve
 	local policy_study = "p_1"
 
