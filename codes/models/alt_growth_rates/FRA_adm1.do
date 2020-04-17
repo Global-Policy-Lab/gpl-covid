@@ -251,7 +251,7 @@ drop miss_ct
 
 
 //-------------------------------Cross-validation
-
+tempvar counter_CV
 tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
@@ -265,6 +265,12 @@ foreach var in "national_lockdown" "school_closure" "pck_social_distance" {
 lincom national_lockdown + school_closure + pck_social_distance
 post results ("FRA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
+predictnl `counter_CV' = testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+sum `counter_CV'
+post results ("FRA") ("full_sample") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+drop `counter_CV'
+
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
@@ -275,6 +281,11 @@ foreach adm in `state_list' {
 	}
 	lincom national_lockdown + school_closure + pck_social_distance
 	post results ("FRA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	predictnl `counter_CV' = testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+	_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+	sum `counter_CV'
+	post results ("FRA") ("`adm'") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+	drop `counter_CV'	
 }
 postclose results
 
@@ -296,7 +307,6 @@ preserve
 	graph export results/figures/appendix/cross_valid/FRA.png, replace	
 	outsheet * using "results/source_data/extended_cross_validation_FRA.csv", replace
 restore
-
 
 //-------------------------------FIXED LAG
 
