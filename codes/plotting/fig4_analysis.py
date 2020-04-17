@@ -61,6 +61,8 @@ def main():
         print("reading from ", fn_template.format(country))
         resampled_dfs_by_country[country] = pd.read_csv(fn_template.format(country))
 
+        print(resampled_dfs_by_country[country].shape)
+
     # get central estimates
     model_dfs_by_country = {}
     for country in countries:
@@ -113,51 +115,7 @@ def main():
 
     # report numbers for central predictions and actual cases
 
-    est_diffs = modeled_no_policy - modeled_with_policy
-
-    print("estimated diff in cumulative cases using central estimates:")
-    for c, country in enumerate(countries):
-        print("in {0},".format(country), end=" ")
-        print("at day {0},".format(latest_dates[c]), end=" ")
-        print(
-            "we predict a difference of {0:,} cumulative cases due to to policy".format(
-                int(est_diffs[c, 0])
-            )
-        )
-
-    # total across countries
-    # don't actually print this since the predictions end on different days
-    # print()
-    # est_diffs_with_reported_cases = modeled_no_policy - cases_confirmed
-
-    # print("the estimated total reduction is {0:,}".format(int(est_diffs.sum())))
-
-    # print(
-    #     "using actual case (black dots) baseline this number would be {0:,}".format(
-    #         int(est_diffs_with_reported_cases.sum()))
-    # )
-
-    # print()
-    # est_diffs = modeled_no_policy - modeled_with_policy
-    # print("checking on predictions vs actual reported cases:")
-    # for c, country in enumerate(countries):
-    #     print("in {0},".format(country), end=" ")
-    #     print("at day {0},".format(latest_dates[c]), end=" ")
-    #     print(
-    #         "we predict {0:,} cumulative cases; in total there were {1:,}".format(
-    #             int(modeled_with_policy[c, 0]), cases_confirmed[c, 0]
-    #         )
-    #     )
-    # print()
-    # print("estimated cumulative cases had there been no policies:")
-    # for c, country in enumerate(countries):
-    #     print("in {0},".format(country), end=" ")
-    #     print("at day {0},".format(latest_dates[c]), end=" ")
-    #     print(
-    #         "we predict there would have been {0:,} had no policies been enacted".format(
-    #             int(modeled_no_policy[c, 0])
-    #         )
-    #    )
+    est_diffs_modeled = modeled_no_policy - modeled_with_policy
 
     # 4. use resampled predictions to get intervals
     df_no_pol_pred = aggregate_preds_by_country(
@@ -169,7 +127,8 @@ def main():
     )
 
     # aggregate in this df
-    est_diffs_by_country = pd.DataFrame(df_no_pol_pred["date"].copy())
+    est_diffs_by_country = pd.DataFrame()
+
     for country in countries:
         pred_no_pol = df_no_pol_pred[pred_no_pol_key + "_" + country]
         pred_pol = df_pol_pred[pred_pol_key + "_" + country]
@@ -187,7 +146,7 @@ def main():
     for c, country in enumerate(countries):
         print(
             "{0:,} (95% resample range [{1:,} to {2:,}]) more cases in {3} (cumulative, on {4}), ".format(
-                int(est_diffs[c, 0]),
+                int(est_diffs_modeled[c, 0]),
                 int(np.floor(small_ends[c])),
                 int(np.ceil(big_ends[c])),
                 country,
@@ -195,6 +154,20 @@ def main():
             ),
             end="\n",
         )
+
+    print()
+    print("we estimate that there would be:", end="\n")
+
+    c_all = len(countries)
+    print(
+        "{0:,} (95% resample range [{1:,} to {2:,}]) more cases ".format(
+            int(est_diffs_modeled[:, 0].sum()),
+            int(np.floor(small_ends[c_all])),
+            int(np.ceil(big_ends[c_all])),
+        ),
+        end="",
+    )
+    print("across countries (accumulated over the specific dates for each countries)")
 
 
 if __name__ == "__main__":
