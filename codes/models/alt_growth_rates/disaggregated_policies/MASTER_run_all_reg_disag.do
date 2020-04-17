@@ -1,0 +1,105 @@
+// Master do file that runs all disaggregated policy regression scripts
+
+clear all
+
+// optional scheme for graphs
+capture set scheme covid19_fig3 
+
+// create folders for output 
+capture mkdir "results/"
+capture mkdir "results/figures/"
+capture mkdir "results/figures/appendix/" 
+capture mkdir "results/figures/appendix/disaggregated_policies" 
+capture mkdir "results/tables/" 
+capture mkdir "results/tables/ATE_disag" 
+capture mkdir "results/source_data" 
+capture copy "results/source_data/Figure3_CHN_data.csv" "results/source_data/ExtendedDataFigure8_CHN_data.csv" 
+
+// run .do files
+do "codes/models/alt_growth_rates/CHN_adm2.do"
+do "codes/models/alt_growth_rates/disaggregated_policies/KOR_adm1_disag.do"
+do "codes/models/alt_growth_rates/disaggregated_policies/ITA_adm2_disag.do"
+do "codes/models/alt_growth_rates/disaggregated_policies/IRN_adm1_disag.do"
+do "codes/models/alt_growth_rates/disaggregated_policies/FRA_adm1_disag.do"
+do "codes/models/alt_growth_rates/disaggregated_policies/USA_adm1_disag.do"
+
+// combine all case growth rate graphs for ED fig 8
+graph use "results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph", name(CHN_adm2_active_fix, replace)
+
+filelist, dir("results/figures/appendix/disaggregated_policies") pattern("*.gph")
+levelsof filename, local(filenames)
+foreach fn of local filenames{
+	local filepath = "results/figures/appendix/disaggregated_policies/" + "`fn'"
+	local graphname = regexr("`fn'", "\.gph", "")
+	
+	display "`graphname'"
+	graph use "`filepath'", name("`graphname'", replace)
+}
+
+graph combine CHN_adm2_active_fix KOR_disag ITA_disag ///
+IRN_disag FRA_disag USA_disag, cols(1) imargin(tiny) ysize(18) xsize(10)
+graph export results/figures/appendix/disaggregated_policies/ALL_disag.pdf, replace
+graph export results/figures/appendix/disaggregated_policies/ALL_disag.png, replace
+
+
+// make table comparing ATE between disaggregated model and grouped model by country
+filelist, dir("models") pattern("*_ATE.csv")
+levelsof filename, local(filenames)
+foreach fn of local filenames{
+	local filepath = "models/" + "`fn'"
+	local tempname = regexr("`fn'", "\.csv", "")
+		
+	insheet using `filepath', clear
+	rename adm0 adm0_name
+	display "`fn'"
+	if "`fn'"=="CHN_ATE.csv"{
+		keep if lag==.
+	}
+	else if "`fn'"!="CHN_ATE.csv"{
+		keep if lag==0
+	}
+	gen model_type = "_grouped"
+	
+	tempfile `tempname'
+	save ``tempname'', replace
+}
+
+filelist, dir("results/tables/ATE_disag") pattern("*ATE_disag.csv")
+levelsof filename, local(filenames)
+foreach fn of local filenames{
+	local filepath = "results/tables/ATE_disag/" + "`fn'"
+	local tempname = regexr("`fn'", "\.csv", "")
+	
+	insheet using `filepath', clear
+	gen model_type = "_disaggregated"
+	
+	tempfile `tempname'
+	save ``tempname'', replace
+}
+
+use `CHN_ATE', clear
+foreach c in KOR ITA IRN FRA USA {
+	append using ``c'_ATE'
+	append using ``c'_ATE_disag'
+}
+
+keep adm0_name model_type ate lb ub
+order adm0_name model_type ate lb ub
+
+replace adm0_name = "FRA" if adm0_name=="France"
+expand 2 if adm0_name=="CHN", gen(dup)
+replace model_type = "_disaggregated" if dup==1
+drop dup
+
+foreach var of varlist ate lb ub {
+	replace `var' = round(`var', .001)
+}
+
+reshape wide ate lb ub, i(adm0_name) j(model_type, str)
+gen ci_disaggregated = "(" + string(lb_disaggregated) + ", " + string(ub_disaggregated) + ")"
+gen ci_grouped = "(" + string(lb_grouped) + ", " + string(ub_grouped) + ")"
+
+keep adm0_name ate_disaggregated ci_disaggregated ate_grouped ci_grouped
+order adm0_name ate_disaggregated ci_disaggregated ate_grouped ci_grouped
+
+outsheet using "results/tables/ATE_disag/ATE_comparison_disag.csv", comma replace

@@ -236,10 +236,10 @@ outsheet using "models/reg_data/CHN_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_active_cases travel_ban_local_* home_isolation_* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
 local r2 = e(r2)
-outreg2 using "results/tables/CHN_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/CHN_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(City FE, "YES", Day-of-Week FE, "NO") title(China, "Dependent variable: Growth rate of active cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1")
-cap erase "results/tables/CHN_estimates_table.txt"
+cap erase "results/tables/reg_results/CHN_estimates_table.txt"
 
 // export coef
 tempfile results_file
@@ -418,6 +418,8 @@ yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) ///
 saving(results/figures/fig3/raw/legend_fig3.pdf, replace)
 
 
+//-------------------------------EVENT STUDY
+
 preserve 
 
 gen D_home_isolation = D.home_isolation
@@ -472,49 +474,11 @@ graph export results/figures/appendix/CHN_event_study.pdf, replace
 restore
 
 
-//-------------------------------CREATING DAILY LAGS
-
-// sum t
-// local start_date = `r(min)'
-//
-// local orig_obs = r(N)
-// local set_obs = r(N) + 50
-//
-// set obs `set_obs'
-// replace t = `start_date' - (_n-`orig_obs') if t==.
-//
-// sum adm12_id if longest_series==1
-// replace adm12_id = `r(min)' if _n > `orig_obs'
-// fillin adm12_id t
-//
-// gen D_home_isolation = D.home_isolation
-// replace D_home_isolation = 0 if D_home_isolation == .
-// tab D_home_isolation, mi
-//
-// gen D_travel_ban_local = D.travel_ban_local
-// replace D_travel_ban_local = 0 if D_travel_ban_local == .
-//
-// tab D_travel_ban_local, mi
-// br if D_travel_ban_local==-1
-// br if adm2_name=="Hangzhou"
-// br if adm2_name=="Wenzhou"
-//
-//
-// reghdfe D_l_active_cases testing_regime_change_* L(-5/50).(D_travel_ban_local D_home_isolation), absorb(i.adm12_id, savefe) cluster(t) resid
-//
-// reghdfe D_l_active_cases testing_regime_change_* L(-5/37).D_travel_ban_local ///
-// L(-5/33).D_home_isolation, absorb(i.adm12_id, savefe) cluster(t) resid
-//
-// coefplot, keep(*D_travel_ban_local) vertical xline(6) yline(0) xsize(8) ///
-// tit("China: local travel ban") xlabel(,angle(45)) coeflabels(,truncate(3)) name(travel_ban, replace)
-//
-// coefplot, keep(*D_home_isolation) vertical xline(6) yline(0) xsize(8) ///
-// tit("China: home isolation") xlabel(,angle(45)) coeflabels(,truncate(3)) name(home_iso, replace)
-//
-// graph combine travel_ban home_iso, cols(1)
-
-
 //-------------------------------Running the model for Wuhan only 
+
+// gen cases_to_pop = active_cases / population
+// collapse (max) cases_to_pop active_cases, by(adm2_name)
+// sort active_cases
 
 reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_* if adm2_name == "Wuhan", noabsorb
 
@@ -564,6 +528,11 @@ title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}lo
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
+
+egen miss_ct = rowmiss(y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh)
+outsheet t y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh ///
+using "results/source_data/ExtendedDataFigure9_Wuhan_data.csv" if miss_ct<6, comma replace
+drop miss_ct
 
 
 //-------------------------------Cross-validation
@@ -625,7 +594,7 @@ preserve
 restore
 
 
-// FIXED LAG 
+//------------------------------------FIXED LAG 
 tempfile base_data
 save `base_data'
 

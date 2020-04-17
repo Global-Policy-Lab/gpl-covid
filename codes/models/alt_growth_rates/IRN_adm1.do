@@ -134,11 +134,11 @@ outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
-outreg2 using "results/tables/IRN_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/IRN_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Iran, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
  "\'22Travel ban (opt), work from home, school closure\'22 policies were enacted March 1-5, 2020 which overlaps with missing provincial case data in Iran on March 2-3, 2020.")
-cap erase "results/tables/IRN_estimates_table.txt"
+cap erase "results/tables/reg_results/IRN_estimates_table.txt"
 
 // saving coefs
 tempfile results_file
@@ -265,6 +265,11 @@ drop miss_ct
 
 //-------------------------------Running the model for Tehran only 
 
+// gen cases_to_pop = cum_confirmed_cases / population
+// keep if cum_confirmed_cases!=.
+// collapse (min) t (max) cases_to_pop cum_confirmed_cases, by(adm1_name)
+// sort cum_confirmed_cases
+
 reg D_l_cum_confirmed_cases testing_regime_* p_1 p_2 if adm1_name=="Tehran"
 
 // predicted "actual" outcomes with real policies
@@ -314,8 +319,13 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(m
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
 
+egen miss_ct = rowmiss(y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr)
+outsheet t y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr ///
+using "results/source_data/ExtendedDataFigure9_Tehran_data.csv" if miss_ct<6, comma replace
+drop miss_ct
 
-// FIXED LAG 
+
+//-------------------------------FIXED LAG 
 tempfile base_data
 save `base_data'
 

@@ -1,4 +1,172 @@
 date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_deaths
+2020-04-15,USA,Alaska,293.0,8664.0,9.0
+2020-04-15,USA,Alabama,4113.0,34077.0,121.0
+2020-04-15,USA,Arkansas,1569.0,21834.0,33.0
+2020-04-15,USA,American Samoa,0.0,3.0,
+2020-04-15,USA,Arizona,3962.0,45310.0,142.0
+2020-04-15,USA,California,24424.0,216486.0,821.0
+2020-04-15,USA,Colorado,7941.0,39580.0,329.0
+2020-04-15,USA,Connecticut,14755.0,50143.0,868.0
+2020-04-15,USA,District of Columbia,2197.0,11525.0,72.0
+2020-04-15,USA,Delaware,2014.0,13102.0,46.0
+2020-04-15,USA,Florida,22511.0,213509.0,609.0
+2020-04-15,USA,Georgia,14987.0,64090.0,552.0
+2020-04-15,USA,Guam,135.0,978.0,5.0
+2020-04-15,USA,Hawaii,517.0,19803.0,9.0
+2020-04-15,USA,Iowa,1995.0,19869.0,53.0
+2020-04-15,USA,Idaho,1464.0,15398.0,39.0
+2020-04-15,USA,Illinois,24593.0,116929.0,948.0
+2020-04-15,USA,Indiana,8955.0,48396.0,436.0
+2020-04-15,USA,Kansas,1494.0,14668.0,76.0
+2020-04-15,USA,Kentucky,2210.0,27697.0,115.0
+2020-04-15,USA,Louisiana,21951.0,121928.0,1103.0
+2020-04-15,USA,Massachusetts,29918.0,132023.0,1108.0
+2020-04-15,USA,Maryland,10032.0,55763.0,349.0
+2020-04-15,USA,Maine,770.0,14846.0,24.0
+2020-04-15,USA,Michigan,28059.0,89697.0,1921.0
+2020-04-15,USA,Minnesota,1809.0,40242.0,87.0
+2020-04-15,USA,Missouri,4895.0,49012.0,147.0
+2020-04-15,USA,Northern Marianas,13.0,40.0,2.0
+2020-04-15,USA,Mississippi,3360.0,38151.0,122.0
+2020-04-15,USA,Montana,404.0,9583.0,7.0
+2020-04-15,USA,North Carolina,5123.0,67827.0,117.0
+2020-04-15,USA,North Dakota,365.0,11317.0,9.0
+2020-04-15,USA,Nebraska,901.0,11729.0,20.0
+2020-04-15,USA,New Hampshire,1139.0,12166.0,32.0
+2020-04-15,USA,New Jersey,71030.0,144021.0,3156.0
+2020-04-15,USA,New Mexico,1407.0,32850.0,36.0
+2020-04-15,USA,Nevada,3211.0,27655.0,131.0
+2020-04-15,USA,New York,213779.0,526012.0,11586.0
+2020-04-15,USA,Ohio,7791.0,71552.0,361.0
+2020-04-15,USA,Oklahoma,2263.0,29219.0,123.0
+2020-04-15,USA,Oregon,1663.0,33351.0,58.0
+2020-04-15,USA,Pennsylvania,26490.0,137584.0,647.0
+2020-04-15,USA,Puerto Rico,974.0,7799.0,51.0
+2020-04-15,USA,Rhode Island,3529.0,25897.0,87.0
+2020-04-15,USA,South Carolina,3656.0,34733.0,107.0
+2020-04-15,USA,South Dakota,1168.0,9859.0,6.0
+2020-04-15,USA,Tennessee,6079.0,80896.0,135.0
+2020-04-15,USA,Texas,15492.0,151810.0,364.0
+2020-04-15,USA,Utah,2542.0,47614.0,20.0
+2020-04-15,USA,Virginia,6500.0,44169.0,195.0
+2020-04-15,USA,Virgin Islands,51.0,382.0,1.0
+2020-04-15,USA,Vermont,759.0,11081.0,30.0
+2020-04-15,USA,Washington,10694.0,122854.0,541.0
+2020-04-15,USA,Wisconsin,3721.0,43047.0,182.0
+2020-04-15,USA,West Virginia,702.0,17656.0,10.0
+2020-04-15,USA,Wyoming,287.0,6329.0,2.0
+2020-04-14,USA,Alaska,285.0,8348.0,9.0
+2020-04-14,USA,Alabama,3876.0,33117.0,110.0
+2020-04-14,USA,Arkansas,1480.0,21131.0,30.0
+2020-04-14,USA,American Samoa,0.0,3.0,
+2020-04-14,USA,Arizona,3806.0,44096.0,131.0
+2020-04-14,USA,California,23338.0,202208.0,758.0
+2020-04-14,USA,Colorado,7691.0,38742.0,308.0
+2020-04-14,USA,Connecticut,13989.0,45841.0,671.0
+2020-04-14,USA,District of Columbia,2058.0,11518.0,67.0
+2020-04-14,USA,Delaware,1761.0,12304.0,41.0
+2020-04-14,USA,Florida,21367.0,203180.0,537.0
+2020-04-14,USA,Georgia,14223.0,61795.0,501.0
+2020-04-14,USA,Guam,135.0,946.0,5.0
+2020-04-14,USA,Hawaii,504.0,19420.0,9.0
+2020-04-14,USA,Iowa,1899.0,18885.0,49.0
+2020-04-14,USA,Idaho,1453.0,15114.0,33.0
+2020-04-14,USA,Illinois,23247.0,110616.0,868.0
+2020-04-14,USA,Indiana,8527.0,46017.0,388.0
+2020-04-14,USA,Kansas,1426.0,14147.0,69.0
+2020-04-14,USA,Kentucky,2048.0,26683.0,104.0
+2020-04-14,USA,Louisiana,21518.0,118422.0,1013.0
+2020-04-14,USA,Massachusetts,28163.0,126551.0,957.0
+2020-04-14,USA,Maryland,9472.0,53733.0,302.0
+2020-04-14,USA,Maine,734.0,12342.0,20.0
+2020-04-14,USA,Michigan,27001.0,86226.0,1768.0
+2020-04-14,USA,Minnesota,1695.0,39241.0,79.0
+2020-04-14,USA,Missouri,4686.0,47978.0,133.0
+2020-04-14,USA,Northern Marianas,13.0,40.0,2.0
+2020-04-14,USA,Mississippi,3087.0,37878.0,111.0
+2020-04-14,USA,Montana,399.0,9234.0,7.0
+2020-04-14,USA,North Carolina,5024.0,65039.0,108.0
+2020-04-14,USA,North Dakota,341.0,10916.0,9.0
+2020-04-14,USA,Nebraska,871.0,11357.0,18.0
+2020-04-14,USA,New Hampshire,1020.0,11610.0,23.0
+2020-04-14,USA,New Jersey,68824.0,139774.0,2805.0
+2020-04-14,USA,New Mexico,1345.0,31970.0,31.0
+2020-04-14,USA,Nevada,3088.0,26661.0,120.0
+2020-04-14,USA,New York,202208.0,499143.0,10834.0
+2020-04-14,USA,Ohio,7153.0,67874.0,324.0
+2020-04-14,USA,Oklahoma,2184.0,28269.0,108.0
+2020-04-14,USA,Oregon,1633.0,32363.0,55.0
+2020-04-14,USA,Pennsylvania,25345.0,133631.0,584.0
+2020-04-14,USA,Puerto Rico,923.0,7207.0,45.0
+2020-04-14,USA,Rhode Island,3251.0,22900.0,80.0
+2020-04-14,USA,South Carolina,3553.0,33872.0,97.0
+2020-04-14,USA,South Dakota,988.0,9296.0,6.0
+2020-04-14,USA,Tennessee,5823.0,78831.0,124.0
+2020-04-14,USA,Texas,14624.0,146467.0,318.0
+2020-04-14,USA,Utah,2412.0,46476.0,19.0
+2020-04-14,USA,Virginia,6171.0,42763.0,154.0
+2020-04-14,USA,Virgin Islands,51.0,377.0,1.0
+2020-04-14,USA,Vermont,752.0,10585.0,29.0
+2020-04-14,USA,Washington,10538.0,93929.0,516.0
+2020-04-14,USA,Wisconsin,3555.0,41552.0,170.0
+2020-04-14,USA,West Virginia,640.0,17038.0,9.0
+2020-04-14,USA,Wyoming,275.0,5964.0,1.0
+2020-04-13,USA,Alaska,277.0,7830.0,8.0
+2020-04-13,USA,Alabama,3734.0,29182.0,99.0
+2020-04-13,USA,Arkansas,1410.0,20804.0,30.0
+2020-04-13,USA,American Samoa,0.0,3.0,
+2020-04-13,USA,Arizona,3702.0,43347.0,122.0
+2020-04-13,USA,California,22348.0,190882.0,687.0
+2020-04-13,USA,Colorado,7684.0,37534.0,304.0
+2020-04-13,USA,Connecticut,13381.0,44309.0,602.0
+2020-04-13,USA,District of Columbia,1955.0,10934.0,53.0
+2020-04-13,USA,Delaware,1625.0,11820.0,35.0
+2020-04-13,USA,Florida,20601.0,196207.0,483.0
+2020-04-13,USA,Georgia,13315.0,57021.0,464.0
+2020-04-13,USA,Guam,135.0,905.0,5.0
+2020-04-13,USA,Hawaii,499.0,18844.0,9.0
+2020-04-13,USA,Iowa,1710.0,18696.0,43.0
+2020-04-13,USA,Idaho,1426.0,14881.0,27.0
+2020-04-13,USA,Illinois,22025.0,105768.0,794.0
+2020-04-13,USA,Indiana,8236.0,44539.0,350.0
+2020-04-13,USA,Kansas,1376.0,13864.0,62.0
+2020-04-13,USA,Kentucky,1963.0,25866.0,97.0
+2020-04-13,USA,Louisiana,21016.0,108091.0,884.0
+2020-04-13,USA,Massachusetts,26867.0,122049.0,844.0
+2020-04-13,USA,Maryland,8936.0,51751.0,262.0
+2020-04-13,USA,Maine,698.0,12306.0,19.0
+2020-04-13,USA,Michigan,25635.0,82644.0,1602.0
+2020-04-13,USA,Minnesota,1650.0,38427.0,70.0
+2020-04-13,USA,Missouri,4388.0,45428.0,114.0
+2020-04-13,USA,Northern Marianas,11.0,38.0,2.0
+2020-04-13,USA,Mississippi,2942.0,30984.0,98.0
+2020-04-13,USA,Montana,394.0,9098.0,7.0
+2020-04-13,USA,North Carolina,4816.0,63388.0,86.0
+2020-04-13,USA,North Dakota,331.0,10781.0,8.0
+2020-04-13,USA,Nebraska,814.0,10972.0,17.0
+2020-04-13,USA,New Hampshire,985.0,11207.0,23.0
+2020-04-13,USA,New Jersey,64584.0,129469.0,2443.0
+2020-04-13,USA,New Mexico,1245.0,30515.0,26.0
+2020-04-13,USA,Nevada,2971.0,25464.0,114.0
+2020-04-13,USA,New York,195031.0,478357.0,10056.0
+2020-04-13,USA,Ohio,6975.0,65112.0,274.0
+2020-04-13,USA,Oklahoma,2069.0,22859.0,99.0
+2020-04-13,USA,Oregon,1584.0,31121.0,53.0
+2020-04-13,USA,Pennsylvania,24199.0,129792.0,524.0
+2020-04-13,USA,Puerto Rico,903.0,6863.0,45.0
+2020-04-13,USA,Rhode Island,2976.0,20661.0,73.0
+2020-04-13,USA,South Carolina,3319.0,31425.0,82.0
+2020-04-13,USA,South Dakota,868.0,9002.0,6.0
+2020-04-13,USA,Tennessee,5610.0,76195.0,109.0
+2020-04-13,USA,Texas,13906.0,133226.0,287.0
+2020-04-13,USA,Utah,2363.0,45787.0,18.0
+2020-04-13,USA,Virginia,5747.0,41401.0,149.0
+2020-04-13,USA,Virgin Islands,51.0,373.0,1.0
+2020-04-13,USA,Vermont,748.0,10366.0,28.0
+2020-04-13,USA,Washington,10411.0,93802.0,508.0
+2020-04-13,USA,Wisconsin,3428.0,40197.0,154.0
+2020-04-13,USA,West Virginia,626.0,16655.0,9.0
+2020-04-13,USA,Wyoming,275.0,5964.0,1.0
 2020-04-12,USA,Alaska,272.0,8038.0,8.0
 2020-04-12,USA,Alabama,3525.0,21583.0,93.0
 2020-04-12,USA,Arkansas,1280.0,19722.0,27.0
@@ -1087,7 +1255,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-24,USA,Massachusetts,1159.0,13749.0,11.0
 2020-03-24,USA,Maryland,349.0,443.0,3.0
 2020-03-24,USA,Maine,125.0,3139.0,
-2020-03-24,USA,Michigan,1791.0,7587.0,24.0
+2020-03-24,USA,Michigan,6441.0,12237.0,24.0
 2020-03-24,USA,Minnesota,262.0,5812.0,1.0
 2020-03-24,USA,Missouri,183.0,552.0,3.0
 2020-03-24,USA,Northern Marianas,0.0,,0.0
@@ -1143,7 +1311,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-23,USA,Massachusetts,777.0,8922.0,9.0
 2020-03-23,USA,Maryland,288.0,382.0,3.0
 2020-03-23,USA,Maine,107.0,2898.0,
-2020-03-23,USA,Michigan,1328.0,6025.0,15.0
+2020-03-23,USA,Michigan,5789.0,10486.0,15.0
 2020-03-23,USA,Minnesota,235.0,4746.0,1.0
 2020-03-23,USA,Missouri,183.0,552.0,3.0
 2020-03-23,USA,Northern Marianas,0.0,,0.0
@@ -1199,7 +1367,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-22,USA,Massachusetts,646.0,6105.0,5.0
 2020-03-22,USA,Maryland,244.0,338.0,3.0
 2020-03-22,USA,Maine,89.0,2353.0,
-2020-03-22,USA,Michigan,1035.0,4747.0,8.0
+2020-03-22,USA,Michigan,5098.0,8810.0,8.0
 2020-03-22,USA,Minnesota,169.0,4680.0,1.0
 2020-03-22,USA,Missouri,90.0,459.0,3.0
 2020-03-22,USA,Northern Marianas,0.0,,0.0
@@ -1255,7 +1423,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-21,USA,Massachusetts,525.0,5277.0,1.0
 2020-03-21,USA,Maryland,190.0,284.0,2.0
 2020-03-21,USA,Maine,73.0,2337.0,
-2020-03-21,USA,Michigan,787.0,4483.0,5.0
+2020-03-21,USA,Michigan,4543.0,8239.0,5.0
 2020-03-21,USA,Minnesota,138.0,4090.0,1.0
 2020-03-21,USA,Missouri,73.0,442.0,3.0
 2020-03-21,USA,Northern Marianas,0.0,,0.0
@@ -1311,7 +1479,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-20,USA,Massachusetts,413.0,4091.0,1.0
 2020-03-20,USA,Maryland,149.0,243.0,1.0
 2020-03-20,USA,Maine,57.0,2321.0,
-2020-03-20,USA,Michigan,549.0,3295.0,3.0
+2020-03-20,USA,Michigan,4027.0,6773.0,3.0
 2020-03-20,USA,Minnesota,115.0,3856.0,
 2020-03-20,USA,Missouri,47.0,416.0,1.0
 2020-03-20,USA,Northern Marianas,0.0,,0.0
@@ -1367,7 +1535,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-19,USA,Massachusetts,328.0,3132.0,
 2020-03-19,USA,Maryland,107.0,201.0,1.0
 2020-03-19,USA,Maine,53.0,2057.0,
-2020-03-19,USA,Michigan,336.0,2121.0,3.0
+2020-03-19,USA,Michigan,3392.0,5177.0,3.0
 2020-03-19,USA,Minnesota,89.0,3038.0,
 2020-03-19,USA,Missouri,24.0,332.0,1.0
 2020-03-19,USA,Northern Marianas,0.0,,0.0
@@ -1423,7 +1591,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-18,USA,Massachusetts,256.0,2271.0,
 2020-03-18,USA,Maryland,85.0,179.0,
 2020-03-18,USA,Maine,43.0,1713.0,
-2020-03-18,USA,Michigan,80.0,1295.0,
+2020-03-18,USA,Michigan,2913.0,4128.0,
 2020-03-18,USA,Minnesota,77.0,2762.0,
 2020-03-18,USA,Missouri,13.0,266.0,0.0
 2020-03-18,USA,Northern Marianas,0.0,,0.0
@@ -1479,7 +1647,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-17,USA,Massachusetts,218.0,1759.0,
 2020-03-17,USA,Maryland,57.0,151.0,
 2020-03-17,USA,Maine,32.0,1335.0,
-2020-03-17,USA,Michigan,65.0,691.0,
+2020-03-17,USA,Michigan,2393.0,3019.0,
 2020-03-17,USA,Minnesota,60.0,2336.0,
 2020-03-17,USA,Missouri,8.0,215.0,0.0
 2020-03-17,USA,Northern Marianas,0.0,,
@@ -1535,7 +1703,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-16,USA,Massachusetts,164.0,516.0,
 2020-03-16,USA,Maryland,37.0,131.0,
 2020-03-16,USA,Maine,17.0,781.0,
-2020-03-16,USA,Michigan,53.0,325.0,
+2020-03-16,USA,Michigan,1933.0,2205.0,
 2020-03-16,USA,Minnesota,54.0,1893.0,
 2020-03-16,USA,Missouri,6.0,170.0,0.0
 2020-03-16,USA,Northern Marianas,0.0,,
@@ -1589,7 +1757,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-15,USA,Massachusetts,138.0,490.0,
 2020-03-15,USA,Maryland,31.0,125.0,
 2020-03-15,USA,Maine,3.0,94.0,
-2020-03-15,USA,Michigan,33.0,238.0,
+2020-03-15,USA,Michigan,1480.0,1685.0,
 2020-03-15,USA,Minnesota,35.0,1422.0,
 2020-03-15,USA,Missouri,5.0,127.0,0.0
 2020-03-15,USA,Mississippi,10.0,94.0,
@@ -1640,7 +1808,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-14,USA,Massachusetts,138.0,490.0,
 2020-03-14,USA,Maryland,26.0,120.0,
 2020-03-14,USA,Maine,3.0,94.0,
-2020-03-14,USA,Michigan,25.0,230.0,
+2020-03-14,USA,Michigan,1196.0,1401.0,
 2020-03-14,USA,Minnesota,21.0,868.0,
 2020-03-14,USA,Missouri,4.0,94.0,0.0
 2020-03-14,USA,Mississippi,6.0,90.0,
@@ -1691,7 +1859,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-13,USA,Massachusetts,123.0,215.0,
 2020-03-13,USA,Maryland,17.0,111.0,
 2020-03-13,USA,Maine,3.0,94.0,
-2020-03-13,USA,Michigan,16.0,149.0,
+2020-03-13,USA,Michigan,945.0,1078.0,
 2020-03-13,USA,Minnesota,14.0,555.0,
 2020-03-13,USA,Missouri,2.0,73.0,
 2020-03-13,USA,Mississippi,4.0,45.0,
@@ -1742,7 +1910,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-12,USA,Massachusetts,95.0,,
 2020-03-12,USA,Maryland,12.0,106.0,
 2020-03-12,USA,Maine,1.0,66.0,
-2020-03-12,USA,Michigan,2.0,93.0,
+2020-03-12,USA,Michigan,702.0,793.0,
 2020-03-12,USA,Minnesota,9.0,316.0,
 2020-03-12,USA,Missouri,1.0,65.0,
 2020-03-12,USA,Mississippi,1.0,42.0,
@@ -1793,7 +1961,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-11,USA,Massachusetts,92.0,,
 2020-03-11,USA,Maryland,9.0,103.0,
 2020-03-11,USA,Maine,0.0,42.0,
-2020-03-11,USA,Michigan,2.0,59.0,
+2020-03-11,USA,Michigan,497.0,554.0,
 2020-03-11,USA,Minnesota,5.0,222.0,
 2020-03-11,USA,Missouri,1.0,,
 2020-03-11,USA,Mississippi,0.0,20.0,
@@ -1844,7 +2012,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-10,USA,Massachusetts,92.0,,
 2020-03-10,USA,Maryland,6.0,95.0,
 2020-03-10,USA,Maine,0.0,20.0,
-2020-03-10,USA,Michigan,0.0,39.0,
+2020-03-10,USA,Michigan,358.0,397.0,
 2020-03-10,USA,Minnesota,3.0,135.0,
 2020-03-10,USA,Missouri,1.0,,
 2020-03-10,USA,Mississippi,0.0,,
@@ -1895,7 +2063,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-09,USA,Massachusetts,41.0,,
 2020-03-09,USA,Maryland,5.0,78.0,
 2020-03-09,USA,Maine,0.0,1.0,
-2020-03-09,USA,Michigan,0.0,36.0,
+2020-03-09,USA,Michigan,254.0,290.0,
 2020-03-09,USA,Minnesota,2.0,82.0,
 2020-03-09,USA,Missouri,1.0,,
 2020-03-09,USA,Mississippi,0.0,,
@@ -1946,7 +2114,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-08,USA,Massachusetts,13.0,,
 2020-03-08,USA,Maryland,3.0,55.0,
 2020-03-08,USA,Maine,0.0,1.0,
-2020-03-08,USA,Michigan,0.0,26.0,
+2020-03-08,USA,Michigan,168.0,194.0,
 2020-03-08,USA,Minnesota,1.0,49.0,
 2020-03-08,USA,Missouri,1.0,,
 2020-03-08,USA,Mississippi,0.0,,
@@ -1997,7 +2165,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-07,USA,Massachusetts,13.0,,
 2020-03-07,USA,Maryland,3.0,44.0,
 2020-03-07,USA,Maine,0.0,1.0,
-2020-03-07,USA,Michigan,0.0,18.0,
+2020-03-07,USA,Michigan,128.0,146.0,
 2020-03-07,USA,Minnesota,1.0,49.0,
 2020-03-07,USA,Missouri,0.0,,
 2020-03-07,USA,Mississippi,0.0,,
@@ -2042,7 +2210,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-06,USA,Kentucky,0.0,7.0,
 2020-03-06,USA,Massachusetts,8.0,,
 2020-03-06,USA,Maryland,3.0,29.0,
-2020-03-06,USA,Michigan,0.0,8.0,
+2020-03-06,USA,Michigan,98.0,106.0,
 2020-03-06,USA,Minnesota,0.0,36.0,
 2020-03-06,USA,North Carolina,2.0,,
 2020-03-06,USA,Nebraska,0.0,17.0,
@@ -2072,7 +2240,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-05,USA,Illinois,5.0,170.0,
 2020-03-05,USA,Massachusetts,2.0,,
 2020-03-05,USA,Maryland,0.0,17.0,
-2020-03-05,USA,Michigan,0.0,8.0,
+2020-03-05,USA,Michigan,72.0,80.0,
 2020-03-05,USA,North Carolina,1.0,,
 2020-03-05,USA,Nebraska,0.0,17.0,
 2020-03-05,USA,New Hampshire,2.0,18.0,
@@ -2094,6 +2262,7 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-04,USA,Georgia,2.0,,
 2020-03-04,USA,Illinois,4.0,128.0,
 2020-03-04,USA,Massachusetts,2.0,,
+2020-03-04,USA,Michigan,52.0,,
 2020-03-04,USA,North Carolina,1.0,,
 2020-03-04,USA,New Hampshire,2.0,12.0,
 2020-03-04,USA,New York,6.0,54.0,
@@ -2103,10 +2272,13 @@ date,adm0_name,adm1_name,cumulative_confirmed_cases,cumulative_tests,cumulative_
 2020-03-04,USA,Texas,1.0,,
 2020-03-04,USA,Washington,76.0,,16.0
 2020-03-04,USA,Wisconsin,1.0,20.0,
+2020-03-03,USA,Michigan,34.0,,
 2020-03-03,USA,Rhode Island,2.0,8.0,
 2020-03-03,USA,Washington,58.0,,14.0
+2020-03-02,USA,Michigan,18.0,,
 2020-03-02,USA,Rhode Island,1.0,,
 2020-03-02,USA,Washington,34.0,,11.0
+2020-03-01,USA,Michigan,9.0,,
 2020-03-01,USA,Rhode Island,1.0,,
 2020-03-01,USA,Washington,30.0,,8.0
 2020-02-29,USA,Washington,18.0,,5.0
