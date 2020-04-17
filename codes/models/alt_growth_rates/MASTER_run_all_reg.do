@@ -12,7 +12,7 @@ capture mkdir "results/figures/fig3/"
 capture mkdir "results/figures/fig3/raw" 
 capture mkdir "results/figures/appendix/" 
 capture mkdir "results/figures/appendix/error_dist" 
-capture mkdir "results/figures/appendix/sub_natl_growth_rates" 
+capture mkdir "results/figures/appendix/subnatl_growth_rates" 
 capture mkdir "results/figures/appendix/cross_valid" 
 capture mkdir "results/figures/appendix/fixed_lag" 
 capture mkdir "results/tables/" 
@@ -61,21 +61,18 @@ graph export results/figures/appendix/error_dist/ALL_conf_cases_e.png, replace
 
 
 // combine sub-national growth rate graphs for ED fig 9
-// plus FRA hospitalization growth rate
-graph use "results/figures/appendix/FRA_adm1_hosp_growth_rates_fixedx.gph", name(FRA_adm1_hosp, replace)
-
-filelist, dir("results/figures/appendix/sub_natl_growth_rates") pattern("*.gph")
+filelist, dir("results/figures/appendix/subnatl_growth_rates") pattern("*.gph")
 levelsof filename, local(filenames)
 foreach fn of local filenames{
-	local filepath = "results/figures/appendix/sub_natl_growth_rates/" + "`fn'"
+	local filepath = "results/figures/appendix/subnatl_growth_rates/" + "`fn'"
 	local graphname = regexr("`fn'", "cases_growth_rates_fixedx\.gph", "fix")
 	*display "`filepath'"
 	display "`graphname'"
 	graph use "`filepath'", name("`graphname'", replace)
 }
-graph combine Wuhan_active_fix Tehran_conf_fix Milano_conf_fix ///
-Washington_conf_fix NewYork_conf_fix FRA_adm1_hosp, cols(1) imargin(tiny) ysize(18) xsize(10)
-graph export results/figures/appendix/sub_natl_growth_rates/COMBINED_sub_natl.png, replace
+graph combine Wuhan_active_fix Daegu_active_fix Milan_conf_fix Tehran_conf_fix  ///
+IledeFrance_conf_fix NewYork_conf_fix, cols(1) imargin(tiny) ysize(18) xsize(10)
+graph export results/figures/appendix/subnatl_growth_rates/ALL_subnatl.pdf, replace
 
 
 // make table comparing ATE models with different fixed lags by country

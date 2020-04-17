@@ -10,6 +10,3 @@ adm0,policy,beta,se
 "USA","p_9",-.07,.014
 "USA","comb. policy",-.347,.061
 "USA","no_policy rate",.3,.069
-"USA_Washington","no_policy rate",.378,.093
-"USA_California","no_policy rate",.29,.064
-"USA_NewYork","no_policy rate",.833,.503

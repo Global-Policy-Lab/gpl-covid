@@ -13,7 +13,7 @@ capture mkdir "results/figures/appendix/disaggregated_policies"
 capture mkdir "results/tables/" 
 capture mkdir "results/tables/ATE_disag" 
 capture mkdir "results/source_data" 
-capture copy "results/source_data/Figure3_CHN_data.csv" "results/source_data/ExtendedDataFigure8_CHN_data.csv" 
+capture copy "results/source_data/Figure3_CHN_data.csv" "results/source_data/ExtendedDataFigure9a_CHN_data.csv" 
 
 // run .do files
 do "codes/models/alt_growth_rates/CHN_adm2.do"
@@ -23,7 +23,7 @@ do "codes/models/alt_growth_rates/disaggregated_policies/IRN_adm1_disag.do"
 do "codes/models/alt_growth_rates/disaggregated_policies/FRA_adm1_disag.do"
 do "codes/models/alt_growth_rates/disaggregated_policies/USA_adm1_disag.do"
 
-// combine all case growth rate graphs for ED fig 8
+// combine all case growth rate graphs for ED fig 9
 graph use "results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph", name(CHN_adm2_active_fix, replace)
 
 filelist, dir("results/figures/appendix/disaggregated_policies") pattern("*.gph")
@@ -37,9 +37,8 @@ foreach fn of local filenames{
 }
 
 graph combine CHN_adm2_active_fix KOR_disag ITA_disag ///
-IRN_disag FRA_disag USA_disag, cols(1) imargin(tiny) ysize(18) xsize(10)
+IRN_disag FRA_disag USA_disag, cols(1) imargin(tiny) ysize(18) xsize(10)	
 graph export results/figures/appendix/disaggregated_policies/ALL_disag.pdf, replace
-graph export results/figures/appendix/disaggregated_policies/ALL_disag.png, replace
 
 
 // make table comparing ATE between disaggregated model and grouped model by country
