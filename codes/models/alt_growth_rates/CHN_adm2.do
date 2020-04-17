@@ -393,12 +393,13 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick))
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph, replace)
 
-egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
-outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
-using "results/source_data/Figure3_CHN_data.csv" if miss_ct<8, comma replace
+egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
+outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/Figure3_CHN_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
 // for legend
+set scheme s1color
 tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
@@ -411,11 +412,12 @@ tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 if e(sample), ///
 tit(China) ytit(Growth rate of active confirmed cases) ///
 legend(order(6 8 5 7 9) cols(1) ///
-lab(6 "No policy (admin unit)") lab(8 "No policy (national avg)") ///
-lab(5 "Actual with policies (admin unit)") lab(7 "Actual with policies (national avg)")  ///
+lab(6 "No policy scenario admin unit") lab(8 "No policy scenario national avg") ///
+lab(5 "Actual policies (predicted) admin unit") lab(7 "Actual policies (predicted) national avg") ///
+lab(7 "Observed change in log cases national avg") ///
 region(lcolor(none))) scheme(s1color) xlabel(, format(%tdMon_DD)) ///
-yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) ///
-saving(results/figures/fig3/raw/legend_fig3.pdf, replace)
+yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) 
+graph export results/figures/fig3/raw/legend_fig3.pdf, replace
 
 
 //-------------------------------EVENT STUDY
@@ -516,8 +518,9 @@ predict day_avg_wh if adm2_name  == "Wuhan" & e(sample) == 1
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
-tw (rspike ub_y_actual_wh lb_y_actual_wh t, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_wh lb_counter_wh t, lwidth(vthin) color(red*.5)) ///
+cap set scheme covid19_fig3 // optional scheme for graphs
+tw (rspike ub_y_actual_wh lb_y_actual_wh t_random, lwidth(vthin) color(blue*.5)) ///
+(rspike ub_counter_wh lb_counter_wh t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual_wh t, msize(tiny) color(blue*.5) ) ///
 (scatter y_counter_wh t, msize(tiny) color(red*.5)) ///
 (connect y_actual_wh t, color(blue) m(square) lpattern(solid)) ///
@@ -525,13 +528,13 @@ tw (rspike ub_y_actual_wh lb_y_actual_wh t, lwidth(vthin) color(blue*.5)) ///
 (sc day_avg_wh t, color(black)) ///
 if e(sample), ///
 title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/sub_natl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
+plotregion(m(b=0)) ///
+saving(results/figures/appendix/subnatl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
 
-egen miss_ct = rowmiss(y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh)
-outsheet t y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh ///
-using "results/source_data/ExtendedDataFigure9_Wuhan_data.csv" if miss_ct<6, comma replace
+egen miss_ct = rowmiss(y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh)
+outsheet t y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh ///
+using "results/source_data/ExtendedDataFigure9b_Wuhan_data.csv" if miss_ct<7, comma replace
 drop miss_ct
 
 

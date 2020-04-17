@@ -262,11 +262,10 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick))
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
 
-egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
-outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
-using "results/source_data/Figure3_KOR_data.csv" if miss_ct<8, comma replace
+egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
+outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/Figure3_KOR_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
-
 
 // tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 // (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
@@ -279,6 +278,57 @@ drop miss_ct
 // title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
 // xscale(range(21960(10)22011)) xlabel(21960(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 // yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) 
+
+
+//-------------------------------Running the model for Daegu only
+
+// gen cases_to_pop = active_cases / population
+// collapse (max) cases_to_pop active_cases, by(adm1_name)
+// sort active_cases //Daegu
+// sort cases_to_pop //Daegu
+
+reghdfe D_l_active_cases p_* testing_regime_change_* if adm1_name=="Daegu", noabsorb
+
+// predicted "actual" outcomes with real policies
+predictnl y_actual_dg = xb() if e(sample), ci(lb_y_actual_dg ub_y_actual_dg)
+	
+// predicting counterfactual growth for each obs
+predictnl y_counter_dg = ///
+testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+testing_regime_change_29feb2020 * _b[testing_regime_change_29feb2020] + ///
+testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+_b[_cons] if e(sample), ci(lb_counter_dg ub_counter_dg)
+
+// quality control: don't want to be forecasting negative growth (not modeling recoveries)
+// fix so there are no negative growth rates in error bars
+foreach var of varlist y_actual_dg y_counter_dg lb_y_actual_dg ub_y_actual_dg lb_counter_dg ub_counter_dg {
+	replace `var' = 0 if `var'<0 & `var'!=.
+}
+
+// Observed avg change in log cases
+reg D_l_active_cases i.t if adm1_name=="Daegu"
+predict day_avg_dg if adm1_name=="Daegu" & e(sample) == 1
+
+// Graph of predicted growth rates
+// fixed x-axis across countries
+tw (rspike ub_y_actual_dg lb_y_actual_dg t_random, lwidth(vthin) color(blue*.5)) ///
+(rspike ub_counter_dg lb_counter_dg t_random2, lwidth(vthin) color(red*.5)) ///
+|| (scatter y_actual_dg t,  msize(tiny) color(blue*.5) ) ///
+(scatter y_counter_dg t, msize(tiny) color(red*.5)) ///
+(connect y_actual_dg t, color(blue) m(square) lpattern(solid)) ///
+(connect y_counter_dg t, color(red) lpattern(dash) m(Oh)) ///
+(sc day_avg_dg t, color(black)) ///
+if e(sample), ///
+title("Daegu, South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
+plotregion(m(b=0)) ///
+saving(results/figures/appendix/subnatl_growth_rates/Daegu_active_cases_growth_rates_fixedx.gph, replace)
+
+egen miss_ct = rowmiss(y_actual_dg lb_y_actual_dg ub_y_actual_dg y_counter_dg lb_counter_dg ub_counter_dg day_avg_dg)
+outsheet t y_actual_dg lb_y_actual_dg ub_y_actual_dg y_counter_dg lb_counter_dg ub_counter_dg day_avg_dg ///
+using "results/source_data/ExtendedDataFigure9b_Daegu_data.csv" if miss_ct<7, comma replace
+drop miss_ct
 
 
 //-------------------------------Cross-validation
