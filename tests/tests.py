@@ -4,6 +4,7 @@ import shlex
 import subprocess
 from shutil import copytree
 
+
 def test_readme():
     with open("README.md", "r") as f:
         readme = f.read()
@@ -29,7 +30,9 @@ def test_pipeline(tmp_path):
 
     bad_files = []
     len_path = len(tmp_path.parts)
-    for p in list(tmp_model_path.rglob("*.csv")) + list(tmp_results_path.rglob("*.csv")):
+    for p in list(tmp_model_path.rglob("*.csv")) + list(
+        tmp_results_path.rglob("*.csv")
+    ):
         # skip for bootstrap samples which may have different num of bootstraps
         if "bootstrap" not in p.name:
             other_file = Path("").joinpath(*p.parts[len_path:])
