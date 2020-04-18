@@ -82,7 +82,7 @@ def main():
         ).values
         recoveries_lag = pd.Series(recoveries_lag, index=bds.cum_recoveries.index)
         numerator = bds.cum_deaths + recoveries_lag
-        
+
         # remove any confirmed recoveries that occur between now and t+l from the
         # denominator (active cases) b/c we assume they have already recovered
         fut_recovered = df.cum_recoveries.reindex(
