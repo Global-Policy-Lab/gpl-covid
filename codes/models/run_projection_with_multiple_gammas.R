@@ -70,8 +70,6 @@ final_df <- gamma_loop_df %>%
   ungroup() %>% 
   mutate(sigma = as.character(sigma))
 
-
-
 out_scale_down_to_zero <- final_df %>%
   ggplot() + 
   aes(x = gamma, y = cases_saved, color = factor(sigma), shape = factor(sigma)) + 
@@ -79,56 +77,14 @@ out_scale_down_to_zero <- final_df %>%
   theme_classic() + 
   theme(axis.text = element_text(color = "black")) + 
   xlab(expression(gamma)) + 
-  ggtitle("Cases delayed (log scale)") + 
-  labs(color = expression(sigma), shape = expression(sigma))
+  ggtitle("Cases delayed (log scale)")
 
-xpos_1_1 <- (gamma_estimates %>% 
-           filter(recovery_delay == 0) %>% 
-           pull(gamma))
-xpos_1_2 <- (gamma_estimates %>% 
-            filter(recovery_delay == 14) %>% 
-            pull(gamma))
-ypos_1_1 = 1
-ypos_1_2 = 50
-ypos_1_3 = 9
-xshift_1_1 = 0.02
-xshift_1_2 = 0.04
 out_scale_down_to_zero <- out_scale_down_to_zero + 
-  geom_curve(
-    aes(xend = xpos_1_1, 
-        yend = ypos_1_1, 
-        x = xpos_1_1 + xshift_1_1,
-        y = ypos_1_2),
-    arrow = arrow(length = unit(0.03, "npc")),
-    curvature = 0.3,
-    color = "black"
-  ) + 
-  geom_curve(
-    aes(xend = xpos_1_2, 
-        yend = ypos_1_1, 
-        x = xpos_1_2 + xshift_1_2,
-        y = ypos_1_3),
-    arrow = arrow(length = unit(0.03, "npc")),
-    curvature = 0.3,
-    color = "black"
-  ) + 
-  scale_y_log10("Confirmed cases delayed",
+  scale_y_log10("Confirmed cases delayed\n(log scale)",
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x)),
                 limits = c(1, max(final_df$cases_saved)*1.5), 
-                expand = c(0, 0)) +
-  annotate(geom = "text", x = xpos_1_1 + xshift_1_1, y = ypos_1_2,
-           label = expression("Simulation "*gamma),
-           hjust = 0) + 
-  annotate(geom = "text", x = xpos_1_2 + xshift_1_2, y = ypos_1_3,
-           label = expression("Est. "*gamma*" assuming"),
-           hjust = 0, vjust = -0.6) + 
-  annotate(geom = "text", x = xpos_1_2 + xshift_1_2, y = ypos_1_3,
-           label = expression("14-day delay in"),
-           hjust = 0, vjust = 0.5) + 
-  annotate(geom = "text", x = xpos_1_2 + xshift_1_2, y = ypos_1_3,
-           label = expression("recording recovery."),
-           hjust = 0, vjust = 1.6)
+                expand = c(0, 0))
 
 out_scale_trimmed <- final_df %>% 
   ggplot() + 
@@ -140,44 +96,9 @@ out_scale_trimmed <- final_df %>%
   ggtitle("Cases delayed (linear scale trimmed)") 
 
 yr_2 <- ggplot_build(out_scale_trimmed)$layout$panel_params[[1]]$y.range
-xpos_2_1 <- xpos_1_1
-xpos_2_2 <- xpos_1_2
-ypos_2_1 = yr_2[1]
-ypos_2_2 = yr_2[1] + 0.3*(diff(yr_2))
-ypos_2_3 = yr_2[1] + 0.13*(diff(yr_2))
-xshift_2_1 = xshift_1_1
-xshift_2_2 = 0.03
 out_scale_trimmed <- out_scale_trimmed + 
-  # geom_curve(
-  #   aes(xend = xpos_2_1, 
-  #       yend = ypos_2_1, 
-  #       x = xpos_2_1 + xshift_2_1,
-  #       y = ypos_2_2),
-  #   arrow = arrow(length = unit(0.03, "npc")),
-  #   curvature = 0.3
-  # ) + 
-  # geom_curve(
-  #   aes(xend = xpos_2_2, 
-  #       yend = ypos_2_1, 
-  #       x = xpos_2_2 + xshift_2_2,
-  #       y = ypos_2_3),
-  #   arrow = arrow(length = unit(0.03, "npc")),
-  #   curvature = 0.3
-  # ) + 
-  scale_y_continuous("Confirmed cases delayed", labels = scales::comma, 
-                     limits = yr_2, expand = c(0, 0)) #+
-  # annotate(geom = "text", x = xpos_2_1 + xshift_2_1, y = ypos_2_2,
-  #          label = expression("Simulation "*gamma),
-  #          hjust = 0) + 
-  # annotate(geom = "text", x = xpos_2_2 + xshift_2_2, y = ypos_2_3,
-  #          label = expression("Est. "*gamma*" assuming"),
-  #          hjust = 0, vjust = -0.6) + 
-  # annotate(geom = "text", x = xpos_2_2 + xshift_2_2, y = ypos_2_3,
-  #          label = expression("14-day delay in"),
-  #          hjust = 0, vjust = 0.5) + 
-  # annotate(geom = "text", x = xpos_2_2 + xshift_2_2, y = ypos_2_3,
-  #          label = expression("recording recovery."),
-  #          hjust = 0, vjust = 1.6)
+  scale_y_continuous("Confirmed cases delayed\n(linear scale trimmed)", labels = scales::comma, 
+                     limits = yr_2, expand = c(0, 0))
 
 out_scale_trimmed_true <- final_df %>% 
   ggplot() + 
@@ -190,44 +111,12 @@ out_scale_trimmed_true <- final_df %>%
 
 
 yr_3 <- ggplot_build(out_scale_trimmed_true)$layout$panel_params[[1]]$y.range
-xpos_3_1 <- xpos_1_1
-xpos_3_2 <- xpos_1_2
-ypos_3_1 = yr_3[1]
-ypos_3_2 = yr_3[1] + 0.15*(diff(yr_3))
-ypos_3_3 = yr_3[1] + 0.1*(diff(yr_3))
-xshift_3_1 = 0.03
-xshift_3_2 = 0.06
-out_scale_trimmed_true <- out_scale_trimmed_true + 
-  # geom_curve(
-  #   aes(xend = xpos_3_1, 
-  #       yend = ypos_3_1, 
-  #       x = xpos_3_1 + xshift_3_1,
-  #       y = ypos_3_2),
-  #   arrow = arrow(length = unit(0.03, "npc")),
-  #   curvature = 0.3
-  # ) + 
-  # geom_curve(
-  #   aes(xend = xpos_3_2, 
-  #       yend = ypos_3_1, 
-  #       x = xpos_3_2 + xshift_3_2,
-  #       y = ypos_3_3),
-  #   arrow = arrow(length = unit(0.03, "npc")),
-  #   curvature = 0.3
-  # ) + 
-  scale_y_continuous("Estimated with-policy confirmed cases", labels = scales::comma,
-                     limits = yr_3, expand = expansion(c(0, 0)))# +
-  # annotate(geom = "text", x = xpos_3_1 + xshift_3_1, y = ypos_3_2,
-  #          label = expression("Simulation "*gamma),
-  #          hjust = 0) + 
-  # annotate(geom = "text", x = xpos_3_2 + xshift_3_2, y = ypos_3_3,
-  #          label = expression("Est. "*gamma*" assuming"),
-  #          hjust = 0, vjust = -0.6) + 
-  # annotate(geom = "text", x = xpos_3_2 + xshift_3_2, y = ypos_3_3,
-  #          label = expression("14-day delay in"),
-  #          hjust = 0, vjust = 0.5) + 
-  # annotate(geom = "text", x = xpos_3_2 + xshift_3_2, y = ypos_3_3,
-  #          label = expression("recording recovery."),
-  #          hjust = 0, vjust = 1.6)
+suppressWarnings({
+  # expand scale is deprecated but our conda has an old ggplot
+  out_scale_trimmed_true <- out_scale_trimmed_true + 
+    scale_y_continuous("Estimated with-policy confirmed cases\n(linear scale trimmed)", labels = scales::comma,
+                       limits = yr_3, expand = expand_scale(c(0, 0)))
+})
 
 out_scale_trimmed_no_policy <- final_df %>% 
   ggplot() + 
@@ -239,54 +128,25 @@ out_scale_trimmed_no_policy <- final_df %>%
   ggtitle("Estimated no-policy cases")
 
 yr_4 <- ggplot_build(out_scale_trimmed_no_policy)$layout$panel_params[[1]]$y.range
-xpos_4_1 <- xpos_1_1
-xpos_4_2 <- xpos_1_2
-ypos_4_1 = yr_4[1]
-ypos_4_2 = yr_4[1] + 0.3*(diff(yr_4))
-ypos_4_3 = yr_4[1] + 0.13*(diff(yr_4))
-xshift_4_1 = xshift_1_1
-xshift_4_2 = 0.03
 out_scale_trimmed_no_policy <- out_scale_trimmed_no_policy + 
-  # geom_curve(
-  #   aes(xend = xpos_4_1, 
-  #       yend = ypos_4_1, 
-  #       x = xpos_4_1 + xshift_4_1,
-  #       y = ypos_4_2),
-  #   arrow = arrow(length = unit(0.03, "npc")),
-  #   curvature = 0.3
-  # ) + 
-  # geom_curve(
-  #   aes(xend = xpos_4_2, 
-  #       yend = ypos_4_1, 
-  #       x = xpos_4_2 + xshift_4_2,
-  #       y = ypos_4_3),
-  #   arrow = arrow(length = unit(0.03, "npc")),
-  #   curvature = 0.3
-  # ) + 
-  scale_y_continuous("Estimate no-policy confirmed cases", labels = scales::comma,
-                     limits = yr_4, expand = c(0, 0)) #+
-  # annotate(geom = "text", x = xpos_4_1 + xshift_4_1, y = ypos_4_2,
-  #          label = expression("Simulation "*gamma),
-  #          hjust = 0) + 
-  # annotate(geom = "text", x = xpos_4_2 + xshift_4_2, y = ypos_4_3,
-  #          label = expression("Est. "*gamma*" assuming"),
-  #          hjust = 0, vjust = -0.6) + 
-  # annotate(geom = "text", x = xpos_4_2 + xshift_4_2, y = ypos_4_3,
-  #          label = expression("14-day delay in"),
-  #          hjust = 0, vjust = 0.5) + 
-  # annotate(geom = "text", x = xpos_4_2 + xshift_4_2, y = ypos_4_3,
-  #          label = expression("recording recovery."),
-  #          hjust = 0, vjust = 1.6)
+  scale_y_continuous("Estimate no-policy confirmed cases\n(linear scale trimmed)", labels = scales::comma,
+                     limits = yr_4, expand = c(0, 0))
 
 suppressWarnings({
-  final <- (out_scale_down_to_zero + theme(legend.position = c(0.8, 0.55)) | out_scale_trimmed + theme(legend.position = "none")) / 
-    (out_scale_trimmed_true + theme(legend.position = "none") | out_scale_trimmed_no_policy + theme(legend.position = "none")) +
+  e <- expression(sigma*" = "*phantom(2)*"0.2"*" (SEIR)",sigma*" = 0.33"*" (SEIR)",sigma*" = "*phantom(2)*"0.5"*" (SEIR)",sigma*" = "*phantom(",,,,")*infinity*phantom(",,,,")*"(SIR)")
+
+  final <- (out_scale_trimmed_no_policy + theme(legend.position = "none")) + 
+    (out_scale_trimmed_true + theme(legend.position = "none")) + 
+    (out_scale_trimmed + theme(legend.position = "none")) + 
+    (out_scale_down_to_zero + theme(legend.position = c(0.7, 0.3))) + 
+    patchwork::plot_layout(ncol = 2) +
     plot_annotation(tag_levels = "a") &
     theme(plot.tag = element_text(face = "bold"),
           legend.text.align = 0,
-          legend.title.align = 0.5) &
-    scale_color_npg(labels = expression(0.2,0.33,0.5,infinity*" (SIR)")) & 
-    scale_shape(labels = expression(0.2,0.33,0.5,infinity*" (SIR)"))
+          legend.text = element_text(size = 12),
+          legend.title = element_blank()) &
+    scale_color_npg(labels = e) & 
+    scale_shape(labels = e)
   
   
   cowplot::save_plot(plot = final, filename = "results/figures/fig4/fig4_total_sensitivity_to_gamma.pdf",
