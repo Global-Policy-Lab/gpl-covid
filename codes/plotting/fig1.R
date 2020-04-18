@@ -2,7 +2,7 @@
 ##  Figure 1: Data Display  ##
 ##############################
 
-# Updated 4/12/2020
+# Updated 4/17/2020
 # by hdruckenmiller
 
 rm(list=ls())
@@ -371,7 +371,6 @@ pdf(paste0(output_dir, country, "_map.pdf"), width = 5, height = 5)
 plot(map)
 points(adm$lon, adm$lat, col=alpha("darkred", 0.3), 
        pch=19, cex=0.1*sqrt(adm$cum_confirmed_cases_imputed))
-text(mean(adm$lon), mean(adm$lat), paste("Cases as of ", map_date))
 # Add legend, size = 1000 cases
 if (country=="ITA"){
   points(min(adm$lon, na.rm = T), min(adm$lat, na.rm = T), col=alpha("darkred", 0.3), 
@@ -414,6 +413,11 @@ if (c %in% c(5,6)){
 ##########################################################
 
 ## SAVE SOURCE DATA 
+
+rownames(epi_source) <- NULL
+rownames(policy_source) <- NULL
+rownames(policylist) <- NULL
+rownames(map_source) <- NULL
 
 write.csv(epi_source, file=paste0(source_dir, "fig1_epi_timeseries.csv"))
 write.csv(policy_source, file=paste0(source_dir, "fig1_policy_timeseries.csv"))
