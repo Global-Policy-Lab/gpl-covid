@@ -2,7 +2,7 @@
 ##  Figure 1: Data Display  ##
 ##############################
 
-# Updated 4/17/2020
+# Updated 4/18/2020
 # by hdruckenmiller
 
 rm(list=ls())
