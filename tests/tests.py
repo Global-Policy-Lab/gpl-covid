@@ -19,8 +19,10 @@ def test_readme():
 
 def test_pipeline(tmp_path):
     tmp_model_path = tmp_path / "models"
-
+    tmp_results_path = tmp_path / "results" / "source_data"
+    tmp_results_path.parent.mkdir()
     copytree("models", tmp_model_path)
+    copytree("results/source_data", tmp_results_path)
 
     # run pipeline
     cmd = shlex.split("bash run --nostata --nocensus --num-proj 2")
@@ -28,9 +30,11 @@ def test_pipeline(tmp_path):
 
     bad_files = []
     len_path = len(tmp_path.parts)
-    for p in tmp_model_path.rglob("*"):
+    for p in list(tmp_model_path.rglob("*.csv")) + list(
+        tmp_results_path.rglob("*.csv")
+    ):
         # skip for bootstrap samples which may have different num of bootstraps
-        if p.suffix == ".csv" and "bootstrap" not in p.name:
+        if "bootstrap" not in p.name:
             other_file = Path("").joinpath(*p.parts[len_path:])
             try:
                 pd.testing.assert_frame_equal(pd.read_csv(p), pd.read_csv(other_file))
