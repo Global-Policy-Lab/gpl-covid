@@ -8,7 +8,6 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(gridExtra))
-library(Hmisc)
 
 # set working directory
 dir <- "results/source_data/"
