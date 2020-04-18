@@ -134,11 +134,11 @@ outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
-outreg2 using "results/tables/IRN_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/IRN_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Iran, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
  "\'22Travel ban (opt), work from home, school closure\'22 policies were enacted March 1-5, 2020 which overlaps with missing provincial case data in Iran on March 2-3, 2020.")
-cap erase "results/tables/IRN_estimates_table.txt"
+cap erase "results/tables/reg_results/IRN_estimates_table.txt"
 
 // saving coefs
 tempfile results_file
@@ -185,15 +185,6 @@ post results ("IRN") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 
 
 local comb_policy = round(r(estimate), 0.001)
 local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
-
-// compute ATE
-preserve
-	keep if e(sample) == 1
-	collapse  D_l_cum_confirmed_cases p_1 p_2 
-	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2], ci(LB UB) se(sd) p(pval)
-	g adm0 = "IRN"
-	outsheet * using "models/IRN_ATE.csv", comma replace 
-restore
 
 // quality control: cannot have negative growth in cumulative cases
 // fix so there are no negative growth rates in error bars
@@ -254,9 +245,9 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick))
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
-egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
-outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
-using "results/source_data/Figure3_IRN_data.csv" if miss_ct<8, comma replace
+egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
+outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/Figure3_IRN_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
 // tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
@@ -273,6 +264,11 @@ drop miss_ct
 
 
 //-------------------------------Running the model for Tehran only 
+
+// gen cases_to_pop = cum_confirmed_cases / population
+// keep if cum_confirmed_cases!=.
+// collapse (min) t (max) cases_to_pop cum_confirmed_cases, by(adm1_name)
+// sort cum_confirmed_cases
 
 reg D_l_cum_confirmed_cases testing_regime_* p_1 p_2 if adm1_name=="Tehran"
 
@@ -310,8 +306,8 @@ predict day_avg_thr if adm1_name  == "Tehran" & e(sample) == 1
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
-tw (rspike ub_y_actual_thr lb_y_actual_thr t, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_thr lb_counter_thr t, lwidth(vthin) color(red*.5)) ///
+tw (rspike ub_y_actual_thr lb_y_actual_thr t_random, lwidth(vthin) color(blue*.5)) ///
+(rspike ub_counter_thr lb_counter_thr t_random2, lwidth(vthin) color(red*.5)) ///
 || (scatter y_actual_thr t, msize(tiny) color(blue*.5) ) ///
 (scatter y_counter_thr t, msize(tiny) color(red*.5)) ///
 (connect y_actual_thr t, color(blue) m(square) lpattern(solid)) ///
@@ -320,76 +316,112 @@ tw (rspike ub_y_actual_thr lb_y_actual_thr t, lwidth(vthin) color(blue*.5)) ///
 if e(sample), ///
 title("Tehran, Iran", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/sub_natl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
+yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+saving(results/figures/appendix/subnatl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
+
+egen miss_ct = rowmiss(y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr day_avg_thr)
+outsheet t y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr day_avg_thr ///
+using "results/source_data/ExtendedDataFigure9b_Tehran_data.csv" if miss_ct<7, comma replace
+drop miss_ct
 
 
-// FIXED LAG 
+//----------------------------------------------FIXED LAG 
+tempfile base_data
+save `base_data'
+
+reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
+local r2=e(r2)
 preserve
-	reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
-
-	coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
-	 
-	foreach lags of num 1 2 3 4 5{ 
-		quietly {
-		foreach var in p_1 p_2{
-			g `var'_copy = `var'
-			g `var'_fixelag = L`lags'.`var'
-			replace `var'_fixelag = 0 if `var'_fixelag == .
-			replace `var' = `var'_fixelag
-			
-		}
-		drop *_fixelag 
-
-		reghdfe D_l_cum_confirmed_cases p_1 p_2 testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
-		coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
-		local r2 = e(r2)
-		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
+	keep if e(sample) == 1
+	collapse  D_l_cum_confirmed_cases  p_* 
+	predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] , ci(LB UB) se(sd) p(pval)
+	keep ATE LB UB sd pval 
+	g lag = 0
+	g r2 = `r2'
+	tempfile f0
+	save `f0'
+restore	 
+coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
+ 
+foreach lags of num 1 2 3 4 5 10 15{ 
+	quietly {
+	foreach var in p_1 p_2{
+		g `var'_copy = `var'
+		g `var'_fixelag = L`lags'.`var'
+		replace `var'_fixelag = 0 if `var'_fixelag == .
+		replace `var' = `var'_fixelag
 		
-		foreach var in p_1 p_2{
-			replace `var' = `var'_copy
-			drop `var'_copy
-		}
-		}
 	}
+	drop *_fixelag 
+
+	reghdfe D_l_cum_confirmed_cases p_1 p_2 testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+	coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+	local r2 = e(r2)
+	preserve
+		keep if e(sample) == 1
+		collapse  D_l_cum_confirmed_cases  p_* 
+		predictnl ATE = p_1*_b[p_1] + p_2* _b[p_2] , ci(LB UB) se(sd) p(pval)
+		keep ATE LB UB sd pval 
+		g lag = `lags'
+		g r2 = `r2'
+		tempfile f`lags'
+		save `f`lags''
+	restore	 
+ 	
+	
+	replace L`lags'_at = L`lags'_at - 0.1 *`lags'
+	
+	foreach var in p_1 p_2{
+		replace `var' = `var'_copy
+		drop `var'_copy
+	}
+	}
+}
 
 
-	set scheme s1color
-	tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
-	|| scatter  L0_at L0_b, mc(black) ///
-	|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
-	|| scatter  L1_at L1_b, mc(black*.9) ///
-	|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
-	|| scatter  L2_at L2_b, mc(black*.7) ///
-	|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
-	|| scatter  L3_at L3_b, mc(black*.5) ///
-	|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
-	|| scatter  L4_at L4_b, mc(black*.3) ///
-	|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
-	|| scatter  L5_at L5_b, mc(black*.1) ///		
-	ylabel(1 "trvl ban opt, wrk hme, schl clse" ///
-	2 "home isolation", angle(0)) ///
-	ytitle("") title("Iran - comparing Fixed Lags models") ///
-	legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
-	lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
-	graph export results/figures/appendix/fixed_lag/IRN.pdf, replace
-	graph export results/figures/appendix/fixed_lag/IRN_FL.png, replace
-	drop if L0_b == .
-	keep *_at *_ll1 *_ul1 *_b
-	egen policy = seq()
-	reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
-	rename *_ *
-	reshape long L, i(temp policy) j(val)
-	tostring policy, replace
-	replace policy = "trvl ban, wrk hme, schl clse" if policy == "1"
-	replace policy = "home isolation" if policy == "2"
-	rename val lag
-	reshape wide L, i(lag policy) j(temp) string
-	sort Lat
-	rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-	outsheet * using "results/source_data/extended_fixed_lag_IRN.csv", replace	
-restore
+set scheme s1color
+tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
+|| scatter  L0_at L0_b, mc(black) ///
+|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
+|| scatter  L1_at L1_b, mc(black*.9) ///
+|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
+|| scatter  L2_at L2_b, mc(black*.7) ///
+|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
+|| scatter  L3_at L3_b, mc(black*.5) ///
+|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
+|| scatter  L4_at L4_b, mc(black*.3) ///
+|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
+|| scatter  L5_at L5_b, mc(black*.1) ///		
+ylabel(1 "Travel ban (opt), work from home, school closure" ///
+2 "Home isolation", angle(0)) ///
+ytitle("") title("Iran - comparing Fixed Lags models") ///
+legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
+lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
+graph export results/figures/appendix/fixed_lag/IRN.pdf, replace
+graph export results/figures/appendix/fixed_lag/IRN_FL.png, replace
+drop if L0_b == .
+keep *_at *_ll1 *_ul1 *_b
+egen policy = seq()
+reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
+rename *_ *
+reshape long L, i(temp policy) j(val)
+tostring policy, replace
+replace policy = "Travel ban (opt), work from home, school closure" if policy == "1"
+replace policy = "Home isolation" if policy == "2"
+rename val lag
+reshape wide L, i(lag policy) j(temp) string
+sort Lat
+rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
+outsheet * using "results/source_data/extended_fixed_lag_IRN.csv", replace	
 
+use `f0', clear
+foreach L of num 1 2 3 4 5 10 15 {
+	append using `f`L''
+}
+g adm0 = "IRN"
+outsheet * using "models/IRN_ATE.csv", comma replace 
+
+use `base_data', clear
 //------------------------NEW: EVENT STUDY
 preserve
 local policy_study = "p_2"
@@ -464,6 +496,7 @@ restore
 
 
 //-------------------------------Cross-validation
+tempvar counter_CV
 tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
@@ -476,6 +509,13 @@ foreach var in "p_1" "p_2"{
 lincom p_1 + p_2 
 post results ("IRN") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
+predictnl `counter_CV' =  testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+sum `counter_CV'
+post results ("IRN") ("full_sample") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+drop `counter_CV'
+
+
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
@@ -485,6 +525,11 @@ foreach adm in `state_list' {
 	}
 	lincom p_1 + p_2 
 	post results ("IRN") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	predictnl `counter_CV' =  testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+	_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+	sum `counter_CV'
+	post results ("IRN") ("`adm'") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+	drop `counter_CV'	
 }
 postclose results
 
@@ -495,8 +540,8 @@ preserve
 	tw scatter i beta , xline(0,lc(black) lp(dash)) mc(black*.5)   ///
 	|| scatter i beta if sample == "full_sample", mc(red)  ///
 	yscale(range(0.5(0.5)3.5)) ylabel(1 "combined effect" ///
-	2  "school clo. , travel ban , work from home" ///
-	3 "home isolation", angle(0)) ///
+	2  "Travel ban (opt), work from home, school closure" ///
+	3 "Home isolation", angle(0)) ///
 	xtitle("Estimated effect on daily growth rate", height(5)) ///
 	legend(order(2 1) lab(2 "Full sample") lab(1 "Leaving one region out") ///
 	region(lstyle(none))) ///

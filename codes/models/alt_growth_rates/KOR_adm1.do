@@ -138,12 +138,12 @@ outsheet using "models/reg_data/KOR_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_active_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
-outreg2 using "results/tables/KOR_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/KOR_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title(South Korea, "Dependent variable: Growth rate of active cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
  "\'22Social distance (optional)\'22 includes recommended policies related to social distancing, e.g. no gathering, work from home, and closing businesses such as karaoke and cyber cafes." "" ///
  "\'22Social distance (mandatory)\'22 includes prohibiting rallies, closing churches, and closing welfare service facilities.")
-cap erase "results/tables/KOR_estimates_table.txt"
+cap erase "results/tables/reg_results/KOR_estimates_table.txt"
 
 // saving coef
 tempfile results_file
@@ -196,15 +196,6 @@ post results ("KOR") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 
 
 local comb_policy = round(r(estimate), 0.001)
 local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
-
-// compute ATE
-preserve
-	keep if e(sample) == 1
-	collapse  D_l_active_cases p_* 
-	predictnl ATE = p_1*_b[p_1] + p_2*_b[p_2] + p_3*_b[p_3] + p_4*_b[p_4], ci(LB UB) se(sd) p(pval)
-	g adm0 = "KOR"
-	outsheet * using "models/KOR_ATE.csv", comma replace 
-restore
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars
@@ -271,11 +262,10 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick))
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
 
-egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
-outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
-using "results/source_data/Figure3_KOR_data.csv" if miss_ct<8, comma replace
+egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
+outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/Figure3_KOR_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
-
 
 // tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 // (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
@@ -290,7 +280,59 @@ drop miss_ct
 // yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) 
 
 
+//-------------------------------Running the model for Daegu only
+
+// gen cases_to_pop = active_cases / population
+// collapse (max) cases_to_pop active_cases, by(adm1_name)
+// sort active_cases //Daegu
+// sort cases_to_pop //Daegu
+
+reghdfe D_l_active_cases p_* testing_regime_change_* if adm1_name=="Daegu", noabsorb
+
+// predicted "actual" outcomes with real policies
+predictnl y_actual_dg = xb() if e(sample), ci(lb_y_actual_dg ub_y_actual_dg)
+	
+// predicting counterfactual growth for each obs
+predictnl y_counter_dg = ///
+testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+testing_regime_change_29feb2020 * _b[testing_regime_change_29feb2020] + ///
+testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+_b[_cons] if e(sample), ci(lb_counter_dg ub_counter_dg)
+
+// quality control: don't want to be forecasting negative growth (not modeling recoveries)
+// fix so there are no negative growth rates in error bars
+foreach var of varlist y_actual_dg y_counter_dg lb_y_actual_dg ub_y_actual_dg lb_counter_dg ub_counter_dg {
+	replace `var' = 0 if `var'<0 & `var'!=.
+}
+
+// Observed avg change in log cases
+reg D_l_active_cases i.t if adm1_name=="Daegu"
+predict day_avg_dg if adm1_name=="Daegu" & e(sample) == 1
+
+// Graph of predicted growth rates
+// fixed x-axis across countries
+tw (rspike ub_y_actual_dg lb_y_actual_dg t_random, lwidth(vthin) color(blue*.5)) ///
+(rspike ub_counter_dg lb_counter_dg t_random2, lwidth(vthin) color(red*.5)) ///
+|| (scatter y_actual_dg t,  msize(tiny) color(blue*.5) ) ///
+(scatter y_counter_dg t, msize(tiny) color(red*.5)) ///
+(connect y_actual_dg t, color(blue) m(square) lpattern(solid)) ///
+(connect y_counter_dg t, color(red) lpattern(dash) m(Oh)) ///
+(sc day_avg_dg t, color(black)) ///
+if e(sample), ///
+title("Daegu, South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
+plotregion(m(b=0)) ///
+saving(results/figures/appendix/subnatl_growth_rates/Daegu_active_cases_growth_rates_fixedx.gph, replace)
+
+egen miss_ct = rowmiss(y_actual_dg lb_y_actual_dg ub_y_actual_dg y_counter_dg lb_counter_dg ub_counter_dg day_avg_dg)
+outsheet t y_actual_dg lb_y_actual_dg ub_y_actual_dg y_counter_dg lb_counter_dg ub_counter_dg day_avg_dg ///
+using "results/source_data/ExtendedDataFigure9b_Daegu_data.csv" if miss_ct<7, comma replace
+drop miss_ct
+
+
 //-------------------------------Cross-validation
+tempvar counter_CV
 tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
@@ -302,7 +344,15 @@ foreach var in "p_1" "p_2" "p_3" "p_4"{
 }
 lincom p_1 + p_2 + p_3 + p_4
 post results ("KOR") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-
+predictnl `counter_CV' = ///
+testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+testing_regime_change_29feb2020 * _b[testing_regime_change_29feb2020] + ///
+testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+sum `counter_CV'
+post results ("KOR") ("full_sample") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+drop `counter_CV'
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
@@ -312,6 +362,15 @@ foreach adm in `state_list' {
 	}
 	lincom p_1 + p_2 + p_3 + p_4 
 	post results ("KOR") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	predictnl `counter_CV' = ///
+	testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+	testing_regime_change_29feb2020 * _b[testing_regime_change_29feb2020] + ///
+	testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+	testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+	_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+	sum `counter_CV'
+	post results ("KOR") ("`adm'") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+	drop `counter_CV'	
 }
 postclose results
 
@@ -339,78 +398,114 @@ preserve
 	outsheet * using "results/source_data/extended_cross_validation_KOR.csv", replace	
 restore
 
-//---------------------------------Fixed Lag
+tempfile base_data
+save `base_data'
+
+//------------------------------------FIXED LAG 
+
+reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
+local r2 = e(r2)
+
 preserve
-	reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
-	coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
-	 
-	foreach lags of num 1/5 { 
-		quietly {
-		foreach var in p_1 p_2 p_3 p_4{
-			g `var'_copy = `var'
-			g `var'_fixelag = L`lags'.`var'
-			replace `var'_fixelag = 0 if `var'_fixelag  == .
-			replace `var' = `var'_fixelag
-			
-		}
-		drop *_fixelag 
-
-		reghdfe D_l_active_cases testing_regime_change_* p_1 p_2 p_3 p_4, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
-		coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
-		local r2 = e(r2)
-		replace L`lags'_at = L`lags'_at - 0.1 *`lags'
+	keep if e(sample) == 1
+	collapse  D_l_active_cases p_* 
+	predictnl ATE = p_1*_b[p_1] + p_2*_b[p_2] + p_3*_b[p_3] + p_4*_b[p_4], ci(LB UB) se(sd) p(pval)
+	keep ATE LB UB sd pval 
+	g lag = 0
+	g r2 = `r2'
+	tempfile f0
+	save `f0'
+restore	 
+  
+foreach lags of num 1 2 3 4 5 10 15{ 
+	quietly {
+	foreach var in p_1 p_2 p_3 p_4{
+		g `var'_copy = `var'
+		g `var'_fixelag = L`lags'.`var'
+		replace `var'_fixelag = 0 if `var'_fixelag  == .
+		replace `var' = `var'_fixelag
 		
-		foreach var in p_1 p_2 p_3 p_4{
-			replace `var' = `var'_copy
-			drop `var'_copy
-		}
-		}
-		di `r2'
 	}
+	drop *_fixelag 
 
-	set scheme s1color
-	tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
-	|| scatter  L0_at L0_b, mc(black) ///
-	|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
-	|| scatter  L1_at L1_b, mc(black*.9) ///
-	|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
-	|| scatter  L2_at L2_b, mc(black*.7) ///
-	|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
-	|| scatter  L3_at L3_b, mc(black*.5) ///
-	|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
-	|| scatter  L4_at L4_b, mc(black*.3) ///
-	|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
-	|| scatter  L5_at L5_b, mc(black*.1) ///	
-	ylabel( ///
-	1 "Social distance (optional)" ///
-	2 "Social distance (mandatory)" ///
-	3 "Emergency declaration" ///
-	4 "Quarantine positive cases", angle(0)) ///
-	ytitle("") title("South Korea comparing fixed lags models") ///
-	legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
-	lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
-	graph export results/figures/appendix/fixed_lag/KOR.pdf, replace
-	graph export results/figures/appendix/fixed_lag/KOR.png, replace
+	reghdfe D_l_active_cases testing_regime_change_* p_1 p_2 p_3 p_4, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+	coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+	local r2 = e(r2)
 	
-	drop if L0_b == .
-	keep *_at *_ll1 *_ul1 *_b
-	egen policy = seq()
-	reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
-	rename *_ *
-	reshape long L, i(temp policy) j(val)
-	tostring policy, replace
-	replace policy = "social distance" if policy == "1"
-	replace policy = "no dem, rel cls, wel serv cls" if policy == "2"
-	replace policy = "emerg declaration" if policy == "3"
-	replace policy = "quarantine positive cases" if policy == "4"
-	rename val lag
-	reshape wide L, i(lag policy) j(temp) string
-	sort Lat
-	rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-	outsheet * using "results/source_data/extended_fixed_lag_KOR.csv", replace
-restore
 
-//------------------------NEW: EVENT STUDY
+	preserve
+		keep if e(sample) == 1
+		collapse  D_l_active_cases p_* 
+		predictnl ATE = p_1*_b[p_1] + p_2*_b[p_2] + p_3*_b[p_3] + p_4*_b[p_4], ci(LB UB) se(sd) p(pval)
+		keep ATE LB UB sd pval 
+		g lag = `lags'
+		g r2 = `r2'
+		tempfile f`lags'
+		save `f`lags''
+	restore	 	
+	
+	replace L`lags'_at = L`lags'_at - 0.1 *`lags'
+	
+	foreach var in p_1 p_2 p_3 p_4{
+		replace `var' = `var'_copy
+		drop `var'_copy
+	}
+	}
+	di `r2'
+}
+
+set scheme s1color
+tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
+|| scatter  L0_at L0_b, mc(black) ///
+|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
+|| scatter  L1_at L1_b, mc(black*.9) ///
+|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
+|| scatter  L2_at L2_b, mc(black*.7) ///
+|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
+|| scatter  L3_at L3_b, mc(black*.5) ///
+|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
+|| scatter  L4_at L4_b, mc(black*.3) ///
+|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
+|| scatter  L5_at L5_b, mc(black*.1) ///	
+ylabel( ///
+1 "Social distance (optional)" ///
+2 "Social distance (mandatory)" ///
+3 "Emergency declaration" ///
+4 "Quarantine positive cases", angle(0)) ///
+ytitle("") title("South Korea comparing fixed lags models") ///
+legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
+lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
+graph export results/figures/appendix/fixed_lag/KOR.pdf, replace
+graph export results/figures/appendix/fixed_lag/KOR.png, replace
+
+drop if L0_b == .
+keep *_at *_ll1 *_ul1 *_b
+egen policy = seq()
+reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
+rename *_ *
+reshape long L, i(temp policy) j(val)
+tostring policy, replace
+replace policy = "Social distance (optional)" if policy == "1"
+replace policy = "Social distance (mandatory)" if policy == "2"
+replace policy = "Emergency declaration" if policy == "3"
+replace policy = "Quarantine positive cases" if policy == "4"
+rename val lag
+reshape wide L, i(lag policy) j(temp) string
+sort Lat
+rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
+outsheet * using "results/source_data/extended_fixed_lag_KOR.csv", replace
+
+use `f0', clear
+foreach L of num 1 2 3 4 5 10 15 {
+	append using `f`L''
+}
+g adm0 = "KOR"
+outsheet * using "models/KOR_ATE.csv", comma replace 
+
+use `base_data', clear
+
+//------------------------EVENT STUDY
 preserve
 	local policy_study = "p_1"
 

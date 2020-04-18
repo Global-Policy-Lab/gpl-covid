@@ -24,7 +24,7 @@ gamma = readr::read_csv("models/gamma_est.csv",
   pull(gamma_est) %>% 
   mean()
 
-dir.create("data/post_processing", recursive=TRUE, showWarnings=FALSE)
+dir.create("models/projections", recursive=TRUE, showWarnings=FALSE)
 message("Running France projection.")
 source("codes/models/FRA_create_CBs.R")
 message("Running Iran projection.")
