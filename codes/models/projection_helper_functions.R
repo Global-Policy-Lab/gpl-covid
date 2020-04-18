@@ -382,7 +382,7 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
     cum_confirmed_cases_simulated[i] = cum_confirmed_cases_simulated[i - 1] + new_true_infections*proportion_confirmed
   }
   if (all){
-    if(sigma < Inf){
+    if(daily_sigma < Inf){
       out <- tibble(number_of_susceptible_individuals = number_of_susceptible_individuals, 
                     number_of_infectious_individuals = number_of_infectious_individuals, 
                     number_of_recovered_individuals = number_of_recovered_individuals,
