@@ -1,4 +1,4 @@
-import delim "results/source_data/ExtendedDataFigure7_r2.csv", clear
+import delim "results/source_data/indiv/ExtendedDataFigure8_r2.csv", clear
 
 rename * r2*
 rename r2ïlags L
@@ -24,7 +24,7 @@ graph export results/figures/appendix/fixed_lag/r2.pdf, replace
 
 
 foreach ADM in "FRA" "IRN" "KOR" "ITA" "USA" {
-	import delim using "results/source_data/extended_fixed_lag_`ADM'.csv", clear
+	import delim using "results/source_data/indiv/ExtendedDataFigure8_fixed_lag_`ADM'.csv", clear
 	
 	cap rename (at b ll1 ul1) (position beta lower_ci upper_ci)
 	g adm0 = "`ADM'"
@@ -116,6 +116,16 @@ yline(`yline3', lc(black) lp(dot)) ///
 yline(`yline4', lc(black) lp(dot)) legend(off) ysize(20) xline(0, lc(black)) 
 
 graph export results/figures/appendix/fixed_lag/fig7_FL.pdf, replace
+
+// output source data for ED fig 7
+export excel adm0 policy beta lower upper using "results/source_data/ExtendedDataFigure8_lags.xlsx", sheet("panel_a") firstrow(var) sheetreplace
+
+import delim "results/source_data/indiv/ExtendedDataFigure8_r2.csv", clear
+rename ïlags lags
+export excel using "results/source_data/ExtendedDataFigure8_lags.xlsx", sheet("panel_b") firstrow(var) sheetreplace
+
+import delim "results/source_data/indiv/ExtendedDataFigure8_CHN_event_study.csv", clear
+export excel using "results/source_data/ExtendedDataFigure8_lags.xlsx", sheet("panel_c") firstrow(var) sheetreplace
 
 /*
 tw rspike upper lower seq if hosp != 1 & adm0 == "USA", xline(0, lc(black)) hor mc(gs10) lw(thin) ///

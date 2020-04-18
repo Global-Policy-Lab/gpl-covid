@@ -158,7 +158,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_irn, replace)
 graph combine hist_irn qn_irn, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_irn.gph, replace)
 graph drop hist_irn qn_irn
 
-outsheet e using "results/source_data/ExtendedDataFigure1_IRN_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_IRN_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -246,8 +246,8 @@ yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
-outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
-using "results/source_data/Figure3_IRN_data.csv" if miss_ct<9 & e(sample), comma replace
+outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/indiv/Figure3_IRN_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
 // tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
@@ -297,7 +297,7 @@ sum y_counter_thr
 postclose results
 preserve
 	use `results_file', clear
-	outsheet * using "results/source_data/Figure2_IRN_coefs.csv", comma replace
+	outsheet * using "results/source_data/indiv/Figure2_IRN_coefs.csv", comma replace
 restore
 
 // Observed avg change in log cases
@@ -320,8 +320,8 @@ yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/subnatl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr day_avg_thr)
-outsheet t y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr day_avg_thr ///
-using "results/source_data/ExtendedDataFigure9b_Tehran_data.csv" if miss_ct<7, comma replace
+outsheet adm0_name adm1_name t y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr day_avg_thr ///
+using "results/source_data/indiv/ExtendedDataFigure9b_Tehran_data.csv" if miss_ct<7, comma replace
 drop miss_ct
 
 
@@ -412,7 +412,7 @@ rename val lag
 reshape wide L, i(lag policy) j(temp) string
 sort Lat
 rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-outsheet * using "results/source_data/extended_fixed_lag_IRN.csv", replace	
+outsheet * using "results/source_data/indiv/ExtendedDataFigure8_fixed_lag_IRN.csv", replace	
 
 use `f0', clear
 foreach L of num 1 2 3 4 5 10 15 {
@@ -548,5 +548,5 @@ preserve
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/IRN.pdf, replace
 	graph export results/figures/appendix/cross_valid/IRN.png, replace	
-	outsheet * using "results/source_data/extended_cross_validation_IRN.csv", replace
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure6_cross_valid_IRN.csv", replace
 restore

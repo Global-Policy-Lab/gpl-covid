@@ -286,7 +286,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_chn, replace)
 graph combine hist_chn qn_chn, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_chn.gph, replace)
 graph drop hist_chn qn_chn
 
-outsheet e using "results/source_data/ExtendedDataFigure1_CHN_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_CHN_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -319,7 +319,7 @@ testing_regime_change_06feb2020 * _b[testing_regime_change_06feb2020] + ///
 testing_regime_change_13feb2020 * _b[testing_regime_change_13feb2020] + ///
 testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
 testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
-_b[_cons] + __hdfe1__ if e(sample), ci(lb_counter2 ub_counter2)
+_b[_cons] + __hdfe1__ if e(sample), ci(lb_counter ub_counter)
     
 
 // compute ATE
@@ -394,8 +394,8 @@ yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
-outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
-using "results/source_data/Figure3_CHN_data.csv" if miss_ct<9 & e(sample), comma replace
+outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/indiv/Figure3_CHN_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
 // for legend
@@ -418,6 +418,68 @@ lab(7 "Observed change in log cases national avg") ///
 region(lcolor(none))) scheme(s1color) xlabel(, format(%tdMon_DD)) ///
 yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) 
 graph export results/figures/fig3/raw/legend_fig3.pdf, replace
+
+
+//-------------------------------Running the model for Wuhan only 
+
+// gen cases_to_pop = active_cases / population
+// collapse (max) cases_to_pop active_cases, by(adm2_name)
+// sort active_cases
+
+reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_* if adm2_name == "Wuhan", noabsorb
+
+// export coefficients (FOR FIG2)
+post results ("CHN_Wuhan") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
+
+postclose results
+preserve
+	use `results_file', clear
+	outsheet * using "results/source_data/indiv/Figure2_CHN_coefs.csv", comma replace // for display (figure 2)
+restore
+
+// predicted "actual" outcomes with real policies
+predictnl y_actual_wh = xb() if e(sample), ci(lb_y_actual_wh ub_y_actual_wh)
+
+// predicting counterfactual growth for each obs
+predictnl y_counter_wh =  ///
+testing_regime_change_18jan2020 * _b[testing_regime_change_18jan2020] + ///
+testing_regime_change_28jan2020 * _b[testing_regime_change_28jan2020] + ///
+testing_regime_change_06feb2020 * _b[testing_regime_change_06feb2020] + ///
+testing_regime_change_13feb2020 * _b[testing_regime_change_13feb2020] + ///
+testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
+testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
+_b[_cons] if e(sample), ci(lb_counter_wh ub_counter_wh)
+
+// quality control: don't want to be forecasting negative growth (not modeling recoveries)
+// fix so there are no negative growth rates in error bars
+foreach var of varlist y_actual_wh y_counter_wh lb_y_actual_wh ub_y_actual_wh lb_counter_wh ub_counter_wh {
+	replace `var' = 0 if `var'<0 & `var'!=.
+}
+
+// Observed avg change in log cases
+reg D_l_active_cases i.t if adm2_name  == "Wuhan"
+predict day_avg_wh if adm2_name  == "Wuhan" & e(sample) == 1
+
+// Graph of predicted growth rates
+// fixed x-axis across countries
+cap set scheme covid19_fig3 // optional scheme for graphs
+tw (rspike ub_y_actual_wh lb_y_actual_wh t_random, lwidth(vthin) color(blue*.5)) ///
+(rspike ub_counter_wh lb_counter_wh t_random2, lwidth(vthin) color(red*.5)) ///
+|| (scatter y_actual_wh t, msize(tiny) color(blue*.5) ) ///
+(scatter y_counter_wh t, msize(tiny) color(red*.5)) ///
+(connect y_actual_wh t, color(blue) m(square) lpattern(solid)) ///
+(connect y_counter_wh t, color(red) lpattern(dash) m(Oh)) ///
+(sc day_avg_wh t, color(black)) ///
+if e(sample), ///
+title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
+plotregion(m(b=0)) ///
+saving(results/figures/appendix/subnatl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
+
+egen miss_ct = rowmiss(y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh)
+outsheet adm0_name adm1_name adm2_name t y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh ///
+using "results/source_data/indiv/ExtendedDataFigure9b_Wuhan_data.csv" if miss_ct<7, comma replace
+drop miss_ct
 
 
 //-------------------------------EVENT STUDY
@@ -471,71 +533,20 @@ loc pre_treat_val = r(mean)
 
 //event study regression
 reg D_l_active_cases f5 f4 f3 f2 f1 l0 l1 l2 l3 l4 testing_regime_change*, cluster(adm12_id) nocons
-coefplot , vertical keep(f5 f4 f3 f2 f1 l0 l1 l2 l3 l4) yline(`pre_treat_val') tit(event study for 36 cities with unconfounded home isolation)
+coefplot, vertical keep(f5 f4 f3 f2 f1 l0 l1 l2 l3 l4) yline(`pre_treat_val') tit(event study for 36 cities with unconfounded home isolation)
 graph export results/figures/appendix/CHN_event_study.pdf, replace
-restore
 
-
-//-------------------------------Running the model for Wuhan only 
-
-// gen cases_to_pop = active_cases / population
-// collapse (max) cases_to_pop active_cases, by(adm2_name)
-// sort active_cases
-
-reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_* if adm2_name == "Wuhan", noabsorb
-
-// export coefficients (FOR FIG2)
-post results ("CHN_Wuhan") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
-
-postclose results
-preserve
-	use `results_file', clear
-	outsheet * using "results/source_data/Figure2_CHN_coefs.csv", comma replace // for display (figure 2)
-restore
-
-// predicted "actual" outcomes with real policies
-predictnl y_actual_wh = xb() if e(sample), ci(lb_y_actual_wh ub_y_actual_wh)
-
-// predicting counterfactual growth for each obs
-predictnl y_counter_wh =  ///
-testing_regime_change_18jan2020 * _b[testing_regime_change_18jan2020] + ///
-testing_regime_change_28jan2020 * _b[testing_regime_change_28jan2020] + ///
-testing_regime_change_06feb2020 * _b[testing_regime_change_06feb2020] + ///
-testing_regime_change_13feb2020 * _b[testing_regime_change_13feb2020] + ///
-testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
-testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
-_b[_cons] if e(sample), ci(lb_counter_wh ub_counter_wh)
-
-// quality control: don't want to be forecasting negative growth (not modeling recoveries)
-// fix so there are no negative growth rates in error bars
-foreach var of varlist y_actual_wh y_counter_wh lb_y_actual_wh ub_y_actual_wh lb_counter_wh ub_counter_wh {
-	replace `var' = 0 if `var'<0 & `var'!=.
+//output source_data
+tempfile results_file_evnt_stdy
+postfile results str3 adm0 str3 lag beta se using `results_file_evnt_stdy', replace
+foreach var in f5 f4 f3 f2 f1 l0 l1 l2 l3 l4 {
+	post results ("CHN") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
+postclose results
+use `results_file_evnt_stdy', clear
+outsheet * using "results/source_data/indiv/ExtendedDataFigure8_CHN_event_study.csv", comma replace
 
-// Observed avg change in log cases
-reg D_l_active_cases i.t if adm2_name  == "Wuhan"
-predict day_avg_wh if adm2_name  == "Wuhan" & e(sample) == 1
-
-// Graph of predicted growth rates
-// fixed x-axis across countries
-cap set scheme covid19_fig3 // optional scheme for graphs
-tw (rspike ub_y_actual_wh lb_y_actual_wh t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_wh lb_counter_wh t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual_wh t, msize(tiny) color(blue*.5) ) ///
-(scatter y_counter_wh t, msize(tiny) color(red*.5)) ///
-(connect y_actual_wh t, color(blue) m(square) lpattern(solid)) ///
-(connect y_counter_wh t, color(red) lpattern(dash) m(Oh)) ///
-(sc day_avg_wh t, color(black)) ///
-if e(sample), ///
-title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-plotregion(m(b=0)) ///
-saving(results/figures/appendix/subnatl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
-
-egen miss_ct = rowmiss(y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh)
-outsheet t y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh ///
-using "results/source_data/ExtendedDataFigure9b_Wuhan_data.csv" if miss_ct<7, comma replace
-drop miss_ct
+restore
 
 
 //-------------------------------Cross-validation
@@ -645,7 +656,7 @@ preserve
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/CHN.pdf, replace
 	graph export results/figures/appendix/cross_valid/CHN.png, replace	
-	outsheet * using "results/source_data/extended_cross_validation_CHN.csv", replace
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure6_cross_valid_CHN.csv", replace
 restore
 
 

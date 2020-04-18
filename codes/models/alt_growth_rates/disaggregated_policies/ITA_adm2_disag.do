@@ -180,8 +180,8 @@ yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/disaggregated_policies/ITA_disag.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
-outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
-using "results/source_data/ExtendedDataFigure9a_ITA_data.csv" if miss_ct<9 & e(sample), comma replace
+outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/indiv/ExtendedDataFigure9a_ITA_data.csv" if miss_ct<9 & e(sample), comma replace
 
 // tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 // (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///

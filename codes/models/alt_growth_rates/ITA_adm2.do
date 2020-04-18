@@ -160,7 +160,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_ita, replace)
 graph combine hist_ita qn_ita, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_ita.gph, replace)
 graph drop hist_ita qn_ita
 
-outsheet e using "results/source_data/ExtendedDataFigure1_ITA_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_ITA_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -209,7 +209,7 @@ coefplot, keep(p_*) tit("ITA: policy packages") subtitle(`subtitle2') xline(0) n
 postclose results
 preserve
 	use `results_file', clear
-	outsheet * using "results/source_data/Figure2_ITA_coefs.csv", comma replace
+	outsheet * using "results/source_data/indiv/Figure2_ITA_coefs.csv", comma replace
 restore
 
 //export predicted counterfactual growth rate
@@ -253,8 +253,8 @@ yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/ITA_adm2_conf_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
-outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
-using "results/source_data/Figure3_ITA_data.csv" if miss_ct<9 & e(sample), comma replace
+outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/indiv/Figure3_ITA_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
 // tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
@@ -317,8 +317,8 @@ yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/subnatl_growth_rates/Milan_conf_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual_mi lb_y_actual_mi ub_y_actual_mi y_counter_mi lb_counter_mi ub_counter_mi day_avg_mi)
-outsheet t y_actual_mi lb_y_actual_mi ub_y_actual_mi y_counter_mi lb_counter_mi ub_counter_mi day_avg_mi ///
-using "results/source_data/ExtendedDataFigure9b_Milan_data.csv" if miss_ct<7, comma replace
+outsheet adm0_name adm1_name adm2_name t y_actual_mi lb_y_actual_mi ub_y_actual_mi y_counter_mi lb_counter_mi ub_counter_mi day_avg_mi ///
+using "results/source_data/indiv/ExtendedDataFigure9b_Milan_data.csv" if miss_ct<7, comma replace
 drop miss_ct
 
 drop p_3_4_6
@@ -385,7 +385,7 @@ preserve
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/ITA.pdf, replace
 	graph export results/figures/appendix/cross_valid/ITA.png, replace	
-	outsheet * using "results/source_data/extended_cross_validation_ITA.csv", replace	
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure6_cross_valid_ITA.csv", replace	
 restore
 
 //------------------------------------FIXED LAG 
@@ -488,7 +488,7 @@ rename val lag
 reshape wide L, i(lag policy) j(temp) string
 sort Lat
 rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-outsheet * using "results/source_data/extended_fixed_lag_ITA.csv", replace
+outsheet * using "results/source_data/indiv/ExtendedDataFigure8_fixed_lag_ITA.csv", replace
 
 
 use `f0', clear
