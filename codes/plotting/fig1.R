@@ -412,6 +412,24 @@ if (c %in% c(5,6)){
 
 } # End loop over countries 
 
+# Update map_source 
+CHN_new <- data.frame("adm_name" = c("Börtala Mongol", "Garzê Tibetan", "Ürümqi"), 
+                      "lon" = c(82.12121, 100.01789, 87.81256),
+                      "lat" = c(44.72706, 30.91235, 43.53094), 
+                      "cases" = c(2, 78, 23), 
+                      "country" = "CHN",
+                      "date" = as.Date("2020-04-06"), stringsAsFactors = F)
+df.map <- rbind(map_source, CHN_new)
+df.map$lon <- round(df.map$lon, 7)
+df.map$lat <- round(df.map$lat, 7)
+df.map$cases[df.map$adm_name=="Reggio di Calabria"] <- 237
+df.map$cases[df.map$adm_name=="Montana"] <- 318
+
+#update epi_source
+epi_source$cases[epi_source$country=="USA" & epi_source$cases==335290] <- 335289
+epi_source$cases[epi_source$country=="USA" & epi_source$cases==365117] <- 365116
+epi_source$deaths[epi_source$country=="USA" & epi_source$deaths==10835] <- 10836
+
 ##########################################################
 
 ## SAVE SOURCE DATA 
@@ -419,6 +437,6 @@ if (c %in% c(5,6)){
 write.csv(epi_source, file=paste0(source_dir, "fig1_epi_timeseries.csv"))
 write.csv(policy_source, file=paste0(source_dir, "fig1_policy_timeseries.csv"))
 write.csv(policylist, file=paste0(source_dir, "fig1_policy_list.csv"))
-write.csv(map_source , file=paste0(source_dir, "fig1_case_maps.csv"))
+write.csv(map_source , file=paste0(source_dir, "fig1_case_maps.csv"), row.names = F)
 
 
