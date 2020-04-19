@@ -420,15 +420,15 @@ CHN_new <- data.frame("adm_name" = c("Börtala Mongol", "Garzê Tibetan", "Ürü
                       "country" = "CHN",
                       "date" = as.Date("2020-04-06"), stringsAsFactors = F)
 df.map <- rbind(map_source, CHN_new)
-df.map$lon <- trunc(df.map$lon, 5)
-df.map$lat <- trunc(df.map$lat, 5)
+df.map$lon <- round(df.map$lon, 5)
+df.map$lat <- round(df.map$lat, 5)
 df.map$cases[df.map$adm_name=="Reggio di Calabria"] <- 237
 df.map$cases[df.map$adm_name=="Montana"] <- 318
 
 #update epi_source
-epi_source$cases[df.map$country=="USA" & df.map$cases==335290] <- 335289
-epi_source$cases[df.map$country=="USA" & df.map$cases==365117] <- 365116
-epi_source$deaths[df.map$country=="USA" & df.map$deaths==10835] <- 10836
+epi_source$cases[epi_source$country=="USA" & epi_source$cases==335290] <- 335289
+epi_source$cases[epi_source$country=="USA" & epi_source$cases==365117] <- 365116
+epi_source$deaths[epi_source$country=="USA" & epi_source$deaths==10835] <- 10836
 
 
 ##########################################################
