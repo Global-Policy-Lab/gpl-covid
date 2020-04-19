@@ -63,36 +63,36 @@ Rscript codes/data/usa/download_and_clean_usafacts.R
 
 ### Dataset merging
 #### CHN
-printf "***Processing CHN data***\n"
+printf "***Processing and merging CHN data***\n"
 python codes/data/china/collate_data.py
 
 #### FRA
-printf "***Processing FRA data***\n"
+printf "***Merging FRA data***\n"
 if $STATA
 then
     stata -b do codes/data/france/format_policy.do
 fi
 
 # IRN
-printf "***Processing IRN data***\n"
+printf "***Processing  and merging IRN data***\n"
 Rscript codes/data/iran/iran_cleaning.R
 python codes/data/iran/iran-split-interim-into-processed.py
 
 # ITA
-printf "***Processing ITA data***\n"
+printf "***Processing  and merging ITA data***\n"
 python codes/data/italy/italy-download-cases-merge-policies.py
 
 # KOR
-printf "***Processing KOR data***\n"
+printf "***Processing  and merging KOR data***\n"
 Rscript codes/data/korea/generate_KOR_processed.R
 
 # USA
-printf "***Processing USA data***\n"
+printf "***Merging USA data***\n"
 python codes/data/usa/merge_policy_and_cases.py
 
 # quality-check processed datasets
 printf "***Checking processed data***\n"
-python codes/data/multi_country/quality-check-processed-datasets.py -l
+python codes/data/multi_country/quality-check-processed-datasets.py
 
 ## regression model estimation
 printf "***Estimating regression model and creating Figure 3 and A1***\n"
@@ -131,7 +131,7 @@ printf "***Creating Table A1***\n"
 python codes/plotting/count-policies.py
 
 # Figure A1
-# created by regression model estimatoin
+# created by regression model estimation
 
 # Figure A2
 printf "***Creating Fig A2***\n"

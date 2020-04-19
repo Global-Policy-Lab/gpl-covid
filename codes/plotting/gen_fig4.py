@@ -10,7 +10,13 @@ import codes.utils as cutil
 
 # save the figure here
 save_fig = True
+save_data = True
+
 fig_dir = cutil.HOME / "results" / "figures" / "fig4"
+fig_data_dir = cutil.HOME / "results" / "source_data"
+fig_data_fn = "Figure4_data.csv"
+
+
 fig_dir.mkdir(parents=True, exist_ok=True)
 fig_name = "fig4.pdf"
 
@@ -27,7 +33,7 @@ matplotlib.rcParams["font.family"] = "sans-serif"
 pred_no_pol_key = "predicted_cum_confirmed_cases_no_policy"
 pred_pol_key = "predicted_cum_confirmed_cases_true"
 
-data_dir = cutil.DATA / "post_processing"
+data_dir = cutil.MODELS / "projections"
 fn_template = os.path.join(data_dir, "{0}_bootstrap_projection.csv")
 
 countries_in_order = ["china", "korea", "italy", "iran", "france", "usa"]
@@ -40,6 +46,14 @@ country_names = {
     "china": "China",
     "korea": "South Korea",
 }
+
+
+cutoff_dates = pd.read_csv(
+    cutil.HOME / "codes" / "data" / "cutoff_dates.csv"
+).set_index("tag")
+cutoff_end = str(cutoff_dates.loc["default", "end_date"])
+end_date = "{0}-{1}-{2}".format(cutoff_end[0:4], cutoff_end[4:6], cutoff_end[6:8])
+start_date = "2020-01-15"
 
 
 def color_add_alpha(color, alpha):
@@ -57,7 +71,7 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
     quantiles_no_policy = quantiles_dict["quantiles_no_policy"]
     quantiles_policy = quantiles_dict["quantiles_policy"]
 
-    if not model is None:
+    if model is not None:
         dates_model = pd.to_datetime(model["date"])
         preds_policy = model["predicted_cum_confirmed_cases_true"]
         preds_no_policy = model["predicted_cum_confirmed_cases_no_policy"]
@@ -69,9 +83,8 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
 
     # inner to outer - hardcode for now
     alphas_fc = [0.2, 0.5]
-    alphas_ec = [0.4, 0.9]
 
-    if not model is None:
+    if model is not None:
         model_no_pol = ax.plot(
             dates_model, preds_no_policy, color=no_policy_color, lw=5, ls="--"
         )
@@ -102,7 +115,7 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
         lower_idx += 1
         upper_idx -= 1
 
-    if not model is None:
+    if model is not None:
         model_pol = ax.plot(
             dates_model, preds_policy, color=policy_color, lw=5, ls="--"
         )
@@ -244,8 +257,9 @@ def plot_bracket(ax, model_df):
     ax.arrow(end_cap[0], end_cap[1], end[0] - end_cap[0], 0, lw=2, clip_on=False)
 
     # rounds to the nearest 1,000
-    num_rounded = int(round(end[1] - start[1], -3))
-    annot = "{0:,d} fewer\nestimated cases".format(num_rounded)
+    # num_rounded = int(round(end[1] - start[1], -3))
+    num_rounded = int(float("{0:.2}".format(end[1] - start[1])))
+    annot = "~{0:,d} fewer\nestimated cases".format(num_rounded)
     # put text
     ax.annotate(
         annot,
@@ -272,7 +286,6 @@ def annotate_cases(ax, cases):
         cases_last / 100.0,
     )
 
-    formatter = mdates.DateFormatter("%b %d")
     annot_date = cases_date.strftime("%b %d")
 
     annot = "{0}: {1:,d} \nconfirmed cases".format(annot_date, int(cases_last))
@@ -295,10 +308,34 @@ def annotate_cases(ax, cases):
 
 
 def main():
+
+    # initialize the dataframes that will get filled in
+    dfs_by_country = [
+        pd.DataFrame(
+            {
+                "country": country_names[c],
+                "date": pd.date_range(start_date, end_date, freq="D"),
+            }
+        )
+        for c in countries_in_order
+    ]
+
     # read in all the cases data
     cases_dict = cutil.load_all_cases_deaths(cases_drop=True)
 
-    # get resampled data
+    # save that data
+    for c, country in enumerate(countries_in_order):
+
+        cases_df_this_country = cases_dict[country]
+
+        dfs_by_country[c] = pd.merge(
+            dfs_by_country[c].set_index("date", drop=False),
+            cases_df_this_country.set_index("date"),
+            left_index=True,
+            right_index=True,
+            how="left",
+        )
+
     resampled_dfs_by_country = {}
     for country in countries_in_order:
         print("reading ", fn_template.format(country))
@@ -306,16 +343,26 @@ def main():
 
     # get central estimates
     model_dfs_by_country = {}
-    for country in countries_in_order:
-        model_dfs_by_country[country] = pd.read_csv(
+    for c, country in enumerate(countries_in_order):
+        model_df_this_country = pd.read_csv(
             fn_template.replace("bootstrap", "model").format(country)
+        )
+
+        model_dfs_by_country[country] = model_df_this_country
+
+        dfs_by_country[c] = pd.merge(
+            dfs_by_country[c],
+            model_df_this_country.set_index("date"),
+            left_index=True,
+            right_index=True,
+            how="left",
         )
 
     # get quantile data
     quantiles = [0.025, 0.15, 0.85, 0.975]  # 95% range  # 70% range
 
     quantiles_by_country = {}
-    for country in countries_in_order:
+    for c, country in enumerate(countries_in_order):
         quantile_this_country = {}
         dates, quantiles_policy, quantiles_no_policy = make_quantiles(
             resampled_dfs_by_country[country], quantiles
@@ -325,6 +372,27 @@ def main():
         quantile_this_country["quantiles_policy"] = quantiles_policy
         quantile_this_country["quantiles_no_policy"] = quantiles_no_policy
         quantiles_by_country[country] = quantile_this_country
+
+        # make a small df for this quantile so we can merge on date
+        quantiles_this_country_dict = {}
+        for q, quantile in enumerate(quantiles):
+            key_start = "quantile_{0}_".format(quantile)
+            quantiles_this_country_dict[key_start + "policy"] = quantiles_policy[:, q]
+            quantiles_this_country_dict[key_start + "no_policy"] = quantiles_no_policy[
+                :, q
+            ]
+
+        quantile_df = pd.DataFrame(
+            quantiles_this_country_dict, index=pd.to_datetime(dates)
+        )
+
+        dfs_by_country[c] = pd.merge(
+            dfs_by_country[c],
+            quantile_df,
+            how="left",
+            left_index=True,
+            right_index=True,
+        )
 
     # plot
     fig, ax = plt.subplots(
@@ -379,7 +447,7 @@ def main():
         ax[c].set_ylabel("Predicted cumulative \ncases", fontsize=32)
         ax[c].set_yscale("log")
 
-        ax[c].set_xlim(np.datetime64("2020-01-15"), np.datetime64("2020-03-18"))
+        ax[c].set_xlim(np.datetime64(start_date), np.datetime64(end_date))
 
         ax[c].set_ylim(10, 1e8)
 
@@ -425,6 +493,13 @@ def main():
     plt.setp(leg.get_title(), fontsize=44)
 
     leg_ax.axis("off")
+
+    df_all_countries = pd.concat(dfs_by_country).drop(["date_str"], axis=1)
+
+    if save_data:
+        out_fn = fig_data_dir / fig_data_fn
+        print("saving fig data in {0}".format(out_fn))
+        df_all_countries.to_csv(out_fn, index=False)
 
     if save_fig:
         out_fn = fig_dir / fig_name

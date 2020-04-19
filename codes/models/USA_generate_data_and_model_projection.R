@@ -12,6 +12,7 @@ mydata <- read_csv("models/reg_data/USA_reg_data.csv",
                      adm1_name = col_character(),
                      date = col_date(format = ""),
                      adm1_id = col_character(),
+                     adm1_abb = col_character(),
                      t = col_character()
                    )) %>% 
   arrange(adm1_name, date) %>%
@@ -22,9 +23,20 @@ mydata <- mydata %>%
   mutate_at(vars(matches("testing_regime")),
             ~if_else(is.na(.x), 0, .x))
 
+changed = TRUE
+while(changed){
+  new <- mydata %>% 
+    group_by(tmp_id) %>% 
+    filter(!(is.na(cum_confirmed_cases) & date == min(date)))  
+  if(nrow(new) == nrow(mydata)){
+    changed <- FALSE
+  }
+  mydata <- new
+}
+
 policy_variables_to_use <- 
   c(
-    'p_1', 'p_2', 'p_3'
+    names(mydata) %>% str_subset('^p_')
   )  
 
 other_control_variables <-
