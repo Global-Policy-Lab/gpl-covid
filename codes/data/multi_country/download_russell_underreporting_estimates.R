@@ -1,4 +1,4 @@
-library(tidyverse)
+suppressPackageStartupMessages(library(tidyverse))
 cfr_data <- read_rds(url("https://github.com/thimotei/CFR_calculation/blob/master/global_estimates/data/reportDataFinal.rds?raw=true", "rb"))
 
 cfr_data <- cfr_data %>% 
