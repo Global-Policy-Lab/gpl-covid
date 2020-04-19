@@ -84,6 +84,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Anhui,991,1,6,984
 2020-04-14,China,Anhui,991,1,6,984
 2020-04-15,China,Anhui,991,1,6,984
+2020-04-16,China,Anhui,991,1,6,984
+2020-04-17,China,Anhui,991,1,6,984
+2020-04-18,China,Anhui,991,1,6,984
 2020-01-22,China,Beijing,14,14,0,0
 2020-01-23,China,Beijing,22,22,0,0
 2020-01-24,China,Beijing,36,35,0,1
@@ -169,6 +172,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Beijing,589,97,8,484
 2020-04-14,China,Beijing,589,90,8,491
 2020-04-15,China,Beijing,590,87,8,495
+2020-04-16,China,Beijing,593,82,8,503
+2020-04-17,China,Beijing,593,76,8,509
+2020-04-18,China,Beijing,593,76,8,509
 2020-01-22,China,Chongqing,6,6,0,0
 2020-01-23,China,Chongqing,9,9,0,0
 2020-01-24,China,Chongqing,27,27,0,0
@@ -254,6 +260,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Chongqing,579,3,6,570
 2020-04-14,China,Chongqing,579,3,6,570
 2020-04-15,China,Chongqing,579,3,6,570
+2020-04-16,China,Chongqing,579,3,6,570
+2020-04-17,China,Chongqing,579,3,6,570
+2020-04-18,China,Chongqing,579,3,6,570
 2020-01-22,China,Fujian,1,1,0,0
 2020-01-23,China,Fujian,5,5,0,0
 2020-01-24,China,Fujian,10,10,0,0
@@ -339,6 +348,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Fujian,352,26,1,325
 2020-04-14,China,Fujian,353,23,1,329
 2020-04-15,China,Fujian,353,21,1,331
+2020-04-16,China,Fujian,353,19,1,333
+2020-04-17,China,Fujian,354,19,1,334
+2020-04-18,China,Fujian,355,18,1,336
 2020-01-22,China,Gansu,0,0,0,0
 2020-01-23,China,Gansu,2,2,0,0
 2020-01-24,China,Gansu,2,2,0,0
@@ -424,6 +436,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Gansu,139,2,2,135
 2020-04-14,China,Gansu,139,1,2,136
 2020-04-15,China,Gansu,139,1,2,136
+2020-04-16,China,Gansu,139,0,2,137
+2020-04-17,China,Gansu,139,0,2,137
+2020-04-18,China,Gansu,139,0,2,137
 2020-01-22,China,Guangdong,26,26,0,0
 2020-01-23,China,Guangdong,32,30,0,2
 2020-01-24,China,Guangdong,53,51,0,2
@@ -509,6 +524,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Guangdong,1555,93,8,1454
 2020-04-14,China,Guangdong,1564,98,8,1458
 2020-04-15,China,Guangdong,1566,96,8,1462
+2020-04-16,China,Guangdong,1571,92,8,1471
+2020-04-17,China,Guangdong,1577,94,8,1475
+2020-04-18,China,Guangdong,1579,89,8,1482
 2020-01-22,China,Guangxi,2,2,0,0
 2020-01-23,China,Guangxi,5,5,0,0
 2020-01-24,China,Guangxi,23,23,0,0
@@ -594,6 +612,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Guangxi,254,0,2,252
 2020-04-14,China,Guangxi,254,0,2,252
 2020-04-15,China,Guangxi,254,0,2,252
+2020-04-16,China,Guangxi,254,0,2,252
+2020-04-17,China,Guangxi,254,0,2,252
+2020-04-18,China,Guangxi,254,0,2,252
 2020-01-22,China,Guizhou,1,1,0,0
 2020-01-23,China,Guizhou,3,3,0,0
 2020-01-24,China,Guizhou,3,3,0,0
@@ -679,6 +700,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Guizhou,146,0,2,144
 2020-04-14,China,Guizhou,146,0,2,144
 2020-04-15,China,Guizhou,146,0,2,144
+2020-04-16,China,Guizhou,146,0,2,144
+2020-04-17,China,Guizhou,146,0,2,144
+2020-04-18,China,Guizhou,146,0,2,144
 2020-01-22,China,Hainan,4,4,0,0
 2020-01-23,China,Hainan,5,5,0,0
 2020-01-24,China,Hainan,8,8,0,0
@@ -764,6 +788,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Hainan,168,0,6,162
 2020-04-14,China,Hainan,168,0,6,162
 2020-04-15,China,Hainan,168,0,6,162
+2020-04-16,China,Hainan,168,0,6,162
+2020-04-17,China,Hainan,168,0,6,162
+2020-04-18,China,Hainan,168,0,6,162
 2020-01-22,China,Hebei,1,1,0,0
 2020-01-23,China,Hebei,1,0,1,0
 2020-01-24,China,Hebei,2,1,1,0
@@ -849,6 +876,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Hebei,327,8,6,313
 2020-04-14,China,Hebei,327,7,6,314
 2020-04-15,China,Hebei,327,7,6,314
+2020-04-16,China,Hebei,328,7,6,315
+2020-04-17,China,Hebei,328,6,6,316
+2020-04-18,China,Hebei,328,6,6,316
 2020-01-22,China,Heilongjiang,0,0,0,0
 2020-01-23,China,Heilongjiang,2,2,0,0
 2020-01-24,China,Heilongjiang,4,3,1,0
@@ -934,6 +964,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Heilongjiang,740,257,13,470
 2020-04-14,China,Heilongjiang,819,336,13,470
 2020-04-15,China,Heilongjiang,841,358,13,470
+2020-04-16,China,Heilongjiang,861,377,13,471
+2020-04-17,China,Heilongjiang,872,388,13,471
+2020-04-18,China,Heilongjiang,892,407,13,472
 2020-01-22,China,Henan,5,5,0,0
 2020-01-23,China,Henan,5,5,0,0
 2020-01-24,China,Henan,9,9,0,0
@@ -1019,6 +1052,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Henan,1276,1,22,1253
 2020-04-14,China,Henan,1276,0,22,1254
 2020-04-15,China,Henan,1276,0,22,1254
+2020-04-16,China,Henan,1276,0,22,1254
+2020-04-17,China,Henan,1276,0,22,1254
+2020-04-18,China,Henan,1276,0,22,1254
 2020-01-22,China,Hong Kong,0,0,0,0
 2020-01-23,China,Hong Kong,2,2,0,0
 2020-01-24,China,Hong Kong,2,2,0,0
@@ -1104,6 +1140,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Hong Kong,1009,645,4,360
 2020-04-14,China,Hong Kong,1012,574,4,434
 2020-04-15,China,Hong Kong,1017,554,4,459
+2020-04-16,China,Hong Kong,1017,528,4,485
+2020-04-17,China,Hong Kong,1021,484,4,533
+2020-04-18,China,Hong Kong,1024,452,4,568
 2020-01-22,China,Hubei,444,399,17,28
 2020-01-23,China,Hubei,444,399,17,28
 2020-01-24,China,Hubei,549,494,24,31
@@ -1189,6 +1228,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Hubei,67803,244,3221,64338
 2020-04-14,China,Hubei,67803,219,3221,64363
 2020-04-15,China,Hubei,67803,179,3222,64402
+2020-04-16,China,Hubei,67803,146,3222,64435
+2020-04-17,China,Hubei,68128,129,4512,63487
+2020-04-18,China,Hubei,68128,122,4512,63494
 2020-01-22,China,Hunan,4,4,0,0
 2020-01-23,China,Hunan,9,9,0,0
 2020-01-24,China,Hunan,24,24,0,0
@@ -1274,6 +1316,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Hunan,1019,1,4,1014
 2020-04-14,China,Hunan,1019,1,4,1014
 2020-04-15,China,Hunan,1019,1,4,1014
+2020-04-16,China,Hunan,1019,1,4,1014
+2020-04-17,China,Hunan,1019,1,4,1014
+2020-04-18,China,Hunan,1019,0,4,1015
 2020-01-22,China,Inner Mongolia,0,0,0,0
 2020-01-23,China,Inner Mongolia,0,0,0,0
 2020-01-24,China,Inner Mongolia,1,1,0,0
@@ -1359,6 +1404,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Inner Mongolia,190,106,1,83
 2020-04-14,China,Inner Mongolia,190,98,1,91
 2020-04-15,China,Inner Mongolia,190,95,1,94
+2020-04-16,China,Inner Mongolia,193,98,1,94
+2020-04-17,China,Inner Mongolia,193,89,1,103
+2020-04-18,China,Inner Mongolia,193,88,1,104
 2020-01-22,China,Jiangsu,1,1,0,0
 2020-01-23,China,Jiangsu,5,5,0,0
 2020-01-24,China,Jiangsu,9,9,0,0
@@ -1444,6 +1492,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Jiangsu,653,15,0,638
 2020-04-14,China,Jiangsu,653,12,0,641
 2020-04-15,China,Jiangsu,653,11,0,642
+2020-04-16,China,Jiangsu,653,11,0,642
+2020-04-17,China,Jiangsu,653,10,0,643
+2020-04-18,China,Jiangsu,653,10,0,643
 2020-01-22,China,Jiangxi,2,2,0,0
 2020-01-23,China,Jiangxi,7,7,0,0
 2020-01-24,China,Jiangxi,18,18,0,0
@@ -1529,6 +1580,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Jiangxi,937,0,1,936
 2020-04-14,China,Jiangxi,937,0,1,936
 2020-04-15,China,Jiangxi,937,0,1,936
+2020-04-16,China,Jiangxi,937,0,1,936
+2020-04-17,China,Jiangxi,937,0,1,936
+2020-04-18,China,Jiangxi,937,0,1,936
 2020-01-22,China,Jilin,0,0,0,0
 2020-01-23,China,Jilin,1,1,0,0
 2020-01-24,China,Jilin,3,3,0,0
@@ -1614,6 +1668,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Jilin,100,3,1,96
 2020-04-14,China,Jilin,100,3,1,96
 2020-04-15,China,Jilin,102,5,1,96
+2020-04-16,China,Jilin,102,5,1,96
+2020-04-17,China,Jilin,102,4,1,97
+2020-04-18,China,Jilin,102,4,1,97
 2020-01-22,China,Liaoning,2,2,0,0
 2020-01-23,China,Liaoning,3,3,0,0
 2020-01-24,China,Liaoning,4,4,0,0
@@ -1699,6 +1756,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Liaoning,145,7,2,136
 2020-04-14,China,Liaoning,145,5,2,138
 2020-04-15,China,Liaoning,145,5,2,138
+2020-04-16,China,Liaoning,145,3,2,140
+2020-04-17,China,Liaoning,146,4,2,140
+2020-04-18,China,Liaoning,146,2,2,142
 2020-01-22,China,Macau,1,1,0,0
 2020-01-23,China,Macau,2,2,0,0
 2020-01-24,China,Macau,2,2,0,0
@@ -1784,6 +1844,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Macau,45,32,0,13
 2020-04-14,China,Macau,45,32,0,13
 2020-04-15,China,Macau,45,29,0,16
+2020-04-16,China,Macau,45,29,0,16
+2020-04-17,China,Macau,45,29,0,16
+2020-04-18,China,Macau,45,28,0,17
 2020-01-22,China,Ningxia,1,1,0,0
 2020-01-23,China,Ningxia,1,1,0,0
 2020-01-24,China,Ningxia,2,2,0,0
@@ -1869,6 +1932,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Ningxia,75,0,0,75
 2020-04-14,China,Ningxia,75,0,0,75
 2020-04-15,China,Ningxia,75,0,0,75
+2020-04-16,China,Ningxia,75,0,0,75
+2020-04-17,China,Ningxia,75,0,0,75
+2020-04-18,China,Ningxia,75,0,0,75
 2020-01-22,China,Qinghai,0,0,0,0
 2020-01-23,China,Qinghai,0,0,0,0
 2020-01-24,China,Qinghai,0,0,0,0
@@ -1954,6 +2020,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Qinghai,18,0,0,18
 2020-04-14,China,Qinghai,18,0,0,18
 2020-04-15,China,Qinghai,18,0,0,18
+2020-04-16,China,Qinghai,18,0,0,18
+2020-04-17,China,Qinghai,18,0,0,18
+2020-04-18,China,Qinghai,18,0,0,18
 2020-01-22,China,Shaanxi,0,0,0,0
 2020-01-23,China,Shaanxi,3,3,0,0
 2020-01-24,China,Shaanxi,5,5,0,0
@@ -2039,6 +2108,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Shaanxi,256,5,3,248
 2020-04-14,China,Shaanxi,256,5,3,248
 2020-04-15,China,Shaanxi,256,2,3,251
+2020-04-16,China,Shaanxi,256,2,3,251
+2020-04-17,China,Shaanxi,256,1,3,252
+2020-04-18,China,Shaanxi,256,1,3,252
 2020-01-22,China,Shandong,2,2,0,0
 2020-01-23,China,Shandong,6,6,0,0
 2020-01-24,China,Shandong,15,15,0,0
@@ -2124,6 +2196,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Shandong,784,19,7,758
 2020-04-14,China,Shandong,784,18,7,759
 2020-04-15,China,Shandong,784,16,7,761
+2020-04-16,China,Shandong,784,16,7,761
+2020-04-17,China,Shandong,787,19,7,761
+2020-04-18,China,Shandong,787,15,7,765
 2020-01-22,China,Shanghai,9,9,0,0
 2020-01-23,China,Shanghai,16,16,0,0
 2020-01-24,China,Shanghai,20,19,0,1
@@ -2209,6 +2284,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Shanghai,618,165,7,446
 2020-04-14,China,Shanghai,618,143,7,468
 2020-04-15,China,Shanghai,622,130,7,485
+2020-04-16,China,Shanghai,628,132,7,489
+2020-04-17,China,Shanghai,628,109,7,512
+2020-04-18,China,Shanghai,628,109,7,512
 2020-01-22,China,Shanxi,1,1,0,0
 2020-01-23,China,Shanxi,1,1,0,0
 2020-01-24,China,Shanxi,1,1,0,0
@@ -2294,6 +2372,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Shanxi,173,38,0,135
 2020-04-14,China,Shanxi,173,38,0,135
 2020-04-15,China,Shanxi,186,51,0,135
+2020-04-16,China,Shanxi,194,59,0,135
+2020-04-17,China,Shanxi,197,62,0,135
+2020-04-18,China,Shanxi,197,62,0,135
 2020-01-22,China,Sichuan,5,5,0,0
 2020-01-23,China,Sichuan,8,8,0,0
 2020-01-24,China,Sichuan,15,15,0,0
@@ -2379,6 +2460,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Sichuan,560,9,3,548
 2020-04-14,China,Sichuan,560,9,3,548
 2020-04-15,China,Sichuan,560,7,3,550
+2020-04-16,China,Sichuan,560,5,3,552
+2020-04-17,China,Sichuan,560,5,3,552
+2020-04-18,China,Sichuan,561,5,3,553
 2020-01-22,China,Tianjin,4,4,0,0
 2020-01-23,China,Tianjin,4,4,0,0
 2020-01-24,China,Tianjin,8,8,0,0
@@ -2464,6 +2548,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Tianjin,184,17,3,164
 2020-04-14,China,Tianjin,185,14,3,168
 2020-04-15,China,Tianjin,185,11,3,171
+2020-04-16,China,Tianjin,186,11,3,172
+2020-04-17,China,Tianjin,189,13,3,173
+2020-04-18,China,Tianjin,189,13,3,173
 2020-01-22,China,Tibet,0,0,0,0
 2020-01-23,China,Tibet,0,0,0,0
 2020-01-24,China,Tibet,0,0,0,0
@@ -2549,6 +2636,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Tibet,1,0,0,1
 2020-04-14,China,Tibet,1,0,0,1
 2020-04-15,China,Tibet,1,0,0,1
+2020-04-16,China,Tibet,1,0,0,1
+2020-04-17,China,Tibet,1,0,0,1
+2020-04-18,China,Tibet,1,0,0,1
 2020-01-22,China,Xinjiang,0,0,0,0
 2020-01-23,China,Xinjiang,2,2,0,0
 2020-01-24,China,Xinjiang,2,2,0,0
@@ -2634,6 +2724,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Xinjiang,76,0,3,73
 2020-04-14,China,Xinjiang,76,0,3,73
 2020-04-15,China,Xinjiang,76,0,3,73
+2020-04-16,China,Xinjiang,76,0,3,73
+2020-04-17,China,Xinjiang,76,0,3,73
+2020-04-18,China,Xinjiang,76,0,3,73
 2020-01-22,China,Yunnan,1,1,0,0
 2020-01-23,China,Yunnan,2,2,0,0
 2020-01-24,China,Yunnan,5,5,0,0
@@ -2719,6 +2812,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Yunnan,184,8,2,174
 2020-04-14,China,Yunnan,184,7,2,175
 2020-04-15,China,Yunnan,184,6,2,176
+2020-04-16,China,Yunnan,184,6,2,176
+2020-04-17,China,Yunnan,184,5,2,177
+2020-04-18,China,Yunnan,184,5,2,177
 2020-01-22,China,Zhejiang,10,10,0,0
 2020-01-23,China,Zhejiang,27,27,0,0
 2020-01-24,China,Zhejiang,43,42,0,1
@@ -2804,3 +2900,6 @@ date,adm0_name,adm1_name,cum_confirmed_cases,active_cases,cum_deaths,cum_recover
 2020-04-13,China,Zhejiang,1267,27,1,1239
 2020-04-14,China,Zhejiang,1267,24,1,1242
 2020-04-15,China,Zhejiang,1268,23,1,1244
+2020-04-16,China,Zhejiang,1268,23,1,1244
+2020-04-17,China,Zhejiang,1268,21,1,1246
+2020-04-18,China,Zhejiang,1268,21,1,1246
