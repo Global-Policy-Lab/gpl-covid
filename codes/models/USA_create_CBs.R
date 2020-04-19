@@ -1,9 +1,9 @@
 source("codes/models/USA_generate_data_and_model_projection.R")
 #projection
-out <- compute_bootstrap_replications(full_data = mydata,
-                                      policy_variables_to_use = policy_variables_to_use,
+out <- compute_bootstrap_replications(full_data = usa_data,
+                                      policy_variables_to_use = usa_policy_variables_to_use,
                                       lhs = "D_l_cum_confirmed_cases",
-                                      other_control_variables = other_control_variables,
+                                      other_control_variables = usa_other_control_variables,
                                       times = times,
                                       gamma = gamma,
                                       proportion_confirmed = underreporting %>% 
