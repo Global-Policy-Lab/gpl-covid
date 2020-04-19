@@ -7,6 +7,7 @@ import pandas as pd
 import xarray as xr
 from collections import OrderedDict
 from statsmodels.api import OLS, add_constant
+import warnings
 
 
 def init_reg_ds(n_samples, LHS_vars, policies, **dim_kwargs):
@@ -35,21 +36,56 @@ def init_state_arrays(shp, n_arrays):
     return [np.ones(shp) * np.nan for a in range(n_arrays)]
 
 
-def adjust_timescales_from_daily(ds):
+def adjust_timescales_from_daily(ds, tstep, to=False):
     out = ds.copy()
-    tstep = ds.t[1] - ds.t[0]
     for k, v in ds.variables.items():
-        # only adjust variables, not coordinates
-        if (
-            len(k.split("_")) > 1
-            and k.split("_")[0] in ["lambda", "beta", "gamma", "sigma",]
-            and k not in ds.coords.keys()
-        ):
+        if k.split("_")[0] in [
+            "lambda",
+            "beta",
+            "gamma",
+            "sigma",
+        ]:
+            # staying in continuous rate
             out[k] = out[k] * tstep
     return out
 
 
-def init_policy_dummies(policy_ds, n_samples, t, seed=0):
+def adjust_timescales_to_daily(ds, tsteps_per_day):
+    """
+    Adjusts from discrete rates used for SIR model to daily continuous rates
+    """
+    out = ds.copy()
+    tstep = ds.t[1] - ds.t[0]
+    coord_cols = [k for k in ds.coords if k in ["lambda", "beta", "gamma", "sigma"]]
+    cols = [
+        k
+        for k, v in ds.variables.items()
+        if k.split("_")[0] in ["lambda", "beta", "gamma", "sigma"]
+        and k not in coord_cols
+    ] + ["effect_true", "intercept_true"]
+
+    out = ds.isel(t=slice(0, -1, tsteps_per_day))
+
+    def scale_up_disc_to_cont(x):
+        return np.log((x + 1).prod(dim="t"))
+
+    for c in cols + coord_cols:
+        if "t" in ds[c].dims:
+            out[c].values = (
+                ds[c]
+                .isel(t=slice(None, -1))
+                .groupby(ds.t.astype(int)[:-1])
+                .map(scale_up_disc_to_cont)
+                .values
+            )
+        else:
+            out[c] = np.log((1 + ds.isel(t=slice(None, -1))[c]) ** (1 / tstep))
+            if c in coord_cols:
+                out[c] = out[c].round(5)
+    return out
+
+
+def init_policy_dummies(policy_ds, n_samples, t, seed=0, random_end=False):
     """
     Initialize dummy variables to define policy effects
     """
@@ -59,20 +95,27 @@ def init_policy_dummies(policy_ds, n_samples, t, seed=0):
     n_steps = len(t)
     steps_per_day = int(np.round(1 / ((t.max() - t.min()) / (t.shape[0] - 1))))
 
-    dates = np.empty((n_samples, n_effects), dtype=np.int16)
-    for ix in range(n_effects):
-        dates[:, ix] = np.random.randint(
-            policy_ds.interval.sel(time="start")[ix],
-            policy_ds.interval.sel(time="end")[ix],
-            n_samples,
-        )
+    # initialized double as many b/c we will drop collinear ones
+    dates = np.random.randint(
+        policy_ds.interval.sel(time="start"),
+        policy_ds.interval.sel(time="end"),
+        (n_samples * 2, n_effects),
+    )
+    dates.sort(axis=1)
 
     # drop any with complete collinearity of policies
-    valid = np.apply_along_axis(
-        lambda x: len(x) == dates.shape[1], 1, np.unique(dates, axis=1)
-    )
+    valid = np.apply_along_axis(lambda x: len(np.unique(x)) == dates.shape[1], 1, dates)
+
+    # confirm we still have n_samples left after dropping
+    assert valid.sum() > n_samples
     dates = dates[valid]
-    n_samples = dates.shape[0]
+    dates = dates[:n_samples]
+
+    # determine random end point of regression, if desired
+    if random_end:
+        random_end_arr = np.random.uniform(size=(n_samples,))
+    else:
+        random_end_arr = np.ones(n_samples)
 
     # create policy dummy array
     comp = np.repeat(np.arange(n_steps)[:, np.newaxis], dates.shape[1], axis=1)
@@ -99,7 +142,15 @@ def init_policy_dummies(policy_ds, n_samples, t, seed=0):
     out = out.swapaxes(1, 2)
     coords = OrderedDict(sample=range(n_samples), t=t, policy=policy_ds.policy,)
     out = xr.DataArray(out, coords=coords, dims=coords.keys(), name="policy_timeseries")
-    return out
+    return (
+        out,
+        xr.DataArray(
+            random_end_arr,
+            coords={"sample": range(n_samples)},
+            dims=["sample"],
+            name="random_end",
+        ),
+    )
 
 
 def get_beta_SEIR(lambdas, gammas, sigmas):
@@ -115,58 +166,119 @@ def get_beta_SIR(lambdas, gammas, *args):
     return lambdas + gammas
 
 
-def get_stochastic_params(
+def get_lambda_SEIR(betas, gammas, sigmas):
+    return (
+        -(sigmas + gammas) + np.sqrt((sigmas - gammas) ** 2 + 4 * sigmas * betas)
+    ) / 2
+
+
+def get_lambda_SIR(betas, gammas, *args):
+    return betas - gammas
+
+
+def get_stochastic_discrete_params(
     estimates_ds,
-    beta_noise_sd,
+    no_policy_growth_rate,
+    policy_effect_timeseries,
+    t,
     beta_noise_on,
-    gamma_noise_sd,
-    gamma_noise_on,
-    sigma_noise_sd=None,
+    beta_noise_sd,
+    kind="SIR",
+    gamma_noise_on=None,
+    gamma_noise_sd=None,
     sigma_noise_on=False,
+    sigma_noise_sd=None,
 ):
 
+    if kind == "SIR":
+        beta_func = get_beta_SIR
+        lambda_func = get_lambda_SIR
+    elif kind == "SEIR":
+        beta_func = get_beta_SEIR
+        lambda_func = get_lambda_SEIR
+    else:
+        raise ValueError(kind)
     out = estimates_ds.copy()
+
+    # this is the discrete short-timestep eigenvalue for a zero-mean beta
+    tstep = t[1] - t[0]
+    out["lambda_disc_meanbeta"] = (
+        np.exp((no_policy_growth_rate + policy_effect_timeseries) * tstep) - 1
+    )
+
     if "sample" not in out.dims:
         out = out.expand_dims("sample")
 
     for param in ["gamma", "sigma"]:
         if f"{param}_deterministic" not in out:
             out[f"{param}_deterministic"] = out[param].copy()
+        # discretize
+        out[f"{param}_deterministic"] = np.exp(out[f"{param}_deterministic"]) - 1
+        out[param] = np.exp(out[param]) - 1
 
     sampXtime = (len(out.sample), len(out.t))
     out_vars = ["beta_stoch", "gamma_stoch"]
-    if beta_noise_on:
+
+    out["beta_deterministic"] = beta_func(
+        out.lambda_disc_meanbeta, out.gamma, out.sigma
+    )
+
+    if beta_noise_on == "normal":
         out["beta_stoch"] = (
             ("sample", "t"),
             np.random.normal(0, beta_noise_sd, sampXtime),
         )
-        out["beta_stoch"] = out.beta_deterministic + out["beta_stoch"]
+        out["beta_stoch"] = out["beta_deterministic"] + out["beta_stoch"]
+    elif beta_noise_on == "exponential":
+        out["beta_stoch"] = (
+            out.beta_deterministic.dims,
+            np.random.exponential(out.beta_deterministic),
+        )
+    elif not beta_noise_on:
+        out["beta_stoch"] = out["beta_deterministic"].copy()
     else:
-        out["beta_stoch"] = out.beta_deterministic.copy()
-    if gamma_noise_on:
+        raise ValueError(beta_noise_on)
+
+    if gamma_noise_on == "normal":
         out["gamma_stoch"] = (
             ("sample", "t"),
             np.random.normal(0, gamma_noise_sd, sampXtime),
         )
         out["gamma_stoch"] = out.gamma_deterministic + out["gamma_stoch"]
-    else:
+    elif gamma_noise_on == "exponential":
+        out["gamma_stoch"] = (
+            out.gamma_deterministic.dims,
+            np.random.exponential(out.gamma_deterministic),
+        )
+    elif not gamma_noise_on:
         out["gamma_stoch"] = out.gamma_deterministic.copy()
+    else:
+        raise ValueError(gamma_noise_on)
 
     if "sigma" in out.dims:
         out_vars.append("sigma_stoch")
-        if sigma_noise_on:
+        if sigma_noise_on == "normal":
             out["sigma_stoch"] = (
                 ("sample", "t"),
                 np.random.normal(0, sigma_noise_sd, sampXtime),
             )
             out["sigma_stoch"] = out.sigma_deterministic + out["sigma_stoch"]
-        else:
+        elif sigma_noise_on == "exponential":
+            out["sigma_stoch"] = (
+                out.sigma_deterministic.dims,
+                np.random.exponential(out.sigma_deterministic),
+            )
+        elif not sigma_noise_on:
             out["sigma_stoch"] = out.sigma_deterministic.copy()
 
+    out["lambda_stoch"] = lambda_func(out.beta_stoch, out.gamma_stoch, out.sigma_stoch)
+
     # make sure none are non-positive
-    out = out.drop(out_vars).merge(
-        out[out_vars].where((out[out_vars] > 0) | (out[out_vars].isnull()), 0)
-    )
+    total_neg = (out[out_vars] < 0).to_array().sum().item()
+    if total_neg > 0:
+        warnings.warn(
+            f"{total_neg} parameter draws are <0, which is non-physical. Consider reducing gaussian noise or trying exponential noise."
+        )
 
     return out
 
@@ -214,6 +326,7 @@ def run_SEIR(E0, I0, R0, ds):
     n_steps = len(ds.t)
 
     new_dims = ["t"] + [i for i in ds.beta_stoch.dims if i != "t"]
+
     beta = ds.beta_stoch.transpose(*new_dims)
     gamma = ds.gamma_stoch.broadcast_like(beta)
     sigma = ds.sigma_stoch.broadcast_like(beta)
@@ -244,31 +357,67 @@ def run_SEIR(E0, I0, R0, ds):
     return out
 
 
+def get_true_pol_effects(estimates_ds):
+    first_pol = estimates_ds.interval.sel(time="start").item()
+    n_policies = estimates_ds.policy.shape[0]
+
+    no_pol = (
+        estimates_ds.lambda_stoch.sel(t=slice(None, first_pol))
+        .isel(t=slice(None, -20))
+        .expand_dims("policy")
+    )
+
+    lambdas = [no_pol.mean("t")]
+    weights = [xr.ones_like(no_pol).sum(dim="t")]
+    for px in range(n_policies):
+        valid = (
+            estimates_ds.policy_timeseries.isel(policy=slice(px, None)).sum(
+                dim="policy"
+            )
+            == 1
+        )
+        valid_vals = estimates_ds.lambda_stoch.where(valid)
+        lambdas.append(valid_vals.mean(dim="t"))
+        weights.append(valid_vals.notnull().sum(dim="t"))
+    lambdas = xr.concat(lambdas, dim="policy")
+    weights = xr.concat(weights, dim="policy")
+
+    weighted_lambda = (lambdas * weights).sum(dim="sample") / weights.sum(dim="sample")
+    weighted_lambda["policy"] = ["Intercept"] + list(estimates_ds.policy.values)
+    true_effect = weighted_lambda.diff(dim="policy", n=1)
+    true_effect.name = "effect_true"
+    intercept = (
+        weighted_lambda.isel(policy=0).drop("policy").to_dataset(name="intercept_true")
+    )
+
+    return xr.merge((intercept, true_effect))
+
+
 def simulate_and_regress(
     pop,
     no_policy_growth_rate,
     p_effects,
     p_lags,
-    p_start_date,
-    p_end_date,
+    p_start_interval,
     n_days,
     tsteps_per_day,
     n_samples,
     LHS_vars,
     reg_lag_days,
     gamma_to_test,
-    beta_noise_sd,
-    beta_noise_on,
-    gamma_noise_sd,
-    gamma_noise_on,
     min_cases,
-    sigma_noise_sd=0,
+    sigma_to_test=[np.nan],
+    beta_noise_on=False,
+    beta_noise_sd=0,
     sigma_noise_on=False,
+    sigma_noise_sd=0,
+    gamma_noise_on=False,
+    gamma_noise_sd=0,
     kind="SEIR",
     E0=1,
     I0=0,
     R0=0,
-    sigma_to_test=[np.nan],
+    random_end=False,
     save_dir=None,
 ):
 
@@ -278,8 +427,8 @@ def simulate_and_regress(
         R0=R0,
         pop=pop,
         min_cases=min_cases,
-        beta_noise_on=int(beta_noise_on),
-        gamma_noise_on=int(gamma_noise_on),
+        beta_noise_on=str(beta_noise_on),
+        gamma_noise_on=str(gamma_noise_on),
         beta_noise_sd=beta_noise_sd,
         gamma_noise_sd=gamma_noise_sd,
         no_policy_growth_rate=no_policy_growth_rate,
@@ -293,7 +442,7 @@ def simulate_and_regress(
 
     ## setup
     if kind == "SEIR":
-        attrs["sigma_noise_on"] = int(sigma_noise_on)
+        attrs["sigma_noise_on"] = str(sigma_noise_on)
         attrs["sigma_noise_sd"] = sigma_noise_sd
         sim_engine = run_SEIR
         get_beta = get_beta_SEIR
@@ -306,6 +455,10 @@ def simulate_and_regress(
         ics = [I0, R0]
         LHS_vars = [l for l in LHS_vars if "E" not in l]
 
+    # get time vector
+    ttotal = n_days * tsteps_per_day + 1
+    t = np.linspace(0, 1, ttotal) * n_days
+
     # store policy info
     policies = xr.Dataset(
         coords={
@@ -316,13 +469,9 @@ def simulate_and_regress(
         data_vars={
             "effect": (("policy",), p_effects),
             "lag": (("policy", "lag_num"), p_lags),
-            "interval": (("policy", "time"), np.array([p_start_date, p_end_date]).T),
+            "interval": (("time",), p_start_interval),
         },
     )
-
-    # get time vector
-    ttotal = n_days * tsteps_per_day + 1
-    t = np.linspace(0, 1, ttotal) * n_days
 
     # initialize results array
     estimates_ds = init_reg_ds(
@@ -334,34 +483,35 @@ def simulate_and_regress(
     )
 
     # get policy effects
-    policy_dummies = init_policy_dummies(policies, n_samples, t, seed=0,)
-    policies = xr.merge((policies, policy_dummies))
+    policy_dummies, random_end_da = init_policy_dummies(
+        policies, n_samples, t, seed=0, random_end=random_end
+    )
+    policies = xr.merge((policies, policy_dummies, random_end_da))
     policy_effect_timeseries = (policies.policy_timeseries * policies.effect).sum(
         "policy"
     )
     n_samp_valid = len(policies.sample)
 
-    # get deterministic params
-    estimates_ds["lambda_deterministic"] = (
-        np.ones_like(t) * no_policy_growth_rate + policy_effect_timeseries
-    )
-    estimates_ds["beta_deterministic"] = get_beta(
-        estimates_ds.lambda_deterministic, estimates_ds.gamma, estimates_ds.sigma
-    )
+    # adjust rate params to correct timestep
+    estimates_ds = adjust_timescales_from_daily(estimates_ds, t[1] - t[0])
+    beta_noise_sd = beta_noise_sd / np.sqrt(tsteps_per_day)
+    gamma_noise_sd = gamma_noise_sd / np.sqrt(tsteps_per_day)
+    sigma_noise_sd = sigma_noise_sd / np.sqrt(tsteps_per_day)
 
     # get stochastic params
-    estimates_ds = get_stochastic_params(
+    estimates_ds = get_stochastic_discrete_params(
         estimates_ds,
-        beta_noise_sd,
+        no_policy_growth_rate,
+        policy_effect_timeseries,
+        t,
         beta_noise_on,
-        gamma_noise_sd,
-        gamma_noise_on,
-        sigma_noise_sd=sigma_noise_sd,
+        beta_noise_sd,
+        kind=kind,
+        gamma_noise_on=gamma_noise_on,
+        gamma_noise_sd=gamma_noise_sd,
         sigma_noise_on=sigma_noise_on,
+        sigma_noise_sd=sigma_noise_sd,
     )
-
-    # adjust rate params to correct timestep
-    estimates_ds = adjust_timescales_from_daily(estimates_ds)
 
     # run simulation
     estimates_ds = sim_engine(*ics, estimates_ds)
@@ -373,18 +523,20 @@ def simulate_and_regress(
         estimates_ds["EIR"] = estimates_ds["EI"] + estimates_ds["R"]
 
     # get minimum S for each simulation
-    # at end and when p3 turns on
+    # at end and when the last policy turns on
     estimates_ds["S_min"] = estimates_ds.S.isel(t=-1)
-    p3_on = (policies.policy_timeseries.isel(policy=-1) > 0).argmax(dim="t")
+    p3_on = (policies.policy_timeseries > 0).argmax(dim="t").max(dim="policy")
     estimates_ds["S_min_p3"] = estimates_ds.S.isel(t=p3_on)
 
     # blend in policy dataset
     estimates_ds = estimates_ds.merge(policies)
 
+    # get true mean policy effects after noise added to epi parameters
+    estimates_ds = xr.merge((estimates_ds, get_true_pol_effects(estimates_ds)))
+
     # convert to daily observations
-    daily_ds = estimates_ds.sel(
-        t=slice(0, None, int(np.round(1 / (estimates_ds.t[1] - estimates_ds.t[0]))))
-    )
+    daily_ds = adjust_timescales_to_daily(estimates_ds, tsteps_per_day)
+
     # prep regression LHS vars (logdiff)
     new = (
         np.log(daily_ds[daily_ds.LHS.values])
@@ -419,7 +571,7 @@ def simulate_and_regress(
         RHS_ds = xr.concat((RHS_ds, lag_vars), dim="policy")
 
     # Apply min cum_cases threshold used in regressions
-    valid_reg = daily_ds.I >= min_cases / pop
+    valid_reg = daily_ds.IR >= min_cases / pop
     if "sigma" not in valid_reg.dims:
         valid_reg = valid_reg.expand_dims("sigma")
         valid_reg["sigma"] = [np.nan]
@@ -428,6 +580,21 @@ def simulate_and_regress(
     no_pol_on_regday0 = (RHS_old > 0).max(dim="policy").argmax(
         dim="t"
     ) > valid_reg.argmax(dim="t")
+
+    # find random last day to end regression, starting with 1 day after last policy
+    # is implemented
+    if random_end:
+        last_pol = (daily_ds.policy_timeseries.sum(dim="policy") == 3).argmax(dim="t")
+        last_reg_day = (
+            ((daily_ds.dims["t"] - (last_pol + 1)) * daily_ds.random_end)
+            .round()
+            .astype(int)
+            + last_pol
+            + 1
+        )
+    else:
+        last_reg_day = daily_ds.dims["t"]
+    daily_ds["random_end"] = last_reg_day
 
     # loop through regressions
     for cx, case_var in enumerate(daily_ds.LHS.values):
@@ -439,6 +606,8 @@ def simulate_and_regress(
                 for samp in daily_ds.sample.values:
                     if no_pol_on_regday0.isel(sample=samp, gamma=gx, sigma=sx):
                         this_valid = valid_reg.isel(sample=samp, gamma=gx, sigma=sx)
+                        if random_end:
+                            this_valid = (this_valid) & (RHS_ds.t <= last_reg_day[samp])
                         LHS = s_ds.isel(sample=samp)[this_valid].values
                         RHS = add_constant(
                             RHS_ds.isel(sample=samp)[{"t": this_valid}].values
@@ -482,7 +651,9 @@ def simulate_and_regress(
 def load_reg_results(res_dir):
     reg_ncs = [f for f in res_dir.iterdir() if f.name[0] != "."]
     pops = [int(f.name.split("_")[1]) for f in reg_ncs]
-    reg_res = xr.concat([xr.open_dataset(f) for f in reg_ncs], dim="pop")
+    reg_res = xr.concat(
+        [xr.open_dataset(f) for f in reg_ncs], dim="pop", data_vars="different"
+    )
     reg_res["pop"] = pops
     reg_res["t"] = reg_res.t.astype(int)
     reg_res = reg_res.sortby("pop")
