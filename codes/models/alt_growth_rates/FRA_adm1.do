@@ -250,7 +250,7 @@ drop miss_ct
 // yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
 
 
-//-------------------------------Running the model for IledeFrance only
+//-------------------------------Running the model for Ile-de-France only
 
 // gen cases_to_pop = cum_confirmed_cases / population
 // collapse (max) cases_to_pop cum_confirmed_cases, by(adm1_name)
