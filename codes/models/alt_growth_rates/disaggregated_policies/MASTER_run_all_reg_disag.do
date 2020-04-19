@@ -13,7 +13,7 @@ capture mkdir "results/figures/appendix/disaggregated_policies"
 capture mkdir "results/tables/" 
 capture mkdir "results/tables/ATE_disag" 
 capture mkdir "results/source_data" 
-capture copy "results/source_data/Figure3_CHN_data.csv" "results/source_data/ExtendedDataFigure9a_CHN_data.csv" 
+capture copy "results/source_data/indiv/Figure3_CHN_data.csv" "results/source_data/indiv/ExtendedDataFigure9a_CHN_data.csv" 
 
 // run .do files
 do "codes/models/alt_growth_rates/CHN_adm2.do"
@@ -102,3 +102,44 @@ keep adm0_name ate_disaggregated ci_disaggregated ate_grouped ci_grouped
 order adm0_name ate_disaggregated ci_disaggregated ate_grouped ci_grouped
 
 outsheet using "results/tables/ATE_disag/ATE_comparison_disag.csv", comma replace
+
+
+// combine all source data for ED fig 9
+filelist, dir("results/source_data/indiv") pattern("ExtendedDataFigure9*.csv")
+levelsof filename, local(filenames)
+foreach fn of local filenames{
+	local filepath = "results/source_data/indiv/" + "`fn'"
+	local tempname = subinstr(regexr("`fn'", "_data\.csv", ""), "ExtendedDataFigure9", "", .)
+	insheet using `filepath', clear
+	
+	if regexm("`fn'", "FRA|France"){
+		replace adm0_name = "FRA" if adm0_name=="France"
+		rename t t0
+		gen t = string(t0, "%td")
+		drop t0
+	}	
+	tempfile `tempname'
+	save ``tempname'', replace
+}
+use `a_CHN', clear
+foreach c in KOR ITA IRN FRA USA {
+	append using `a_`c''
+}
+export excel using "results/source_data/ExtendedDataFigure9.xlsx", sheet("panel_a") firstrow(var) sheetreplace
+
+use `b_Wuhan', clear
+foreach reg in Daegu Milan Tehran IledeFrance NewYork {
+	append using `b_`reg'', force
+}
+foreach var in y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter day_avg{
+	gen `var' = `var'_wh
+	foreach reg in dg mi thr idf ny{
+		replace `var' = `var'_`reg' if `var'==.
+	}
+}
+export excel adm* t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter day_avg ///
+using "results/source_data/ExtendedDataFigure9.xlsx", sheet("panel_b") firstrow(var) sheetreplace
+
+use `c_FRA_hosp', clear
+order adm0_name t
+export excel using "results/source_data/ExtendedDataFigure9.xlsx", sheet("panel_c") firstrow(var) sheetreplace
