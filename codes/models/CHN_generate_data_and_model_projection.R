@@ -1,6 +1,6 @@
 # setwd("E:/GPL_covid/")
-library(tidyverse)
-library(lfe)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lfe))
 source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
 source("codes/data/multi_country/get_JHU_country_data.R")
@@ -9,7 +9,7 @@ underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
 if(!(exists("gamma") & class(gamma) != "function")){
   gamma = 0.052
 }
-mydata <- read_csv('models/reg_data/CHN_reg_data.csv',                   
+china_data <- read_csv('models/reg_data/CHN_reg_data.csv',                   
                    col_types = cols(
                      .default = col_double(),
                      adm0_name = col_character(),
@@ -27,42 +27,42 @@ mydata <- read_csv('models/reg_data/CHN_reg_data.csv',
 
 changed = TRUE
 while(changed){
-  new <- mydata %>% 
+  new <- china_data %>% 
     group_by(tmp_id) %>% 
     filter(!(is.na(cum_confirmed_cases) & date == min(date)))  
-  if(nrow(new) == nrow(mydata)){
+  if(nrow(new) == nrow(china_data)){
     changed <- FALSE
   }
-  mydata <- new
+  china_data <- new
 }
 
-policy_variables_to_use <- 
+china_policy_variables_to_use <- 
   c(
-    names(mydata) %>% str_subset('home_isolation_'),
-    names(mydata) %>% str_subset('travel_ban_local_')
+    names(china_data) %>% str_subset('home_isolation_'),
+    names(china_data) %>% str_subset('travel_ban_local_')
   )  
 
-other_control_variables <- 
-  c(names(mydata) %>% str_subset("testing_regime_change_"))
+china_other_control_variables <- 
+  c(names(china_data) %>% str_subset("testing_regime_change_"))
 
 
 formula <- as.formula(
   paste("D_l_active_cases ~ tmp_id +", 
-        paste(policy_variables_to_use, collapse = " + "), ' + ',
-        paste(other_control_variables, collapse = " + "),
+        paste(china_policy_variables_to_use, collapse = " + "), ' + ',
+        paste(china_other_control_variables, collapse = " + "),
         " - 1 | 0 | 0 | date "
   ))
 suppressWarnings({
-  main_model <- felm(data = mydata,
+  china_model <- felm(data = china_data,
                      formula = formula,
-                     cmethod = 'reghdfe'); #summary(main_model)
+                     cmethod = 'reghdfe'); #summary(china_model)
 })
 #projection
 
-main_projection <- compute_predicted_cum_cases(full_data = mydata, model = main_model,
+main_projection <- compute_predicted_cum_cases(full_data = china_data, model = china_model,
                                                lhs = "D_l_active_cases",
-                                               policy_variables_used = policy_variables_to_use,
-                                               other_control_variables = other_control_variables,
+                                               policy_variables_used = china_policy_variables_to_use,
+                                               other_control_variables = china_other_control_variables,
                                                time_steps_per_day = 6,
                                                gamma = gamma,
                                                proportion_confirmed = underreporting %>% 
