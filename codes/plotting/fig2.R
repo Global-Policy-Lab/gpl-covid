@@ -172,18 +172,12 @@ theme_fig2 <- function(base_size=11) {
 
 #average value across 6 countries
 df.6 <- filter(df.no, policy %in% c("China", "South Korea", "Italy", "Iran", "France", "United States")) 
-df.6$wt <- (1/df.6$se^2)/sum(1/df.6$se^2) # create precision weights
 df.6$N<- c(3698, 595, 2899, 548, 270, 1235) # add number of obs for each country
-average.beta <- round(sum(df.6$wt*df.6$beta), 2) 
-# 0.37
+average.beta <- round(mean(df.6$beta), 2)
 average.se <- sqrt(sum((df.6$se)^2*df.6$N)/sum(df.6$N))
-# 0.07114325
 average.beta.lb <- average.beta - 1.96*average.se
-# 0.2305592
 average.beta.ub <- average.beta + 1.96*average.se
-# 0.5094408
 average.beta.percent <- round((exp(average.beta)-1)*100, 0)
-# 45%
 
 #draw faint horizontal lines dividing countries
 y.breaks <- plyr::count(df$order)[2]
@@ -199,7 +193,7 @@ betas.no <- ggplot(data = df.no) +
   geom_segment(aes(x = lb, y = policy, xend = ub, yend = policy), size = 0.3, colour =  "grey39") + #grey CI
   geom_point(aes(x=beta, y=policy),  color = "darkred", size=3, alpha = 0.9) +
   geom_vline(xintercept=0, colour="grey30", linetype="solid", size = 0.3) + 
-  geom_vline(xintercept=mean(df.no$beta), colour="darkred", linetype="dotted", size = 0.5) + #average beta
+  geom_vline(xintercept=average.beta, colour="darkred", linetype="dotted", size = 0.5) + #average beta
   geom_hline(yintercept= 0.5, colour="grey50", linetype="dotted", size = 0.5) + 
   geom_text(aes(x = 0.55, y = 6.5), size = 2, label= paste0("Average = ", average.beta, " (",average.beta.percent,"%)")) + 
   scale_y_discrete(limits = rev(df.no$policy), position = "left") +
