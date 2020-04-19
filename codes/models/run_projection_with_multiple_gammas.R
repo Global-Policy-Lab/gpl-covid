@@ -30,8 +30,8 @@ gamma_loop_df <- crossing(
                  "D_l_cum_confirmed_cases", "D_l_cum_confirmed_cases", "D_l_cum_confirmed_cases"),
          model = list(china_model, iran_model, korea_model, italy_model, france_model, usa_model)
   ),
-  gamma = c(0.05), #0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4),
-  sigma = c(0.2), #0.33, 0.5, Inf),
+  gamma = c(0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4),
+  sigma = c(0.2, 0.33, 0.5, Inf),
   time_steps_per_day = c(6)
 ) %>% 
   left_join(underreporting, by = c("urcountry" = "country"))
@@ -153,7 +153,6 @@ suppressWarnings({
                      scale = 2, base_asp = 1.2)
   cowplot::save_plot(plot = final, filename = "results/figures/fig4/fig4_total_sensitivity_to_gamma.jpg",
                      scale = 2, base_asp = 1.2, dpi = 600)
-  # There is a bug in ggsave that creates an empty Rplots.pdf file
   if(file.exists("Rplots.pdf")){
     file.remove("Rplots.pdf")
   }
