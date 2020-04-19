@@ -425,6 +425,12 @@ df.map$lat <- trunc(df.map$lat, 5)
 df.map$cases[df.map$adm_name=="Reggio di Calabria"] <- 237
 df.map$cases[df.map$adm_name=="Montana"] <- 318
 
+#update epi_source
+epi_source$cases[df.map$country=="USA" & df.map$cases==335290] <- 335289
+epi_source$cases[df.map$country=="USA" & df.map$cases==365117] <- 365116
+epi_source$deaths[df.map$country=="USA" & df.map$deaths==10835] <- 10836
+
+
 ##########################################################
 
 ## SAVE SOURCE DATA 
