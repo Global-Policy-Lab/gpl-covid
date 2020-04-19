@@ -32,3 +32,5 @@ dependencies:
     - r-tigris=0.9
     - r-gridExtra=2.3
     - r-ggsci=2.9
+    - r-cowplot=1.0
+
