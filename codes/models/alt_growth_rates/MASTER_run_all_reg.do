@@ -72,7 +72,7 @@ foreach fn of local filenames{
 	graph use "`filepath'", name("`graphname'", replace)
 }
 graph combine Wuhan_active_fix Daegu_active_fix Milan_conf_fix Tehran_conf_fix  ///
-IledeFrance_conf_fix NewYork_conf_fix, cols(1) imargin(tiny) ysize(18) xsize(10)
+IledeFrance_conf_fix Washington_conf_fix, cols(1) imargin(tiny) ysize(18) xsize(10)
 graph export results/figures/appendix/subnatl_growth_rates/ALL_subnatl.pdf, replace
 
 

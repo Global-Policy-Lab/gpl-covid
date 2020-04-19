@@ -128,12 +128,12 @@ foreach c in KOR ITA IRN FRA USA {
 export excel using "results/source_data/ExtendedDataFigure9.xlsx", sheet("panel_a") firstrow(var) sheetreplace
 
 use `b_Wuhan', clear
-foreach reg in Daegu Milan Tehran IledeFrance NewYork {
+foreach reg in Daegu Milan Tehran IledeFrance Washington {
 	append using `b_`reg'', force
 }
 foreach var in y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter day_avg{
 	gen `var' = `var'_wh
-	foreach reg in dg mi thr idf ny{
+	foreach reg in dg mi thr idf wa{
 		replace `var' = `var'_`reg' if `var'==.
 	}
 }
