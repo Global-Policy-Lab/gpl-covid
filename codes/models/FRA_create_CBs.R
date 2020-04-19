@@ -4,10 +4,10 @@ if(!exists("times")){
   times <- 2
 }
 #projection
-out <- compute_bootstrap_replications(full_data = mydata,
-                                      policy_variables_to_use = policy_variables_to_use,
+out <- compute_bootstrap_replications(full_data = france_data,
+                                      policy_variables_to_use = france_policy_variables_to_use,
                                       lhs = "D_l_cum_confirmed_cases",
-                                      other_control_variables = other_control_variables,
+                                      other_control_variables = france_other_control_variables,
                                       times = times,
                                       gamma = gamma,
                                       proportion_confirmed = underreporting %>% 
