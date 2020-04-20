@@ -37,7 +37,9 @@ def test_pipeline(tmp_path):
         if "bootstrap" not in p.name:
             other_file = Path("").joinpath(*p.parts[len_path:])
             try:
-                pd.testing.assert_frame_equal(pd.read_csv(p), pd.read_csv(other_file))
+                pd.testing.assert_frame_equal(
+                    pd.read_csv(p), pd.read_csv(other_file), check_like=True
+                )
             except UnicodeDecodeError:
                 pass
             except:
