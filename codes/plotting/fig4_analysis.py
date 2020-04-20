@@ -6,6 +6,38 @@ import pandas as pd
 import codes.utils as cutil
 
 
+countries_in_order = ["china", "korea", "italy", "iran", "france", "usa"]
+
+country_abbrievations = {
+    "france": "FRA",
+    "iran": "IRN",
+    "usa": "USA",
+    "italy": "ITA",
+    "china": "CHN",
+    "korea": "KOR",
+}
+
+cutoff_dates = pd.read_csv(
+    cutil.HOME / "codes" / "data" / "cutoff_dates.csv"
+).set_index("tag")
+cutoff_end = str(cutoff_dates.loc["default", "end_date"])
+end_date = "{0}-{1}-{2}".format(cutoff_end[0:4], cutoff_end[4:6], cutoff_end[6:8])
+start_date = "2020-01-15"
+
+# country specfic cutoff dates
+cutoff_dates_by_country = {}
+for country in countries_in_order:
+    key_this_country = "{0}_analysis".format(country_abbrievations[country])
+
+    if key_this_country in cutoff_dates.index:
+        cutoff_this_country = str(cutoff_dates.loc[key_this_country, "end_date"])
+        cutoff_dates_by_country[country] = "{0}-{1}-{2}".format(
+            cutoff_this_country[0:4], cutoff_this_country[4:6], cutoff_this_country[6:8]
+        )
+    else:
+        cutoff_dates_by_country[country] = end_date
+
+
 def aggregate_preds_by_country(
     countries, resampled_dfs_by_country, pred_key, latest_dates
 ):
@@ -89,7 +121,7 @@ def main():
         preds_this_country = model_dfs_by_country[country]
 
         # use the most recent date that we have data for this country
-        latest_date_this_country = preds_this_country["date"].max()
+        latest_date_this_country = cutoff_dates_by_country[country]
         latest_dates.append(latest_date_this_country)
 
         # get predictions without policy
@@ -119,6 +151,7 @@ def main():
 
     est_diffs_modeled = modeled_no_policy - modeled_with_policy
 
+    print(est_diffs_modeled)
     # 4. use resampled predictions to get intervals
     df_no_pol_pred = aggregate_preds_by_country(
         countries, resampled_dfs_by_country, pred_no_pol_key, latest_dates
