@@ -2,12 +2,14 @@
 Functions to help in infectious disease simulation.
 """
 
+import warnings
+from collections import OrderedDict
+
 import numpy as np
+
 import pandas as pd
 import xarray as xr
-from collections import OrderedDict
 from statsmodels.api import OLS, add_constant
-import warnings
 
 
 def init_reg_ds(n_samples, LHS_vars, policies, **dim_kwargs):

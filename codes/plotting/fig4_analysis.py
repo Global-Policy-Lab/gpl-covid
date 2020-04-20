@@ -1,9 +1,9 @@
 import os
 
 import numpy as np
-import pandas as pd
 
 import codes.utils as cutil
+import pandas as pd
 
 
 def aggregate_preds_by_country(
