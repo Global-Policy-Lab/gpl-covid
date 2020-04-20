@@ -10,6 +10,7 @@ out <- compute_bootstrap_replications(full_data = korea_data,
                                         filter(country == "South Korea") %>% 
                                         pull(underreporting_estimate))
 
-
-write_csv(out, path = "models/projections/korea_bootstrap_projection.csv")
+if(times > 2){
+  write_csv(out, path = "models/projections/korea_bootstrap_projection.csv")
+}
 write_csv(main_projection, path = "models/projections/korea_model_projection.csv")
