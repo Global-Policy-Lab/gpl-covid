@@ -1,7 +1,9 @@
+import warnings
+
+import numpy as np
+
 import codes.utils as cutil
 import pandas as pd
-import numpy as np
-import warnings
 
 
 def check_population_col_is_filled(df, adm_col, pop_col, errors="raise"):
