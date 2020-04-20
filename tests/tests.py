@@ -44,9 +44,14 @@ def test_pipeline(tmp_path):
             except UnicodeDecodeError:
                 pass
             except:
-                bad_files.append(str(other_file))
+                bad_files.append((str(other_file), str(p)))
     if len(bad_files) > 0:
+        for other_file, p in bad_files:
+           cmd = shlex.split(f"cat {other_file}")
+           subprocess.run(cmd)
+           cmd = shlex.split(f"cat {p}")
+           subprocess.run(cmd)
         raise AssertionError(
             "The folowing files produced by this code do not match the version saved "
-            f"in the repo: {bad_files}"
+            f"in the repo: {[x for x, _ in bad_files]}"
         )
