@@ -167,11 +167,11 @@ outsheet using "models/reg_data/USA_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
-outreg2 using "results/tables/USA_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/USA_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(State FE, "YES", Day-of-Week FE, "YES") title(United States, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
  "\'22Social distance\'22 includes policies such as closing libraries, maintaining 6 feet distance from others in public, and limiting visits to long term care facilities.")
-cap erase "results/tables/USA_estimates_table.txt"
+cap erase "results/tables/reg_results/USA_estimates_table.txt"
 
 // saving coef
 tempfile results_file
@@ -191,7 +191,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_usa, replace)
 graph combine hist_usa qn_usa, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_usa.gph, replace)
 graph drop hist_usa qn_usa
 
-outsheet e using "results/source_data/ExtendedDataFigure1_USA_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_USA_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -258,6 +258,13 @@ coefplot, keep(p_*) tit("USA: policy packages") subtitle(`subtitle2') ///
 graphregion(margin(10 5 0 5)) xline(0) name(USA_policy, replace)
 
 
+// export coefficients (FOR FIG2)
+postclose results
+preserve
+	use `results_file', clear
+	outsheet * using "results/source_data/indiv/Figure2_USA_coefs.csv", comma replace
+restore
+
 // export predicted counterfactual growth rate
 preserve
 	keep if e(sample) == 1
@@ -297,9 +304,9 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(m
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/USA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
-egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
-outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
-using "results/source_data/Figure3_USA_data.csv" if miss_ct<8, comma replace
+egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
+outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/indiv/Figure3_USA_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
 // tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
@@ -315,79 +322,54 @@ drop miss_ct
 // yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
 
 
-//-------------------------------Running the model for certain states
+//-------------------------------Running the model for Washington only
 
-foreach state in "Washington" "California" "New York" {
+// p_5 = 0.5 and p_7 = 0 for entire sample period
+// no testing regime changes in WA
 
-	reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_* if adm1_name=="`state'", noabsorb
-	
-	local state0 = regexr("`state'", " ", "")
-	local rowname = "USA_" + "`state0'"
-	display "`rowname'"
-	post results ("`rowname'") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 
+reghdfe D_l_cum_confirmed_cases p_* if adm1_name=="Washington", noabsorb
 
-	// predicted "actual" outcomes with real policies
-	predictnl y_actual_`state0' = xb() if e(sample), ///
-	ci(lb_y_actual_`state0' ub_y_actual_`state0')
-		
-	// predicting counterfactual growth for each obs
-	predictnl y_counter_`state0' = ///
-	testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
-	testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
-	testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
-	testing_regime_change_19mar2020 * _b[testing_regime_change_19mar2020] + /// 
-	testing_regime_change_20mar2020 * _b[testing_regime_change_20mar2020] + /// 
-	testing_regime_change_21mar2020 * _b[testing_regime_change_21mar2020] + /// 
-	testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
-	testing_regime_change_23mar2020 * _b[testing_regime_change_23mar2020] + /// 
-	testing_regime_change_24mar2020 * _b[testing_regime_change_24mar2020] + /// 
-	testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + /// 
-	testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
-	testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
-	testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + ///  
-	_b[_cons] if e(sample), ///
-	ci(lb_counter_`state0' ub_counter_`state0')
+// predicted "actual" outcomes with real policies
+predictnl y_actual_wa = xb() if e(sample), ci(lb_y_actual_wa ub_y_actual_wa)
+	
+// predicting counterfactual growth for each obs
+predictnl y_counter_wa = _b[_cons] if e(sample), ci(lb_counter_wa ub_counter_wa)
 
-	// quality control: don't want to be forecasting negative growth (not modeling recoveries)
-	// fix so there are no negative growth rates in error bars
-	foreach var of varlist y_actual_`state0' y_counter_`state0' lb_y_actual_`state0' ub_y_actual_`state0' lb_counter_`state0' ub_counter_`state0' {
-		replace `var' = 0 if `var'<0 & `var'!=.
-	}
+coefplot, keep(p_*) tit("Washington State: policy packages") xline(0)
 
-	
-	coefplot, keep(p_*) tit("`state0': policy packages") xline(0) name(`state0'_policy, replace)
-	
-	// Observed avg change in log cases
-	reg D_l_cum_confirmed_cases i.t if adm1_name=="`state'"
-	predict day_avg_`state0' if adm1_name=="`state'" & e(sample) == 1
-	
-	// Graph of predicted growth rates
-	// fixed x-axis across countries
-	local title = "`state'" + " State, USA"
-	
-	tw (rspike ub_y_actual_`state0' lb_y_actual_`state0' t,  lwidth(vthin) color(blue*.5)) ///
-	(rspike ub_counter_`state0' lb_counter_`state0' t, lwidth(vthin) color(red*.5)) ///
-	|| (scatter y_actual_`state0' t,  msize(tiny) color(blue*.5) ) ///
-	(scatter y_counter_`state0' t, msize(tiny) color(red*.5)) ///
-	(connect y_actual_`state0' t, color(blue) m(square) lpattern(solid)) ///
-	(connect y_counter_`state0' t, color(red) lpattern(dash) m(Oh)) ///
-	(sc day_avg_`state0' t, color(black)) ///
-	if e(sample), ///
-	title("`title'", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-	xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-	saving(results/figures/appendix/sub_natl_growth_rates/`state0'_conf_cases_growth_rates_fixedx.gph, replace)
+// quality control: don't want to be forecasting negative growth (not modeling recoveries)
+// fix so there are no negative growth rates in error bars
+foreach var of varlist y_actual_wa y_counter_wa lb_y_actual_wa ub_y_actual_wa lb_counter_wa ub_counter_wa {
+	replace `var' = 0 if `var'<0 & `var'!=.
 }
 
-// export coefficients (FOR FIG2)
-postclose results
-preserve
-	use `results_file', clear
-	outsheet * using "results/source_data/Figure2_USA_coefs.csv", comma replace
-restore
+// Observed avg change in log cases
+reg D_l_cum_confirmed_cases i.t if adm1_name=="Washington"
+predict day_avg_wa if adm1_name=="Washington" & e(sample) == 1
+
+// Graph of predicted growth rates
+// fixed x-axis across countries
+tw (rspike ub_y_actual_wa lb_y_actual_wa t_random,  lwidth(vthin) color(blue*.5)) ///
+(rspike ub_counter_wa lb_counter_wa t_random2, lwidth(vthin) color(red*.5)) ///
+|| (scatter y_actual_wa t,  msize(tiny) color(blue*.5) ) ///
+(scatter y_counter_wa t, msize(tiny) color(red*.5)) ///
+(connect y_actual_wa t, color(blue) m(square) lpattern(solid)) ///
+(connect y_counter_wa t, color(red) lpattern(dash) m(Oh)) ///
+(sc day_avg_wa t, color(black)) ///
+if e(sample), ///
+title("Washington State, USA", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+saving(results/figures/appendix/subnatl_growth_rates/Washington_conf_cases_growth_rates_fixedx.gph, replace)
+
+egen miss_ct = rowmiss(y_actual_wa lb_y_actual_wa ub_y_actual_wa y_counter_wa lb_counter_wa ub_counter_wa day_avg_wa)
+outsheet adm0_name adm1_name t y_actual_wa lb_y_actual_wa ub_y_actual_wa y_counter_wa lb_counter_wa ub_counter_wa day_avg_wa ///
+using "results/source_data/indiv/ExtendedDataFigure9b_Washington_data.csv" if miss_ct<7, comma replace
+drop miss_ct
 
 
 //-------------------------------Cross-validation
+tempvar counter_CV
 tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
@@ -400,6 +382,25 @@ foreach var of varlist p_*{
 lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 + p_7 + p_8 + p_9
 post results ("USA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
+predictnl `counter_CV' =  ///
+testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
+testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
+testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
+testing_regime_change_19mar2020 * _b[testing_regime_change_19mar2020] + /// 
+testing_regime_change_20mar2020 * _b[testing_regime_change_20mar2020] + /// 
+testing_regime_change_21mar2020 * _b[testing_regime_change_21mar2020] + /// 
+testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+testing_regime_change_23mar2020 * _b[testing_regime_change_23mar2020] + /// 
+testing_regime_change_24mar2020 * _b[testing_regime_change_24mar2020] + /// 
+testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + /// 
+testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
+testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + /// 
+_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+sum `counter_CV'
+post results ("USA") ("full_sample") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+drop `counter_CV'
+
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
@@ -409,6 +410,24 @@ foreach adm in `state_list' {
 	}
 	lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 + p_7 + p_8 + p_9
 	post results ("USA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	predictnl `counter_CV' =  ///
+	testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
+	testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
+	testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
+	testing_regime_change_19mar2020 * _b[testing_regime_change_19mar2020] + /// 
+	testing_regime_change_20mar2020 * _b[testing_regime_change_20mar2020] + /// 
+	testing_regime_change_21mar2020 * _b[testing_regime_change_21mar2020] + /// 
+	testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
+	testing_regime_change_23mar2020 * _b[testing_regime_change_23mar2020] + /// 
+	testing_regime_change_24mar2020 * _b[testing_regime_change_24mar2020] + /// 
+	testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + /// 
+	testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
+	testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
+	testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + /// 
+	_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+	sum `counter_CV'
+	post results ("USA") ("`adm'") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+	drop `counter_CV'	
 }
 postclose results
 
@@ -436,10 +455,10 @@ preserve
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/USA.pdf, replace
 	graph export results/figures/appendix/cross_valid/USA.png, replace	
-	outsheet * using "results/source_data/extended_cross_validation_USA.csv", replace
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure7_cross_valid_USA.csv", comma replace
 restore
 
-//---------------------------------Fixed lag
+//------------------------------------FIXED LAG 
 
 tempfile base_data
 save `base_data'
@@ -546,7 +565,7 @@ rename val lag
 reshape wide L, i(lag policy) j(temp) string
 sort Lat
 rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-outsheet * using "results/source_data/extended_fixed_lag_USA.csv", replace	
+outsheet * using "results/source_data/indiv/ExtendedDataFigure8_fixed_lag_USA.csv", replace	
 
 use `f0', clear
 foreach L of num 1 2 3 4 5 10 15 {

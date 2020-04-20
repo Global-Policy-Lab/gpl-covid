@@ -129,11 +129,11 @@ outsheet using "models/reg_data/ITA_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
 
-outreg2 using "results/tables/ITA_estimates_table", sideway noparen nodepvar word replace label ///
+outreg2 using "results/tables/reg_results/ITA_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Italy, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
  ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
  "\'22Social distance\'22 includes policies for working from home, maintaining 1 meter distance from others in public, and prohibiting public and private events.")
-cap erase "results/tables/ITA_estimates_table.txt"
+cap erase "results/tables/reg_results/ITA_estimates_table.txt"
 
 // save coef
 tempfile results_file
@@ -160,7 +160,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_ita, replace)
 graph combine hist_ita qn_ita, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_ita.gph, replace)
 graph drop hist_ita qn_ita
 
-outsheet e using "results/source_data/ExtendedDataFigure1_ITA_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_ITA_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -209,7 +209,7 @@ coefplot, keep(p_*) tit("ITA: policy packages") subtitle(`subtitle2') xline(0) n
 postclose results
 preserve
 	use `results_file', clear
-	outsheet * using "results/source_data/Figure2_ITA_coefs.csv", comma replace
+	outsheet * using "results/source_data/indiv/Figure2_ITA_coefs.csv", comma replace
 restore
 
 //export predicted counterfactual growth rate
@@ -252,9 +252,9 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick))
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/ITA_adm2_conf_cases_growth_rates_fixedx.gph, replace)
 
-egen miss_ct = rowmiss(m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter)
-outsheet t m_y_actual y_actual lb_y_actual ub_y_actual m_y_counter y_counter lb_counter ub_counter ///
-using "results/source_data/Figure3_ITA_data.csv" if miss_ct<8, comma replace
+egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
+outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/indiv/Figure3_ITA_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
 // tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
@@ -271,94 +271,61 @@ drop miss_ct
 // br if adm2_name=="Isernia"
 
 
-//-------------------------------Running the model for Lombardy only 
+//-------------------------------Running the model for Milano only
 
-reghdfe D_l_cum_confirmed_cases p_* if adm1_name == "Lombardia", absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+// gen cases_to_pop = cum_confirmed_cases / population
+// collapse (max) cases_to_pop cum_confirmed_cases, by(adm2_name)
+// sort cum_confirmed_cases //Milano
+// sort cases_to_pop //Cremona
+
+// need to combine b/c collinear in time in Milano
+// p_3 "Travel ban"; p_4 "Quarantine positive cases"; p_6 "Home isolation"
+gen p_3_4_6 = (p_3 + p_4 + p_6) / 3
+lab var p_3_4_6 "Trvl ban, quarantine pos, home iso"
+
+reghdfe D_l_cum_confirmed_cases p_1 p_2 p_5 p_3_4_6 if adm2_name=="Milano", noabsorb
 
 // predicted "actual" outcomes with real policies
-predictnl y_actual_lom = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual_lom ub_y_actual_lom)
-
+predictnl y_actual_mi = xb() if e(sample), ci(lb_y_actual_mi ub_y_actual_mi)
+	
 // predicting counterfactual growth for each obs
-predictnl y_counter_lom = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter_lom ub_counter_lom)
+predictnl y_counter_mi = _b[_cons] if e(sample), ci(lb_counter_mi ub_counter_mi)
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars
-foreach var of varlist y_actual_lom y_counter_lom lb_y_actual_lom ub_y_actual_lom lb_counter_lom ub_counter_lom {
+foreach var of varlist y_actual_mi y_counter_mi lb_y_actual_mi ub_y_actual_mi lb_counter_mi ub_counter_mi {
 	replace `var' = 0 if `var'<0 & `var'!=.
 }
 
-// computing daily avgs in sample, store with a single panel unit (longest time series)
-reg y_actual_lom i.t if adm1_name == "Lombardia"
-predict m_y_actual_lom if adm2_name=="Bergamo"
-
-reg y_counter_lom i.t if adm1_name == "Lombardia"
-predict m_y_counter_lom if adm2_name=="Bergamo"
-
 // Observed avg change in log cases
-reg D_l_cum_confirmed_cases i.t if adm1_name == "Lombardia"
-predict day_avg_lom if adm2_name=="Bergamo" & e(sample) == 1
+reg D_l_cum_confirmed_cases i.t if adm2_name=="Milano"
+predict day_avg_mi if adm2_name=="Milano" & e(sample) == 1
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
-tw (rspike ub_y_actual_lom lb_y_actual_lom t_random,  lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_lom lb_counter_lom t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual_lom t_random,  msize(tiny) color(blue*.5) ) ///
-(scatter y_counter_lom t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual_lom t, color(blue) m(square) lpattern(solid)) ///
-(connect m_y_counter_lom t, color(red) lpattern(dash) m(Oh)) ///
-(sc day_avg_lom t, color(black)) ///
+tw (rspike ub_y_actual_mi lb_y_actual_mi t_random, lwidth(vthin) color(blue*.5)) ///
+(rspike ub_counter_mi lb_counter_mi t_random2, lwidth(vthin) color(red*.5)) ///
+|| (scatter y_actual_mi t,  msize(tiny) color(blue*.5) ) ///
+(scatter y_counter_mi t, msize(tiny) color(red*.5)) ///
+(connect y_actual_mi t, color(blue) m(square) lpattern(solid)) ///
+(connect y_counter_mi t, color(red) lpattern(dash) m(Oh)) ///
+(sc day_avg_mi t, color(black)) ///
 if e(sample), ///
-title("Lombardy, Italy", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/sub_natl_growth_rates/Lombardy_conf_cases_growth_rates_fixedx.gph, replace)
+title("Milan, Italy", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
+yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+saving(results/figures/appendix/subnatl_growth_rates/Milan_conf_cases_growth_rates_fixedx.gph, replace)
 
+egen miss_ct = rowmiss(y_actual_mi lb_y_actual_mi ub_y_actual_mi y_counter_mi lb_counter_mi ub_counter_mi day_avg_mi)
+outsheet adm0_name adm1_name adm2_name t y_actual_mi lb_y_actual_mi ub_y_actual_mi y_counter_mi lb_counter_mi ub_counter_mi day_avg_mi ///
+using "results/source_data/indiv/ExtendedDataFigure9b_Milan_data.csv" if miss_ct<7, comma replace
+drop miss_ct
 
-//-------------------------------Running the model for certain provinces
-
-gen cases_to_pop = cum_confirmed_cases / population
-egen cases_to_pop_max = max(cases_to_pop)
-tab adm2_name if cases_to_pop==cases_to_pop_max //Cremona
-
-foreach province in "Cremona" "Bergamo" "Lodi" {
-
-	reghdfe D_l_cum_confirmed_cases p_* if adm2_name=="`province'", noabsorb
-
-	// predicted "actual" outcomes with real policies
-	predictnl y_actual_`province' = xb() if e(sample), ci(lb_y_actual_`province' ub_y_actual_`province')
-		
-	// predicting counterfactual growth for each obs
-	predictnl y_counter_`province' = _b[_cons] if e(sample), ci(lb_counter_`province' ub_counter_`province')
-
-	// quality control: don't want to be forecasting negative growth (not modeling recoveries)
-	// fix so there are no negative growth rates in error bars
-	foreach var of varlist y_actual_`province' y_counter_`province' lb_y_actual_`province' ub_y_actual_`province' lb_counter_`province' ub_counter_`province' {
-		replace `var' = 0 if `var'<0 & `var'!=.
-	}
-
-	// Observed avg change in log cases
-	reg D_l_cum_confirmed_cases i.t if adm2_name=="`province'"
-	predict day_avg_`province' if adm2_name=="`province'" & e(sample) == 1
-	
-	// Graph of predicted growth rates
-	// fixed x-axis across countries
-	local title = "`province'" + ", Italy"
-	
-	tw (rspike ub_y_actual_`province' lb_y_actual_`province' t,  lwidth(vthin) color(blue*.5)) ///
-	(rspike ub_counter_`province' lb_counter_`province' t, lwidth(vthin) color(red*.5)) ///
-	|| (scatter y_actual_`province' t,  msize(tiny) color(blue*.5) ) ///
-	(scatter y_counter_`province' t, msize(tiny) color(red*.5)) ///
-	(connect y_actual_`province' t, color(blue) m(square) lpattern(solid)) ///
-	(connect y_counter_`province' t, color(red) lpattern(dash) m(Oh)) ///
-	(sc day_avg_`province' t, color(black)) ///
-	if e(sample), ///
-	title("`title'", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-	xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-	saving(results/figures/appendix/sub_natl_growth_rates/`province'_conf_cases_growth_rates_fixedx.gph, replace)
-}
+drop p_3_4_6
 
 //-------------------------------Cross-validation
+
+tempvar counter_CV
 tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
@@ -371,6 +338,11 @@ foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6"{
 lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
 post results ("ITA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
+// predicting counterfactual growth for each obs
+predictnl `counter_CV' = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+sum `counter_CV'
+post results ("ITA") ("full_sample") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+drop `counter_CV'
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
@@ -380,6 +352,13 @@ foreach adm in `state_list' {
 	}
 	lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
 	post results ("ITA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+	
+	predictnl `counter_CV' = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
+	sum `counter_CV'
+	post results ("ITA") ("`adm'") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+	drop `counter_CV'
+			
+	
 }
 postclose results
 
@@ -406,10 +385,10 @@ preserve
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/ITA.pdf, replace
 	graph export results/figures/appendix/cross_valid/ITA.png, replace	
-	outsheet * using "results/source_data/extended_cross_validation_ITA.csv", replace	
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure7_cross_valid_ITA.csv", comma replace	
 restore
 
-//-------------------------------Fixed lag
+//------------------------------------FIXED LAG 
 
 tempfile base_data
 save `base_data'
@@ -509,7 +488,7 @@ rename val lag
 reshape wide L, i(lag policy) j(temp) string
 sort Lat
 rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-outsheet * using "results/source_data/extended_fixed_lag_ITA.csv", replace
+outsheet * using "results/source_data/indiv/ExtendedDataFigure8_fixed_lag_ITA.csv", replace
 
 
 use `f0', clear

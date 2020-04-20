@@ -17,18 +17,11 @@ if (!dir.exists(output_dir)){ #make dir if it doesn't exist
   dir.create(output_dir, recursive=TRUE)
 }
 
-countrylist <- c("CHN", "KOR", "ITA", "IRN", "FRA", "USA")
-
 #---------------------------------------------------------
 # Load data and set up parameters for plotting
 #---------------------------------------------------------
 
-df <- c() #load all coeff cvs & combine data into a df
-for (c in countrylist){
-  iso <- read.csv(paste0(dir, "Figure2_",c, "_coefs.csv"), header = T, stringsAsFactors = F)
-  df <- rbind(df, iso)
-  rm(iso)
-}
+df <- read.csv(paste0(dir, "Figure2_data.csv"), header = T, stringsAsFactors = F) 
 
 #Calculate 95% CI
 df$ub <- df$beta + 1.96*df$se
@@ -48,9 +41,6 @@ df$order[df$adm0 == "ITA"] <- 4
 df$order[df$adm0 == "IRN"] <- 3
 df$order[df$adm0 == "FRA"] <- 2
 df$order[df$adm0 == "USA"] <- 1
-df$order[df$adm0 == "USA_Washington"] <- 0.99
-df$order[df$adm0 == "USA_California"] <- 0.97
-df$order[df$adm0 == "USA_NewYork"] <- 0.98
 
 #Panel 1: Infection growth rate without policy
 df.no <- filter(df, df$policy == "no_policy rate") 
@@ -60,16 +50,12 @@ df.no$policy[df.no$adm0 == "FRA" & df.no$policy == "no_policy rate"] <- "France"
 df.no$policy[df.no$adm0 == "ITA" & df.no$policy == "no_policy rate"] <- "Italy"
 df.no$policy[df.no$adm0 == "IRN" & df.no$policy == "no_policy rate"] <- "Iran"
 df.no$policy[df.no$adm0 == "USA" & df.no$policy == "no_policy rate"] <- "United States"
-df.no$policy[df.no$adm0 == "USA_Washington" & df.no$policy == "no_policy rate"] <- "Washington, United States"
-df.no$policy[df.no$adm0 == "USA_California" & df.no$policy == "no_policy rate"] <- "California, United States"
-df.no$policy[df.no$adm0 == "USA_NewYork" & df.no$policy == "no_policy rate"] <- "New York, United States"
 df.no$policy[df.no$adm0 == "CHN" & df.no$policy == "no_policy rate"] <- "China"
 df.no$policy[df.no$adm0 == "CHN_Wuhan" & df.no$policy == "no_policy rate"] <- "Wuhan, China"
 
 
 #Panel 2: Effect of all policies combined
 df.combined <- filter(df, (df$policy == "comb. policy" & df$adm0 != "CHN") |
-                        #df$policy == "comb. policy Teheran" |
                         df$policy == "first week (home+travel)" |
                         df$policy == "second week (home+travel)" |
                         df$policy == "third week (home+travel)" |
@@ -80,7 +66,6 @@ df.combined$policy[df.combined$adm0 == "KOR" & df.combined$policy == "comb. poli
 df.combined$policy[df.combined$adm0 == "FRA" & df.combined$policy == "comb. policy"] <- "France"
 df.combined$policy[df.combined$adm0 == "ITA" & df.combined$policy == "comb. policy"] <- "Italy"
 df.combined$policy[df.combined$adm0 == "IRN" & df.combined$policy == "comb. policy"] <- "Iran"
-#df.combined$policy[df.combined$adm0 == "IRN" & df.combined$policy == "comb. policy Teheran"] <- "Tehran, Iran"
 df.combined$policy[df.combined$adm0 == "USA" & df.combined$policy == "comb. policy"] <- "United States"
 df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "first week (home+travel)"] <- "China, Week 1"
 df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "second week (home+travel)"] <- "China, Week 2"
@@ -185,10 +170,14 @@ theme_fig2 <- function(base_size=11) {
   ret
 }
 
-#average value
-average.beta <- round(mean(df.no$beta), 2)
+#average value across 6 countries
+df.6 <- filter(df.no, policy %in% c("China", "South Korea", "Italy", "Iran", "France", "United States")) 
+df.6$N<- c(3698, 595, 2899, 548, 270, 1235) # add number of obs for each country
+average.beta <- round(mean(df.6$beta), 2)
+average.se <- sqrt(sum((df.6$se)^2*df.6$N)/sum(df.6$N))
+average.beta.lb <- average.beta - 1.96*average.se
+average.beta.ub <- average.beta + 1.96*average.se
 average.beta.percent <- round((exp(average.beta)-1)*100, 0)
-
 
 #draw faint horizontal lines dividing countries
 y.breaks <- plyr::count(df$order)[2]
@@ -204,9 +193,9 @@ betas.no <- ggplot(data = df.no) +
   geom_segment(aes(x = lb, y = policy, xend = ub, yend = policy), size = 0.3, colour =  "grey39") + #grey CI
   geom_point(aes(x=beta, y=policy),  color = "darkred", size=3, alpha = 0.9) +
   geom_vline(xintercept=0, colour="grey30", linetype="solid", size = 0.3) + 
-  geom_vline(xintercept=mean(df.no$beta), colour="darkred", linetype="dotted", size = 0.5) + #average beta
+  geom_vline(xintercept=average.beta, colour="darkred", linetype="dotted", size = 0.5) + #average beta
   geom_hline(yintercept= 0.5, colour="grey50", linetype="dotted", size = 0.5) + 
-  geom_text(aes(x = 0.55, y = 9.5), size = 2, label= paste0("Average = ", average.beta, " (",average.beta.percent,"%)")) + 
+  geom_text(aes(x = 0.55, y = 6.5), size = 2, label= paste0("Average = ", average.beta, " (",average.beta.percent,"%)")) + 
   scale_y_discrete(limits = rev(df.no$policy), position = "left") +
   theme_fig2() + 
   coord_cartesian(xlim =c(-0.9,0.9))  +
@@ -232,7 +221,7 @@ growth.no <- ggplot(data = df.no) +
 
 #combine 3 plots into 1 figure
 all.plot.no <- grid.arrange(betas.no, eff.size.no, growth.no, ncol=3)
-ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 20, height = 5)
+ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 18, height = 4)
  
 #---------------------------------------------------------
 # Panel B: Effect of all policies combined

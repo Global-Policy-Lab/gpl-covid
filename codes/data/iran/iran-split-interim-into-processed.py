@@ -7,8 +7,9 @@
 # - Merge populations
 # - Save outputs at `data/processed/adm0/IRN_processed.csv` and `data/processed/adm2/IRN_processed.csv`
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 from codes import utils as cutil
 
 # Define paths

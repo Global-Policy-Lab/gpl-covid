@@ -1,11 +1,20 @@
 # setwd("E:/GPL_covid/")
-library(tidyverse)
-library(lfe)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lfe))
 source("codes/models/predict_felm.R")
 source("codes/models/projection_helper_functions.R")
-underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
+underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
+                           col_types = cols(
+                             country = col_character(),
+                             total_cases = col_double(),
+                             total_deaths = col_double(),
+                             underreporting_estimate = col_double(),
+                             lower = col_double(),
+                             upper = col_double(),
+                             underreporting_estimate_clean = col_character()
+                           ))
 
-mydata <- read_csv("models/reg_data/IRN_reg_data.csv",
+iran_data <- read_csv("models/reg_data/IRN_reg_data.csv",
                    col_types = cols(
                      .default = col_double(),
                      adm0_name = col_character(),
@@ -19,48 +28,48 @@ mydata <- read_csv("models/reg_data/IRN_reg_data.csv",
          day_of_week = factor(dow),
          tmp_id = factor(adm1_id))
 
-mydata <- mydata %>% 
+iran_data <- iran_data %>% 
   mutate_at(vars(matches("testing_regime")),
             ~if_else(is.na(.x), 0, .x))
 
 changed = TRUE
 while(changed){
-  new <- mydata %>% 
+  new <- iran_data %>% 
     group_by(tmp_id) %>% 
     filter(!(is.na(cum_confirmed_cases) & date == min(date)))  
-  if(nrow(new) == nrow(mydata)){
+  if(nrow(new) == nrow(iran_data)){
     changed <- FALSE
   }
-  mydata <- new
+  iran_data <- new
 }
 
-policy_variables_to_use <- 
+iran_policy_variables_to_use <- 
   c(
-    names(mydata) %>% str_subset('p_1'),
-    names(mydata) %>% str_subset('p_2')
+    names(iran_data) %>% str_subset('p_1'),
+    names(iran_data) %>% str_subset('p_2')
   )  
 
-other_control_variables <- 
-  c(names(mydata) %>% str_subset("testing_regime_"),
+iran_other_control_variables <- 
+  c(names(iran_data) %>% str_subset("testing_regime_"),
     'day_of_week')
 
 formula <- as.formula(
   paste("D_l_cum_confirmed_cases ~ tmp_id +", 
-        paste(policy_variables_to_use, collapse = " + "), ' + ',
-        paste(other_control_variables, collapse = " + "),
+        paste(iran_policy_variables_to_use, collapse = " + "), ' + ',
+        paste(iran_other_control_variables, collapse = " + "),
         " - 1 | 0 | 0 | date "
   ))
 
 suppressWarnings({
-  main_model <- felm(data = mydata,
+  iran_model <- felm(data = iran_data,
                      formula = formula,
-                     cmethod = 'reghdfe'); #summary(main_model)
+                     cmethod = 'reghdfe'); #summary(iran_model)
 })
 # debug(compute_predicted_cum_cases)
-main_projection <- compute_predicted_cum_cases(full_data = mydata, model = main_model,
+main_projection <- compute_predicted_cum_cases(full_data = iran_data, model = iran_model,
                                                lhs = "D_l_cum_confirmed_cases",
-                                               policy_variables_used = policy_variables_to_use,
-                                               other_control_variables = other_control_variables,
+                                               policy_variables_used = iran_policy_variables_to_use,
+                                               other_control_variables = iran_other_control_variables,
                                                gamma = gamma,
                                                proportion_confirmed = underreporting %>% 
                                                  filter(country == "Iran") %>% 

@@ -1,8 +1,10 @@
-import pandas as pd
-import numpy as np
-from codes import utils as cutil
-import os
 import argparse
+import os
+
+import numpy as np
+import pandas as pd
+
+from codes import utils as cutil
 
 parser = argparse.ArgumentParser(
     description="Check for issues in [country]_processed.csv datasets. "

@@ -1,12 +1,26 @@
-import pandas as pd
-import matplotlib.pyplot as plt
+import datetime
 import warnings
 from urllib.error import HTTPError
 
 import matplotlib
-import datetime
 import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
+import pandas as pd
+
 import codes.utils as cutil
+
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--nd",
+    dest="d",
+    action="store_false",
+    help="do not re-download raw JHU time-series",
+)
+parser.set_defaults(d=True)
+args = parser.parse_args()
+download_jhu = args.d
 
 matplotlib.rcParams["pdf.fonttype"] = 42
 matplotlib.rcParams["axes.linewidth"] = 2
@@ -15,6 +29,9 @@ matplotlib.rcParams["axes.linewidth"] = 2
 def main():
     out_dir = cutil.HOME / "results" / "figures" / "appendix"
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    jhu_dir = cutil.DATA_RAW / "multi_country"
+    jhu_path = jhu_dir / "time_series_covid19_confirmed_global.csv"
 
     df = pd.read_csv(cutil.DATA_PROCESSED / "adm2" / "CHN_processed.csv")
     df.loc[:, "date"] = pd.to_datetime(df["date"])
@@ -27,13 +44,18 @@ def main():
         "csse_covid_19_data/csse_covid_19_time_series/"
         "time_series_covid19_confirmed_global.csv"
     )
-    try:
-        jhu = pd.read_csv(url)
-    except HTTPError:
-        warnings.warn(
-            "JHU data no longer available at URL. Unable to scrape data for Fig A2."
-        )
-        return None
+    if download_jhu:
+        try:
+            jhu = pd.read_csv(url)
+            jhu.to_csv(jhu_path, index=False)
+        except HTTPError:
+            warnings.warn(
+                "JHU data no longer available at URL. Unable to scrape data for Fig A2."
+            )
+            return None
+    else:
+        jhu = pd.read_csv(jhu_path)
+
     jhu = jhu.loc[jhu["Country/Region"] == "China", :].copy()
     jhu = jhu.drop(columns=["Country/Region", "Lat", "Long"])
     jhu = jhu.rename({"Province/State": "adm1_name"}, axis=1)
