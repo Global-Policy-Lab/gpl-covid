@@ -753,182 +753,182 @@ adm0,sample,policy,beta
 "KOR","Ulsan","p_4",.022
 "KOR","Ulsan","comb. policy",-.495
 "KOR","Ulsan","no_policy rate",.317
-"ITA","full_sample","p_1",.138
-"ITA","full_sample","p_2",-.106
+"ITA","full_sample","p_1",.144
+"ITA","full_sample","p_2",-.104
 "ITA","full_sample","p_3",-.295
-"ITA","full_sample","p_4",-.072
-"ITA","full_sample","p_5",-.138
-"ITA","full_sample","p_6",.06
-"ITA","full_sample","comb. policy",-.413
-"ITA","full_sample","no_policy rate",.327
-"ITA","Abruzzo","p_1",.137
-"ITA","Abruzzo","p_2",-.105
+"ITA","full_sample","p_4",-.073
+"ITA","full_sample","p_5",-.137
+"ITA","full_sample","p_6",.059
+"ITA","full_sample","comb. policy",-.407
+"ITA","full_sample","no_policy rate",.371
+"ITA","Abruzzo","p_1",.142
+"ITA","Abruzzo","p_2",-.104
 "ITA","Abruzzo","p_3",-.296
 "ITA","Abruzzo","p_4",-.071
 "ITA","Abruzzo","p_5",-.135
-"ITA","Abruzzo","p_6",.057
-"ITA","Abruzzo","comb. policy",-.414
-"ITA","Abruzzo","no_policy rate",.324
-"ITA","Basilicata","p_1",.137
-"ITA","Basilicata","p_2",-.106
+"ITA","Abruzzo","p_6",.056
+"ITA","Abruzzo","comb. policy",-.407
+"ITA","Abruzzo","no_policy rate",.37
+"ITA","Basilicata","p_1",.143
+"ITA","Basilicata","p_2",-.104
 "ITA","Basilicata","p_3",-.293
 "ITA","Basilicata","p_4",-.072
-"ITA","Basilicata","p_5",-.137
-"ITA","Basilicata","p_6",.058
-"ITA","Basilicata","comb. policy",-.413
-"ITA","Basilicata","no_policy rate",.327
-"ITA","Calabria","p_1",.139
-"ITA","Calabria","p_2",-.106
+"ITA","Basilicata","p_5",-.136
+"ITA","Basilicata","p_6",.057
+"ITA","Basilicata","comb. policy",-.406
+"ITA","Basilicata","no_policy rate",.371
+"ITA","Calabria","p_1",.145
+"ITA","Calabria","p_2",-.105
 "ITA","Calabria","p_3",-.29
 "ITA","Calabria","p_4",-.073
 "ITA","Calabria","p_5",-.14
-"ITA","Calabria","p_6",.059
-"ITA","Calabria","comb. policy",-.411
-"ITA","Calabria","no_policy rate",.329
-"ITA","Campania","p_1",.092
-"ITA","Campania","p_2",-.067
+"ITA","Calabria","p_6",.058
+"ITA","Calabria","comb. policy",-.405
+"ITA","Calabria","no_policy rate",.371
+"ITA","Campania","p_1",.093
+"ITA","Campania","p_2",-.063
 "ITA","Campania","p_3",-.264
 "ITA","Campania","p_4",-.071
-"ITA","Campania","p_5",-.16
-"ITA","Campania","p_6",.067
-"ITA","Campania","comb. policy",-.403
-"ITA","Campania","no_policy rate",.345
-"ITA","Emilia Romagna","p_1",.16
-"ITA","Emilia Romagna","p_2",-.071
+"ITA","Campania","p_5",-.159
+"ITA","Campania","p_6",.066
+"ITA","Campania","comb. policy",-.398
+"ITA","Campania","no_policy rate",.371
+"ITA","Emilia Romagna","p_1",.166
+"ITA","Emilia Romagna","p_2",-.073
 "ITA","Emilia Romagna","p_3",-.286
-"ITA","Emilia Romagna","p_4",-.084
+"ITA","Emilia Romagna","p_4",-.085
 "ITA","Emilia Romagna","p_5",-.149
-"ITA","Emilia Romagna","p_6",.06
-"ITA","Emilia Romagna","comb. policy",-.372
-"ITA","Emilia Romagna","no_policy rate",.306
-"ITA","Friuli Venezia Giu","p_1",.132
-"ITA","Friuli Venezia Giu","p_2",-.112
+"ITA","Emilia Romagna","p_6",.059
+"ITA","Emilia Romagna","comb. policy",-.367
+"ITA","Emilia Romagna","no_policy rate",.341
+"ITA","Friuli Venezia Giu","p_1",.139
+"ITA","Friuli Venezia Giu","p_2",-.111
 "ITA","Friuli Venezia Giu","p_3",-.329
-"ITA","Friuli Venezia Giu","p_4",-.064
+"ITA","Friuli Venezia Giu","p_4",-.065
 "ITA","Friuli Venezia Giu","p_5",-.109
-"ITA","Friuli Venezia Giu","p_6",.048
-"ITA","Friuli Venezia Giu","comb. policy",-.434
-"ITA","Friuli Venezia Giu","no_policy rate",.322
-"ITA","Lazio","p_1",.159
-"ITA","Lazio","p_2",-.121
-"ITA","Lazio","p_3",-.297
-"ITA","Lazio","p_4",-.075
-"ITA","Lazio","p_5",-.135
-"ITA","Lazio","p_6",.058
-"ITA","Lazio","comb. policy",-.411
-"ITA","Lazio","no_policy rate",.322
-"ITA","Liguria","p_1",.15
-"ITA","Liguria","p_2",-.107
+"ITA","Friuli Venezia Giu","p_6",.047
+"ITA","Friuli Venezia Giu","comb. policy",-.427
+"ITA","Friuli Venezia Giu","no_policy rate",.371
+"ITA","Lazio","p_1",.14
+"ITA","Lazio","p_2",-.093
+"ITA","Lazio","p_3",-.299
+"ITA","Lazio","p_4",-.069
+"ITA","Lazio","p_5",-.132
+"ITA","Lazio","p_6",.054
+"ITA","Lazio","comb. policy",-.399
+"ITA","Lazio","no_policy rate",.359
+"ITA","Liguria","p_1",.156
+"ITA","Liguria","p_2",-.105
 "ITA","Liguria","p_3",-.271
 "ITA","Liguria","p_4",-.079
 "ITA","Liguria","p_5",-.158
-"ITA","Liguria","p_6",.067
-"ITA","Liguria","comb. policy",-.399
-"ITA","Liguria","no_policy rate",.325
-"ITA","Lombardia","p_1",.144
-"ITA","Lombardia","p_2",-.105
-"ITA","Lombardia","p_3",-.189
-"ITA","Lombardia","p_4",-.144
-"ITA","Lombardia","p_5",-.237
+"ITA","Liguria","p_6",.066
+"ITA","Liguria","comb. policy",-.392
+"ITA","Liguria","no_policy rate",.371
+"ITA","Lombardia","p_1",.15
+"ITA","Lombardia","p_2",-.099
+"ITA","Lombardia","p_3",-.187
+"ITA","Lombardia","p_4",-.145
+"ITA","Lombardia","p_5",-.238
 "ITA","Lombardia","p_6",.225
-"ITA","Lombardia","comb. policy",-.305
-"ITA","Lombardia","no_policy rate",.324
-"ITA","Marche","p_1",.128
+"ITA","Lombardia","comb. policy",-.292
+"ITA","Lombardia","no_policy rate",.371
+"ITA","Marche","p_1",.135
 "ITA","Marche","p_2",-.109
-"ITA","Marche","p_3",-.311
-"ITA","Marche","p_4",-.058
+"ITA","Marche","p_3",-.31
+"ITA","Marche","p_4",-.059
 "ITA","Marche","p_5",-.12
-"ITA","Marche","p_6",.048
-"ITA","Marche","comb. policy",-.423
-"ITA","Marche","no_policy rate",.32
-"ITA","Molise","p_1",.132
-"ITA","Molise","p_2",-.103
+"ITA","Marche","p_6",.047
+"ITA","Marche","comb. policy",-.416
+"ITA","Marche","no_policy rate",.369
+"ITA","Molise","p_1",.137
+"ITA","Molise","p_2",-.102
 "ITA","Molise","p_3",-.308
-"ITA","Molise","p_4",-.065
-"ITA","Molise","p_5",-.133
-"ITA","Molise","p_6",.055
-"ITA","Molise","comb. policy",-.423
-"ITA","Molise","no_policy rate",.329
-"ITA","P.A. Bolzano","p_1",.137
-"ITA","P.A. Bolzano","p_2",-.106
+"ITA","Molise","p_4",-.066
+"ITA","Molise","p_5",-.132
+"ITA","Molise","p_6",.054
+"ITA","Molise","comb. policy",-.417
+"ITA","Molise","no_policy rate",.371
+"ITA","P.A. Bolzano","p_1",.143
+"ITA","P.A. Bolzano","p_2",-.104
 "ITA","P.A. Bolzano","p_3",-.294
 "ITA","P.A. Bolzano","p_4",-.072
-"ITA","P.A. Bolzano","p_5",-.136
-"ITA","P.A. Bolzano","p_6",.057
-"ITA","P.A. Bolzano","comb. policy",-.413
-"ITA","P.A. Bolzano","no_policy rate",.326
-"ITA","P.A. Trento","p_1",.136
-"ITA","P.A. Trento","p_2",-.106
-"ITA","P.A. Trento","p_3",-.298
+"ITA","P.A. Bolzano","p_5",-.135
+"ITA","P.A. Bolzano","p_6",.056
+"ITA","P.A. Bolzano","comb. policy",-.407
+"ITA","P.A. Bolzano","no_policy rate",.371
+"ITA","P.A. Trento","p_1",.142
+"ITA","P.A. Trento","p_2",-.105
+"ITA","P.A. Trento","p_3",-.297
 "ITA","P.A. Trento","p_4",-.073
 "ITA","P.A. Trento","p_5",-.131
-"ITA","P.A. Trento","p_6",.057
-"ITA","P.A. Trento","comb. policy",-.414
-"ITA","P.A. Trento","no_policy rate",.325
-"ITA","Piemonte","p_1",.151
-"ITA","Piemonte","p_2",-.106
-"ITA","Piemonte","p_3",-.255
-"ITA","Piemonte","p_4",-.074
-"ITA","Piemonte","p_5",-.161
-"ITA","Piemonte","p_6",.053
-"ITA","Piemonte","comb. policy",-.391
-"ITA","Piemonte","no_policy rate",.329
-"ITA","Puglia","p_1",.144
-"ITA","Puglia","p_2",-.106
+"ITA","P.A. Trento","p_6",.056
+"ITA","P.A. Trento","comb. policy",-.408
+"ITA","P.A. Trento","no_policy rate",.37
+"ITA","Piemonte","p_1",.186
+"ITA","Piemonte","p_2",-.139
+"ITA","Piemonte","p_3",-.251
+"ITA","Piemonte","p_4",-.082
+"ITA","Piemonte","p_5",-.164
+"ITA","Piemonte","p_6",.057
+"ITA","Piemonte","comb. policy",-.395
+"ITA","Piemonte","no_policy rate",.387
+"ITA","Puglia","p_1",.149
+"ITA","Puglia","p_2",-.104
 "ITA","Puglia","p_3",-.281
 "ITA","Puglia","p_4",-.071
-"ITA","Puglia","p_5",-.15
-"ITA","Puglia","p_6",.057
-"ITA","Puglia","comb. policy",-.406
-"ITA","Puglia","no_policy rate",.328
-"ITA","Sardegna","p_1",.139
-"ITA","Sardegna","p_2",-.107
+"ITA","Puglia","p_5",-.149
+"ITA","Puglia","p_6",.056
+"ITA","Puglia","comb. policy",-.4
+"ITA","Puglia","no_policy rate",.37
+"ITA","Sardegna","p_1",.144
+"ITA","Sardegna","p_2",-.105
 "ITA","Sardegna","p_3",-.299
 "ITA","Sardegna","p_4",-.074
 "ITA","Sardegna","p_5",-.138
-"ITA","Sardegna","p_6",.064
-"ITA","Sardegna","comb. policy",-.415
-"ITA","Sardegna","no_policy rate",.329
-"ITA","Sicilia","p_1",.139
+"ITA","Sardegna","p_6",.063
+"ITA","Sardegna","comb. policy",-.409
+"ITA","Sardegna","no_policy rate",.372
+"ITA","Sicilia","p_1",.147
 "ITA","Sicilia","p_2",-.111
 "ITA","Sicilia","p_3",-.324
-"ITA","Sicilia","p_4",-.065
+"ITA","Sicilia","p_4",-.066
 "ITA","Sicilia","p_5",-.121
-"ITA","Sicilia","p_6",.054
-"ITA","Sicilia","comb. policy",-.429
-"ITA","Sicilia","no_policy rate",.325
-"ITA","Toscana","p_1",.135
+"ITA","Sicilia","p_6",.053
+"ITA","Sicilia","comb. policy",-.422
+"ITA","Sicilia","no_policy rate",.369
+"ITA","Toscana","p_1",.144
 "ITA","Toscana","p_2",-.11
 "ITA","Toscana","p_3",-.317
-"ITA","Toscana","p_4",-.068
+"ITA","Toscana","p_4",-.069
 "ITA","Toscana","p_5",-.122
-"ITA","Toscana","p_6",.056
-"ITA","Toscana","comb. policy",-.427
-"ITA","Toscana","no_policy rate",.333
-"ITA","Umbria","p_1",.141
-"ITA","Umbria","p_2",-.105
+"ITA","Toscana","p_6",.054
+"ITA","Toscana","comb. policy",-.42
+"ITA","Toscana","no_policy rate",.372
+"ITA","Umbria","p_1",.147
+"ITA","Umbria","p_2",-.104
 "ITA","Umbria","p_3",-.281
 "ITA","Umbria","p_4",-.073
-"ITA","Umbria","p_5",-.143
-"ITA","Umbria","p_6",.056
-"ITA","Umbria","comb. policy",-.405
-"ITA","Umbria","no_policy rate",.327
-"ITA","Valle d'Aosta","p_1",.138
-"ITA","Valle d'Aosta","p_2",-.105
+"ITA","Umbria","p_5",-.142
+"ITA","Umbria","p_6",.055
+"ITA","Umbria","comb. policy",-.399
+"ITA","Umbria","no_policy rate",.37
+"ITA","Valle d'Aosta","p_1",.144
+"ITA","Valle d'Aosta","p_2",-.104
 "ITA","Valle d'Aosta","p_3",-.288
 "ITA","Valle d'Aosta","p_4",-.071
 "ITA","Valle d'Aosta","p_5",-.139
-"ITA","Valle d'Aosta","p_6",.055
-"ITA","Valle d'Aosta","comb. policy",-.41
-"ITA","Valle d'Aosta","no_policy rate",.327
-"ITA","Veneto","p_1",.17
-"ITA","Veneto","p_2",-.144
-"ITA","Veneto","p_3",-.298
-"ITA","Veneto","p_4",-.098
-"ITA","Veneto","p_5",-.147
-"ITA","Veneto","p_6",.071
-"ITA","Veneto","comb. policy",-.447
-"ITA","Veneto","no_policy rate",.344
+"ITA","Valle d'Aosta","p_6",.054
+"ITA","Valle d'Aosta","comb. policy",-.404
+"ITA","Valle d'Aosta","no_policy rate",.371
+"ITA","Veneto","p_1",.174
+"ITA","Veneto","p_2",-.135
+"ITA","Veneto","p_3",-.299
+"ITA","Veneto","p_4",-.096
+"ITA","Veneto","p_5",-.146
+"ITA","Veneto","p_6",.068
+"ITA","Veneto","comb. policy",-.435
+"ITA","Veneto","no_policy rate",.406
 "USA","full_sample","p_1",-.105
 "USA","full_sample","p_2",-.117
 "USA","full_sample","p_3",-.11

@@ -142,12 +142,6 @@ foreach var in "p_1" "p_2" "p_3" "p_4" "p_5" "p_6"{
 	post results ("ITA") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
-// check underreporting estimate
-// gen D_l_cum_confirmed_cases_adj = D_l_cum_confirmed_cases
-// 	replace D_l_cum_confirmed_cases_adj = . if ((cum_confirmed_cases/0.054) / population) > 0.01
-//	
-// reghdfe D_l_cum_confirmed_cases_adj p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
-
 
 //------------- checking error structure (appendix)
 
