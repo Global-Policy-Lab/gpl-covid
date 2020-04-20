@@ -423,6 +423,6 @@ rownames(map_source) <- NULL
 write.csv(epi_source, file=paste0(source_dir, "fig1_epi_timeseries.csv"))
 write.csv(policy_source, file=paste0(source_dir, "fig1_policy_timeseries.csv"))
 write.csv(policylist, file=paste0(source_dir, "fig1_policy_list.csv"))
-write.csv(map_source , file=paste0(source_dir, "fig1_case_maps.csv"))
+write.csv(map_source %>% arrange(country, adm_name), file=paste0(source_dir, "fig1_case_maps.csv"))
 
 
