@@ -158,5 +158,5 @@ printf "***Creating Fig A2***\n"
 python codes/plotting/figA2.py
 
 # Figure AX (Projection with multiple gamma plot - replace this text when numbered)
-printf "***Creating Fig AX***\n"
+printf "***Creating ED Fig 8***\n"
 Rscript codes/models/run_projection_with_multiple_gammas.R
