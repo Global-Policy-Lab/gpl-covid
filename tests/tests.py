@@ -1,8 +1,9 @@
-from pathlib import Path
-import pandas as pd
 import shlex
 import subprocess
+from pathlib import Path
 from shutil import copytree
+
+import pandas as pd
 
 
 def test_readme():

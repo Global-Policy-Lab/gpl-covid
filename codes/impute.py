@@ -1,5 +1,6 @@
 import numpy as np
 
+
 # ### Impute values in cases where cumulative counts rise and then fall
 def convert_non_monotonic_to_nan(array):
     """Converts a numpy array to a monotonically increasing one.
