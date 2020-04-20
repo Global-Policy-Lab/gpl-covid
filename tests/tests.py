@@ -25,7 +25,7 @@ def test_pipeline(tmp_path):
     copytree("results/source_data", tmp_results_path)
 
     # run pipeline
-    cmd = shlex.split("bash run --nostata --nocensus --num-proj 2")
+    cmd = shlex.split("bash run --no-download --nostata --nocensus --num-proj 2")
     subprocess.run(cmd, check=True)
 
     bad_files = []
