@@ -1,8 +1,8 @@
 import warnings
 
-import numpy as np
-
 import codes.utils as cutil
+
+import numpy as np
 import pandas as pd
 
 

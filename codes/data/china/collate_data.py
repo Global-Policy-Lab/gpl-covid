@@ -1,9 +1,11 @@
-import numpy as np
-import pandas as pd
+from os.path import join
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
 from codes import utils as cutil
-from os.path import join
 
 
 def convert_non_monotonic_to_nan(array):

@@ -8,6 +8,7 @@ pip install -e .
 STATA=true
 CENSUS=true
 NUMPROJ=1000
+DOWNLOAD=true
 for arg in "$@"
 do
     case $arg in
@@ -24,8 +25,12 @@ do
             shift
             shift
         ;;
+      	-d|--no-download)
+      	    DOWNLOAD=false
+      	    shift
+      	;;
     esac
-    
+
 done
 
 
@@ -41,14 +46,19 @@ fi
 
 ### Policy
 printf "***Downloading USA testing data***\n"
-python codes/data/usa/download_latest_covidtrackingdotcom_data.py
-python codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py
-
+if $DOWNLOAD
+then
+    python codes/data/usa/download_latest_covidtrackingdotcom_data.py
+    python codes/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py
+fi
 
 ### Epi
 #### Multi-country
 printf "***Downloading Johns Hopkins U data for all countries***\n"
-Rscript codes/data/multi_country/download_6_countries_JHU.R
+if $DOWNLOAD
+then
+    Rscript codes/data/multi_country/download_6_countries_JHU.R
+fi
 
 #### FRA
 printf "***Processing FRA epi data***\n"
@@ -59,7 +69,10 @@ fi
 
 #### USA
 printf "***Processing USA epi data***\n"
-Rscript codes/data/usa/download_and_clean_usafacts.R
+if $DOWNLOAD
+then
+    Rscript codes/data/usa/download_and_clean_usafacts.R
+fi
 
 ### Dataset merging
 #### CHN
@@ -80,7 +93,12 @@ python codes/data/iran/iran-split-interim-into-processed.py
 
 # ITA
 printf "***Processing  and merging ITA data***\n"
-python codes/data/italy/italy-download-cases-merge-policies.py
+if $DOWNLOAD
+then
+    python codes/data/italy/italy-download-cases-merge-policies.py
+else
+    python codes/data/italy/italy-download-cases-merge-policies.py --nr
+fi
 
 # KOR
 printf "***Processing  and merging KOR data***\n"
@@ -107,6 +125,8 @@ printf "***Projecting infections***\n"
 python codes/models/get_gamma.py
 Rscript codes/models/run_all_CB_simulations.R $NUMPROJ
 
+# This one outputs all the raw projection output for diagnostic purposes.
+Rscript codes/models/output_underlying_projection_output.R
 
 ## Figures and tables
 
@@ -135,4 +155,13 @@ python codes/plotting/count-policies.py
 
 # Figure A2
 printf "***Creating Fig A2***\n"
-python codes/plotting/figA2.py
+if $DOWNLOAD
+then
+    python codes/plotting/figA2.py
+else
+    python codes/plotting/figA2.py --nd
+fi
+
+# Figure AX (Projection with multiple gamma plot - replace this text when numbered)
+printf "***Creating ED Fig 8***\n"
+Rscript codes/models/run_projection_with_multiple_gammas.R

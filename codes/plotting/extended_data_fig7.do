@@ -1,142 +1,43 @@
-import delim "results/source_data/ExtendedDataFigure7_r2.csv", clear
+// generate appendix figure - cross validation
 
-rename * r2*
-rename r2ïlags L
-reshape long r2, i(L) j(adm0) string
-
-egen max = max(r2), by(adm0)
-replace max = . if max != r2
-
-egen grp = group(adm0)
-
-set scheme s1color
-local command = "tw connect r2 L if grp == 1, mc(midgreen) lc(midgreen)"
-
-foreach j of num 2/5 {
-	local command = "`command' || connect r2 L if grp == `j'"
-}
-
-`command', lc(ebblue) mc(ebblue) || scatter max L, mc(gold) msize(large) m(T) ///
-legend(lab(1 "FRA") lab(2 "IRN") lab(3 "ITA") lab(4 "KOR") lab(5 "USA") rows(1) region(lstyle(none))) ///
-xtitle(# fixed lags) ytitle(R-squared, height(10))
-
-graph export results/figures/appendix/fixed_lag/r2.pdf, replace
-
-
-foreach ADM in "FRA" "IRN" "KOR" "ITA" "USA" {
-	import delim using "results/source_data/extended_fixed_lag_`ADM'.csv", clear
-	
-	cap rename (at b ll1 ul1) (position beta lower_ci upper_ci)
-	g adm0 = "`ADM'"
+foreach ADM in "CHN" "FRA" "IRN" "KOR" "ITA" "USA" {
+	import delim using "results/source_data/indiv/ExtendedDataFigure7_cross_valid_`ADM'.csv", clear
+	cap g i = ite
 	tempfile f`ADM'
 	save `f`ADM''
 }
 
 drop if _n > 0
 
-foreach ADM in "FRA" "IRN" "KOR" "ITA" "USA" {
+foreach ADM in "CHN" "FRA" "IRN" "KOR" "ITA" "USA" {
 	append using `f`ADM''
 }
 
-g grp = adm0 == "USA"
-replace grp = 2 if adm0 == "FRA"
-replace grp = 3 if adm0 == "IRN"
-replace grp = 4 if adm0 == "ITA"
-replace grp = 5 if adm0 == "KOR"
+drop ite min max se
 
-sort grp pos
+egen grp = group(adm0)
+replace grp = grp - 1
+replace grp = 0 if adm0 == "IRN"
+replace grp = 2 if adm0 == "CHN"
+replace i = i + grp * 11
 
-preserve
-	keep if hosp == 1
-	drop position
-	tempfile hosp
-	save `hosp'
-restore
+tw scatter i beta if policy != "comb. policy", xline(0, lc(black) lp(dash)) mc(gs10) m(Oh) ///
+|| scatter i beta if sample == "full_sample" & policy != "comb. policy", mc(red) m(Oh) legend(off) ///
+ysize(10) 
 
 
-drop if hosp == 1
-egen seq = seq()
-egen pol = seq(), by(policy grp)
-replace pol = 0 if pol > 1
-g sep = sum(pol)
-replace seq = seq + sep * 3
+graph export results/figures/appendix/cross_valid/fig6.pdf, replace
 
-g t = _n
-tset t
-g sep_adm = D.grp
-qui sum seq if adm0 == "FRA" & sep_adm == 1
-local yline1 = r(mean) - 2
-qui sum seq if adm0 == "IRN" & sep_adm == 1
-local yline2 = r(mean) - 2
-qui sum seq if adm0 == "ITA" & sep_adm == 1
-local yline3 = r(mean) - 2
-qui sum seq if adm0 == "KOR" & sep_adm == 1
-local yline4 = r(mean) - 2
-
-preserve
-	keep if hosp == 0
-	keep seq lag policy
-	merge 1:1 lag policy using `hosp', nogen
-	replace seq = seq - 0.5
-	save `hosp', replace
-restore
+// ouput source data for ED fig 6
+outsheet adm0 sample policy beta using "results/source_data/ExtendedDataFigure7_cross_valid.csv", comma replace
 
 
-append using `hosp'
+sort adm0 policy beta
 
-
-
-tw rspike upper lower seq if hosp != 1 & lag == 0, lc(black) hor lw(thin) ///
-|| scatter seq beta if hosp != 1 & lag == 0, mc(black) ///
-|| rspike upper lower seq if hosp == 1 & lag == 0, hor lc(black)  lw(vthin) ///
-|| scatter seq beta if hosp == 1 & lag == 0, mc(black) m(oh) ///
-|| rspike upper lower seq if hosp != 1 & lag == 1, lc(black*.9) hor lw(thin) ///
-|| scatter seq beta if hosp != 1 & lag == 1, mc(black*.9) ///
-|| rspike upper lower seq if hosp == 1 & lag == 1, hor lc(black*.9)  lw(vthin) ///
-|| scatter seq beta if hosp == 1 & lag == 1, mc(black*.9) m(oh) ///
-|| rspike upper lower seq if hosp != 1 & lag == 2, lc(black*.7) hor lw(thin) ///
-|| scatter seq beta if hosp != 1 & lag == 2, mc(black*.7) ///
-|| rspike upper lower seq if hosp == 1 & lag == 2, hor lc(black*.7)  lw(vthin) ///
-|| scatter seq beta if hosp == 1 & lag == 2, mc(black*.7) m(oh) ///
-|| rspike upper lower seq if hosp != 1 & lag == 3, lc(black*.5) hor lw(thin) ///
-|| scatter seq beta if hosp != 1 & lag == 3, mc(black*.5) ///
-|| rspike upper lower seq if hosp == 1 & lag == 3, hor lc(black*.5)  lw(vthin) ///
-|| scatter seq beta if hosp == 1 & lag == 3, mc(black*.5) m(oh) ///
-|| rspike upper lower seq if hosp != 1 & lag == 4, lc(black*.3) hor lw(thin) ///
-|| scatter seq beta if hosp != 1 & lag == 4, mc(black*.3) ///
-|| rspike upper lower seq if hosp == 1 & lag == 4, hor lc(black*.3)  lw(vthin) ///
-|| scatter seq beta if hosp == 1 & lag == 4, mc(black*.3) m(oh) ///
-|| rspike upper lower seq if hosp != 1 & lag == 5, lc(black*.1) hor lw(thin) ///
-|| scatter seq beta if hosp != 1 & lag == 5, mc(black*.1) ///
-|| rspike upper lower seq if hosp == 1 & lag == 5, hor lc(black*.1)  lw(vthin) ///
-|| scatter seq beta if hosp == 1 & lag == 5, mc(black*.1) m(oh) ///
-yline(`yline1', lc(black) lp(dot)) ///
-yline(`yline2', lc(black) lp(dot)) ///
-yline(`yline3', lc(black) lp(dot)) ///
-yline(`yline4', lc(black) lp(dot)) legend(off) ysize(20) xline(0, lc(black)) 
-
-graph export results/figures/appendix/fixed_lag/fig7_FL.pdf, replace
-
-/*
-tw rspike upper lower seq if hosp != 1 & adm0 == "USA", xline(0, lc(black)) hor mc(gs10) lw(thin) ///
-|| scatter seq beta if hosp != 1 & adm0 == "USA", mc(black)  ///
-|| rspike upper lower seq if hosp == 1 & adm0 == "USA", hor mc(ebblue) lw(thin) ///
-|| scatter seq beta if hosp == 1 & adm0 == "USA", mc(ebblue)  ///
-yline(`yline2', lc(black) lp(dot)) ///
-yline(`yline3', lc(black) lp(dot)) ///
-yline(`yline4', lc(black) lp(dot)) legend(off)
-
-graph export results/figures/appendix/fixed_lag/fig7_FL_A.pdf, replace
-
-
-drop if adm0 == "USA"
-
-tw rspike upper lower seq if hosp != 1 & adm0 != "USA", xline(0, lc(black)) ysize(20) hor mc(gs10) lw(thin) ///
-|| scatter seq beta if hosp != 1 & adm0 != "USA", mc(black)  ///
-|| rspike upper lower seq if hosp == 1 & adm0 != "USA", hor mc(ebblue) lw(thin) ///
-|| scatter seq beta if hosp == 1 & adm0 != "USA", mc(ebblue)  ///
-yline(`yline2', lc(black) lp(dot)) ///
-yline(`yline3', lc(black) lp(dot)) ///
-yline(`yline4', lc(black) lp(dot)) legend(off) yscale(range(80(20)220)) xlab(#5)
-
-graph export results/figures/appendix/fixed_lag/fig7_FL_B.pdf, replace
+egen min = min(beta), by(grp policy)
+g MIN = min == beta
+drop min
+egen max = max(beta), by(grp policy)
+g MAX = max == beta
+drop max
+br if MIN == 1 | MAX == 1

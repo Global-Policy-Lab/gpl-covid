@@ -181,10 +181,6 @@ xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick))
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/appendix/disaggregated_policies/FRA_disag.gph, replace)
 
-egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
-outsheet t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
-using "results/source_data/ExtendedDataFigure9a_FRA_data.csv" if miss_ct<9 & e(sample), comma replace
-
 // tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 // (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
 // || (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
@@ -196,3 +192,8 @@ using "results/source_data/ExtendedDataFigure9a_FRA_data.csv" if miss_ct<9 & e(s
 // title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 // xscale(range(21970(10)22000)) xlabel(21970(10)22000, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 // yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
+
+
+egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
+outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/indiv/ExtendedDataFigure9a_FRA_data.csv" if miss_ct<9 & e(sample), comma replace
