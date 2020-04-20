@@ -5,5 +5,4 @@ cfr_data <- cfr_data %>%
   filter(country %>% str_detect("United States|South Korea|China|France|Italy|Iran"))
 
 dir.create("data/interim/multi_country/", showWarnings = FALSE)
-write_rds(cfr_data, "data/interim/multi_country/under_reporting.rds")
 write_csv(cfr_data, "data/interim/multi_country/under_reporting.csv")

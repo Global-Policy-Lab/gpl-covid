@@ -12,7 +12,16 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lfe))
 set.seed(718)
 
-underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
+underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
+                           col_types = cols(
+                             country = col_character(),
+                             total_cases = col_double(),
+                             total_deaths = col_double(),
+                             underreporting_estimate = col_double(),
+                             lower = col_double(),
+                             upper = col_double(),
+                             underreporting_estimate_clean = col_character()
+                           ))
 # source("codes/models/calculate_gamma_from_china_and_korea.R")
 gamma = readr::read_csv("models/gamma_est.csv",
                         col_types = 
