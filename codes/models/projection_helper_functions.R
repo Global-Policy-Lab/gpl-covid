@@ -15,8 +15,8 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
           " - 1 | 0 | 0 | date "
     ))
   main_model <- felm(data = full_data,
-                       formula = formula,
-                       cmethod = "reghdfe"); # summary(main_model)
+                     formula = formula,
+                     cmethod = "reghdfe"); # summary(main_model)
   
   # Eigen values can come out negative in small samples - set those ones to zero
   # https://github.com/sgaure/lfe/blob/deb7058637eb3ab95b0d41bb7fce7e589d480619/R/felm.R
@@ -59,7 +59,8 @@ compute_bootstrap_replications <- function(full_data, policy_variables_to_use, l
 compute_predicted_cum_cases <- function(full_data, model, policy_variables_used, other_control_variables, 
                                         lhs, filter_spec = TRUE, gamma = 1/3,
                                         time_steps_per_day = 6, mmat_actual = NULL,
-                                        proportion_confirmed = 1){
+                                        proportion_confirmed = 1,
+                                        return_no_policy_projection_output = FALSE){
   if(!"population" %in% names(full_data)){
     stop("\"population\" variable required. If unavailable, please add a column using full_data <- full_data %>% mutate(population = 1e+8)")
   }
@@ -99,7 +100,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     true_data_subset_for_estimation %>% 
       select(all_of(policy_variables_used))
   ))))
-
+  
   # Creates a tibble with one row per unit and columns tmp_id
   # and the column names from the model matrix
   tmp_id_tbl <- mmat_actual %>% 
@@ -162,7 +163,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     stopifnot(isTRUE(all.equal(unname(mmat_no_policy_counterfactual[,p]), 
                                true_data_subset_for_prediction %>% pull(p))))
     mmat_no_policy_counterfactual[,p] <- no_policy_counterfactual_data_for_prediction %>% 
-       pull(p)
+      pull(p)
   }
   # Computed the same thing in two ways to make sure they're the same
   stopifnot(isTRUE(all.equal(mmat_no_policy_counterfactual, mmat_no_policy_counterfactual2)))
@@ -215,6 +216,25 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       all()
   })
   
+  if(return_no_policy_projection_output){
+    out <- 
+      no_policy_counterfactual_data_storage %>% 
+      group_by(tmp_id) %>% 
+      summarise(projection_output = {
+        list(calculate_projection_for_one_unit(
+          cum_confirmed_cases_first = cum_confirmed_cases[1],
+          prediction_logdiff = prediction_logdiff,
+          time_steps_per_day = time_steps_per_day,
+          daily_gamma = gamma,
+          unit_population = population[1],
+          proportion_confirmed = proportion_confirmed,
+          all = TRUE
+        ))
+      }) %>% 
+      unnest(projection_output)
+    return(out)
+  }
+  
   no_policy_counterfactual_data_storage <- 
     no_policy_counterfactual_data_storage %>% 
     group_by(tmp_id) %>% 
@@ -266,7 +286,8 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
                                               time_steps_per_day,
                                               daily_gamma,
                                               unit_population,
-                                              proportion_confirmed){
+                                              proportion_confirmed,
+                                              all = FALSE){
   # cum_confirmed_cases == I + R
   # number_of_infectious_individuals == I
   stopifnot(is.na(prediction_logdiff[1]))
@@ -313,6 +334,14 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
     # out[i] = out[i - 1] + active_cases[i - 1]*(exp(prediction_logdiff[i]*max(population[1] - out[i - 1], 0)/population[1]) - 1)
     cum_confirmed_cases_simulated[i] = cum_confirmed_cases_simulated[i - 1] + new_true_infections*proportion_confirmed
   }
-  out <- cum_confirmed_cases_simulated[seq(1, length(cum_confirmed_cases_simulated), by = time_steps_per_day)]
+  if (all){
+    out <- tibble(number_of_susceptible_individuals = number_of_susceptible_individuals, 
+                  number_of_infectious_individuals = number_of_infectious_individuals, 
+                  number_of_recovered_individuals = number_of_recovered_individuals,
+                  share_of_susceptible_individuals = number_of_susceptible_individuals / unit_population)
+  } else {
+    out <- cum_confirmed_cases_simulated[seq(1, length(cum_confirmed_cases_simulated), by = time_steps_per_day)]
+  }
+
   out
 }
