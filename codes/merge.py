@@ -1,8 +1,10 @@
-import numpy as np
-import pandas as pd
 import copy
 import datetime
 import pickle
+
+import numpy as np
+import pandas as pd
+
 import codes.pop as cpop
 
 popweighted_suffix = "popwt"

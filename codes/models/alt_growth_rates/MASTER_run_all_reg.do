@@ -19,6 +19,7 @@ capture mkdir "results/tables/"
 capture mkdir "results/tables/reg_results" 
 capture mkdir "results/tables/ATE_fixed_lag" 
 capture mkdir "results/source_data" 
+capture mkdir "results/source_data/indiv" 
 
 
 // run .do files
@@ -71,7 +72,7 @@ foreach fn of local filenames{
 	graph use "`filepath'", name("`graphname'", replace)
 }
 graph combine Wuhan_active_fix Daegu_active_fix Milan_conf_fix Tehran_conf_fix  ///
-IledeFrance_conf_fix NewYork_conf_fix, cols(1) imargin(tiny) ysize(18) xsize(10)
+IledeFrance_conf_fix Washington_conf_fix, cols(1) imargin(tiny) ysize(18) xsize(10)
 graph export results/figures/appendix/subnatl_growth_rates/ALL_subnatl.pdf, replace
 
 
@@ -112,3 +113,62 @@ replace stat = strupper(stat)
 replace stat = "95% CI" if stat=="CI"
 rename (adm0 stat) (Country Statistic)
 outsheet using "results/tables/ATE_fixed_lag/ATE_comparison_fixed_lag.csv", comma replace
+
+
+// combine all source data for fig 2
+filelist, dir("results/source_data/indiv") pattern("Figure2_*.csv")
+levelsof filename, local(filenames)
+foreach fn of local filenames{
+	local filepath = "results/source_data/indiv/" + "`fn'"
+	local tempname = regexr("`fn'", "\.csv", "")
+	insheet using `filepath', clear
+	display "`tempname'"
+	tempfile `tempname'
+	save ``tempname'', replace
+}
+use `Figure2_CHN_coefs', clear
+foreach c in KOR ITA IRN FRA USA {
+	append using `Figure2_`c'_coefs'
+}
+outsheet using "results/source_data/Figure2_data.csv", comma replace
+
+// combine all source data for fig 3
+filelist, dir("results/source_data/indiv") pattern("Figure3_*.csv")
+levelsof filename, local(filenames)
+foreach fn of local filenames{
+	local filepath = "results/source_data/indiv/" + "`fn'"
+	local tempname = regexr("`fn'", "\.csv", "")
+	insheet using `filepath', clear	
+	tempfile `tempname'
+	save ``tempname'', replace
+}
+use `Figure3_FRA_data', clear
+replace adm0_name = "FRA" if adm0_name=="France"
+rename t date
+
+foreach c in CHN KOR ITA IRN USA {
+	append using `Figure3_`c'_data'
+}
+replace t = string(date, "%td") if adm0_name=="FRA"
+drop date
+order adm0_name t
+outsheet using "results/source_data/Figure3_data.csv", comma replace
+
+// combine all source data for ED fig 1
+filelist, dir("results/source_data/indiv") pattern("ExtendedDataFigure1_*_e.csv")
+levelsof filename, local(filenames)
+foreach fn of local filenames{
+	local filepath = "results/source_data/indiv/" + "`fn'"
+	local tempname = regexr("`fn'", "\.csv", "")
+	insheet using `filepath', clear
+	display "`tempname'"
+	tempfile `tempname'
+	save ``tempname'', replace
+}
+use `ExtendedDataFigure1_CHN_e', clear
+foreach c in KOR ITA IRN FRA USA {
+	append using `ExtendedDataFigure1_`c'_e'
+}
+replace adm0_name = "FRA" if adm0_name=="France"
+outsheet using "results/source_data/ExtendedDataFigure1_e.csv", comma replace
+

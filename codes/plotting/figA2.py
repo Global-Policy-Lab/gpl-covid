@@ -1,11 +1,12 @@
-import pandas as pd
-import matplotlib.pyplot as plt
+import datetime
 import warnings
 from urllib.error import HTTPError
 
 import matplotlib
-import datetime
 import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
+import pandas as pd
+
 import codes.utils as cutil
 
 matplotlib.rcParams["pdf.fonttype"] = 42

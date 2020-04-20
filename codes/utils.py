@@ -1,8 +1,10 @@
-from . import __file__ as pkg_init_name
+import json
 from pathlib import Path
+
 import pandas as pd
 import requests
-import json
+
+from . import __file__ as pkg_init_name
 
 HOME = Path(pkg_init_name).parent.parent
 DATA = HOME / "data"

@@ -1,8 +1,9 @@
-from pathlib import Path
-import pandas as pd
 import shlex
 import subprocess
+from pathlib import Path
 from shutil import copytree
+
+import pandas as pd
 
 
 def test_readme():
@@ -25,7 +26,7 @@ def test_pipeline(tmp_path):
     copytree("results/source_data", tmp_results_path)
 
     # run pipeline
-    cmd = shlex.split("bash run --nostata --nocensus --num-proj 2")
+    cmd = shlex.split("bash run --no-download --nostata --nocensus --num-proj 2")
     subprocess.run(cmd, check=True)
 
     bad_files = []
@@ -37,7 +38,9 @@ def test_pipeline(tmp_path):
         if "bootstrap" not in p.name:
             other_file = Path("").joinpath(*p.parts[len_path:])
             try:
-                pd.testing.assert_frame_equal(pd.read_csv(p), pd.read_csv(other_file))
+                pd.testing.assert_frame_equal(
+                    pd.read_csv(p), pd.read_csv(other_file), check_like=True
+                )
             except UnicodeDecodeError:
                 pass
             except:
