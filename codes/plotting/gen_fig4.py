@@ -416,17 +416,16 @@ def main():
         last_cases_date_this_country = cases_this_country["date_str"].max()
 
         preds_before_last_cases_mask = model_this_country["date"].apply(
-            lambda x: x <=  last_cases_date_this_country
+            lambda x: x <= last_cases_date_this_country
         )
 
-        model_until_last_case = model_this_country.where(
-            preds_before_last_cases_mask
-        )
+        model_until_last_case = model_this_country.where(preds_before_last_cases_mask)
 
         quantiles_until_last_case = {}
         for quant_key, quant_array in quantiles_this_country.items():
             quantiles_until_last_case[quant_key] = quant_array[
-            preds_before_last_cases_mask]
+                preds_before_last_cases_mask
+            ]
 
         ax[c] = plot_quantiles(
             ax[c],
@@ -441,7 +440,7 @@ def main():
         plot_bracket(ax[c], model_this_country)
 
         # 2.a plot cases where they overlap with predictions
-        
+
         cases_overlap_preds_mask = cases_this_country["date_str"].apply(
             lambda x: x in model_this_country["date"].values
         )
