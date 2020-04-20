@@ -2,14 +2,15 @@
 # coding: utf-8
 
 from pathlib import Path
-import pandas as pd
+
 import geopandas as gpd
-from census import Census
-import requests
 import numpy as np
+import pandas as pd
+import requests
 from bs4 import BeautifulSoup
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
+from census import Census
+from fuzzywuzzy import fuzz, process
+
 from codes import utils as cutil
 
 idx = pd.IndexSlice

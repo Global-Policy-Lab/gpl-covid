@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from codes import utils as cutil
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+from codes import utils as cutil
 
 # range of delays between "no longer infectious" and "confirmed recovery" to test
 RECOVERY_DELAYS = range(15)

@@ -6,8 +6,8 @@
 # - Calculate number of policies for each country / adm-level
 
 import pandas as pd
-import codes.utils as cutil
 
+import codes.utils as cutil
 
 path_data_sources = cutil.HOME / "references" / "data_sources.xlsx"
 
