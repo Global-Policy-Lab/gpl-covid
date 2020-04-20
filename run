@@ -25,12 +25,12 @@ do
             shift
             shift
         ;;
-	-d|--no-download)
-	    DOWNLOAD=false
-	    shift
-	;;
+      	-d|--no-download)
+      	    DOWNLOAD=false
+      	    shift
+      	;;
     esac
-    
+
 done
 
 
@@ -155,7 +155,12 @@ python codes/plotting/count-policies.py
 
 # Figure A2
 printf "***Creating Fig A2***\n"
-python codes/plotting/figA2.py
+if $DOWNLOAD
+then
+    python codes/plotting/figA2.py
+else
+    python codes/plotting/figA2.py --nd
+fi
 
 # Figure AX (Projection with multiple gamma plot - replace this text when numbered)
 printf "***Creating ED Fig 8***\n"
