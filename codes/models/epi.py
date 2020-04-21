@@ -363,7 +363,7 @@ def apply_param_noise(ds, params, noise_types, shape=(0,), noise_sds=[0], seed=0
                 "These are non-physical params. If they are dropped in the simulation, "
                 f"this will change the mean. Fraction of negative values: {cross_tab}"
             )
-    return out
+    return ds
 
 
 def get_stochastic_discrete_params(
@@ -1021,7 +1021,21 @@ def load_and_combine_reg_results(reg_dir, cols_to_keep=[]):
 
 
 def calc_cum_effects(coeffs):
-    ## rearrange to get cum_effects in there too
+    """Calculate the estimated cumulative effect of all policies on (asymptotic) 
+    exponential growth rate.
+    
+    Parameters
+    ----------
+    coeffs : :class:`xarray.Dataset`
+        Contains coefficient estimates from regression on simulated data
+    
+    Returns
+    -------
+    :class:`xarray.Dataset`
+        `coeffs` but with ``cum_effect`` added onto ``policy`` dimension. Also adding
+        ``coefficient_true`` variable.
+    """
+
     effects = coeffs.effect
     new_coeffs = coeffs.drop_dims("policy").drop("Intercept").copy()
     coeffs["cum_effect"] = coeffs.coefficient.sum(dim="policy", skipna=False)

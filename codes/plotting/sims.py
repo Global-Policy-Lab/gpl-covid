@@ -256,7 +256,7 @@ if __name__ == "__main__":
         help="directory to store results",
         nargs="?",
         type=lambda x: Path(x),
-        default=PLOT_DIR,
+        default=None,
     )
     parser.add_argument(
         "--LHS",
@@ -268,7 +268,7 @@ if __name__ == "__main__":
         "--source-data",
         help="Path to save source data",
         type=lambda x: Path(x),
-        default=cutil.RESULTS / "source_data" / "ExtendedDataFigure89.csv",
+        default=None,
     )
     args = parser.parse_args()
 
