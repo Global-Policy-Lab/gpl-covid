@@ -146,8 +146,8 @@ done
 # python codes/plotting/gen_fig4.py
 # python codes/plotting/fig4_analysis.py
 
-# # Table A1
-# printf "***Creating Table A1***\n"
+# # Table SI 1
+# printf "***Creating Table SI1***\n"
 # python codes/plotting/count-policies.py
 
 # # Figure A1
