@@ -17,11 +17,15 @@ def test_readme():
                     tocomp = l.rstrip("\n").split(" $")[0]
                     assert tocomp in readme, tocomp
 
+
 def _read_sorted_file(path):
     df = pd.read_csv(path)
-    adm_cols = [c for c in df.columns if (c.startswith("adm") and "_name" in c) or c=="date"]
+    adm_cols = [
+        c for c in df.columns if (c.startswith("adm") and "_name" in c) or c == "date"
+    ]
     df = df.set_index(adm_cols, drop=True).sort_index()
     return df
+
 
 def test_pipeline(tmp_path):
     tmp_model_path = tmp_path / "models"
