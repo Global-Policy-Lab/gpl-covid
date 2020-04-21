@@ -146,11 +146,11 @@ printf "***Creating Fig 4***\n"
 python codes/plotting/gen_fig4.py
 python codes/plotting/fig4_analysis.py
 
-# Table SI 1
+# SI Table 1
 printf "***Creating Table SI1***\n"
 python codes/plotting/count-policies.py
 
-# Figure A2
+# ED Figure 1
 printf "***Creating Fig A2***\n"
 if $DOWNLOAD
 then
