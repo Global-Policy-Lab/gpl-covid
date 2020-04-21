@@ -154,3 +154,6 @@ results/*
 
 # isort
 default.profraw
+
+# papermill
+*-log.ipynb
