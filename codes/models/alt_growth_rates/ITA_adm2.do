@@ -154,7 +154,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_ita, replace)
 graph combine hist_ita qn_ita, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_ita.gph, replace)
 graph drop hist_ita qn_ita
 
-outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_ITA_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure10_ITA_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -265,58 +265,6 @@ drop miss_ct
 // br if adm2_name=="Isernia"
 
 
-//-------------------------------Running the model for Milano only
-
-// gen cases_to_pop = cum_confirmed_cases / population
-// collapse (max) cases_to_pop cum_confirmed_cases, by(adm2_name)
-// sort cum_confirmed_cases //Milano
-// sort cases_to_pop //Cremona
-
-// need to combine b/c collinear in time in Milano
-// p_3 "Travel ban"; p_4 "Quarantine positive cases"; p_6 "Home isolation"
-gen p_3_4_6 = (p_3 + p_4 + p_6) / 3
-lab var p_3_4_6 "Trvl ban, quarantine pos, home iso"
-
-reghdfe D_l_cum_confirmed_cases p_1 p_2 p_5 p_3_4_6 if adm2_name=="Milano", noabsorb
-
-// predicted "actual" outcomes with real policies
-predictnl y_actual_mi = xb() if e(sample), ci(lb_y_actual_mi ub_y_actual_mi)
-	
-// predicting counterfactual growth for each obs
-predictnl y_counter_mi = _b[_cons] if e(sample), ci(lb_counter_mi ub_counter_mi)
-
-// quality control: don't want to be forecasting negative growth (not modeling recoveries)
-// fix so there are no negative growth rates in error bars
-foreach var of varlist y_actual_mi y_counter_mi lb_y_actual_mi ub_y_actual_mi lb_counter_mi ub_counter_mi {
-	replace `var' = 0 if `var'<0 & `var'!=.
-}
-
-// Observed avg change in log cases
-reg D_l_cum_confirmed_cases i.t if adm2_name=="Milano"
-predict day_avg_mi if adm2_name=="Milano" & e(sample) == 1
-
-// Graph of predicted growth rates
-// fixed x-axis across countries
-tw (rspike ub_y_actual_mi lb_y_actual_mi t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_mi lb_counter_mi t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual_mi t,  msize(tiny) color(blue*.5) ) ///
-(scatter y_counter_mi t, msize(tiny) color(red*.5)) ///
-(connect y_actual_mi t, color(blue) m(square) lpattern(solid)) ///
-(connect y_counter_mi t, color(red) lpattern(dash) m(Oh)) ///
-(sc day_avg_mi t, color(black)) ///
-if e(sample), ///
-title("Milan, Italy", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/subnatl_growth_rates/Milan_conf_cases_growth_rates_fixedx.gph, replace)
-
-egen miss_ct = rowmiss(y_actual_mi lb_y_actual_mi ub_y_actual_mi y_counter_mi lb_counter_mi ub_counter_mi day_avg_mi)
-outsheet adm0_name adm1_name adm2_name t y_actual_mi lb_y_actual_mi ub_y_actual_mi y_counter_mi lb_counter_mi ub_counter_mi day_avg_mi ///
-using "results/source_data/indiv/ExtendedDataFigure9b_Milan_data.csv" if miss_ct<7, comma replace
-drop miss_ct
-
-drop p_3_4_6
-
 //-------------------------------Cross-validation
 
 tempvar counter_CV
@@ -379,7 +327,7 @@ preserve
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/ITA.pdf, replace
 	graph export results/figures/appendix/cross_valid/ITA.png, replace	
-	outsheet * using "results/source_data/indiv/ExtendedDataFigure7_cross_valid_ITA.csv", comma replace	
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure4_cross_valid_ITA.csv", comma replace	
 restore
 
 //------------------------------------FIXED LAG 
@@ -482,7 +430,7 @@ rename val lag
 reshape wide L, i(lag policy) j(temp) string
 sort Lat
 rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-outsheet * using "results/source_data/indiv/ExtendedDataFigure8_fixed_lag_ITA.csv", replace
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_fixed_lag_ITA.csv", replace
 
 
 use `f0', clear

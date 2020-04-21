@@ -191,7 +191,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_usa, replace)
 graph combine hist_usa qn_usa, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_usa.gph, replace)
 graph drop hist_usa qn_usa
 
-outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_USA_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure10_USA_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -322,52 +322,6 @@ drop miss_ct
 // yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
 
 
-//-------------------------------Running the model for Washington only
-
-// p_5 = 0.5 and p_7 = 0 for entire sample period
-// no testing regime changes in WA
-
-reghdfe D_l_cum_confirmed_cases p_* if adm1_name=="Washington", noabsorb
-
-// predicted "actual" outcomes with real policies
-predictnl y_actual_wa = xb() if e(sample), ci(lb_y_actual_wa ub_y_actual_wa)
-	
-// predicting counterfactual growth for each obs
-predictnl y_counter_wa = _b[_cons] if e(sample), ci(lb_counter_wa ub_counter_wa)
-
-coefplot, keep(p_*) tit("Washington State: policy packages") xline(0)
-
-// quality control: don't want to be forecasting negative growth (not modeling recoveries)
-// fix so there are no negative growth rates in error bars
-foreach var of varlist y_actual_wa y_counter_wa lb_y_actual_wa ub_y_actual_wa lb_counter_wa ub_counter_wa {
-	replace `var' = 0 if `var'<0 & `var'!=.
-}
-
-// Observed avg change in log cases
-reg D_l_cum_confirmed_cases i.t if adm1_name=="Washington"
-predict day_avg_wa if adm1_name=="Washington" & e(sample) == 1
-
-// Graph of predicted growth rates
-// fixed x-axis across countries
-tw (rspike ub_y_actual_wa lb_y_actual_wa t_random,  lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_wa lb_counter_wa t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual_wa t,  msize(tiny) color(blue*.5) ) ///
-(scatter y_counter_wa t, msize(tiny) color(red*.5)) ///
-(connect y_actual_wa t, color(blue) m(square) lpattern(solid)) ///
-(connect y_counter_wa t, color(red) lpattern(dash) m(Oh)) ///
-(sc day_avg_wa t, color(black)) ///
-if e(sample), ///
-title("Washington State, USA", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/subnatl_growth_rates/Washington_conf_cases_growth_rates_fixedx.gph, replace)
-
-egen miss_ct = rowmiss(y_actual_wa lb_y_actual_wa ub_y_actual_wa y_counter_wa lb_counter_wa ub_counter_wa day_avg_wa)
-outsheet adm0_name adm1_name t y_actual_wa lb_y_actual_wa ub_y_actual_wa y_counter_wa lb_counter_wa ub_counter_wa day_avg_wa ///
-using "results/source_data/indiv/ExtendedDataFigure9b_Washington_data.csv" if miss_ct<7, comma replace
-drop miss_ct
-
-
 //-------------------------------Cross-validation
 tempvar counter_CV
 tempfile results_file_crossV
@@ -455,7 +409,7 @@ preserve
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/USA.pdf, replace
 	graph export results/figures/appendix/cross_valid/USA.png, replace	
-	outsheet * using "results/source_data/indiv/ExtendedDataFigure7_cross_valid_USA.csv", comma replace
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure4_cross_valid_USA.csv", comma replace
 restore
 
 //------------------------------------FIXED LAG 
@@ -565,7 +519,7 @@ rename val lag
 reshape wide L, i(lag policy) j(temp) string
 sort Lat
 rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-outsheet * using "results/source_data/indiv/ExtendedDataFigure8_fixed_lag_USA.csv", replace	
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_fixed_lag_USA.csv", replace	
 
 use `f0', clear
 foreach L of num 1 2 3 4 5 10 15 {

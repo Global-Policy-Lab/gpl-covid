@@ -196,4 +196,4 @@ saving(results/figures/appendix/disaggregated_policies/FRA_disag.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
 outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
-using "results/source_data/indiv/ExtendedDataFigure9a_FRA_data.csv" if miss_ct<9 & e(sample), comma replace
+using "results/source_data/indiv/ExtendedDataFigure6a_FRA_data.csv" if miss_ct<9 & e(sample), comma replace
