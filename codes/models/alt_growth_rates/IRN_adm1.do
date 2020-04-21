@@ -158,7 +158,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_irn, replace)
 graph combine hist_irn qn_irn, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_irn.gph, replace)
 graph drop hist_irn qn_irn
 
-outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_IRN_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure10_IRN_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -204,6 +204,13 @@ coefplot, keep(p_1 p_2) tit("IRN: policy packages") subtitle(`subtitle2') ///
 caption("p_1 = (travel_ban_local_opt + work_from_home + school_closure) / 3", span) ///
 xline(0) name(IRN_policy, replace)
 
+
+// export coefficients (FOR FIG2)
+postclose results
+preserve
+	use `results_file', clear
+	outsheet * using "results/source_data/indiv/Figure2_IRN_coefs.csv", comma replace
+restore
 
 // export predicted counterfactual growth rate
 preserve
@@ -261,68 +268,6 @@ drop miss_ct
 // title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 // xscale(range(21970(10)22011)) xlabel(21970(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 // yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
-
-
-//-------------------------------Running the model for Tehran only 
-
-// gen cases_to_pop = cum_confirmed_cases / population
-// keep if cum_confirmed_cases!=.
-// collapse (min) t (max) cases_to_pop cum_confirmed_cases, by(adm1_name)
-// sort cum_confirmed_cases
-
-reg D_l_cum_confirmed_cases testing_regime_* p_1 p_2 if adm1_name=="Tehran"
-
-// predicted "actual" outcomes with real policies
-predictnl y_actual_thr = xb() if e(sample), ci(lb_y_actual_thr ub_y_actual_thr)
-
-// predicting counterfactual growth for each obs
-predictnl y_counter_thr =  testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
-_b[_cons] if e(sample), ci(lb_counter_thr ub_counter_thr)
-
-// quality control: don't want to be forecasting negative growth (not modeling recoveries)
-// fix so there are no negative growth rates in error bars
-foreach var of varlist y_actual_thr y_counter_thr lb_y_actual_thr ub_y_actual_thr lb_counter_thr ub_counter_thr {
-	replace `var' = 0 if `var'<0 & `var'!=.
-}
-
-// effect of package of policies (FOR FIG2)
-lincom p_1 + p_2
-*post results ("IRN_Tehran") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-
-// the mean here is the avg "biological" rate of initial spread (FOR FIG2)
-sum y_counter_thr
-*post results ("IRN_Tehran") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
-
-// export coefficients (FOR FIG2)
-postclose results
-preserve
-	use `results_file', clear
-	outsheet * using "results/source_data/indiv/Figure2_IRN_coefs.csv", comma replace
-restore
-
-// Observed avg change in log cases
-reg D_l_cum_confirmed_cases i.t if adm1_name  == "Tehran"
-predict day_avg_thr if adm1_name  == "Tehran" & e(sample) == 1
-
-// Graph of predicted growth rates
-// fixed x-axis across countries
-tw (rspike ub_y_actual_thr lb_y_actual_thr t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_thr lb_counter_thr t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual_thr t, msize(tiny) color(blue*.5) ) ///
-(scatter y_counter_thr t, msize(tiny) color(red*.5)) ///
-(connect y_actual_thr t, color(blue) m(square) lpattern(solid)) ///
-(connect y_counter_thr t, color(red) lpattern(dash) m(Oh)) ///
-(sc day_avg_thr t, color(black)) ///
-if e(sample), ///
-title("Tehran, Iran", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/subnatl_growth_rates/Tehran_conf_cases_growth_rates_fixedx.gph, replace)
-
-egen miss_ct = rowmiss(y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr day_avg_thr)
-outsheet adm0_name adm1_name t y_actual_thr lb_y_actual_thr ub_y_actual_thr y_counter_thr lb_counter_thr ub_counter_thr day_avg_thr ///
-using "results/source_data/indiv/ExtendedDataFigure9b_Tehran_data.csv" if miss_ct<7, comma replace
-drop miss_ct
 
 
 //----------------------------------------------FIXED LAG 
@@ -412,7 +357,7 @@ rename val lag
 reshape wide L, i(lag policy) j(temp) string
 sort Lat
 rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
-outsheet * using "results/source_data/indiv/ExtendedDataFigure8_fixed_lag_IRN.csv", replace	
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_fixed_lag_IRN.csv", replace	
 
 use `f0', clear
 foreach L of num 1 2 3 4 5 10 15 {
@@ -548,5 +493,5 @@ preserve
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/IRN.pdf, replace
 	graph export results/figures/appendix/cross_valid/IRN.png, replace	
-	outsheet * using "results/source_data/indiv/ExtendedDataFigure7_cross_valid_IRN.csv", comma replace
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure4_cross_valid_IRN.csv", comma replace
 restore

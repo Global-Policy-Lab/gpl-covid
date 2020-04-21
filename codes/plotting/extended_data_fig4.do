@@ -1,7 +1,7 @@
 // generate appendix figure - cross validation
 
 foreach ADM in "CHN" "FRA" "IRN" "KOR" "ITA" "USA" {
-	import delim using "results/source_data/indiv/ExtendedDataFigure7_cross_valid_`ADM'.csv", clear
+	import delim using "results/source_data/indiv/ExtendedDataFigure4_cross_valid_`ADM'.csv", clear
 	cap g i = ite
 	tempfile f`ADM'
 	save `f`ADM''
@@ -28,8 +28,8 @@ ysize(10)
 
 graph export results/figures/appendix/cross_valid/fig6.pdf, replace
 
-// ouput source data for ED fig 6
-outsheet adm0 sample policy beta using "results/source_data/ExtendedDataFigure7_cross_valid.csv", comma replace
+// ouput source data for ED fig 4
+outsheet adm0 sample policy beta using "results/source_data/ExtendedDataFigure4_cross_valid.csv", comma replace
 
 
 sort adm0 policy beta
