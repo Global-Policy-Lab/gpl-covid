@@ -163,9 +163,6 @@ def make_all_coeff_factorplots(
         Data)
     """
 
-    plot_dir.mkdir(exist_ok=True)
-    save_source_data = Path(save_source_data)
-
     coeffs = epi.load_and_combine_reg_results(
         dir_in, cols_to_keep=["effect", "Intercept", "S_min", "rmse"]
     )
@@ -226,6 +223,8 @@ def make_all_coeff_factorplots(
                 )
 
                 if plot_dir is not None:
+                    plot_dir = Path(plot_dir)
+                    plot_dir.mkdir(exist_ok=True)
                     for suffix in ["pdf", "png"]:
                         g.fig.savefig(
                             plot_dir / f"{var}_pop_{p}_LHS_{LHS}.{suffix}",
@@ -236,6 +235,7 @@ def make_all_coeff_factorplots(
                     plt.clf()
 
     if save_source_data is not None:
+        save_source_data = Path(save_source_data)
         coeffs.sel(LHS=["I", "IR"], policy=["Intercept", "cum_effect"])[
             ["S_min", "coefficient", "coefficient_true"]
         ].to_dataframe().to_csv(save_source_data, float_format="%.5f", index=True)
