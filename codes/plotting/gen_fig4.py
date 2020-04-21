@@ -26,8 +26,13 @@ fig_name = "fig4.pdf"
 matplotlib.rcParams["pdf.fonttype"] = 42
 
 # figure aesthetics
-no_policy_color = "red"
-policy_color = "blue"
+no_policy_color = "#ED2224"
+no_policy_uncertainty_color = "#F37F81"
+# no_policy_color = "red"
+policy_color = "#3A53A4"
+policy_uncertainty_color = "#797CBB"
+# policy_color = "blue"
+
 matplotlib.rcParams["font.sans-serif"] = "Arial"
 matplotlib.rcParams["font.family"] = "sans-serif"
 
@@ -107,7 +112,7 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
     lower_idx = 0
 
     # inner to outer - hardcode for now
-    alphas_fc = [0.2, 0.5]
+    alphas_fc = [0.5, 1.0]
 
     if model is not None:
         model_no_pol = ax.plot(
@@ -124,7 +129,7 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
                 pd.to_datetime(dates),
                 quantiles_no_policy[:, lower_idx],
                 quantiles_no_policy[:, upper_idx],
-                facecolor=color_add_alpha(no_policy_color, alphas_fc[i]),
+                facecolor=color_add_alpha(no_policy_uncertainty_color, alphas_fc[i]),
                 #  edgecolor=color_add_alpha(no_policy_color, alphas_ec[i]),
                 #   alpha = alphas_fc[i],
             )
@@ -159,7 +164,7 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
                 pd.to_datetime(dates),
                 quantiles_policy[:, lower_idx],
                 quantiles_policy[:, upper_idx],
-                facecolor=color_add_alpha(policy_color, alphas_fc[i]),
+                facecolor=color_add_alpha(policy_uncertainty_color, alphas_fc[i]),
                 # edgecolor=color_add_alpha(policy_color, alphas_ec[i]),
             )
 
