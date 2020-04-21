@@ -1,14 +1,14 @@
 import datetime
 import os
 
+import numpy as np
+
+import codes.utils as cutil
 import matplotlib.colors
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
-
-import codes.utils as cutil
 
 # save the figure here
 save_fig = True
@@ -50,12 +50,35 @@ country_names = {
 }
 
 
+country_abbrievations = {
+    "france": "FRA",
+    "iran": "IRN",
+    "usa": "USA",
+    "italy": "ITA",
+    "china": "CHN",
+    "korea": "KOR",
+}
+
+
 cutoff_dates = pd.read_csv(
     cutil.HOME / "codes" / "data" / "cutoff_dates.csv"
 ).set_index("tag")
 cutoff_end = str(cutoff_dates.loc["default", "end_date"])
 end_date = "{0}-{1}-{2}".format(cutoff_end[0:4], cutoff_end[4:6], cutoff_end[6:8])
 start_date = "2020-01-15"
+
+# country specfic cutoff dates
+cutoff_dates_by_country = {}
+for country in countries_in_order:
+    key_this_country = "{0}_analysis".format(country_abbrievations[country])
+
+    if key_this_country in cutoff_dates.index:
+        cutoff_this_country = str(cutoff_dates.loc[key_this_country, "end_date"])
+        cutoff_dates_by_country[country] = "{0}-{1}-{2}".format(
+            cutoff_this_country[0:4], cutoff_this_country[4:6], cutoff_this_country[6:8]
+        )
+    else:
+        cutoff_dates_by_country[country] = end_date
 
 
 def color_add_alpha(color, alpha):
@@ -218,6 +241,7 @@ def make_quantiles(this_country_df, quantiles):
 
 def plot_bracket(ax, model_df):
     # most recent case
+    model_df["date"] = pd.to_datetime(model_df["date"])
     last_model_day = model_df["date"].max()
 
     start = (
@@ -410,21 +434,37 @@ def main():
         # 1.a plot quantiles and model
         quantiles_this_country = quantiles_by_country[country]
         model_this_country = model_dfs_by_country[country]
+        cases_this_country = cases_dict[country]
+
+        # get the last date of cases and only display up until that date
+        # last_cases_date_this_country = cases_this_country["date_str"].max()
+
+        preds_before_last_cases_mask = model_this_country["date"].apply(
+            lambda x: x <= cutoff_dates_by_country[country]
+        )
+
+        model_until_last_case = model_this_country.where(preds_before_last_cases_mask)
+
+        quantiles_until_last_case = {}
+        for quant_key, quant_array in quantiles_this_country.items():
+            quantiles_until_last_case[quant_key] = quant_array[
+                preds_before_last_cases_mask
+            ]
 
         ax[c] = plot_quantiles(
             ax[c],
             quantiles,
-            quantiles_this_country,
+            quantiles_until_last_case,
             legend_dict,
-            model=model_this_country,
+            model=model_until_last_case,
             update_legend=(c == 0),
         )
 
         # 1.b annotate the model on the right
-        plot_bracket(ax[c], model_this_country)
+        plot_bracket(ax[c], model_until_last_case)
 
         # 2.a plot cases where they overlap with predictions
-        cases_this_country = cases_dict[country]
+
         cases_overlap_preds_mask = cases_this_country["date_str"].apply(
             lambda x: x in model_this_country["date"].values
         )

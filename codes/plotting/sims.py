@@ -1,7 +1,9 @@
-import xarray as xr
-import matplotlib.pyplot as plt
-import numpy as np
 import warnings
+
+import numpy as np
+
+import matplotlib.pyplot as plt
+import xarray as xr
 
 
 def facet_hist(estimates, case_type, coef, n_bins=40, hist_kwargs={}, **kwargs):
