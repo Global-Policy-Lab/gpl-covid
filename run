@@ -172,7 +172,7 @@ printf "Running simulations..."
 papermill notebooks/simulate-and-regress.ipynb notebooks/simulate-and-regress-log.ipynb -p n_samples $NUMPROJ -k gpl-covid
 printf "Making Figures..."
 if [ $NUMPROJ = 1000 ]; then
-    python codes/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/sims --source-dir "results/source_data/ExtendedDataFigure89.csv"
+    python codes/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/sims --source-data "results/source_data/ExtendedDataFigure89.csv"
 else
     python codes/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 --LHS I
 fi
