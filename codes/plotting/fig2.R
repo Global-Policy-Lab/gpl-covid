@@ -8,6 +8,7 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(gridExtra))
+library(Hmisc)
 
 # set working directory
 dir <- "results/source_data/"
@@ -89,30 +90,30 @@ df.combined$effectsize[df.combined$policy == "China, Week 5" & df.combined$effec
 
 #code policies individual policies
 #KOR 
-df$policy[df$adm0 == "KOR" & df$policy == "p_1"] <- "Social distance (optional)"
-df$policy[df$adm0 == "KOR" & df$policy == "p_2"] <- "Social distance (mandatory)"
+df$policy[df$adm0 == "KOR" & df$policy == "p_1"] <- "Social distance, no gatherings, business closure, work from home"
+df$policy[df$adm0 == "KOR" & df$policy == "p_2"] <- "No demonstrations, religious & welfare services closure"
 df$policy[df$adm0 == "KOR" & df$policy == "p_3"] <- "Emergency declaration"
 df$policy[df$adm0 == "KOR" & df$policy == "p_4"] <- "Quarantine positive cases "
 
 #USA 
 df$policy[df$adm0 == "USA" & df$policy == "p_1"] <- "No gatherings, event cancellations"
-df$policy[df$adm0 == "USA" & df$policy == "p_2"] <- "Social distance"
+df$policy[df$adm0 == "USA" & df$policy == "p_2"] <- "Social distance, religious closure"
 df$policy[df$adm0 == "USA" & df$policy == "p_3"] <- "Quarantine positive cases"
 df$policy[df$adm0 == "USA" & df$policy == "p_4"] <- "Paid sick leave"
 df$policy[df$adm0 == "USA" & df$policy == "p_5"] <- "Work from home"
 df$policy[df$adm0 == "USA" & df$policy == "p_6"] <- "School closure"
-df$policy[df$adm0 == "USA" & df$policy == "p_7"] <- "Travel ban"
+df$policy[df$adm0 == "USA" & df$policy == "p_7"] <- "Travel ban, transit suspension"
 df$policy[df$adm0 == "USA" & df$policy == "p_8"] <- "Business closure"
 df$policy[df$adm0 == "USA" & df$policy == "p_9"] <- "Home isolation" 
 
 #IRN
-df$policy[df$adm0 == "IRN" & df$policy == "p_1"] <- "Travel ban (opt), work from home, school closure"
+df$policy[df$adm0 == "IRN" & df$policy == "p_1"] <- "School closure, travel ban, work from home"
 df$policy[df$adm0 == "IRN" & df$policy == "p_2"] <- "Home isolation "
 
 #ITA
-df$policy[df$adm0 == "ITA" & df$policy == "p_1"] <- " Social distance"
+df$policy[df$adm0 == "ITA" & df$policy == "p_1"] <- " Work from home, no gatherings, social distance "
 df$policy[df$adm0 == "ITA" & df$policy == "p_2"] <- " School closure"
-df$policy[df$adm0 == "ITA" & df$policy == "p_3"] <- " Travel ban"
+df$policy[df$adm0 == "ITA" & df$policy == "p_3"] <- " Travel ban, transit suspension"
 df$policy[df$adm0 == "ITA" & df$policy == "p_4"] <- " Quarantine positive cases"
 df$policy[df$adm0 == "ITA" & df$policy == "p_5"] <- " Business closure"
 df$policy[df$adm0 == "ITA" & df$policy == "p_6"] <- " Home isolation"
@@ -132,8 +133,8 @@ df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L29_to_L70"] <- "Tra
 
 #FRA
 df$policy[df$adm0 == "FRA" & df$policy == "school_closure"] <- "School closure "
-df$policy[df$adm0 == "FRA" & df$policy == "pck_social_distanc"] <- "Social distance "
-df$policy[df$adm0 == "FRA" & df$policy == "national_lockdown"] <- "National lockdown"
+df$policy[df$adm0 == "FRA" & df$policy == "pck_social_distanc"] <- "Social distance, no gatherings, event cancellations"
+df$policy[df$adm0 == "FRA" & df$policy == "national_lockdown"] <- "Business closure, home isolation"
 
 #order df
 df <- dplyr::arrange(df, desc(order), policy) 
@@ -298,5 +299,4 @@ growth <- ggplot(data = df) +
 #combine 3 plots into 1 figure
 all.plot.ind <- grid.arrange(betas, eff.size, growth, ncol=3)
 ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 28, height = 10)
-
 
