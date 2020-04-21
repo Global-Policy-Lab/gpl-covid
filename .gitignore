@@ -145,7 +145,12 @@ notebooks/iwb-sandbox.ipynb
 .vscode
 api_keys.json
 
-# Results folder
-results/
+# Results
+results/*
+# except for:
+!results/source_data/
 
 **/archive/
+
+# isort
+default.profraw

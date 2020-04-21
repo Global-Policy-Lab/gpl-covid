@@ -1,7 +1,9 @@
-import codes.utils as cutil
-import pandas as pd
-import numpy as np
 import warnings
+
+import numpy as np
+import pandas as pd
+
+import codes.utils as cutil
 
 
 def check_population_col_is_filled(df, adm_col, pop_col, errors="raise"):
@@ -53,7 +55,7 @@ def get_adm_pops(adm_level, country_code, latlons=False):
 
     # hard code in for US adm3 data
     if (country_code == "USA") and (adm_level == 3):
-        path_adm = cutil.DATA_INTERIM / "usa" / f"adm{adm_level}_pop_small.csv"
+        path_adm = cutil.DATA_RAW / "usa" / "adm3_pop.csv"
         adm_df = pd.read_csv(path_adm)
     else:
         path_adm = (

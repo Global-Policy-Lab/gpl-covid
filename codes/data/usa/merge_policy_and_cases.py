@@ -1,8 +1,9 @@
-import pandas as pd
 import os
 
-import codes.utils as cutil
+import pandas as pd
+
 import codes.merge as merge
+import codes.utils as cutil
 
 raw_data_dir = str(cutil.DATA_RAW / "usa")
 int_data_dir = str(cutil.DATA_INTERIM / "usa")
@@ -24,6 +25,9 @@ def main():
     policy_data = pd.read_csv(
         os.path.join(raw_data_dir, "usa_policy_data_sources.csv"), encoding="latin"
     )
+
+    # drop any rows which are all nan
+    policy_data = policy_data.dropna(how="all", axis=0)
 
     policy_data = policy_data.rename(columns={"Optional": "optional"})
     policy_data = policy_data.rename(columns={"date": "date_start"})

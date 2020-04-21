@@ -1,6 +1,8 @@
-import pandas as pd
-import numpy as np
 import os
+
+import numpy as np
+import pandas as pd
+
 import codes.utils as cutil
 
 # local imports

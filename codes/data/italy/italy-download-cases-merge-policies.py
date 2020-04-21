@@ -8,12 +8,14 @@
 # - Merge collected policies
 # - Save outputs at `data/processed/adm1/ITA_processed.csv` and `data/processed/adm2/ITA_processed.csv`
 
-import pandas as pd
-import numpy as np
-from codes import utils as cutil
-from codes import merge as cmerge
-from codes import impute as cimpute
 import argparse
+
+import numpy as np
+import pandas as pd
+
+from codes import impute as cimpute
+from codes import merge as cmerge
+from codes import utils as cutil
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

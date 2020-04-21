@@ -12,19 +12,28 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lfe))
 set.seed(718)
 
-underreporting <- read_rds("data/interim/multi_country/under_reporting.rds")
+underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
+                           col_types = cols(
+                             country = col_character(),
+                             total_cases = col_double(),
+                             total_deaths = col_double(),
+                             underreporting_estimate = col_double(),
+                             lower = col_double(),
+                             upper = col_double(),
+                             underreporting_estimate_clean = col_character()
+                           ))
 # source("codes/models/calculate_gamma_from_china_and_korea.R")
 gamma = readr::read_csv("models/gamma_est.csv",
                         col_types = 
                           cols(
-                            adm0_name = col_character(),
-                            gamma_est = col_double()
+                            recovery_delay = col_double(),
+                            gamma = col_double()
                           )) %>% 
-  filter(adm0_name %in% c("CHN", "KOR")) %>% 
-  pull(gamma_est) %>% 
+  filter(adm0_name %in% c("CHN", "KOR"), recovery_delay == 0) %>% 
+  pull(gamma) %>% 
   mean()
 
-dir.create("data/post_processing", recursive=TRUE, showWarnings=FALSE)
+dir.create("models/projections", recursive=TRUE, showWarnings=FALSE)
 message("Running France projection.")
 source("codes/models/FRA_create_CBs.R")
 message("Running Iran projection.")
