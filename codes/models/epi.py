@@ -156,7 +156,9 @@ def adjust_timescales_to_daily(ds):
     return out
 
 
-def init_policy_dummies(policy_ds, n_samples, t, seed=0, random_end=False):
+def init_policy_dummies(
+    policy_ds, n_samples, t, seed=0, random_end=False, ordered_policies=True
+):
     """Initialize dummy variables to define policy effects.
     
     Parameters
@@ -174,6 +176,9 @@ def init_policy_dummies(policy_ds, n_samples, t, seed=0, random_end=False):
     random_end : bool, optional
         Whether to also generate a variable for the random end point for each MC sim
         beyond which we don't allow the regression to see any data.
+    ordered_policies : bool, optional
+        Whether you want the first policy to always be enacted before the second, which 
+        is enacted before the third, etc. Default is yes.
     
     Returns
     -------
@@ -195,7 +200,9 @@ def init_policy_dummies(policy_ds, n_samples, t, seed=0, random_end=False):
         policy_ds.interval.sel(time="end"),
         (n_samples * 2, n_effects),
     )
-    dates.sort(axis=1)
+
+    if ordered_policies:
+        dates.sort(axis=1)
 
     # drop any with complete collinearity of policies
     valid = np.apply_along_axis(lambda x: len(np.unique(x)) == dates.shape[1], 1, dates)
@@ -619,6 +626,7 @@ def simulate_and_regress(
     I0=0,
     R0=0,
     random_end=False,
+    ordered_policies=True,
     save_dir=None,
 ):
     """Full wrapper to run Monte Carlo simulations of a disease outbreak using SEIR or
@@ -687,6 +695,9 @@ def simulate_and_regress(
         Whether to allow each regression to end at the end of the data sample (False) 
         or to randomly cut off the end of the timeseries at some day between the day 
         after the start of the last policy and the end of the sample. Default False.
+    ordered_policies : bool, optional
+        Whether you want the first policy to always be enacted before the second, which 
+        is enacted before the third, etc. Default is yes.
     save_dir : str or :class:`pathlib.Path`
         The directory to save results
         
@@ -765,7 +776,12 @@ def simulate_and_regress(
 
     # get policy effects
     policy_dummies, random_end_da = init_policy_dummies(
-        policies, n_samples, t, seed=0, random_end=random_end
+        policies,
+        n_samples,
+        t,
+        seed=0,
+        random_end=random_end,
+        ordered_policies=ordered_policies,
     )
     policies = xr.merge((policies, policy_dummies, random_end_da))
     policy_effect_timeseries = (policies.policy_timeseries * policies.effect).sum(
