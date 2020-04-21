@@ -4,6 +4,7 @@ Functions to help in infectious disease simulation.
 
 import warnings
 from collections import OrderedDict
+from pathlib import Path
 
 import numpy as np
 
@@ -675,3 +676,62 @@ def load_reg_results(res_dir):
     reg_res["t"] = reg_res.t.astype(int)
     reg_res = reg_res.sortby("pop")
     return reg_res
+
+
+def load_and_combine_reg_results(reg_dir, cols_to_keep=[]):
+    """Load regression results
+    
+    Parameters
+    ----------
+    reg_dir : str or :class:`pathlib.Path`
+        Directory containing two subdirectories ``SIR`` and ``SEIR``, which both contain
+        another directory ``regression``, which has regression results.
+    cols_to_keep : list of str, optional
+        Which variables to keep when merging SEIR and SIR results
+        
+    Returns
+    -------
+    ds : :class:`xarray.Dataset`
+        Combined regression results from SEIR and SIR data generating processes
+    """
+
+    reg_dir = Path(reg_dir)
+    sir_dir = reg_dir / "SIR" / "regression"
+    reg_res_sir = load_reg_results(sir_dir)
+    reg_res_sir["sigma"] = [np.inf]
+    vals_sir = reg_res_sir[cols_to_keep].merge(
+        reg_res_sir.coefficient.sum("reg_lag", skipna=False)
+    )
+
+    seir_dir = reg_dir / "SEIR" / "regression"
+    reg_res_seir = load_reg_results(seir_dir)
+    vals_seir = reg_res_seir[cols_to_keep].merge(
+        reg_res_seir.coefficient.sum("reg_lag", skipna=False)
+    )
+
+    vals = xr.concat(
+        [vals_seir, vals_sir], dim="sigma", coords="different", data_vars="different"
+    )
+    vals.attrs = reg_res_seir.attrs
+
+    return vals
+
+
+def calc_cum_effects(coeffs):
+    ## rearrange to get cum_effects in there too
+    effects = coeffs.effect
+    new_coeffs = coeffs.drop_dims("policy").drop("Intercept").copy()
+    coeffs["cum_effect"] = coeffs.coefficient.sum(dim="policy", skipna=False)
+    new_var = coeffs[["Intercept", "cum_effect"]].to_array(dim="policy")
+    coefficient = xr.concat((coeffs.coefficient, new_var), dim="policy")
+    coeffs = xr.merge((new_coeffs, coefficient))
+    coeffs.attrs = new_coeffs.attrs
+
+    coeffs = coeffs.sortby(["sigma", "pop"])
+    coeffs["coefficient_true"] = (
+        ("policy",),
+        effects.values.tolist()
+        + [coeffs.attrs["no_policy_growth_rate"], effects.sum().item()],
+    )
+
+    return coeffs
