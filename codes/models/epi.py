@@ -15,7 +15,30 @@ from statsmodels.api import OLS, add_constant
 
 def init_reg_ds(n_samples, LHS_vars, policies, **dim_kwargs):
     """
-    Initialize a Dataset to place regression estimates
+    Initialize a Dataset in which to place regression estimates.
+    
+    Parameters
+    ----------
+    n_samples : int
+        Number of monte carlo draws in your simulation per parameter set
+    LHS_vars : list of str
+        The left hand side variables you want to use to estimate regressions of impact
+        of policy on outbreak growth rate. These are in "SEIR" terminology, i.e. ``I``
+        is active infectious cases. Sums are accomplished by concatenating letters (e.g.
+        ``IR`` is active infectious cases + recovered/dead cases).
+    policies : list of str
+        Labels of the policies that you are applying in this outbreak.
+    dim_kwargs :
+        Additional dimensions that define the parameter space you are exploring. e.g. if
+        you want to test different versions of $\gamma$, you would have a ``gamma`` 
+        kwarg with a list of values that you want to test for gamma.
+        
+    Returns
+    -------
+    :class:`xarray.Dataset`
+        A dataset that will contain coefficient estimates and a couple of other useful
+        values to save after running outbreak simulations and then regressions of policy
+        effect on those outbreaks.
     """
 
     coords = {
@@ -36,10 +59,42 @@ def init_reg_ds(n_samples, LHS_vars, policies, **dim_kwargs):
 
 
 def init_state_arrays(shp, n_arrays):
+    """Initialize state arrays for dynamic model.
+    
+    Parameters
+    ----------
+    shp : tuple of int
+        Shape of arrays (including timesteps, as well as dimensions corresponding to 
+        all parameters we are checking in this simulation exercise, e.g. $\gamma$)
+    n_arrays : int
+        i.e. 3 for SIR and 4 for SEIR
+        
+    Returns
+    -------
+    list of :class:`numpy.ndarray`
+    """
     return [np.ones(shp) * np.nan for a in range(n_arrays)]
 
 
-def adjust_timescales_from_daily(ds, tstep, to=False):
+def adjust_timescales_from_daily(ds, tstep):
+    """Adjust continuous growth rate parameters from daily scale to the scale of a 
+    single timestep in the dynamic model.
+    
+    Parameters
+    ----------
+    ds : :class:`xarray.Dataset`
+        Dataset containing coords or variables corresponding to rate parameters, e.g. 
+        $\lambda$ (asymptotic exponential growth rate), $\beta$ (daily transmission rate
+        per infectious individual), $\gamma$ (inverse of duration of infectious period),
+        and/or $\sigma$ (inverse of latency period).
+    tstep : float
+        Timestep of model, in days
+        
+    Returns
+    -------
+    out : :class:`xarray.Dataset`
+        `ds`, with rate parameters adjusted.
+    """
     out = ds.copy()
     for k, v in ds.variables.items():
         if k.split("_")[0] in [
@@ -53,12 +108,25 @@ def adjust_timescales_from_daily(ds, tstep, to=False):
     return out
 
 
-def adjust_timescales_to_daily(ds, tsteps_per_day):
-    """
-    Adjusts from discrete rates used for SIR model to daily continuous rates
+def adjust_timescales_to_daily(ds):
+    """Adjusts from discrete rate parameters used for SIR model to daily continuous rates.
+    
+    Parameters
+    ----------
+    ds : :class:`xarray.Dataset`
+        Dataset containing coords or variables corresponding to rate parameters, e.g. 
+        $\lambda$ (asymptotic exponential growth rate), $\beta$ (daily transmission rate
+        per infectious individual), $\gamma$ (inverse of duration of infectious period),
+        and/or $\sigma$ (inverse of latency period).
+        
+    Returns
+    -------
+    out : :class:`xarray.Dataset`
+        `ds`, with adjusted rate parameters
     """
     out = ds.copy()
     tstep = ds.t[1] - ds.t[0]
+    tsteps_per_day = int(np.round(1 / tstep))
     coord_cols = [k for k in ds.coords if k in ["lambda", "beta", "gamma", "sigma"]]
     cols = [
         k
@@ -89,8 +157,31 @@ def adjust_timescales_to_daily(ds, tsteps_per_day):
 
 
 def init_policy_dummies(policy_ds, n_samples, t, seed=0, random_end=False):
-    """
-    Initialize dummy variables to define policy effects
+    """Initialize dummy variables to define policy effects.
+    
+    Parameters
+    ----------
+    policy_ds : :class:`xarray.Dataset`
+        A dataset with a ``policy`` coord defining the labels for the different 
+        policies; an ``interval`` variable which defines the bounds of the random start
+        time for each policy.
+    n_samples : int
+        Numbero of monte carlo sims
+    t : iterable of float
+        List of times for dynamic simulation
+    seed : int, optional
+        Random seed for choosing policy start dates
+    random_end : bool, optional
+        Whether to also generate a variable for the random end point for each MC sim
+        beyond which we don't allow the regression to see any data.
+    
+    Returns
+    -------
+    :class:`xarray.DataArray`
+        The timeseries of indicator variables for each policy for all monte carlo sims.
+    :class:`xarray.DataArray`
+        Random regression end points as a fraction of the interval between last policy 
+        start date and end of simulation
     """
 
     np.random.seed(seed)
@@ -157,29 +248,63 @@ def init_policy_dummies(policy_ds, n_samples, t, seed=0, random_end=False):
 
 
 def get_beta_SEIR(lambdas, gammas, sigmas):
-    """
-    In a SEIR model, $\beta$ in a S~=1 setting is a function of the exponential growth 
-    rate ($\lambda$), $\sigma$, and $\gamma$. This calculates that based on the deterministic gamma and 
-    sigmas.
+    """In a SEIR model, $\beta$ in a S~=1 setting is a function of the asymptotic 
+    exponential growth rate ($\lambda$), $\sigma$, and $\gamma$.
     """
     return (lambdas + gammas) * (lambdas + sigmas) / sigmas
 
 
 def get_beta_SIR(lambdas, gammas, *args):
+    """In a SIR model, $\beta$ in a S~=1 setting is a function of the exponential 
+    growth rate ($\lambda$) and $\gamma$.
+    """
     return lambdas + gammas
 
 
 def get_lambda_SEIR(betas, gammas, sigmas):
+    """Calculate the asymptotic exponential growth rate as a function of $\beta$, 
+    $\gamma$, and $\sigma$.
+    """
     return (
         -(sigmas + gammas) + np.sqrt((sigmas - gammas) ** 2 + 4 * sigmas * betas)
     ) / 2
 
 
 def get_lambda_SIR(betas, gammas, *args):
+    """Calculate the exponential growth rate as a function of $\beta$ and $\gamma$."""
     return betas - gammas
 
 
-def apply_noise(out, params, noise_types, shape=(0,), noise_sds=[0], seed=0):
+def apply_param_noise(ds, params, noise_types, shape=(0,), noise_sds=[0], seed=0):
+    """Apply noise to each timestep for each Monte Carlo draw of the outbreak 
+    simulations.
+    
+    Parameters
+    ----------
+    ds : :class:`xarray.Dataset`
+        A Dataset that has variables called ``[varname]_deterministic`` for each of the 
+        parameters in `params`.
+    params : list of str
+        The name of the params in this dataset (e.g. ``beta, gamma, sigma`` for SEIR and
+        ``beta, gamma`` for SIR).
+    noise_types : list of str
+        Same length as `params`. Each element is one of ``["normal", "exponential", 
+        False]``. This defines the type of noise applied to each. False means no noise.
+    shape : tuple of int, optional
+        (n_samples, n_timesteps). Only needed if any `noise_types` are ``normal``
+    noise_sds : list of float
+        Standard deviations to use for any parameters with ``noise_type=="normal"``. 
+        Must be same length as `params` but unused for any params with other 
+        `noise_type`.
+    seed : int
+        Random seed for generating noise
+        
+    Returns
+    -------
+    out : :class:`xarray.Dataset`
+        Same as `ds` but with ``[varname]_stoch`` stochastic variables added.
+    """
+
     np.random.seed(seed)
     for px, param in enumerate(params):
         noise_type = noise_types[px]
@@ -189,41 +314,47 @@ def apply_noise(out, params, noise_types, shape=(0,), noise_sds=[0], seed=0):
         if noise_type is None:
             continue
         elif noise_type == "normal":
-            out[param_stoch] = (
+            ds[param_stoch] = (
                 ("sample", "t"),
                 np.random.normal(0, noise_sd, shape),
             )
-            out[param_stoch] = out[param_det] + out[param_stoch]
+            ds[param_stoch] = ds[param_det] + ds[param_stoch]
         elif noise_type == "exponential":
-            (out[param_det], _, _) = xr.broadcast(out[param_det], out.sample, out.t)
-            out[param_stoch] = (
-                out[param_det].dims,
-                np.random.exponential(out[param_det]),
+            (ds[param_det], _, _) = xr.broadcast(ds[param_det], ds.sample, ds.t)
+            ds[param_stoch] = (
+                ds[param_det].dims,
+                np.random.exponential(ds[param_det]),
             )
+
         # commented out b/c inverse-exponential has undefined expected value
-        # and empirically changes the mean parameter by order(s) of magnitude
-        #         elif noise_type == "inv_exponential":
-        #             (out[param_det],_,_) = xr.broadcast(out[param_det], out.sample, out.t)
-        #             out[param_stoch] = (
-        #                 out[param_det].dims,
-        #                 1/np.random.exponential(1/out[param_det])
-        #             )
+        #         and empirically changes the mean parameter by order(s) of magnitude
+        #                 elif noise_type == "inv_exponential":
+        #                     (out[param_det],_,_) = xr.broadcast(
+        #                         out[param_det],
+        #                         out.sample,
+        #                         out.t)
+        #                     out[param_stoch] = (
+        #                         out[param_det].dims,
+        #                         1/np.random.exponential(1/out[param_det])
+        #                     )
+
         elif not noise_type:
-            out[param_stoch] = out[param_det].copy()
+            ds[param_stoch] = ds[param_det].copy()
         else:
             raise ValueError(noise_type)
-        neg = out[param_stoch] < 0
+        neg = ds[param_stoch] < 0
         n_bad = neg.sum().item()
         if n_bad > 0:
-            n_tot = np.prod(out[param_stoch].shape)
+            n_tot = np.prod(ds[param_stoch].shape)
             dims = ["gamma"]
-            if "sigma" in out[param_stoch].dims:
+            if "sigma" in ds[param_stoch].dims:
                 dims.append("sigma")
-            to_sum = [d for d in out[param_stoch].dims if d not in dims]
+            to_sum = [d for d in ds[param_stoch].dims if d not in dims]
             cross_tab = (neg.sum(to_sum) / neg.count(to_sum)).to_dataframe()
             warnings.warn(
-                f"Parameter {param} has {n_bad}/{n_tot} values <0 ({n_bad/n_tot:.2%}). These are non-physical params. "
-                f"If they are dropped in the simulation, this will change the mean. Fraction of negative values: {cross_tab}"
+                f"Parameter {param} has {n_bad}/{n_tot} values <0 ({n_bad/n_tot:.2%}). "
+                "These are non-physical params. If they are dropped in the simulation, "
+                f"this will change the mean. Fraction of negative values: {cross_tab}"
             )
     return out
 
@@ -242,6 +373,36 @@ def get_stochastic_discrete_params(
     sigma_noise_sd=None,
     seed=0,
 ):
+    """Wrapper around `apply_param_noise`.
+    
+    Parameters
+    ----------
+    estiamtes_ds : :class:`xarray.Dataset`
+        A Dataset that has variables or coordinates referring to the deterministic 
+        values for model params. The code will look for ``[varname]_deterministic`` 
+        variables and if they don't exist, will use ``[varname]`` coords instead. These
+        should be *continuous* rate parameters and will be converted to discrete rate
+        parameters, along with having a stochastic component added.
+    no_policy_growth_rate : float
+        Unimpeded growth rate of the outbreak w/o policy
+    policy_effect_timeseries : :class:`xarray.DataArray`
+        Array of indicators describing when each policy is turning on for each Monte 
+        Carlo sample.
+    t : list of float
+        Value of times at each timestep of simulation (in days)
+    [beta,gamma,sigma]_noise_on : "normal", "exponential", or False
+        What kind of noise to apply to this variable.
+    kind : "SEIR" or "SIR"
+        What type of model you are running
+    seed : int
+        Random seed for creating stochastic component
+    
+    Returns
+    -------
+    out : :class:`xarray.Dataset`
+        `estimates_ds` but with additional ``[varname]_stoch`` variables for each rate
+        param in `ds`.
+    """
 
     if kind == "SIR":
         beta_func = get_beta_SIR
@@ -284,7 +445,7 @@ def get_stochastic_discrete_params(
         these_noise.append(sigma_noise_on)
         these_sd.append(sigma_noise_sd)
 
-    out = apply_noise(
+    out = apply_param_noise(
         out, these_params, these_noise, shape=sampXtime, noise_sds=these_sd, seed=seed
     )
     out["lambda_stoch"] = lambda_func(out.beta_stoch, out.gamma_stoch, out.sigma_stoch)
@@ -293,9 +454,23 @@ def get_stochastic_discrete_params(
 
 
 def run_SIR(I0, R0, ds):
-    """
-    Simulate SIR model using forward euler integration. All states are defined as 
-    fractions of a population.
+    """Simulate SIR model using forward euler integration. All states are defined as 
+    fractions of a population. All rates are discrete rates at the timescale of a 
+    signle simulation timestep.
+    
+    Parameters
+    ----------
+    I0, R0 : float
+        Initial conditions
+    ds : :class:`xarray.Dataset`
+        The dataset containing ``beta_stoch`` and ``gamma_stoch`` variables defining
+        rate parameters
+    
+    Returns
+    -------
+    out : :class:`xarray.Dataset`
+        `ds` with ``S, I, R`` variables added corresponding to the system state at each
+        timestep.
     """
     n_steps = len(ds.t)
 
@@ -329,7 +504,22 @@ def run_SIR(I0, R0, ds):
 def run_SEIR(E0, I0, R0, ds):
     """
     Simulate SEIR model using forward euler integration. All states are defined as 
-    fractions of a population.
+    fractions of a population. All rates are discrete rates at the timescale of a 
+    signle simulation timestep.
+    
+    Parameters
+    ----------
+    E0, I0, R0 : float
+        Initial conditions
+    ds : :class:`xarray.Dataset`
+        The dataset containing ``beta_stoch``, ``gamma_stoch``, and ``sigma_stoch``
+        variables defining rate parameters
+    
+    Returns
+    -------
+    out : :class:`xarray.Dataset`
+        `ds` with ``S, E, I, R`` variables added corresponding to the system state at each
+        timestep.
     """
 
     n_steps = len(ds.t)
@@ -367,6 +557,24 @@ def run_SEIR(E0, I0, R0, ds):
 
 
 def add_obs_noise(daily_ds, measurement_noise_on=False, measurement_noise_sd=0):
+    """Add "measurement noise" onto log-difference observations of growth at each time
+    point, prior to running regressions
+    
+    Parameters
+    ----------
+    daily_ds : :class:`xarray.Dataset`
+        Dataset with ``logdiff`` variable and both ``sample`` and ``t`` coords.
+    measurement_noise_on : "normal", "exponential", or False
+        Type of measurement noise to apply (False is no noise).
+    measurement_noise_sd : float
+        Standard deviation to use only if ``measurement_noise_on=="normal"``
+        
+    Returns
+    -------
+    :class:`xarray.Dataset`
+        `daily_ds` with additional ``logdiff_stoch`` variable.
+    """
+
     if measurement_noise_on == "normal":
         daily_ds["meas_noise"] = (
             ("sample", "t"),
@@ -413,6 +621,81 @@ def simulate_and_regress(
     random_end=False,
     save_dir=None,
 ):
+    """Full wrapper to run Monte Carlo simulations of a disease outbreak using SEIR or
+    SIR dynamics for a number of parameter sets.
+    
+    Parameters
+    ----------
+    pop : int
+        Population to use for these sets of simulation
+    no_policy_growth_rate : float
+        Continuous (asymptotic if SEIR) daily growth rate of infections given no policy, 
+        prior to adding noise.
+    p_effects : list of float
+        Magnitude of the effect of each policy being applied in the simulations to the
+        (asymptotic) continuous growth rate
+    p_lags : list of list of float
+        Lagged policy effect in *dynamic simulation*. This occurs if you assume behavior
+        takes some time to respond to a policy, and thus the affect of the policy on 
+        $\beta$ is delayed. The outer dimension of this list refers to the different 
+        policies in the simulation. The inner is a list of floats between 0 and 1, with
+        each element corresponding to one day after the policy. For isntance, the value
+        ``[[.5,.75],[]]`` means that there are 2 policies. The first has .5 of it's total
+        effect (as indicated in `p_effects`) occuring the day the policy is implemented,
+        .75 the day after, and then reaches its full effect on $\beta$ on the third day.
+        The second policy has an immediate, full effect on $\beta$
+    p_start_interval : list of int
+        ``[start_date, end_date]`` providing the bounds within which each policy is 
+        allowed to begin. The start date is applied uniformly randomly within this 
+        interval for each Monte Carlo draw.
+    n_days : int
+        How many days to run in the simulation
+    tsteps_per_day : int
+    n_samples : int
+        Number of MC draws per parameter set being simulated. In each draw, there will 
+        be different noise added to parameters and measurements, different starting
+        days for policies, and/or different end days for the data used in regression
+    LHS_vars : list of str
+        The left hand side variables you want to use to estimate regressions of impact
+        of policy on outbreak growth rate. These are in "SEIR" terminology, i.e. ``I``
+        is active infectious cases. Sums are accomplished by concatenating letters (e.g.
+        ``IR`` is active infectious cases + recovered/dead cases).
+    reg_lag_days : list of int, optional
+        Lags to include in the regression model for each policy (in days). [0] means no 
+        lags.
+    [gamma,sigma]_to_test : list of float
+        Rate parameters to test. Each one will get `n_samples` MC draws. These are 
+        defined as continous daily rates
+    min_cases : int
+        Minimum cumulative cases that are needed before the beginning of the timeseries
+        that gets used in regression. However, when this is violated, the regression 
+        simply begins 2 days before the first policy. If this happens in many MC draws,
+        this will bias the estimate of no-policy growth rate more than we would see in
+        the regressions on actual data, because it will be further from its asymptotic
+        steady-state growth rate.
+    [measurement,beta,gamma,sigma]_noise_on : "exponential", "normal", or False
+        What type of noise to apply to each parameter during the dynamic simulation 
+        and/or to the daily measurements of log-difference (just prior to regression). 
+        False means no noise
+    [measurement,beta,gamma,sigma]_noise_sd : float
+        Standard deviation of noise to apply. Only used if 
+        ``[varname]_noise_on=="normal"``
+    kind : "SIR" or "SEIR"
+    E0,I0,R0 : int, optional
+        Initial conditions (in number of people). Default is ``I0=1`` and all others 0.
+    random_end : bool, optional
+        Whether to allow each regression to end at the end of the data sample (False) 
+        or to randomly cut off the end of the timeseries at some day between the day 
+        after the start of the last policy and the end of the sample. Default False.
+    save_dir : str or :class:`pathlib.Path`
+        The directory to save results
+        
+    Returns
+    -------
+    daily_ds : :class:`xarray.Dataset`
+        A dataset with all relevant information from each MC draw, both dynamically 
+        simulated states and regression outputs.
+    """
 
     attrs = dict(
         E0=E0,
@@ -430,6 +713,9 @@ def simulate_and_regress(
         tsteps_per_day=tsteps_per_day,
         p_effects=p_effects,
     )
+
+    if save_dir is not None:
+        save_dir = Path(save_dir)
 
     E0 = E0 / pop
     I0 = I0 / pop
@@ -527,7 +813,7 @@ def simulate_and_regress(
     estimates_ds = estimates_ds.merge(policies)
 
     # convert to daily observations
-    daily_ds = adjust_timescales_to_daily(estimates_ds, tsteps_per_day)
+    daily_ds = adjust_timescales_to_daily(estimates_ds)
 
     # prep regression LHS vars (logdiff)
     daily_ds["logdiff"] = (
@@ -667,6 +953,7 @@ def simulate_and_regress(
 
 
 def load_reg_results(res_dir):
+    """Wrapped by `load_and_combine_reg_results`."""
     reg_ncs = [f for f in res_dir.iterdir() if f.name[0] != "."]
     pops = [int(f.name.split("_")[1]) for f in reg_ncs]
     reg_res = xr.concat(
