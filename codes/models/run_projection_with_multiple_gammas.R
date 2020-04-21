@@ -93,7 +93,7 @@ out_scale_trimmed <- final_df %>%
   theme_classic() + 
   theme(axis.text = element_text(color = "black")) + 
   xlab(expression(gamma)) + 
-  ggtitle("Cases delayed (linear scale trimmed)") 
+  ggtitle("Cases delayed (linear scale)") 
 
 yr_2 <- ggplot_build(out_scale_trimmed)$layout$panel_params[[1]]$y.range
 out_scale_trimmed <- out_scale_trimmed + 
@@ -129,7 +129,7 @@ out_scale_trimmed_no_policy <- final_df %>%
 
 yr_4 <- ggplot_build(out_scale_trimmed_no_policy)$layout$panel_params[[1]]$y.range
 out_scale_trimmed_no_policy <- out_scale_trimmed_no_policy + 
-  scale_y_continuous("Estimate no-policy confirmed cases\n(linear scale trimmed)", labels = scales::comma,
+  scale_y_continuous("Estimated no-policy confirmed cases\n(linear scale trimmed)", labels = scales::comma,
                      limits = yr_4, expand = c(0, 0))
 
 suppressWarnings({
