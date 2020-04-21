@@ -18,15 +18,6 @@ def test_readme():
                     assert tocomp in readme, tocomp
 
 
-def _read_sorted_file(path):
-    df = pd.read_csv(path)
-    adm_cols = [
-        c for c in df.columns if (c.startswith("adm") and "_name" in c) or c == "date"
-    ]
-    df = df.set_index(adm_cols, drop=True).sort_index()
-    return df
-
-
 def test_pipeline(tmp_path):
     tmp_model_path = tmp_path / "models"
     tmp_results_path = tmp_path / "results" / "source_data"
@@ -48,7 +39,7 @@ def test_pipeline(tmp_path):
             other_file = Path("").joinpath(*p.parts[len_path:])
             try:
                 pd.testing.assert_frame_equal(
-                    _read_sorted_file(p), _read_sorted_file(other_file), check_like=True
+                    pd.read_csv(p), pd.read_csv(other_file), check_like=True
                 )
             except UnicodeDecodeError:
                 pass
