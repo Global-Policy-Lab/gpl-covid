@@ -286,7 +286,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_chn, replace)
 graph combine hist_chn qn_chn, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_chn.gph, replace)
 graph drop hist_chn qn_chn
 
-outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_CHN_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure10_CHN_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -472,13 +472,13 @@ tw (rspike ub_y_actual_wh lb_y_actual_wh t_random, lwidth(vthin) color(blue*.5))
 (sc day_avg_wh t, color(black)) ///
 if e(sample), ///
 title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-plotregion(m(b=0)) ///
+xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+yscale(r(0(.2)1.2)) ylabel(0(.2)1.2) plotregion(m(b=0)) ///
 saving(results/figures/appendix/subnatl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh)
 outsheet adm0_name adm1_name adm2_name t y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh ///
-using "results/source_data/indiv/ExtendedDataFigure9b_Wuhan_data.csv" if miss_ct<7, comma replace
+using "results/source_data/indiv/ExtendedDataFigure6b_Wuhan_data.csv" if miss_ct<7, comma replace
 drop miss_ct
 
 
@@ -544,7 +544,7 @@ foreach var in f5 f4 f3 f2 f1 l0 l1 l2 l3 l4 {
 }
 postclose results
 use `results_file_evnt_stdy', clear
-outsheet * using "results/source_data/indiv/ExtendedDataFigure8_CHN_event_study.csv", comma replace
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_CHN_event_study.csv", comma replace
 
 restore
 
@@ -656,7 +656,7 @@ preserve
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/CHN.pdf, replace
 	graph export results/figures/appendix/cross_valid/CHN.png, replace	
-	outsheet * using "results/source_data/indiv/ExtendedDataFigure7_cross_valid_CHN.csv", comma replace
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure4_cross_valid_CHN.csv", comma replace
 restore
 
 

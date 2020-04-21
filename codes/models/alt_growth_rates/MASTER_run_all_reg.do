@@ -154,8 +154,8 @@ drop date
 order adm0_name t
 outsheet using "results/source_data/Figure3_data.csv", comma replace
 
-// combine all source data for ED fig 1
-filelist, dir("results/source_data/indiv") pattern("ExtendedDataFigure1_*_e.csv")
+// combine all source data for ED fig 10
+filelist, dir("results/source_data/indiv") pattern("ExtendedDataFigure10_*_e.csv")
 levelsof filename, local(filenames)
 foreach fn of local filenames{
 	local filepath = "results/source_data/indiv/" + "`fn'"
@@ -165,10 +165,10 @@ foreach fn of local filenames{
 	tempfile `tempname'
 	save ``tempname'', replace
 }
-use `ExtendedDataFigure1_CHN_e', clear
+use `ExtendedDataFigure10_CHN_e', clear
 foreach c in KOR ITA IRN FRA USA {
-	append using `ExtendedDataFigure1_`c'_e'
+	append using `ExtendedDataFigure10_`c'_e'
 }
 replace adm0_name = "FRA" if adm0_name=="France"
-outsheet using "results/source_data/ExtendedDataFigure1_e.csv", comma replace
+outsheet using "results/source_data/ExtendedDataFigure10_e.csv", comma replace
 

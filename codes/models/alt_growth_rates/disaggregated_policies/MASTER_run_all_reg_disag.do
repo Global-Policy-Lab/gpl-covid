@@ -13,7 +13,7 @@ capture mkdir "results/figures/appendix/disaggregated_policies"
 capture mkdir "results/tables/" 
 capture mkdir "results/tables/ATE_disag" 
 capture mkdir "results/source_data" 
-capture copy "results/source_data/indiv/Figure3_CHN_data.csv" "results/source_data/indiv/ExtendedDataFigure9a_CHN_data.csv" 
+capture copy "results/source_data/indiv/Figure3_CHN_data.csv" "results/source_data/indiv/ExtendedDataFigure6a_CHN_data.csv" 
 
 // run .do files
 do "codes/models/alt_growth_rates/CHN_adm2.do"
@@ -23,7 +23,7 @@ do "codes/models/alt_growth_rates/disaggregated_policies/IRN_adm1_disag.do"
 do "codes/models/alt_growth_rates/disaggregated_policies/FRA_adm1_disag.do"
 do "codes/models/alt_growth_rates/disaggregated_policies/USA_adm1_disag.do"
 
-// combine all case growth rate graphs for ED fig 9
+// combine all case growth rate graphs for ED fig 6
 graph use "results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph", name(CHN_adm2_active_fix, replace)
 
 filelist, dir("results/figures/appendix/disaggregated_policies") pattern("*.gph")
@@ -37,8 +37,16 @@ foreach fn of local filenames{
 }
 
 graph combine CHN_adm2_active_fix KOR_disag ITA_disag ///
-IRN_disag FRA_disag USA_disag, cols(1) imargin(tiny) ysize(18) xsize(10)	
+IRN_disag FRA_disag USA_disag, cols(1) imargin(tiny) ysize(18) xsize(10) name(ALL_disag, replace)
 graph export results/figures/appendix/disaggregated_policies/ALL_disag.pdf, replace
+
+
+graph use "results/figures/appendix/subnatl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph", name(Wuhan_active_fix, replace)
+graph use "results/figures/appendix/FRA_adm1_hosp_growth_rates_fixedx.gph", name(FRA_hosp, replace)
+
+graph combine Wuhan_active_fix Wuhan_active_fix Wuhan_active_fix ///
+FRA_hosp FRA_hosp FRA_hosp, cols(1) imargin(tiny) ysize(18.5) xsize(10)
+graph export results/figures/appendix/subnatl_growth_rates/Wuhan_FRA_hosp_comb.pdf, replace
 
 
 // make table comparing ATE between disaggregated model and grouped model by country
@@ -104,12 +112,12 @@ order adm0_name ate_disaggregated ci_disaggregated ate_grouped ci_grouped
 outsheet using "results/tables/ATE_disag/ATE_comparison_disag.csv", comma replace
 
 
-// combine all source data for ED fig 9
-filelist, dir("results/source_data/indiv") pattern("ExtendedDataFigure9*.csv")
+// combine all source data for ED fig 6
+filelist, dir("results/source_data/indiv") pattern("ExtendedDataFigure6*.csv")
 levelsof filename, local(filenames)
 foreach fn of local filenames{
 	local filepath = "results/source_data/indiv/" + "`fn'"
-	local tempname = subinstr(regexr("`fn'", "_data\.csv", ""), "ExtendedDataFigure9", "", .)
+	local tempname = subinstr(regexr("`fn'", "_data\.csv", ""), "ExtendedDataFigure6", "", .)
 	insheet using `filepath', clear
 	
 	if regexm("`fn'", "FRA|France"){
@@ -125,21 +133,12 @@ use `a_CHN', clear
 foreach c in KOR ITA IRN FRA USA {
 	append using `a_`c''
 }
-export excel using "results/source_data/ExtendedDataFigure9.xlsx", sheet("panel_a") firstrow(var) sheetreplace
+export excel using "results/source_data/ExtendedDataFigure6.xlsx", sheet("panel_a") firstrow(var) sheetreplace
 
 use `b_Wuhan', clear
-foreach reg in Daegu Milan Tehran IledeFrance Washington {
-	append using `b_`reg'', force
-}
-foreach var in y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter day_avg{
-	gen `var' = `var'_wh
-	foreach reg in dg mi thr idf wa{
-		replace `var' = `var'_`reg' if `var'==.
-	}
-}
 export excel adm* t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter day_avg ///
-using "results/source_data/ExtendedDataFigure9.xlsx", sheet("panel_b") firstrow(var) sheetreplace
+using "results/source_data/ExtendedDataFigure6.xlsx", sheet("panel_b") firstrow(var) sheetreplace
 
 use `c_FRA_hosp', clear
 order adm0_name t
-export excel using "results/source_data/ExtendedDataFigure9.xlsx", sheet("panel_c") firstrow(var) sheetreplace
+export excel using "results/source_data/ExtendedDataFigure6.xlsx", sheet("panel_c") firstrow(var) sheetreplace
