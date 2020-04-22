@@ -256,7 +256,7 @@ Note that the outputs of [codes/plotting/fig1.R](codes/plotting/fig1.R) are requ
 
 #### Extended Data Figure 2
 
-`Rscript codes/plotting/figA3.R`: Generates ED Figure 2 (`results/figures/appendix/figA3.pdf`).
+`Rscript codes/plotting/figED2.R`: Generates ED Figure 2 (`results/figures/appendix/figED2.pdf`).
 
 #### Extended Data Figures 3-4
 
