@@ -106,8 +106,8 @@ reshape wide ate lb ub, i(adm0_name) j(model_type, str)
 gen ci_disaggregated = "(" + string(lb_disaggregated) + ", " + string(ub_disaggregated) + ")"
 gen ci_grouped = "(" + string(lb_grouped) + ", " + string(ub_grouped) + ")"
 
-keep adm0_name ate_disaggregated ci_disaggregated ate_grouped ci_grouped
-order adm0_name ate_disaggregated ci_disaggregated ate_grouped ci_grouped
+keep adm0_name ate_grouped ci_grouped ate_disaggregated ci_disaggregated 
+order adm0_name ate_grouped ci_grouped ate_disaggregated ci_disaggregated 
 
 outsheet using "results/tables/ATE_disag/ATE_comparison_disag.csv", comma replace
 
