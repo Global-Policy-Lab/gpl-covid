@@ -1,4 +1,4 @@
-adm0,adm1_id,adm1_name,date,cum_confirmed_cases,cum_confirmed_cases_imputed,population,cum_hospitalized,event_cancel,event_cancel_popwt,home_isolation,home_isolation_popwt,no_gathering_inside,no_gathering_inside_popwt,social_distance,social_distance_popwt,social_distance_opt,business_closure,no_gathering,no_gathering_size,school_closure,school_closure_popwt
+adm0_name,adm1_id,adm1_name,date,cum_confirmed_cases,cum_confirmed_cases_imputed,population,cum_hospitalized,event_cancel,event_cancel_popwt,home_isolation,home_isolation_popwt,no_gathering_inside,no_gathering_inside_popwt,social_distance,social_distance_popwt,social_distance_opt,business_closure,no_gathering,no_gathering_size,school_closure,school_closure_popwt
 "France",11,"IledeFrance",2020-02-15,5,5,12278210,,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 "France",11,"IledeFrance",2020-02-16,5,5,12278210,,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 "France",11,"IledeFrance",2020-02-17,5,5,12278210,,0,0,0,0,0,0,0,0,0,0,0,0,0,0
