@@ -354,7 +354,7 @@ restore
  
  
  
-foreach lags of num 1 2 3 4 5 10 15 { 
+foreach lags of num 1 2 3 4 5{ 
 	quietly {
 	foreach var in p_1 p_2 p_3 p_4 p_5 p_6 {
 		g `var'_copy = `var'
@@ -434,7 +434,7 @@ outsheet * using "results/source_data/indiv/ExtendedDataFigure5_fixed_lag_ITA.cs
 
 
 use `f0', clear
-foreach L of num 1 2 3 4 5 10 15 {
+foreach L of num 1 2 3 4 5{
 	append using `f`L''
 }
 g adm0 = "ITA"
