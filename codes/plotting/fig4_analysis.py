@@ -94,7 +94,7 @@ def main():
         print("reading from ", fn_template.format(country))
         resampled_dfs_by_country[country] = pd.read_csv(fn_template.format(country))
 
-        print(resampled_dfs_by_country[country].shape)
+        # print(resampled_dfs_by_country[country].shape)
 
     # get central estimates
     model_dfs_by_country = {}
@@ -150,7 +150,6 @@ def main():
 
     est_diffs_modeled = modeled_no_policy - modeled_with_policy
 
-    print(est_diffs_modeled)
     # 4. use resampled predictions to get intervals
     df_no_pol_pred = aggregate_preds_by_country(
         countries, resampled_dfs_by_country, pred_no_pol_key, latest_dates
@@ -162,19 +161,36 @@ def main():
 
     # aggregate in this df
     est_diffs_by_country = pd.DataFrame()
-
+    est_nopol_by_country = pd.DataFrame()
     for country in countries:
         pred_no_pol = df_no_pol_pred[pred_no_pol_key + "_" + country]
         pred_pol = df_pol_pred[pred_pol_key + "_" + country]
 
         est_diffs_by_country[country] = pred_no_pol - pred_pol
+        est_nopol_by_country[country] = pred_no_pol
 
     est_diffs_by_country["all"] = est_diffs_by_country.sum(axis=1)
 
     small_ends = est_diffs_by_country.quantile(0.025)
     big_ends = est_diffs_by_country.quantile(0.975)
 
-    # Print out the final form:
+    # print out actual # cases
+    # Print out the final form of differences:
+    print()
+    print("there are:", end="\n")
+    for c, country in enumerate(countries):
+        print(
+            "{0:,} confirmed cases in in {1} (cumulative, on {2}), ".format(
+                int(cases_confirmed[c]), country, latest_dates[c],
+            ),
+            end="\n",
+        )
+
+    print("this adds to {0}".format(np.sum(cases_confirmed)))
+
+    print()
+
+    # Print out the final form of differences:
     print()
     print("we estimate that there would be:", end="\n")
     for c, country in enumerate(countries):
@@ -190,6 +206,7 @@ def main():
         )
 
     print()
+
     print("we estimate that there would be:", end="\n")
 
     c_all = len(countries)
@@ -198,6 +215,40 @@ def main():
             int(est_diffs_modeled[:, 0].sum()),
             int(np.floor(small_ends[c_all])),
             int(np.ceil(big_ends[c_all])),
+        ),
+        end="",
+    )
+    print("across countries (accumulated over the specific dates for each countries)")
+
+    # Print predictions for no policy interventions
+    est_nopol_by_country["all"] = est_nopol_by_country.sum(axis=1)
+
+    small_ends_no_pol = est_nopol_by_country.quantile(0.025)
+    big_ends_no_pol = est_nopol_by_country.quantile(0.975)
+
+    print()
+    print("we estimate that there would be:", end="\n")
+    for c, country in enumerate(countries):
+        print(
+            "{0:,} (95% pred_no_pol range [{1:,} to {2:,}]) total cases in {3} (cumulative, on {4}), ".format(
+                int(modeled_no_policy[c, 0]),
+                int(np.floor(small_ends_no_pol[c])),
+                int(np.ceil(big_ends_no_pol[c])),
+                country,
+                latest_dates[c],
+            ),
+            end="\n",
+        )
+
+    print()
+    print("we estimate that there would be:", end="\n")
+
+    c_all = len(countries)
+    print(
+        "{0:,} (95% resample range [{1:,} to {2:,}]) total cases ".format(
+            int(modeled_no_policy[:, 0].sum()),
+            int(np.floor(small_ends_no_pol[c_all])),
+            int(np.ceil(big_ends_no_pol[c_all])),
         ),
         end="",
     )
