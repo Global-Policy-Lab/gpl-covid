@@ -146,15 +146,12 @@ printf "***Creating Fig 4***\n"
 python codes/plotting/gen_fig4.py
 python codes/plotting/fig4_analysis.py
 
-# Table A1
-printf "***Creating Table A1***\n"
+# SI Table 1
+printf "***Creating SI Table 1***\n"
 python codes/plotting/count-policies.py
 
-# Figure A1
-# created by regression model estimation
-
-# Figure A2
-printf "***Creating Fig A2***\n"
+# ED Figure 1
+printf "***Creating ED Fig 1***\n"
 if $DOWNLOAD
 then
     python codes/plotting/figA2.py
@@ -162,18 +159,21 @@ else
     python codes/plotting/figA2.py --nd
 fi
 
-# figure A3 & A4
+# ED Figure 3-4
 if $STATA
 then
     stata -b do codes/plotting/extended_data_fig3_4.do
 fi
 
-# figure A5
+# ED Figure 5
 if $STATA
 then
     stata -b do codes/plotting/extended_data_fig5.do
 fi
 
-# Figure AX (Projection with multiple gamma plot - replace this text when numbered)
-printf "***Creating ED Fig 8***\n"
+# ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
+printf "***Creating ED Fig 7***\n"
 Rscript codes/models/run_projection_with_multiple_gammas.R
+
+# ED Figure 10
+# created by regression model estimation
