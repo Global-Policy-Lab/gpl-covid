@@ -162,6 +162,18 @@ else
     python codes/plotting/figA2.py --nd
 fi
 
+# figure A3 & A4
+if $STATA
+then
+    stata -b do codes/plotting/extended_data_fig3_4.do
+fi
+
+# figure A5
+if $STATA
+then
+    stata -b do codes/plotting/extended_data_fig5.do
+fi
+
 # Figure AX (Projection with multiple gamma plot - replace this text when numbered)
 printf "***Creating ED Fig 8***\n"
 Rscript codes/models/run_projection_with_multiple_gammas.R
