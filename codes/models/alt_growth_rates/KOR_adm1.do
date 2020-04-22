@@ -367,7 +367,7 @@ preserve
 	save `f0'
 restore	 
   
-foreach lags of num 1 2 3 4 5 10 15{ 
+foreach lags of num 1 2 3 4 5{ 
 	quietly {
 	foreach var in p_1 p_2 p_3 p_4{
 		g `var'_copy = `var'
@@ -446,81 +446,10 @@ rename (Lat Lb Lll1 Lul1) (position beta lower_CI upper_CI)
 outsheet * using "results/source_data/indiv/ExtendedDataFigure5_fixed_lag_KOR.csv", replace
 
 use `f0', clear
-foreach L of num 1 2 3 4 5 10 15 {
+foreach L of num 1 2 3 4 5{
 	append using `f`L''
 }
 g adm0 = "KOR"
 outsheet * using "models/KOR_ATE.csv", comma replace 
 
 use `base_data', clear
-
-//------------------------EVENT STUDY
-preserve
-	local policy_study = "p_1"
-
-	gen D_`policy_study' = D.`policy_study'
-
-	egen other_policy = rowtotal(p_1 p_2 p_3 p_4)
-
-	replace other_policy = other_policy - `policy_study'
-
-	xtset adm1_id t
-	g moveave = (F3.other_policy ///
-	+ F2.other_policy + F1.other_policy + other_policy + L1.other_policy ///
-	+ L2.other_policy + L3.other_policy + L4.other_policy) / 8
-
-	g stable = other_policy == moveave
-	//create a dummy variable if keeping in the event study
-	g event_sample_`policy_study' = 0
-
-	//identify observations that could potentially go into the event study sample (nearby enough to event and not contaminated by travel ban)
-	replace event_sample_`policy_study' = 1 if D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
-	replace event_sample_`policy_study' = 1 if L1.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
-	replace event_sample_`policy_study' = 1 if L2.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
-	replace event_sample_`policy_study' = 1 if L3.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
-	replace event_sample_`policy_study' = 1 if L4.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
-
-	replace event_sample_`policy_study' = 1 if F1.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
-	replace event_sample_`policy_study' = 1 if F2.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
-	replace event_sample_`policy_study' = 1 if F3.D_`policy_study' !=0 & D_l_active_cases ~=. & stable == 1
-
-	bysort adm1_id: egen event_count = total(event_sample_`policy_study')
-	tab event_count
-	keep if event_count > 8 & event_sample == 1
-
-	//create dummy vars for the days relative to the event
-	gen f1 = F1.D_`policy_study'
-	gen f2 = F2.D_`policy_study'
-	gen f3 = F3.D_`policy_study'
-
-	gen l0 = D_`policy_study' 
-	gen l1 = L1.D_`policy_study' 
-	gen l2 = L2.D_`policy_study' 
-	gen l3 = L3.D_`policy_study' 
-	gen l4 = L4.D_`policy_study' 
-
-
-	foreach var in f1 f2 f3 l0 l1 l2 l3 l4 {
-		replace `var' = 0 if `var' == .
-	}
-
-
-	//this is just a binary if pre-treatment
-	gen pre_treat = f3 +  f2 + f1
-
-	//computing the pre-treatment mean
-	sum D_l_active_cases if pre_treat > 0
-	loc pre_treat_val = r(mean)
-
-
-	//event study regression
-	reg D_l_active_cases f3 f2 f1 l0 l1 l2 l3 l4 testing_regime_change*, cluster(adm1_id) nocons
-
-	**alternative
-	lincom (f3 + f2 + f1) / 3
-	loc pre_treat_val = r(estimate)
-	coefplot , vertical keep(f3 f2 f1 l0 l1 l2 l3 l4) yline(`pre_treat_val') ///
-	title("South Korea - Event study - social distance")  xline(3.5, lc(black) lp(dash))
-	graph export results/figures/appendix/KOR_event_study.png, replace
-restore
-
