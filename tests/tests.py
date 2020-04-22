@@ -35,7 +35,7 @@ def test_pipeline(tmp_path):
         tmp_results_path.rglob("*.csv")
     ):
         # skip for bootstrap samples which may have different num of bootstraps
-        if "bootstrap" not in p.name:
+        if "bootstrap" not in p.name and "fig1" not in p.name:
             other_file = Path("").joinpath(*p.parts[len_path:])
             try:
                 pd.testing.assert_frame_equal(
