@@ -255,14 +255,22 @@ Note that the outputs of [codes/plotting/fig1.R](codes/plotting/fig1.R) are requ
 2. `python codes/plotting/gen_fig4.py`: Generate Figure 4.
 3. `python codes/plotting/fig4_analysis.py`: Generate a printout of numerical results from the projections for each country.
 
-#### Supplementary Information Table A1
+#### Supplementary Information Table 1
 
 `python codes/plotting/count-policies.py`
 
+#### Supplementary Information Table 2
+
+This table is compiled manually.
+
 #### Extended Data Figure 1
 
-1. `Rscript codes/data/korea/make_JHU_comparison_data.R`: Create [data/interim/korea/KOR_JHU_data_comparison.csv](data/interim/korea/KOR_JHU_data_comparison.csv)
-2. `python codes/plotting/figA2.py`: Generate 2 outputs that constitute Figure A2 (`results/figures/appendix/figA2-1.pdf` and `results/figures/appendix/figA2-2.pdf`)
+1. `Rscript codes/data/korea/make_JHU_comparison_data.R`: Creates [data/interim/korea/KOR_JHU_data_comparison.csv](data/interim/korea/KOR_JHU_data_comparison.csv)
+2. `python codes/plotting/figA2.py`: Generates 2 outputs that constitute ED Figure 1 (`results/figures/appendix/figA2-1.pdf` and `results/figures/appendix/figA2-2.pdf`)
+
+#### Extended Data Figure 2
+
+`Rscript codes/plotting/figA3.R`: Generates ED Figure 2 (`results/figures/appendix/figA3.pdf`).
 
 #### Extended Data Figure 7
 
