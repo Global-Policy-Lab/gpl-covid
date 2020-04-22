@@ -163,9 +163,6 @@ def make_all_coeff_factorplots(
         Data)
     """
 
-    plot_dir.mkdir(exist_ok=True)
-    save_source_data = Path(save_source_data)
-
     coeffs = epi.load_and_combine_reg_results(
         dir_in, cols_to_keep=["effect", "Intercept", "S_min", "rmse"]
     )
@@ -176,7 +173,7 @@ def make_all_coeff_factorplots(
     facet_kwargs = dict(row="sigma", col="gamma")
     hist_kwargs = {"edgecolor": "none"}
     for px, p in enumerate(coeffs.pop.values):
-        print(f"...Population {px}/{len(coeffs.pop.values)}")
+        print(f"...Population {px+1}/{len(coeffs.pop.values)}")
         ## loop over LHS vars
         for LHS in ["I", "IR"]:
             LHS_dict = {"I": "Active\ Cases", "IR": "Cumulative\ Cases"}
@@ -226,6 +223,8 @@ def make_all_coeff_factorplots(
                 )
 
                 if plot_dir is not None:
+                    plot_dir = Path(plot_dir)
+                    plot_dir.mkdir(exist_ok=True)
                     for suffix in ["pdf", "png"]:
                         g.fig.savefig(
                             plot_dir / f"{var}_pop_{p}_LHS_{LHS}.{suffix}",
@@ -236,6 +235,7 @@ def make_all_coeff_factorplots(
                     plt.clf()
 
     if save_source_data is not None:
+        save_source_data = Path(save_source_data)
         coeffs.sel(LHS=["I", "IR"], policy=["Intercept", "cum_effect"])[
             ["S_min", "coefficient", "coefficient_true"]
         ].to_dataframe().to_csv(save_source_data, float_format="%.5f", index=True)
@@ -256,7 +256,7 @@ if __name__ == "__main__":
         help="directory to store results",
         nargs="?",
         type=lambda x: Path(x),
-        default=PLOT_DIR,
+        default=None,
     )
     parser.add_argument(
         "--LHS",
@@ -268,7 +268,7 @@ if __name__ == "__main__":
         "--source-data",
         help="Path to save source data",
         type=lambda x: Path(x),
-        default=cutil.RESULTS / "source_data" / "ExtendedDataFigure89.csv",
+        default=None,
     )
     args = parser.parse_args()
 
