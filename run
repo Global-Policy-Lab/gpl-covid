@@ -155,6 +155,9 @@ else
     python codes/plotting/figED1.py --nd
 fi
 
+# ED Figure 2
+Rscript codes/plotting/figED2.R
+
 # ED Figure 3-4
 if $STATA
 then
