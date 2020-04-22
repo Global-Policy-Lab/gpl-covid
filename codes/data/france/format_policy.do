@@ -28,7 +28,6 @@ preserve
 	
 	replace business_closure = 0 if business_closure == .
 	replace home_isolation = 0 if home_isolation == .
-	replace paid_sick_leave = 0 if paid_sick_leave == .	
 	g no_gathering_size = no_gathering_national
 	replace no_gathering_national = 1 if no_gathering_national > 0
 tempfile national
@@ -110,15 +109,14 @@ replace adm1_pop = 327283 if adm1 == 94
 replace adm0 = "France" if adm1 == 94
 
 
-drop adm0_name
-rename adm0 adm0_name
-order adm0_name adm1 adm1_name date cum_c* 
+
+order adm0 adm1 adm1_name date cum_c* 
 sort adm1 date
 
 foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolation_popw" ///
 "no_gathering_inside" "no_gathering_inside_popw" "school_closure" "school_closure_popw" ///
 "social_distance" "social_distance_popw" "school_closure_regional" "business_closure" ///
-"no_gathering" "paid_sick_leave" "school_closure_national" "social_distance_national" ///
+"no_gathering"  "school_closure_national" "social_distance_national" ///
 "social_distance_opt" {
 	replace `var' = 0 if `var' == .
 	sort adm1 date	
@@ -129,6 +127,7 @@ foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolati
 replace no_gathering_size = 0 if no_gathering_size == .
 sort adm1 date
 by adm1: replace no_gathering_size = sum(no_gathering_size)
+replace home_isolation_popw = home_isolation if (home_isolation > home_isolation_popw & home_isolation_popw) == 0
 replace no_gathering_size = 1000 if no_gathering_size == 6000 // decrease cutoff instead of adding the intensity
 replace no_gathering_size = 100 if no_gathering_size == 6100 // decrease cutoff instead of adding the intensity
 
@@ -137,6 +136,7 @@ egen school_closure_local = rowmax(school_closure school_closure_regional school
 egen school_closure_local_popw = rowmax(school_closure_popw school_closure_regional school_closure_national) // same policy, aggregate taking max
 drop school_closure school_closure_regional school_closure_national school_closure_popw
 rename (school_closure_local school_closure_local_popw) (school_closure school_closure_popw)
+
 
 replace social_distance = (social_distance + social_distance_national)/2 // The national policy is different than regional, so treatment intensity is changing
 replace social_distance_popw = (social_distance_popw + social_distance_national)/2
@@ -152,6 +152,7 @@ format date %tdCCYY-NN-DD
 rename (adm1_pop adm1) (population adm1_id)	
 rename *_popw *_popwt
 rename hospitalization cum_hospitalized
+rename adm0 adm0_name
 outsheet * using "data/processed/adm1/FRA_processed.csv", replace comma
 
 
