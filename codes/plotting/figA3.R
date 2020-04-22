@@ -156,9 +156,9 @@ plots = arrangeGrob(grobs = plots,
                     left = "First differences in log(% of cases reported)", 
                     rot = 90)
 
-write_csv(plots_data, 'results/source_data/ExtendedDataFigure3.csv')
+write_csv(plots_data, 'results/source_data/ExtendedDataFigure2.csv')
 
-ggsave('results/figures/appendix/figA3.pdf',
+ggsave('results/figures/appendix/EDFigure2.pdf',
        plots,
        width = 8,
        height = 10)
