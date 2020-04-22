@@ -114,7 +114,7 @@ def main():
         ax_i.set_xticks(x_ticks)
         ax_i.set_xticklabels(x_ticklabels)
     fig.tight_layout()
-    fig.savefig(out_dir / "figA2-1.pdf")
+    fig.savefig(out_dir / "EDFigure1-1.pdf")
 
     df_kor = pd.read_csv(cutil.DATA_INTERIM / "korea" / "KOR_JHU_data_comparison.csv")
     df_kor.loc[:, "date"] = pd.to_datetime(df_kor["date"])
@@ -162,10 +162,10 @@ def main():
     ax_i.set_xticklabels(x_ticklabels)
     ax_i.minorticks_off()
     fig.tight_layout()
-    fig.savefig(out_dir / "figA2-2.pdf")
+    fig.savefig(out_dir / "EDFigure1-2.pdf")
 
     out_dir_csv = str(
-        cutil.HOME / "results" / "source_data" / "ExtendedDataFigure2.csv"
+        cutil.HOME / "results" / "source_data" / "ExtendedDataFigure1.csv"
     )
     df_chn = pd.merge(df_viz, jhu, how="inner", on=["adm1_name", "date"])
     pd.concat(

@@ -147,16 +147,28 @@ python codes/plotting/gen_fig4.py
 python codes/plotting/fig4_analysis.py
 
 # SI Table 1
-printf "***Creating Table SI1***\n"
+printf "***Creating SI Table 1***\n"
 python codes/plotting/count-policies.py
 
 # ED Figure 1
-printf "***Creating Fig A2***\n"
+printf "***Creating ED Fig 1***\n"
 if $DOWNLOAD
 then
     python codes/plotting/figA2.py
 else
     python codes/plotting/figA2.py --nd
+fi
+
+# ED Figure 3-4
+if $STATA
+then
+    stata -b do codes/plotting/extended_data_fig3_4.do
+fi
+
+# ED Figure 5
+if $STATA
+then
+    stata -b do codes/plotting/extended_data_fig5.do
 fi
 
 # ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
