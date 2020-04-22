@@ -173,7 +173,7 @@ def make_all_coeff_factorplots(
     facet_kwargs = dict(row="sigma", col="gamma")
     hist_kwargs = {"edgecolor": "none"}
     for px, p in enumerate(coeffs.pop.values):
-        print(f"...Population {px}/{len(coeffs.pop.values)}")
+        print(f"...Population {px+1}/{len(coeffs.pop.values)}")
         ## loop over LHS vars
         for LHS in ["I", "IR"]:
             LHS_dict = {"I": "Active\ Cases", "IR": "Cumulative\ Cases"}
