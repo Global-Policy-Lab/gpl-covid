@@ -149,6 +149,7 @@ api_keys.json
 results/*
 # except for:
 !results/source_data/
+results/source_data/indiv
 
 **/archive/
 

@@ -308,11 +308,6 @@ preserve
 	title(France Hospitalizations, ring(0)) ytit("Growth rate of" "hospitalizations" "({&Delta}log per day)") ///
 	xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) saving(results/figures/appendix/FRA_adm1_hosp_growth_rates_fixedx.gph, replace)
-	
-	// combine 6x for the exact same scale as the other sub panels in ED fig 9
-	graph combine FRA_hosp_growth FRA_hosp_growth FRA_hosp_growth FRA_hosp_growth FRA_hosp_growth FRA_hosp_growth, ///
-	cols(1) imargin(tiny) ysize(18) xsize(10) 
-	graph export results/figures/appendix/FRA_adm1_hosp_growth_rates_fixedx.pdf, replace
 
 	egen miss_ct = rowmiss(y_actual_hosp lb_y_actual_hosp ub_y_actual_hosp y_counter_hosp lb_counter_hosp ub_counter_hosp m_y_actual_hosp m_y_counter_hosp day_avg_hosp)
 	outsheet adm0_name t y_actual_hosp lb_y_actual_hosp ub_y_actual_hosp y_counter_hosp lb_counter_hosp ub_counter_hosp m_y_actual_hosp m_y_counter_hosp day_avg_hosp ///
