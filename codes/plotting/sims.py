@@ -214,7 +214,7 @@ def make_all_coeff_factorplots(
                     p,
                     LHS,
                     title=title,
-                    figsize=(6.5, 3.25),
+                    figsize=(6.25, 3.5),
                     fig_label=fig_label,
                     xlabel=xlabel,
                     xlim=0.6,
