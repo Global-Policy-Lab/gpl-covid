@@ -680,7 +680,7 @@ preserve
 	save `f0'
 restore	 
  
-foreach lags of num 1 2 3 4 5 10 15{ 
+foreach lags of num 1 2 3 4 5{ 
 	quietly {
 	foreach var in p_1 p_2{
 		g `var'_copy = `var'
@@ -713,7 +713,7 @@ foreach lags of num 1 2 3 4 5 10 15{
 }
 
 use `ATE' , clear
-foreach L of num 0 1 2 3 4 5 10 15 {
+foreach L of num 0 1 2 3 4 5{
 	append using `f`L''
 }
 g adm0 = "CHN"
