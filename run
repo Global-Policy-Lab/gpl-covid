@@ -150,9 +150,9 @@ python codes/plotting/fig4_analysis.py
 printf "***Creating ED Fig 1***\n"
 if $DOWNLOAD
 then
-    python codes/plotting/figA2.py
+    python codes/plotting/figED1.py
 else
-    python codes/plotting/figA2.py --nd
+    python codes/plotting/figED1.py --nd
 fi
 
 # ED Figure 3-4

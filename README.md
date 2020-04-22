@@ -252,7 +252,7 @@ Note that the outputs of [codes/plotting/fig1.R](codes/plotting/fig1.R) are requ
 #### Extended Data Figure 1
 
 1. `Rscript codes/data/korea/make_JHU_comparison_data.R`: Creates [data/interim/korea/KOR_JHU_data_comparison.csv](data/interim/korea/KOR_JHU_data_comparison.csv)
-2. `python codes/plotting/figA2.py`: Generates 2 outputs that constitute ED Figure 1 (`results/figures/appendix/figA2-1.pdf` and `results/figures/appendix/figA2-2.pdf`)
+2. `python codes/plotting/figED1.py`: Generates 2 outputs that constitute ED Figure 1 (`results/figures/appendix/EDFigure1-2.pdf` and `results/figures/appendix/EDFigure1-2.pdf`)
 
 #### Extended Data Figure 2
 
