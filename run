@@ -113,7 +113,7 @@ printf "***Checking processed data***\n"
 python codes/data/multi_country/quality-check-processed-datasets.py
 
 ## regression model estimation
-printf "***Estimating regression model and creating Figure 3 and A1***\n"
+printf "***Estimating regression model and creating Figure 3, SI Table 3, SI Table 5, ED Figure 10***\n"
 if $STATA
 then
     stata -b do codes/models/alt_growth_rates/MASTER_run_all_reg.do
@@ -146,22 +146,53 @@ printf "***Creating Fig 4***\n"
 python codes/plotting/gen_fig4.py
 python codes/plotting/fig4_analysis.py
 
-# Table A1
-printf "***Creating Table A1***\n"
-python codes/plotting/count-policies.py
-
-# Figure A1
-# created by regression model estimation
-
-# Figure A2
-printf "***Creating Fig A2***\n"
+# ED Figure 1
+printf "***Creating ED Fig 1***\n"
 if $DOWNLOAD
 then
-    python codes/plotting/figA2.py
+    python codes/plotting/figED1.py
 else
-    python codes/plotting/figA2.py --nd
+    python codes/plotting/figED1.py --nd
 fi
 
-# Figure AX (Projection with multiple gamma plot - replace this text when numbered)
-printf "***Creating ED Fig 8***\n"
+# ED Figure 3-4
+if $STATA
+then
+    stata -b do codes/plotting/extended_data_fig3_4.do
+fi
+
+# ED Figure 5
+if $STATA
+then
+    stata -b do codes/plotting/extended_data_fig5.do
+fi
+
+# ED Figure 6
+printf "***Estimating regression model with disaggregated policy variables and creating ED Figure 6 and SI Table 4***\n"
+if $STATA
+then
+    stata -b do codes/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
+fi
+
+# ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
+printf "***Creating ED Fig 7***\n"
 Rscript codes/models/run_projection_with_multiple_gammas.R
+
+# ED Figure 10
+# created by regression model estimation
+
+# SI Table 1
+printf "***Creating SI Table 1***\n"
+python codes/plotting/count-policies.py
+
+# SI Table 2
+# generated manually
+
+# SI Table 3
+# created by regression model estimation
+
+# SI Table 4
+# created by regression model estimation with disaggregated policy variables for ED Figure 6
+
+# SI Table 5
+# created by regression model estimation

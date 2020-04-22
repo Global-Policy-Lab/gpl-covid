@@ -137,7 +137,7 @@ qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_fra, replace) ysca
 graph combine hist_fra qn_fra, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_fra.gph, replace)
 graph drop hist_fra qn_fra
 
-outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure1_FRA_e.csv" if e(sample), comma replace
+outsheet adm0_name e using "results/source_data/indiv/ExtendedDataFigure10_FRA_e.csv" if e(sample), comma replace
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -250,56 +250,6 @@ drop miss_ct
 // yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
 
 
-//-------------------------------Running the model for Ile-de-France only
-
-// gen cases_to_pop = cum_confirmed_cases / population
-// collapse (max) cases_to_pop cum_confirmed_cases, by(adm1_name)
-// sort cum_confirmed_cases //IledeFrance
-// sort cases_to_pop //GrandEst
-
-reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure national_lockdown ///
- testing_regime_* if adm1_name=="IledeFrance", noabsorb
-
-// predicted "actual" outcomes with real policies
-predictnl y_actual_idf = xb() if e(sample), ci(lb_y_actual_idf ub_y_actual_idf)
-	
-// predicting counterfactual growth for each obs
-predictnl y_counter_idf = testing_regime_15mar2020 * _b[testing_regime_15mar2020] + ///
-_b[_cons] if e(sample), ci(lb_counter_idf ub_counter_idf)
-
-// quality control: don't want to be forecasting negative growth (not modeling recoveries)
-// fix so there are no negative growth rates in error bars
-foreach var of varlist y_actual_idf y_counter_idf lb_y_actual_idf ub_y_actual_idf lb_counter_idf ub_counter_idf {
-	replace `var' = 0 if `var'<0 & `var'!=.
-}
-
-// Observed avg change in log cases
-reg D_l_cum_confirmed_cases i.t if adm1_name=="IledeFrance"
-predict day_avg_idf if adm1_name=="IledeFrance" & e(sample) == 1
-
-// Graph of predicted growth rates
-// fixed x-axis across countries
-tw (rspike ub_y_actual_idf lb_y_actual_idf t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_idf lb_counter_idf t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual_idf t,  msize(tiny) color(blue*.5) ) ///
-(scatter y_counter_idf t, msize(tiny) color(red*.5)) ///
-(connect y_actual_idf t, color(blue) m(square) lpattern(solid)) ///
-(connect y_counter_idf t, color(red) lpattern(dash) m(Oh)) ///
-(sc day_avg_idf t, color(black)) ///
-if e(sample), ///
-title("Île-de-France, France", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") xtit("") ///
-xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8) titlegap(*6.5)) ylabel(0(.2).8) plotregion(m(b=0)) ///
-saving(results/figures/appendix/subnatl_growth_rates/IledeFrance_conf_cases_growth_rates_fixedx.gph, replace)
-
-egen miss_ct = rowmiss(y_actual_idf lb_y_actual_idf ub_y_actual_idf y_counter_idf lb_counter_idf ub_counter_idf day_avg_idf)
-outsheet adm0_name adm1_name t y_actual_idf lb_y_actual_idf ub_y_actual_idf y_counter_idf lb_counter_idf ub_counter_idf day_avg_idf ///
-using "results/source_data/indiv/ExtendedDataFigure9b_IledeFrance_data.csv" if miss_ct<7, comma replace
-drop miss_ct
-
-*br adm1_name date cum_confirmed_cases D_l_cum_confirmed_cases testing_regime_* pck_social_distance school_closure national_lockdown if adm1_name=="IledeFrance"
-
-
 //-------------------------------Hospitalizations
 
 preserve
@@ -357,16 +307,11 @@ preserve
 	if e(sample), ///
 	title(France Hospitalizations, ring(0)) ytit("Growth rate of" "hospitalizations" "({&Delta}log per day)") ///
 	xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) name(FRA_hosp_growth, replace)
-	
-	// combine 6x for the exact same scale as the other sub panels in ED fig 9
-	graph combine FRA_hosp_growth FRA_hosp_growth FRA_hosp_growth FRA_hosp_growth FRA_hosp_growth FRA_hosp_growth, ///
-	cols(1) imargin(tiny) ysize(18) xsize(10) 
-	graph export results/figures/appendix/FRA_adm1_hosp_growth_rates_fixedx.pdf, replace
+	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) saving(results/figures/appendix/FRA_adm1_hosp_growth_rates_fixedx.gph, replace)
 
 	egen miss_ct = rowmiss(y_actual_hosp lb_y_actual_hosp ub_y_actual_hosp y_counter_hosp lb_counter_hosp ub_counter_hosp m_y_actual_hosp m_y_counter_hosp day_avg_hosp)
 	outsheet adm0_name t y_actual_hosp lb_y_actual_hosp ub_y_actual_hosp y_counter_hosp lb_counter_hosp ub_counter_hosp m_y_actual_hosp m_y_counter_hosp day_avg_hosp ///
-	using "results/source_data/indiv/ExtendedDataFigure9c_FRA_hosp_data.csv" if miss_ct<9 & e(sample), comma replace
+	using "results/source_data/indiv/ExtendedDataFigure6c_FRA_hosp_data.csv" if miss_ct<9 & e(sample), comma replace
 	drop miss_ct
 
 	// for legend
@@ -442,7 +387,7 @@ preserve
 	lab(3 "w/o Grand Est") region(lstyle(none)) pos(11) ring(0)) 
 	graph export results/figures/appendix/cross_valid/FRA.pdf, replace
 	graph export results/figures/appendix/cross_valid/FRA.png, replace	
-	outsheet * using "results/source_data/indiv/ExtendedDataFigure7_cross_valid_FRA.csv", comma replace
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure4_cross_valid_FRA.csv", comma replace
 restore
 
 //-------------------------------FIXED LAG
@@ -571,7 +516,7 @@ reshape long at b ll1 ul1, i(policy lag) j(hosp) string
 replace hosp = "0" if hosp == "L"
 replace hosp = "1" if hosp == "H"
 destring hosp, replace
-outsheet * using "results/source_data/indiv/ExtendedDataFigure8_fixed_lag_FRA.csv", replace
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_fixed_lag_FRA.csv", replace
 
 use `f0', clear
 foreach L of num 1 2 3 4 5 10 15 {

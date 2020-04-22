@@ -46,7 +46,7 @@ graph combine CHN_adm2_active_fix KOR_adm1_active_fix ITA_adm2_conf_fix ///
 IRN_adm1_conf_fix FRA_adm1_conf_fix USA_adm1_conf_fix, cols(1) imargin(tiny) ysize(18) xsize(10)
 graph export results/figures/fig3/raw/ALL_cases_growth_rates_fixedx_long.pdf, replace
 
-// combine all error dist graphs for ED fig 1
+// combine all error dist graphs for ED fig 10
 filelist, dir("results/figures/appendix/error_dist") pattern("*.gph")
 levelsof filename, local(filenames)
 foreach fn of local filenames{
@@ -61,7 +61,7 @@ graph combine error_chn error_irn error_kor error_fra error_ita error_usa, rows(
 graph export results/figures/appendix/error_dist/ALL_conf_cases_e.png, replace
 
 
-// combine sub-national growth rate graphs for ED fig 9
+// combine sub-national growth rate graphs for ED fig 6
 filelist, dir("results/figures/appendix/subnatl_growth_rates") pattern("*.gph")
 levelsof filename, local(filenames)
 foreach fn of local filenames{
@@ -154,8 +154,8 @@ drop date
 order adm0_name t
 outsheet using "results/source_data/Figure3_data.csv", comma replace
 
-// combine all source data for ED fig 1
-filelist, dir("results/source_data/indiv") pattern("ExtendedDataFigure1_*_e.csv")
+// combine all source data for ED fig 10
+filelist, dir("results/source_data/indiv") pattern("ExtendedDataFigure10_*_e.csv")
 levelsof filename, local(filenames)
 foreach fn of local filenames{
 	local filepath = "results/source_data/indiv/" + "`fn'"
@@ -165,10 +165,10 @@ foreach fn of local filenames{
 	tempfile `tempname'
 	save ``tempname'', replace
 }
-use `ExtendedDataFigure1_CHN_e', clear
+use `ExtendedDataFigure10_CHN_e', clear
 foreach c in KOR ITA IRN FRA USA {
-	append using `ExtendedDataFigure1_`c'_e'
+	append using `ExtendedDataFigure10_`c'_e'
 }
 replace adm0_name = "FRA" if adm0_name=="France"
-outsheet using "results/source_data/ExtendedDataFigure1_e.csv", comma replace
+outsheet using "results/source_data/ExtendedDataFigure10_e.csv", comma replace
 
