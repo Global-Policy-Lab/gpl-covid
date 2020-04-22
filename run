@@ -146,19 +146,6 @@ printf "***Creating Fig 4***\n"
 python codes/plotting/gen_fig4.py
 python codes/plotting/fig4_analysis.py
 
-# SI Table 1
-printf "***Creating SI Table 1***\n"
-python codes/plotting/count-policies.py
-
-# SI Table 3
-# created by regression model estimation
-
-# SI Table 4
-# created by regression model estimation with disaggregated policy variables for ED Figure 6
-
-# SI Table 5
-# created by regression model estimation
-
 # ED Figure 1
 printf "***Creating ED Fig 1***\n"
 if $DOWNLOAD
@@ -192,4 +179,20 @@ printf "***Creating ED Fig 7***\n"
 Rscript codes/models/run_projection_with_multiple_gammas.R
 
 # ED Figure 10
+# created by regression model estimation
+
+# SI Table 1
+printf "***Creating SI Table 1***\n"
+python codes/plotting/count-policies.py
+
+# SI Table 2
+# generated manually
+
+# SI Table 3
+# created by regression model estimation
+
+# SI Table 4
+# created by regression model estimation with disaggregated policy variables for ED Figure 6
+
+# SI Table 5
 # created by regression model estimation
