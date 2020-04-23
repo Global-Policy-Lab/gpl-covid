@@ -29,6 +29,7 @@ foreach pol in "comb. policy" "fifth week (home+t" "first week (home+t" "fourth 
 tw scatter i beta , xline(0, lc(black) lp(dash)) mc(gs10) m(Oh)  msize(large)  ///
 || scatter i beta if sample == "full_sample" , mc(red) m(Oh)  msize(large)  legend(off) ///
 ysize(10) 
+outsheet * using results/source_data/ExtendedDataFigure4_cross_valid.csv, replace
 graph export results/figures/appendix/cross_valid/fig4.pdf, replace
 
 tempfile individual_pol
@@ -70,4 +71,4 @@ tw scatter  seq beta if pol == 1 | pol == 5, xline(0, lc(black)) mc(gs10) m(Oh) 
 || scatter seq beta if pol !=1 & pol != 5, m(Oh) msize(large) mc(ebblue) ///
 || scatter  seq beta if sample == "full_sample", m(Oh) msize(large) mc(red) legend(off)
 graph export results/figures/appendix/cross_valid/fig3.pdf, replace
-
+outsheet * using results/source_data/ExtendedDataFigure3_cross_valid.csv, replace
