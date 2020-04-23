@@ -20,15 +20,23 @@ def test_readme():
 
 def test_pipeline(tmp_path):
     
-    # list all files that we know will not get updated by code that is not able to run
-    # stata
+    ## list all files that we know will not get updated
+    # 1) bootstraps are run with only 2 samples in tests, so don't check those
+    # 2) excluded data in "models" and "results/source_data" is created by stata code 
+    #    that does not run in CI
+    # 3) TODO: Figure out why fig1 is getting randomly sorted differently by different
+    #    OS so that we can properly test it
     files_to_exclude = set(
-        list(Path("models/reg_data").glob("*.csv")) +
-        list(Path("models").glob("*_preds.csv")) + 
-        list(Path("models").glob("*_ATE.csv")) + 
+        list(Path("models/reg_data").glob("*.csv")) + #created by stata
+        list(Path("models").glob("*_preds.csv")) + #created by stata
+        list(Path("models").glob("*_ATE.csv")) + #created by stata
+        [Path("results") / "source_data" / i for i in [
+            "Figure2_data.csv"
+            "ExtendedDataFigure10_e.csv",
+            "ExtendedDataFigure3_cross_valid.csv",
+            "ExtendedDataFigure4_cross_valid.csv",
+        ]] +
         list(Path("models/projections").glob("*_bootstrap_projection.csv")) +
-        # TODO: Figure out why fig1 is getting randomly sorted differently by different
-        # OS so that we can properly test it
         list(Path("results/source_data").glob("fig1*.csv"))
     )
     
@@ -39,8 +47,8 @@ def test_pipeline(tmp_path):
     copytree("results/source_data", tmp_results_path)
 
     old_files = set(
-        list(Path("models").rglob("*.csv")) + 
-        list(Path("results/source_data").rglob("*.csv"))
+        [i for i in Path("models").rglob("*") if i.is_file()] + 
+        [i for i in Path("results/source_data").rglob("*") if i.is_file()]
     )
     old_files = old_files - files_to_exclude
     
@@ -54,8 +62,8 @@ def test_pipeline(tmp_path):
     bad_files = []
                  
     new_files = set(
-        list(Path("models").rglob("*.csv")) + 
-        list(Path("results/source_data").rglob("*.csv"))
+        [i for i in Path("models").rglob("*") if i.is_file()] + 
+        [i for i in Path("results/source_data").rglob("*") if i.is_file()]
     )
     new_files = new_files - files_to_exclude
     
