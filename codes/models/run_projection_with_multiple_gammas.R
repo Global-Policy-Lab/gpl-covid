@@ -83,7 +83,7 @@ out_scale_down_to_zero <- out_scale_down_to_zero +
   scale_y_log10("Confirmed cases delayed\n(log scale)",
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x)),
-                limits = c(1, max(final_df$cases_saved)*1.5), 
+                limits = c(10, 10^8), 
                 expand = c(0, 0))
 
 out_scale_trimmed <- final_df %>% 

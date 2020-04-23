@@ -2,8 +2,8 @@
 # coding: utf-8
 
 import numpy as np
-import pandas as pd
 
+import pandas as pd
 from codes import utils as cutil
 
 # range of delays between "no longer infectious" and "confirmed recovery" to test

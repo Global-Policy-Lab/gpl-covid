@@ -1,4 +1,4 @@
-﻿# The Effect of Large-Scale Anti-Contagion Policies on the Coronavirus (COVID-19) Pandemic
+# The Effect of Large-Scale Anti-Contagion Policies on the Coronavirus (COVID-19) Pandemic
 
 This repository contains code and data necessary to replicate the findings of our paper [INSERT arXiv CITATION].
 
@@ -18,7 +18,13 @@ Once you have activated this environment, to run some of the Python scripts, you
 pip install -e .
 ```
 
-To run one of the scripts, you will also need an API key for the US Census API, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format:
+To execute the full `run` script, which runs the analysis from start to finish, you will also need to add this conda environment to the kernels that Jupyter is able to use (this is only needed to run simulations used to create Extended Data Figures 8 and 9). You do this with the following command (from inside the `gpl-covid` conda environment):
+
+```bash
+python -m ipykernel install --user --name gpl-covid
+```
+
+To run one of the scripts (`get_adm_info.py`), you will also need an API key for the US Census API, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format:
 
 ```json
 {
@@ -274,6 +280,11 @@ Note that the outputs of [codes/plotting/fig1.R](codes/plotting/fig1.R) are requ
 #### Extended Data Figure 7
 
 `Rscript codes/models/run_projection_with_multiple_gammas.R`
+
+#### Extended Data Figures 8 and 9
+
+1. `papermill notebooks/simulate-and-regress.ipynb - -k gpl-covid`: Run Monte Carlo simulations of synthetic outbreaks
+2. `python codes/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/sims --source-dir "results/source_data/ExtendedDataFigure89.csv"`: Create figures
 
 #### Extended Data Figure 10
 
