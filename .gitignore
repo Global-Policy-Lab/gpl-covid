@@ -155,3 +155,6 @@ results/source_data/indiv
 
 # isort
 default.profraw
+
+# papermill
+*-log.ipynb

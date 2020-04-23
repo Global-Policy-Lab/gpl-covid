@@ -155,6 +155,9 @@ else
     python codes/plotting/figED1.py --nd
 fi
 
+# ED Figure 2
+Rscript codes/plotting/figED2.R
+
 # ED Figure 3-4
 if $STATA
 then
@@ -177,6 +180,17 @@ fi
 # ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
 printf "***Creating ED Fig 7***\n"
 Rscript codes/models/run_projection_with_multiple_gammas.R
+
+# ED Figure 8/9
+printf "***Creating ED Fig 8/9***\n"
+printf "Running simulations..."
+papermill notebooks/simulate-and-regress.ipynb notebooks/simulate-and-regress-log.ipynb -p n_samples $NUMPROJ -k gpl-covid
+printf "Making Figures..."
+if [ $NUMPROJ = 1000 ]; then
+    python codes/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/sims --source-data "results/source_data/ExtendedDataFigure89.csv"
+else
+    python codes/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 --LHS I
+fi
 
 # ED Figure 10
 # created by regression model estimation

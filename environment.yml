@@ -13,10 +13,13 @@ dependencies:
     - geopandas=0.7
     - jupyter=1.0
     - lxml=4.5
+    - netcdf4=1.5
+    - papermill=2.1
     - pip=20.0
     - pytest=5.4
     - requests=2.23
     - seaborn=0.10
+    - xarray=0.15
     - xlrd=1.2
     - r-base=3.5
 #     - rstudio=1.1
@@ -34,5 +37,6 @@ dependencies:
     - r-gridExtra=2.3
     - r-ggsci=2.9
     - r-cowplot=1.0
+    - r-padr=0.5
     - r-patchwork=1.0
     - blas=2.8=netlib
