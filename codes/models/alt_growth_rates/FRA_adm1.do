@@ -426,7 +426,7 @@ preserve
 	lab(3 "w/o Grand Est") region(lstyle(none)) pos(11) ring(0)) 
 	graph export results/figures/appendix/cross_valid/FRA.pdf, replace
 	graph export results/figures/appendix/cross_valid/FRA.png, replace	
-	outsheet * using "results/source_data/indiv/ExtendedDataFigure4_cross_valid_FRA.csv", comma replace
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_FRA.csv", comma replace
 restore
 
 //-------------------------------FIXED LAG
