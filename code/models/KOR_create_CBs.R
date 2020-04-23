@@ -1,4 +1,4 @@
-source("code/src/models/KOR_generate_data_and_model_projection.R")
+source("code/models/KOR_generate_data_and_model_projection.R")
 #projection
 out <- compute_bootstrap_replications(full_data = korea_data,
                                       policy_variables_to_use = korea_policy_variables_to_use,

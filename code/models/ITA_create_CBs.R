@@ -1,4 +1,4 @@
-source("code/src/models/ITA_generate_data_and_model_projection.R")
+source("code/models/ITA_generate_data_and_model_projection.R")
 #projection
 out <- compute_bootstrap_replications(full_data = italy_data,
                                       policy_variables_to_use = italy_policy_variables_to_use,

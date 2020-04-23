@@ -1,5 +1,5 @@
 suppressPackageStartupMessages(library(tidyverse))
-list.files("code/src/models", full.names = TRUE) %>% 
+list.files("code/models", full.names = TRUE) %>% 
   str_subset("data_and_model_projection") %>% 
   walk(source)
 

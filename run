@@ -116,17 +116,17 @@ python code/data/multi_country/quality-check-processed-datasets.py
 printf "***Estimating regression model and creating Figure 3, SI Table 3, SI Table 5, ED Figure 10***\n"
 if $STATA
 then
-    stata -b do code/src/models/alt_growth_rates/MASTER_run_all_reg.do
+    stata -b do code/models/alt_growth_rates/MASTER_run_all_reg.do
 fi
 
 
 ## SIR model projection
 printf "***Projecting infections***\n"
-python code/src/models/get_gamma.py
-Rscript code/src/models/run_all_CB_simulations.R $NUMPROJ
+python code/models/get_gamma.py
+Rscript code/models/run_all_CB_simulations.R $NUMPROJ
 
 # This one outputs all the raw projection output for diagnostic purposes.
-Rscript code/src/models/output_underlying_projection_output.R
+Rscript code/models/output_underlying_projection_output.R
 
 ## Figures and tables
 
@@ -178,12 +178,12 @@ fi
 printf "***Estimating regression model with disaggregated policy variables and creating ED Figure 6 and SI Table 4***\n"
 if $STATA
 then
-    stata -b do code/src/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
+    stata -b do code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
 fi
 
 # ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
 printf "***Creating ED Fig 7***\n"
-Rscript code/src/models/run_projection_with_multiple_gammas.R
+Rscript code/models/run_projection_with_multiple_gammas.R
 
 # ED Figure 8/9
 printf "***Creating ED Fig 8/9***\n"

@@ -1,4 +1,4 @@
-source("code/src/models/CHN_generate_data_and_model_projection.R")
+source("code/models/CHN_generate_data_and_model_projection.R")
 out <- compute_bootstrap_replications(full_data = china_data,
                                       policy_variables_to_use = china_policy_variables_to_use,
                                       lhs = "D_l_active_cases",

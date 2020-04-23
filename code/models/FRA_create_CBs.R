@@ -1,4 +1,4 @@
-source("code/src/models/FRA_generate_data_and_model_projection.R")
+source("code/models/FRA_generate_data_and_model_projection.R")
 
 if(!exists("times")){
   times <- 2

@@ -23,12 +23,12 @@ capture mkdir "results/source_data/indiv"
 
 
 // run .do files
-do "code/src/models/alt_growth_rates/CHN_adm2.do"
-do "code/src/models/alt_growth_rates/KOR_adm1.do"
-do "code/src/models/alt_growth_rates/ITA_adm2.do"
-do "code/src/models/alt_growth_rates/IRN_adm1.do"
-do "code/src/models/alt_growth_rates/FRA_adm1.do"
-do "code/src/models/alt_growth_rates/USA_adm1.do"
+do "code/models/alt_growth_rates/CHN_adm2.do"
+do "code/models/alt_growth_rates/KOR_adm1.do"
+do "code/models/alt_growth_rates/ITA_adm2.do"
+do "code/models/alt_growth_rates/IRN_adm1.do"
+do "code/models/alt_growth_rates/FRA_adm1.do"
+do "code/models/alt_growth_rates/USA_adm1.do"
 
 
 // combine all case growth rate graphs for fig 3

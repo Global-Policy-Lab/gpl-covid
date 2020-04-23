@@ -1,4 +1,4 @@
-source("code/src/models/IRN_generate_data_and_model_projection.R")
+source("code/models/IRN_generate_data_and_model_projection.R")
 #projection
 out <- compute_bootstrap_replications(full_data = iran_data,
                                       policy_variables_to_use = iran_policy_variables_to_use,
