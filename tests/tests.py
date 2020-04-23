@@ -23,9 +23,10 @@ def test_pipeline(tmp_path):
     ## list all files that we know will not get updated
     # 1) bootstraps are run with only 2 samples in tests, so don't check those
     # 2) excluded data in "models" and "results/source_data" is created by stata code
-    #    that does not run in CI
+    #    that does not run in CI (unless otherwise described below)
     # 3) ExtendedDataFigure89.csv takes a long time to write so is excluded from tests
-    # 4) TODO: Figure out why fig1 is getting randomly sorted differently by different
+    # 4) SITable2.xlsx is created manually
+    # 5) TODO: Figure out why fig1 is getting randomly sorted differently by different
     #    OS so that we can properly test it
     files_to_exclude = set(
         list(Path("models/reg_data").glob("*.csv"))
@@ -42,6 +43,7 @@ def test_pipeline(tmp_path):
                 "ExtendedDataFigure6.xlsx",
                 "ExtendedDataFigure89.csv",
                 "ExtendedDataFigure10_e.csv",
+                "SITable2.xlsx",
             ]
         ]
         + list(Path("models/projections").glob("*_bootstrap_projection.csv"))
