@@ -130,6 +130,7 @@ def main():
         out.loc["KOR", l] = g_kor
         out.loc["pooled", l] = g_pooled
 
+    cutil.MODELS.mkdir(exist_ok=True, parents=True)
     out.to_csv(cutil.MODELS / "gamma_est.csv", index=True)
 
 
