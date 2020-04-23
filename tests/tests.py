@@ -110,13 +110,13 @@ def test_pipeline(tmp_path):
                 cmd = shlex.split(f"cat {p}")
                 subprocess.run(cmd)
         raise AssertionError(
-            f"""The folowing files produced by this code do not match the version saved 
+            f"""The following files produced by this code do not match the version saved 
             in the repo: {set([x for x, _ in bad_files])}.
             
-            The folowing files contained in this commit are NOT created by the code:
+            The following files contained in this commit are NOT created by the code:
             {not_generated}
             
-            The folowing files produced by the code are NOT contained in the commit:
+            The following files produced by the code are NOT contained in the commit:
             {missing_files}
             """
         )
