@@ -1,15 +1,13 @@
+import argparse
 import datetime
 import warnings
 from urllib.error import HTTPError
 
+import codes.utils as cutil
 import matplotlib
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
-
-import codes.utils as cutil
-
-import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

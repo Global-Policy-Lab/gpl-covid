@@ -3,15 +3,15 @@
 
 from pathlib import Path
 
-import geopandas as gpd
 import numpy as np
-import pandas as pd
 import requests
+
+import geopandas as gpd
+import pandas as pd
 from bs4 import BeautifulSoup
 from census import Census
-from fuzzywuzzy import fuzz, process
-
 from codes import utils as cutil
+from fuzzywuzzy import fuzz, process
 
 idx = pd.IndexSlice
 
