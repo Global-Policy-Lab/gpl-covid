@@ -252,7 +252,8 @@ drop miss_ct
 
 //-------------------------------Hospitalizations
 
-preserve
+tempfile base_data0
+save `base_data0'
 
 	// France reports hospitalization data by region past 3/25/2020
 	keep if t>=mdy(3,3,2020) //data quality cutoff, only one region had 10 hospitalizations prior to 3/3
@@ -266,8 +267,22 @@ preserve
 	// predicted "actual" outcomes with real policies
 	predictnl y_actual_hosp = xb() + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_y_actual_hosp ub_y_actual_hosp)
 
-	// effect of all policies combined (for text)
+	// effect of all policies combined
 	lincom national_lockdown + school_closure + pck_social_distance + mask_opt
+	
+	// compute ATE
+	preserve
+		collapse (first) adm0_name (mean) D_l_cum_hospitalized ///
+		pck_social_distance school_closure national_lockdown mask_opt if e(sample) == 1
+		
+		predictnl ATE = pck_social_distance * _b[pck_social_distance] + ///
+		school_closure * _b[school_closure] + ///
+		national_lockdown * _b[national_lockdown] + ///
+		mask_opt * _b[mask_opt]	///
+		if e(sample), ci(LB UB) se(sd) p(pval)
+		
+		display ATE sd
+	restore
 
 	// predicting counterfactual growth for each obs
 	predictnl y_counter_hosp = testing_regime_15mar2020 * _b[testing_regime_15mar2020] + ///
@@ -330,7 +345,31 @@ preserve
 	yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) 
 	graph export results/figures/appendix/legend_edfig9.pdf, replace
 
-restore
+use `base_data0', clear
+
+	// France reports hospitalization data by region past 3/25/2020
+	keep if t>=mdy(3,3,2020) //data quality cutoff, only one region had 10 hospitalizations prior to 3/3
+	keep if t<=mdy(3,25,2020) //use same end date as confirmed cases sample period
+
+	// hospitalization model
+	reghdfe D_l_cum_hospitalized pck_social_distance school_closure national_lockdown ///
+	 testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+
+	// effect of all policies combined
+	lincom national_lockdown + school_closure + pck_social_distance
+	
+	// compute ATE
+	collapse (first) adm0_name (mean) D_l_cum_hospitalized ///
+	pck_social_distance school_closure national_lockdown if e(sample) == 1
+	
+	predictnl ATE = pck_social_distance * _b[pck_social_distance] + ///
+	school_closure * _b[school_closure] + ///
+	national_lockdown * _b[national_lockdown] ///
+	if e(sample), ci(LB UB) se(sd) p(pval)
+	
+	display ATE sd
+		
+use `base_data0', clear
 
 //-------------------------------Cross-validation
 tempvar counter_CV
@@ -418,7 +457,7 @@ testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 coefplot, keep(pck_social_distance school_closure national_lockdown) gen(H0_) title(main model) xline(0) 
 replace H0_at = H0_at - 0.04
 
-foreach lags of num 1 2 3 4 5 10 15 { 
+foreach lags of num 1 2 3 4 5{ 
 	quietly {
 	foreach var in pck_social_distance school_closure national_lockdown{
 		g `var'_copy = `var'
@@ -519,7 +558,7 @@ destring hosp, replace
 outsheet * using "results/source_data/indiv/ExtendedDataFigure5_fixed_lag_FRA.csv", replace
 
 use `f0', clear
-foreach L of num 1 2 3 4 5 10 15 {
+foreach L of num 1 2 3 4 5{
 	append using `f`L''
 }
 g adm0 = "FRA"
