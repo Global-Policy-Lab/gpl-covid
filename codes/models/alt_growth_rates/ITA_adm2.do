@@ -389,30 +389,41 @@ foreach lags of num 1 2 3 4 5{
 }
 
 
-set scheme s1color
-tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
-|| scatter  L0_at L0_b, mc(black) ///
-|| rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
-|| scatter  L1_at L1_b, mc(black*.9) ///
-|| rspike L2_ll1 L2_ul1 L2_at , hor xline(0) lc(black*.7) lw(thin) ///
-|| scatter  L2_at L2_b, mc(black*.7) ///
-|| rspike L3_ll1 L3_ul1 L3_at , hor xline(0) lc(black*.5) lw(thin) ///
-|| scatter  L3_at L3_b, mc(black*.5) ///
-|| rspike L4_ll1 L4_ul1 L4_at , hor xline(0) lc(black*.3) lw(thin) ///
-|| scatter  L4_at L4_b, mc(black*.3) ///
-|| rspike L5_ll1 L5_ul1 L5_at , hor xline(0) lc(black*.1) lw(thin) ///
-|| scatter  L5_at L5_b, mc(black*.1) ///	
-ylabel(1 "Social distance" ///
-2 "School closure" ///
-3 "Travel ban" ///
-4 "Quarantine positive cases" ///
-5 "Business closure" ///
-6 "Home isolation", angle(0)) ///
-ytitle("") title("Italy comparing Fixed Lags models") ///
-legend(order(2 4 6 8 10 12) lab(2 "L0") lab(4 "L1") lab(6 "L2") lab(8 "L3") ///
-lab(10 "L4") lab(12 "L5") rows(1) region(lstyle(none)))
-graph export results/figures/appendix/fixed_lag/ITA.pdf, replace
-graph export results/figures/appendix/fixed_lag/ITA.png, replace	
+// get r2
+matrix rsq = J(16,3,0)
+foreach lags of num 0/15{ 
+	quietly {
+	foreach var in p_1 p_2 p_3 p_4 p_5 p_6 {
+		g `var'_copy = `var'
+		g `var'_fixelag = L`lags'.`var'
+		replace `var'_fixelag = 0 if `var'_fixelag == .
+		replace `var' = `var'_fixelag
+		
+	}
+	drop *_fixelag
+	}
+	if $BS == 1 {
+		bootstrap e(r2), rep(1000) seed(1) : ///
+		reghdfe D_l_cum_confirmed_cases p_1 p_2 p_3 p_4 p_5 p_6 , absorb(i.adm2_id i.dow)
+		matrix rsq[`lags'+1,1] = _b[_bs_1]
+		matrix rsq[`lags'+1,2] = _se[_bs_1]
+		matrix rsq[`lags'+1,3] = `lags'
+	}
+	foreach var in p_1 p_2 p_3 p_4 p_5 p_6{
+		qui replace `var' = `var'_copy
+		qui drop `var'_copy
+	}
+}
+
+if $BS == 1 {
+	preserve
+	clear
+	svmat rsq
+	rename (rsq1 rsq2 rsq3) (r2 se lag_length)
+	outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_ITA.csv", replace	
+	restore
+}
+	
 drop if L0_b == .
 keep *_at *_ll1 *_ul1 *_b
 egen policy = seq()

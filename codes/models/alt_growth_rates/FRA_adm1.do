@@ -501,6 +501,44 @@ foreach lags of num 1 2 3 4 5{
 	}
 }
 
+// get r2
+preserve
+drop if t > date("20200325","YMD")
+matrix rsq = J(16,3,0)
+foreach lags of num 0/15{ 
+	quietly {
+	foreach var in pck_social_distance school_closure national_lockdown{
+		g `var'_copy = `var'
+		g `var'_fixelag = L`lags'.`var'
+		replace `var'_fixelag = 0 if `var'_fixelag == .
+		replace `var' = `var'_fixelag
+		
+	}
+	drop *_fixelag
+	}
+	if $BS == 1 {	
+		bootstrap e(r2), rep(1000) seed(1) : ///
+		reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure ///
+		national_lockdown testing_regime_*, absorb(i.adm1_id i.dow) 
+		matrix rsq[`lags'+1,1] = _b[_bs_1]
+		matrix rsq[`lags'+1,2] = _se[_bs_1]
+		matrix rsq[`lags'+1,3] = `lags'
+	}
+	foreach var in pck_social_distance school_closure national_lockdown{
+		qui replace `var' = `var'_copy
+		qui drop `var'_copy
+	}	
+}
+restore
+
+preserve
+clear
+svmat rsq
+rename (rsq1 rsq2 rsq3) (r2 se lag_length)
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_FRA.csv", replace	
+restore
+
+
 
 set scheme s1color
 tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
