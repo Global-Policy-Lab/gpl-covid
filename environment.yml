@@ -35,4 +35,4 @@ dependencies:
     - r-ggsci=2.9
     - r-cowplot=1.0
     - r-patchwork=1.0
-
+    - blas=2.8=netlib
