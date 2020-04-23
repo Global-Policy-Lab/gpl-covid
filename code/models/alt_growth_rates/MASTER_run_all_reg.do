@@ -21,6 +21,7 @@ capture mkdir "results/tables/ATE_fixed_lag"
 capture mkdir "results/source_data" 
 capture mkdir "results/source_data/indiv" 
 
+global BS = 0 // set to 1 to run bootstrap CI on fig A3-b (add 2-3 hours)
 
 // run .do files
 do "code/models/alt_growth_rates/CHN_adm2.do"
@@ -59,21 +60,6 @@ foreach fn of local filenames{
 
 graph combine error_chn error_irn error_kor error_fra error_ita error_usa, rows(3)
 graph export results/figures/appendix/error_dist/ALL_conf_cases_e.png, replace
-
-
-// combine sub-national growth rate graphs for ED fig 6
-filelist, dir("results/figures/appendix/subnatl_growth_rates") pattern("*.gph")
-levelsof filename, local(filenames)
-foreach fn of local filenames{
-	local filepath = "results/figures/appendix/subnatl_growth_rates/" + "`fn'"
-	local graphname = regexr("`fn'", "cases_growth_rates_fixedx\.gph", "fix")
-	*display "`filepath'"
-	display "`graphname'"
-	graph use "`filepath'", name("`graphname'", replace)
-}
-graph combine Wuhan_active_fix Daegu_active_fix Milan_conf_fix Tehran_conf_fix  ///
-IledeFrance_conf_fix Washington_conf_fix, cols(1) imargin(tiny) ysize(18) xsize(10)
-graph export results/figures/appendix/subnatl_growth_rates/ALL_subnatl.pdf, replace
 
 
 // make table comparing ATE models with different fixed lags by country
