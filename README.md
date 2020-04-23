@@ -81,8 +81,6 @@ code
 │       ├── gen_state_name_abbrev_xwalk.R
 │       ├── get_usafacts_data.R
 │       └── merge_policy_and_cases.py
-├── impute.py
-├── merge.py
 ├── models
 │   ├── CHN_create_CBs.R
 │   ├── CHN_generate_data_and_model_projection.R
@@ -111,7 +109,6 @@ code
 │   │       ├── KOR_adm1_disag.do
 │   │       ├── MASTER_run_all_reg_disag.do
 │   │       └── USA_adm1_disag.do
-│   ├── epi.py
 │   ├── get_gamma.py
 │   ├── output_underlying_projection_output.R
 │   ├── predict_felm.R
@@ -131,8 +128,13 @@ code
 │   ├── figED2.R
 │   ├── gen_fig4.py
 │   └── sims.py
-├── pop.py
-└── utils.py
+└── src
+    ├── impute.py
+    ├── merge.py
+    ├── models
+    │   └── epi.py
+    ├── pop.py
+    └── utils.py
 ```
 
 ## Data Documentation
