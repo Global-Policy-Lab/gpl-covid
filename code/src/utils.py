@@ -7,7 +7,7 @@ import pandas as pd
 
 from . import __file__ as pkg_init_name
 
-HOME = Path(pkg_init_name).parent.parent
+HOME = Path(pkg_init_name).parent.parent.parent
 DATA = HOME / "data"
 DATA_RAW = DATA / "raw"
 DATA_PROCESSED = DATA / "processed"
@@ -15,7 +15,7 @@ DATA_INTERIM = DATA / "interim"
 MODELS = HOME / "models"
 RESULTS = HOME / "results"
 REG_DATA = MODELS / "reg_data"
-CODE = HOME / "code"
+CODE = HOME / "code" / "src"
 
 ISOS = ["USA", "ITA", "FRA", "CHN", "KOR", "IRN"]
 adm3_dir_fmt = "gadm36_{iso3}_{datestamp}.zip"
