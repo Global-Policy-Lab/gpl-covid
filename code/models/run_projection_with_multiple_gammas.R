@@ -153,7 +153,7 @@ suppressWarnings({
                      scale = 2, base_asp = 1.2)
   cowplot::save_plot(plot = final, filename = "results/figures/fig4/fig4_total_sensitivity_to_gamma.jpg",
                      scale = 2, base_asp = 1.2, dpi = 600)
-  write_csv(final_df, path = "results/source_data/ExtendedDataFigure7.csv")
+  write_csv(final_df %>% dplyr::select(-time_steps_per_day), path = "results/source_data/ExtendedDataFigure7.csv")
   if(file.exists("Rplots.pdf")){
     file.remove("Rplots.pdf")
   }
