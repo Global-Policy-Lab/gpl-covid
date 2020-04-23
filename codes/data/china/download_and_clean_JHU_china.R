@@ -1,5 +1,5 @@
 suppressPackageStartupMessages(library(tidyverse))
-source("codes/data/multi_country/get_JHU_country_data.R")
+source("code/data/multi_country/get_JHU_country_data.R")
 china_data <- get_jhu_data("China")
 # no nesting of provinces looks like and no country total
 # china_data$province_state %>%

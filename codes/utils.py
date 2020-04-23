@@ -15,7 +15,7 @@ DATA_INTERIM = DATA / "interim"
 MODELS = HOME / "models"
 RESULTS = HOME / "results"
 REG_DATA = MODELS / "reg_data"
-CODES = HOME / "codes"
+CODE = HOME / "code"
 
 ISOS = ["USA", "ITA", "FRA", "CHN", "KOR", "IRN"]
 adm3_dir_fmt = "gadm36_{iso3}_{datestamp}.zip"

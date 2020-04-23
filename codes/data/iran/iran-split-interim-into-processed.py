@@ -10,7 +10,7 @@
 import numpy as np
 
 import pandas as pd
-from codes import utils as cutil
+from code import utils as cutil
 
 # Define paths
 

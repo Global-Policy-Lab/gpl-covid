@@ -1,7 +1,7 @@
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(magrittr))
 
-source("codes/data/usa/get_usafacts_data.R")
+source("code/data/usa/get_usafacts_data.R")
 state_adm_data <- read_csv("data/interim/adm/adm1/adm1.csv",
                      col_types = cols(
                        adm0_name = col_character(),

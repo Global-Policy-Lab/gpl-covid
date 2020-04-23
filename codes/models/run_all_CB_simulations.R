@@ -22,7 +22,7 @@ underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
                              upper = col_double(),
                              underreporting_estimate_clean = col_character()
                            ))
-# source("codes/models/calculate_gamma_from_china_and_korea.R")
+# source("code/models/calculate_gamma_from_china_and_korea.R")
 gamma = readr::read_csv("models/gamma_est.csv",
                         col_types = 
                           cols(
@@ -35,14 +35,14 @@ gamma = readr::read_csv("models/gamma_est.csv",
 
 dir.create("models/projections", recursive=TRUE, showWarnings=FALSE)
 message("Running France projection.")
-source("codes/models/FRA_create_CBs.R")
+source("code/models/FRA_create_CBs.R")
 message("Running Iran projection.")
-source("codes/models/IRN_create_CBs.R")
+source("code/models/IRN_create_CBs.R")
 message("Running South Korea projection.")
-source("codes/models/KOR_create_CBs.R")
+source("code/models/KOR_create_CBs.R")
 message("Running USA projection.")
-source("codes/models/USA_create_CBs.R")
+source("code/models/USA_create_CBs.R")
 message("Running China projection.")
-source("codes/models/CHN_create_CBs.R")
+source("code/models/CHN_create_CBs.R")
 message("Running Italy projection.")
-source("codes/models/ITA_create_CBs.R")
+source("code/models/ITA_create_CBs.R")

@@ -16,12 +16,12 @@ capture mkdir "results/source_data"
 capture copy "results/source_data/indiv/Figure3_CHN_data.csv" "results/source_data/indiv/ExtendedDataFigure6a_CHN_data.csv" 
 
 // run .do files
-do "codes/models/alt_growth_rates/CHN_adm2.do"
-do "codes/models/alt_growth_rates/disaggregated_policies/KOR_adm1_disag.do"
-do "codes/models/alt_growth_rates/disaggregated_policies/ITA_adm2_disag.do"
-do "codes/models/alt_growth_rates/disaggregated_policies/IRN_adm1_disag.do"
-do "codes/models/alt_growth_rates/disaggregated_policies/FRA_adm1_disag.do"
-do "codes/models/alt_growth_rates/disaggregated_policies/USA_adm1_disag.do"
+do "code/models/alt_growth_rates/CHN_adm2.do"
+do "code/models/alt_growth_rates/disaggregated_policies/KOR_adm1_disag.do"
+do "code/models/alt_growth_rates/disaggregated_policies/ITA_adm2_disag.do"
+do "code/models/alt_growth_rates/disaggregated_policies/IRN_adm1_disag.do"
+do "code/models/alt_growth_rates/disaggregated_policies/FRA_adm1_disag.do"
+do "code/models/alt_growth_rates/disaggregated_policies/USA_adm1_disag.do"
 
 // combine all case growth rate graphs for ED fig 6
 graph use "results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph", name(CHN_adm2_active_fix, replace)

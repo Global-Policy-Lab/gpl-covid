@@ -8,8 +8,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 import xarray as xr
-from codes import utils as cutil
-from codes.models import epi
+from code import utils as cutil
+from code.models import epi
 
 PLOT_DIR = cutil.RESULTS / "figures" / "appendix" / "sims"
 

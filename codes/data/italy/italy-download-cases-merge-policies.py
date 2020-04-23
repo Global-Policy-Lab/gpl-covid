@@ -13,9 +13,9 @@ import argparse
 import numpy as np
 
 import pandas as pd
-from codes import impute as cimpute
-from codes import merge as cmerge
-from codes import utils as cutil
+from code import impute as cimpute
+from code import merge as cmerge
+from code import utils as cutil
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

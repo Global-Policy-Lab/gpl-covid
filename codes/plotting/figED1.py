@@ -3,7 +3,7 @@ import datetime
 import warnings
 from urllib.error import HTTPError
 
-import codes.utils as cutil
+import code.utils as cutil
 import matplotlib
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt

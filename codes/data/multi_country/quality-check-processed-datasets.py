@@ -4,7 +4,7 @@ import os
 import numpy as np
 
 import pandas as pd
-from codes import utils as cutil
+from code import utils as cutil
 
 parser = argparse.ArgumentParser(
     description="Check for issues in [country]_processed.csv datasets. "
@@ -60,7 +60,7 @@ default_error_behavior = get_default_error_behavior(args.e)
 
 use_cutoff = cutil.PROCESSED_DATA_DATE_CUTOFF
 
-path_cutoff_dates = cutil.CODES / "data" / "cutoff_dates.csv"
+path_cutoff_dates = cutil.CODE / "data" / "cutoff_dates.csv"
 path_template = cutil.DATA_PROCESSED / "[country]_processed.csv"
 path_data_dictionary = cutil.HOME / "references" / "data_dictionary.xlsx"
 

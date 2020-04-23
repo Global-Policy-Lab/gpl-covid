@@ -2,7 +2,7 @@ import warnings
 
 import numpy as np
 
-import codes.utils as cutil
+import code.utils as cutil
 import pandas as pd
 
 

@@ -1,9 +1,9 @@
 # setwd("E:/GPL_covid/")
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lfe))
-source("codes/models/predict_felm.R")
-source("codes/models/projection_helper_functions.R")
-source("codes/data/multi_country/get_JHU_country_data.R")
+source("code/models/predict_felm.R")
+source("code/models/projection_helper_functions.R")
+source("code/data/multi_country/get_JHU_country_data.R")
 underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
                            col_types = cols(
                              country = col_character(),

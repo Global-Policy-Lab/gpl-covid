@@ -4,7 +4,7 @@ clear all
 //-----------------------setup
 
 // import end of sample cut-off 
-import delim using codes/data/cutoff_dates.csv, clear 
+import delim using code/data/cutoff_dates.csv, clear 
 keep if tag == "default"
 local end_sample = end_date[1]
 

@@ -4,7 +4,7 @@ import pickle
 
 import numpy as np
 
-import codes.pop as cpop
+import code.pop as cpop
 import pandas as pd
 
 popweighted_suffix = "popwt"
