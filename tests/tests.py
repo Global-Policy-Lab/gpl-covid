@@ -19,39 +19,83 @@ def test_readme():
 
 
 def test_pipeline(tmp_path):
+    
+    # list all files that we know will not get updated by code that is not able to run
+    # stata
+    files_to_exclude = set(
+        list(Path("models/reg_data").glob("*.csv")) +
+        list(Path("models").glob("*_preds.csv")) + 
+        list(Path("models").glob("*_ATE.csv")) + 
+        list(Path("models/projections").glob("*_bootstrap_projection.csv")) +
+        # TODO: Figure out why fig1 is getting randomly sorted differently by different
+        # OS so that we can properly test it
+        list(Path("results/source_data").glob("fig1*.csv"))
+    )
+    
     tmp_model_path = tmp_path / "models"
     tmp_results_path = tmp_path / "results" / "source_data"
     tmp_results_path.parent.mkdir()
     copytree("models", tmp_model_path)
     copytree("results/source_data", tmp_results_path)
 
+    old_files = set(
+        list(Path("models").rglob("*.csv")) + 
+        list(Path("results/source_data").rglob("*.csv"))
+    )
+    old_files = old_files - files_to_exclude
+    
+    # know when last modified
+    old_mtimes = {i:i.stat().st_mtime for i in old_files}
+    
     # run pipeline
     cmd = shlex.split("bash run --no-download --nostata --nocensus --num-proj 2")
     subprocess.run(cmd, check=True)
 
     bad_files = []
-    len_path = len(tmp_path.parts)
-    for p in list(tmp_model_path.rglob("*.csv")) + list(
-        tmp_results_path.rglob("*.csv")
-    ):
-        # skip for bootstrap samples which may have different num of bootstraps
-        if "bootstrap" not in p.name and "fig1" not in p.name:
-            other_file = Path("").joinpath(*p.parts[len_path:])
-            try:
-                pd.testing.assert_frame_equal(
-                    pd.read_csv(p), pd.read_csv(other_file), check_like=True
-                )
-            except UnicodeDecodeError:
-                pass
-            except:
-                bad_files.append((str(other_file), str(p)))
-    if len(bad_files) > 0:
-        for other_file, p in bad_files:
-            cmd = shlex.split(f"cat {other_file}")
-            subprocess.run(cmd)
-            cmd = shlex.split(f"cat {p}")
-            subprocess.run(cmd)
+                 
+    new_files = set(
+        list(Path("models").rglob("*.csv")) + 
+        list(Path("results/source_data").rglob("*.csv"))
+    )
+    new_files = new_files - files_to_exclude
+    
+    # know when last modified
+    new_mtimes = {i:i.stat().st_mtime for i in new_files}
+    
+    # find all files that either weren't created with code or were created with code
+    # yet weren't already in repo
+    missing_files = set([i for i in new_files if i not in old_files])
+    not_generated = set([i for i in old_files if old_mtimes[i] == new_mtimes[i]])
+    
+    to_test = new_files - missing_files - not_generated
+    for other_file in to_test:
+        p = tmp_path / other_file
+        try:
+            pd.testing.assert_frame_equal(
+                pd.read_csv(p), pd.read_csv(other_file), check_like=True
+            )
+        except UnicodeDecodeError:
+            pass
+        except:
+            bad_files.append((str(other_file), str(p)))
+                
+    # raise errors
+    if len(missing_files.union(not_generated,bad_files)) > 0:
+        if len(bad_files) > 0:
+            print("Dumped contents of non-matched files:\n")
+            for other_file, p in bad_files:
+                cmd = shlex.split(f"cat {other_file}")
+                subprocess.run(cmd)
+                cmd = shlex.split(f"cat {p}")
+                subprocess.run(cmd)
         raise AssertionError(
-            "The folowing files produced by this code do not match the version saved "
-            f"in the repo: {[x for x, _ in bad_files]}"
+            f"""The folowing files produced by this code do not match the version saved 
+            in the repo: {set([x for x, _ in bad_files])}.
+            
+            The folowing files contained in this commit are NOT created by the code:
+            {not_generated}
+            
+            The folowing files produced by the code are NOT contained in the commit:
+            {missing_files}
+            """
         )
