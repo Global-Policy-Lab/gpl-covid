@@ -10,14 +10,14 @@ from code import utils as cutil
 
 def convert_non_monotonic_to_nan(array):
     """Converts a numpy array to a monotonically increasing one.
-    
+
     Args:
         array (numpy.ndarray [N,]): input array
-        
+
     Returns:
         numpy.ndarray [N,]: some values marked as missing, all non-missing
             values should be monotonically increasing
-    
+
     Usage:
         >>> convert_non_monotonic_to_nan(np.array([0, 0, 5, 3, 4, 6, 3, 7, 6, 7, 8]))
         np.array([ 0.,  0., np.nan,  3., np.nan, np.nan,  3., np.nan,  6.,  7.,  8.])
