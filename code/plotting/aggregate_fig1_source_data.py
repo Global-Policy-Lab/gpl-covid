@@ -1,5 +1,5 @@
-import codes.utils as cutil
-import codes as pd
+import code.utils as cutil
+import pandas as pd
 
 out_dir = cutil.RESULTS / "source_data"
 
