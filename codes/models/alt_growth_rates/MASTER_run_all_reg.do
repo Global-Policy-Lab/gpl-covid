@@ -21,6 +21,7 @@ capture mkdir "results/tables/ATE_fixed_lag"
 capture mkdir "results/source_data" 
 capture mkdir "results/source_data/indiv" 
 
+global BS = 0 // set to 1 to run bootstrap CI on fig A3-b (add 2-3 hours)
 
 // run .do files
 do "codes/models/alt_growth_rates/CHN_adm2.do"
