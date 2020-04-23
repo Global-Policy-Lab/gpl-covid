@@ -2,8 +2,8 @@ import argparse
 import os
 
 import numpy as np
-import pandas as pd
 
+import pandas as pd
 from codes import utils as cutil
 
 parser = argparse.ArgumentParser(

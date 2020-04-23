@@ -1,7 +1,7 @@
 // generate appendix figure - cross validation
 
 foreach ADM in "CHN" "FRA" "IRN" "KOR" "ITA" "USA" {
-	import delim using "results/source_data/indiv/ExtendedDataFigure4_cross_valid_`ADM'.csv", clear
+	import delim using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_`ADM'.csv", clear
 	cap g i = ite
 	tempfile f`ADM'
 	save `f`ADM''
