@@ -1,8 +1,9 @@
 import json
 from pathlib import Path
 
-import pandas as pd
 import requests
+
+import pandas as pd
 
 from . import __file__ as pkg_init_name
 
@@ -12,6 +13,7 @@ DATA_RAW = DATA / "raw"
 DATA_PROCESSED = DATA / "processed"
 DATA_INTERIM = DATA / "interim"
 MODELS = HOME / "models"
+RESULTS = HOME / "results"
 REG_DATA = MODELS / "reg_data"
 CODES = HOME / "codes"
 
@@ -21,6 +23,8 @@ adm3_dir_fmt = "gadm36_{iso3}_{datestamp}.zip"
 CUM_CASE_MIN_FILTER = 10
 PROCESSED_DATA_ERROR_HANDLING = "raise"
 PROCESSED_DATA_DATE_CUTOFF = False
+
+COLORS = {"effect": "#27408B", "no_policy_growth_rate": "#8B0000"}
 
 with open(HOME / "api_keys.json", "r") as f:
     API_KEYS = json.load(f)
