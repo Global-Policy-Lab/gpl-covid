@@ -157,7 +157,10 @@ else
 fi
 
 # ED Figure 2
-Rscript code/plotting/figED2.R
+if $DOWNLOAD
+then
+    Rscript code/plotting/figED2.R
+fi
 
 # ED Figure 3-4
 if $STATA
