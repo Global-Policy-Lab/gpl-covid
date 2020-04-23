@@ -132,46 +132,46 @@ Rscript code/models/output_underlying_projection_output.R
 
 # Fig 1
 printf "***Creating Fig 1***\n"
-Rscript code/src/plotting/fig1.R
-python code/src/plotting/aggregate_fig1_source_data.py
+Rscript code/plotting/fig1.R
+python code/plotting/aggregate_fig1_source_data.py
 
 # Fig 2
 printf "***Creating Fig 2***\n"
-Rscript code/src/plotting/fig2.R
+Rscript code/plotting/fig2.R
 
 # Fig 3
 # created by regression model estimation
 
 # Fig 4
 printf "***Creating Fig 4***\n"
-python code/src/plotting/gen_fig4.py
-python code/src/plotting/fig4_analysis.py
+python code/plotting/gen_fig4.py
+python code/plotting/fig4_analysis.py
 
 # ED Figure 1
 printf "***Creating ED Fig 1***\n"
 if $DOWNLOAD
 then
-    python code/src/plotting/figED1.py
+    python code/plotting/figED1.py
 else
-    python code/src/plotting/figED1.py --nd
+    python code/plotting/figED1.py --nd
 fi
 
 # ED Figure 2
 if $DOWNLOAD
 then
-    Rscript code/src/plotting/figED2.R
+    Rscript code/plotting/figED2.R
 fi
 
 # ED Figure 3-4
 if $STATA
 then
-    stata -b do code/src/plotting/extended_data_fig3_4.do
+    stata -b do code/plotting/extended_data_fig3_4.do
 fi
 
 # ED Figure 5
 if $STATA
 then
-    stata -b do code/src/plotting/extended_data_fig5.do
+    stata -b do code/plotting/extended_data_fig5.do
 fi
 
 # ED Figure 6
@@ -191,9 +191,9 @@ printf "Running simulations..."
 papermill notebooks/simulate-and-regress.ipynb notebooks/simulate-and-regress-log.ipynb -p n_samples $NUMPROJ -k gpl-covid
 printf "Making Figures..."
 if [ $NUMPROJ = 1000 ]; then
-    python code/src/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/sims --source-data "results/source_data/ExtendedDataFigure89.csv"
+    python code/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/sims --source-data "results/source_data/ExtendedDataFigure89.csv"
 else
-    python code/src/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 --LHS I
+    python code/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 --LHS I
 fi
 
 # ED Figure 10
@@ -201,7 +201,7 @@ fi
 
 # SI Table 1
 printf "***Creating SI Table 1***\n"
-python code/src/plotting/count-policies.py
+python code/plotting/count-policies.py
 
 # SI Table 2
 # generated manually
