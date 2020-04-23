@@ -8,6 +8,7 @@ dependencies:
     - python>=3.7
     - beautifulsoup4=4.8
     - black=19.10
+    - blas=2.8=netlib
     - census=0.8
     - fuzzywuzzy=0.17
     - geopandas=0.7
@@ -39,4 +40,3 @@ dependencies:
     - r-cowplot=1.0
     - r-padr=0.5
     - r-patchwork=1.0
-    - blas=2.8=netlib
