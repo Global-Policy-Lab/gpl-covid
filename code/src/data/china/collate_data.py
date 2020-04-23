@@ -65,7 +65,7 @@ output_file = cutil.DATA_PROCESSED / "adm2" / "CHN_processed.csv"
 match_file = join(DATA_CHINA, "match_china_city_name_w_adm2.csv")
 shp_file = cutil.DATA_INTERIM / "adm" / "adm2" / "adm2.shp"
 
-end_date_file = cutil.HOME / "code" / "data" / "cutoff_dates.csv"
+end_date_file = cutil.DATA / "cutoff_dates.csv"
 
 end_date = pd.read_csv(end_date_file)
 (end_date,) = end_date.loc[end_date["tag"] == "default", "end_date"].values

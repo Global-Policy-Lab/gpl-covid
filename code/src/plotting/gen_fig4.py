@@ -3,7 +3,7 @@ import os
 
 import numpy as np
 
-import code.utils as cutil
+import src.utils as cutil
 import matplotlib.colors
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -65,7 +65,7 @@ country_abbrievations = {
 }
 
 
-cutoff_dates = pd.read_csv(cutil.HOME / "code" / "data" / "cutoff_dates.csv").set_index(
+cutoff_dates = pd.read_csv(cutil.DATA / "cutoff_dates.csv").set_index(
     "tag"
 )
 cutoff_end = str(cutoff_dates.loc["default", "end_date"])

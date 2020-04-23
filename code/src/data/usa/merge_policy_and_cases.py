@@ -1,7 +1,7 @@
 import os
 
-import code.merge as merge
-import code.utils as cutil
+import src.merge as merge
+import src.utils as cutil
 import pandas as pd
 
 raw_data_dir = str(cutil.DATA_RAW / "usa")

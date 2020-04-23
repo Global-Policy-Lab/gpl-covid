@@ -2,7 +2,7 @@ import os
 
 import numpy as np
 
-import code.utils as cutil
+import src.utils as cutil
 import pandas as pd
 
 countries_in_order = ["china", "korea", "italy", "iran", "france", "usa"]
@@ -16,7 +16,7 @@ country_abbrievations = {
     "korea": "KOR",
 }
 
-cutoff_dates = pd.read_csv(cutil.HOME / "code" / "data" / "cutoff_dates.csv").set_index(
+cutoff_dates = pd.read_csv(cutil.DATA / "cutoff_dates.csv").set_index(
     "tag"
 )
 cutoff_end = str(cutoff_dates.loc["default", "end_date"])
