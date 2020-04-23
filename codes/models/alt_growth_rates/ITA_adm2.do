@@ -389,6 +389,39 @@ foreach lags of num 1 2 3 4 5{
 }
 
 
+// get r2
+matrix rsq = J(16,3,0)
+foreach lags of num 0/15{ 
+	quietly {
+	foreach var in p_1 p_2 p_3 p_4 p_5 p_6 {
+		g `var'_copy = `var'
+		g `var'_fixelag = L`lags'.`var'
+		replace `var'_fixelag = 0 if `var'_fixelag == .
+		replace `var' = `var'_fixelag
+		
+	}
+	drop *_fixelag
+	}
+	bootstrap e(r2), rep(1000) seed(1) : ///
+	reghdfe D_l_cum_confirmed_cases p_1 p_2 p_3 p_4 p_5 p_6 , absorb(i.adm2_id i.dow)
+
+	foreach var in p_1 p_2 p_3 p_4 p_5 p_6{
+		qui replace `var' = `var'_copy
+		qui drop `var'_copy
+	}
+	matrix rsq[`lags'+1,1] = _b[_bs_1]
+	matrix rsq[`lags'+1,2] = _se[_bs_1]
+	matrix rsq[`lags'+1,3] = `lags'
+}
+
+preserve
+clear
+svmat rsq
+rename (rsq1 rsq2 rsq3) (r2 se lag_length)
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_ITA.csv", replace	
+restore
+
+
 set scheme s1color
 tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
 || scatter  L0_at L0_b, mc(black) ///

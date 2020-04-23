@@ -1,25 +1,34 @@
-import delim "results/source_data/indiv/ExtendedDataFigure5_r2.csv", clear
-
-rename * r2*
-rename r2ïlags L
-reshape long r2, i(L) j(adm0) string
-
-egen max = max(r2), by(adm0)
-replace max = . if max != r2
-
-egen grp = group(adm0)
-
-set scheme s1color
-local command = "tw connect r2 L if grp == 1, mc(midgreen) lc(midgreen)"
-
-foreach j of num 2/5 {
-	local command = "`command' || connect r2 L if grp == `j'"
+foreach ADM in "FRA" "IRN" "KOR" "ITA" "USA" {
+	import delim using "results/source_data/indiv/ExtendedDataFigure5_r2_`ADM'.csv", clear
+	g adm0 = "`ADM'"
+	tempfile f`ADM'
+	save `f`ADM''
 }
 
-`command', lc(ebblue) mc(ebblue) || scatter max L, mc(gold) msize(large) m(T) ///
-legend(lab(1 "FRA") lab(2 "IRN") lab(3 "ITA") lab(4 "KOR") lab(5 "USA") rows(1) region(lstyle(none))) ///
+drop if _n > 0
+
+foreach ADM in "FRA" "IRN" "KOR" "ITA" "USA" {
+	append using `f`ADM''
+}
+
+egen grp = group(adm0)
+rename lag_ L
+g max = r2 + 1.96*se
+g min = r2 - 1.96*se
+
+foreach GRP of num 2/5{
+	replace L = L + `GRP'/10 if grp == `GRP'
+}
+
+tw connect r2 L if grp == 1, mc(gold) lc(gold) || rspike max min L if grp == 1, lc(gold*.7) ///
+|| connect r2 L if grp == 2, mc(maroon) lc(maroon) || rspike max min L if grp == 2, lc(maroon*.7) ///
+|| connect r2 L if grp == 3, mc(ebblue) lc(ebblue) || rspike max min L if grp == 3, lc(ebblue*.7) ///
+|| connect r2 L if grp == 4, mc(green) lc(green) || rspike max min L if grp == 4, lc(green*.7) ///
+|| connect r2 L if grp == 5, mc(black) lc(black) || rspike max min L if grp == 5, lc(black*.7) ///
+legend(order(1 3 5 7 9) lab(1 "FRA") lab(3 "IRN") lab(5 "ITA") lab(7 "KOR") lab(9 "USA") rows(1) region(lstyle(none))) ///
 xtitle(# fixed lags) ytitle(R-squared, height(10))
 
+outsheet * using "results/source_data/ExtendedDataFigure5_b.csv", replace
 graph export results/figures/appendix/fixed_lag/r2.pdf, replace
 
 

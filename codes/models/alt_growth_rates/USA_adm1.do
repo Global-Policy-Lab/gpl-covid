@@ -1,5 +1,5 @@
 // USA | adm1
-
+set matsize 5000
 clear all
 //-----------------------setup
 
@@ -471,6 +471,64 @@ foreach lags of num 1 2 3 4 5{
 	
 	}
 }
+
+// get r2
+matrix rsq = J(16,3,0)
+foreach lags of num 0/15{ 
+	quietly {
+	foreach var in p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 {
+		g `var'_copy = `var'
+		g `var'_fixelag = L`lags'.`var'
+		replace `var'_fixelag = 0 if `var'_fixelag == .
+		replace `var' = `var'_fixelag
+		
+	}
+	drop *_fixelag
+	}
+		
+	mat j = J(1000,1,0)
+	forvalues i = 1/1000 {
+	preserve
+	bsample, cluster(adm1_id)
+	qui reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9, absorb(i.adm1_id i.dow) 
+	matrix j[`i',1] = e(r2)
+	restore
+	}
+	
+	preserve
+		clear 
+		svmat j
+		collapse (mean) r2 = j1 (sd) sd = j1
+		matrix rsq[`lags'+1,1] = r2[1]
+		matrix rsq[`lags'+1,2] = sd[1]
+		matrix rsq[`lags'+1,3] = `lags'
+	restore
+	
+	foreach var in p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 {
+	qui replace `var' = `var'_copy
+	qui drop `var'_copy
+	}
+}
+	
+	/*
+	bootstrap e(r2), rep(50) seed(1): ///
+	reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9, absorb(i.adm1_id i.dow) 
+	foreach var in p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 {
+		qui replace `var' = `var'_copy
+		qui drop `var'_copy
+	}
+	matrix rsq[`lags'+1,1] = _b[_bs_1]
+	matrix rsq[`lags'+1,2] = _se[_bs_1]
+	matrix rsq[`lags'+1,3] = `lags'
+	*/
+
+
+preserve
+clear
+svmat rsq
+rename (rsq1 rsq2 rsq3) (r2 se lag_length)
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_USA.csv", replace	
+restore
 
 set scheme s1color
 tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
