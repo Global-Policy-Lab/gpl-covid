@@ -28,7 +28,7 @@ tw connect r2 L if grp == 1, mc(gold) lc(gold) || rspike max min L if grp == 1, 
 legend(order(1 3 5 7 9) lab(1 "FRA") lab(3 "IRN") lab(5 "ITA") lab(7 "KOR") lab(9 "USA") rows(1) region(lstyle(none))) ///
 xtitle(# fixed lags) ytitle(R-squared, height(10))
 
-outsheet * using "results/source_data/ExtendedDataFigure5_b.csv", replace
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_b.csv", replace
 graph export results/figures/appendix/fixed_lag/r2.pdf, replace
 
 
