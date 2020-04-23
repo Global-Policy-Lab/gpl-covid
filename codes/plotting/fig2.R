@@ -89,14 +89,14 @@ df.combined$effectsize[df.combined$policy == "China, Week 5" & df.combined$effec
 
 #code policies individual policies
 #KOR 
-df$policy[df$adm0 == "KOR" & df$policy == "p_1"] <- "Social distance, no gatherings, business closure, work from home"
+df$policy[df$adm0 == "KOR" & df$policy == "p_1"] <- "Work from home, business closure, no gatherings, other social distance (opt)" #Work from home, no gatherings, business closure, social distance"
 df$policy[df$adm0 == "KOR" & df$policy == "p_2"] <- "No demonstrations, religious & welfare services closure"
 df$policy[df$adm0 == "KOR" & df$policy == "p_3"] <- "Emergency declaration"
 df$policy[df$adm0 == "KOR" & df$policy == "p_4"] <- "Quarantine positive cases "
 
 #USA 
 df$policy[df$adm0 == "USA" & df$policy == "p_1"] <- "No gatherings, event cancellations"
-df$policy[df$adm0 == "USA" & df$policy == "p_2"] <- "Social distance, religious closure"
+df$policy[df$adm0 == "USA" & df$policy == "p_2"] <- "Religious closure, other social distance"
 df$policy[df$adm0 == "USA" & df$policy == "p_3"] <- "Quarantine positive cases"
 df$policy[df$adm0 == "USA" & df$policy == "p_4"] <- "Paid sick leave"
 df$policy[df$adm0 == "USA" & df$policy == "p_5"] <- "Work from home"
@@ -106,11 +106,11 @@ df$policy[df$adm0 == "USA" & df$policy == "p_8"] <- "Business closure"
 df$policy[df$adm0 == "USA" & df$policy == "p_9"] <- "Home isolation" 
 
 #IRN
-df$policy[df$adm0 == "IRN" & df$policy == "p_1"] <- "School closure, travel ban, work from home"
+df$policy[df$adm0 == "IRN" & df$policy == "p_1"] <- "School closure, travel ban (opt), work from home"
 df$policy[df$adm0 == "IRN" & df$policy == "p_2"] <- "Home isolation "
 
 #ITA
-df$policy[df$adm0 == "ITA" & df$policy == "p_1"] <- " Work from home, no gatherings, social distance "
+df$policy[df$adm0 == "ITA" & df$policy == "p_1"] <- " Work from home, no gatherings, other social distance " 
 df$policy[df$adm0 == "ITA" & df$policy == "p_2"] <- " School closure"
 df$policy[df$adm0 == "ITA" & df$policy == "p_3"] <- " Travel ban, transit suspension"
 df$policy[df$adm0 == "ITA" & df$policy == "p_4"] <- " Quarantine positive cases"
@@ -132,7 +132,7 @@ df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L29_to_L70"] <- "Tra
 
 #FRA
 df$policy[df$adm0 == "FRA" & df$policy == "school_closure"] <- "School closure "
-df$policy[df$adm0 == "FRA" & df$policy == "pck_social_distanc"] <- "Social distance, no gatherings, event cancellations"
+df$policy[df$adm0 == "FRA" & df$policy == "pck_social_distanc"] <- "Event cancellations, no gatherings, other social distance" #social distance, event cancel, no gatherings
 df$policy[df$adm0 == "FRA" & df$policy == "national_lockdown"] <- "Business closure, home isolation"
 
 #order df
@@ -203,7 +203,7 @@ betas.no <- ggplot(data = df.no) +
   ggtitle("Infection growth rate without policy") 
 
 eff.size.no <- ggplot(data = df.no) + 
-  geom_point(aes(x=beta, y=effectsize), color = "darkred", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=effectsize), color = "grey", size=3, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.no$effectsize), position = "left") +
   xlab("Effect size (deltalog per day)") + ylab("") +
   theme_fig2() +
@@ -212,7 +212,7 @@ eff.size.no <- ggplot(data = df.no) +
 
 #growth plot
 growth.no <- ggplot(data = df.no) + 
-  geom_point(aes(x=beta, y=growth), color = "darkred", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=growth), color = "grey", size=3, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.no$growth), position = "left") +
   xlab("As percent growth (% per day)") + ylab("") +
   theme_fig2() +
@@ -239,7 +239,7 @@ betas.combined <- ggplot(data = df.combined) +
 
 #effect size plot
 eff.size.comb <- ggplot(data = df.combined) + 
-  geom_point(aes(x=beta, y=effectsize), color = "royalblue4", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=effectsize), color = "grey", size=3, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.combined$effectsize), position = "left") +
   xlab("Effect size (deltalog per day)") +
   theme_fig2() +
@@ -249,7 +249,7 @@ eff.size.comb <- ggplot(data = df.combined) +
 
 #growth plot
 growth.comb <- ggplot(data = df.combined) + 
-  geom_point(aes(x=beta, y=growth), color = "royalblue4", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=growth), color = "grey", size=3, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.combined$growth), position = "left") +
   xlab("As percent growth (% per day)") + ylab("") +
   theme_fig2() +
