@@ -1,6 +1,6 @@
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(magrittr))
-source("code/src/data/multi_country/get_JHU_country_data.R")
+source("code/data/multi_country/get_JHU_country_data.R")
 
 usa_data <- get_jhu_data("US")
 

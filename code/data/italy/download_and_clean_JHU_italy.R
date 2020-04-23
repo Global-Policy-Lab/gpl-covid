@@ -1,5 +1,5 @@
 suppressPackageStartupMessages(library(tidyverse))
-source("code/src/data/multi_country/get_JHU_country_data.R")
+source("code/data/multi_country/get_JHU_country_data.R")
 italy_data <- get_jhu_data("Italy") %>% 
   select(-province_state)
 

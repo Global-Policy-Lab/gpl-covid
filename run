@@ -41,15 +41,15 @@ done
 printf "***Downloading shape and population info for all countries***\n"
 if $CENSUS
 then
-    python code/src/data/multi_country/get_adm_info.py
+    python code/data/multi_country/get_adm_info.py
 fi
 
 ### Policy
 printf "***Downloading USA testing data***\n"
 if $DOWNLOAD
 then
-    python code/src/data/usa/download_latest_covidtrackingdotcom_data.py
-    python code/src/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py
+    python code/data/usa/download_latest_covidtrackingdotcom_data.py
+    python code/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py
 fi
 
 ### Epi
@@ -57,60 +57,60 @@ fi
 printf "***Downloading Johns Hopkins U data for all countries***\n"
 if $DOWNLOAD
 then
-    Rscript code/src/data/multi_country/download_6_countries_JHU.R
+    Rscript code/data/multi_country/download_6_countries_JHU.R
 fi
 
 #### FRA
 printf "***Processing FRA epi data***\n"
 if $STATA
 then
-    stata -b do code/src/data/france/format_infected.do
+    stata -b do code/data/france/format_infected.do
 fi
 
 #### USA
 printf "***Processing USA epi data***\n"
 if $DOWNLOAD
 then
-    Rscript code/src/data/usa/download_and_clean_usafacts.R
+    Rscript code/data/usa/download_and_clean_usafacts.R
 fi
 
 ### Dataset merging
 #### CHN
 printf "***Processing and merging CHN data***\n"
-python code/src/data/china/collate_data.py
+python code/data/china/collate_data.py
 
 #### FRA
 printf "***Merging FRA data***\n"
 if $STATA
 then
-    stata -b do code/src/data/france/format_policy.do
+    stata -b do code/data/france/format_policy.do
 fi
 
 # IRN
 printf "***Processing  and merging IRN data***\n"
-Rscript code/src/data/iran/iran_cleaning.R
-python code/src/data/iran/iran-split-interim-into-processed.py
+Rscript code/data/iran/iran_cleaning.R
+python code/data/iran/iran-split-interim-into-processed.py
 
 # ITA
 printf "***Processing  and merging ITA data***\n"
 if $DOWNLOAD
 then
-    python code/src/data/italy/italy-download-cases-merge-policies.py
+    python code/data/italy/italy-download-cases-merge-policies.py
 else
-    python code/src/data/italy/italy-download-cases-merge-policies.py --nr
+    python code/data/italy/italy-download-cases-merge-policies.py --nr
 fi
 
 # KOR
 printf "***Processing  and merging KOR data***\n"
-Rscript code/src/data/korea/generate_KOR_processed.R
+Rscript code/data/korea/generate_KOR_processed.R
 
 # USA
 printf "***Merging USA data***\n"
-python code/src/data/usa/merge_policy_and_cases.py
+python code/data/usa/merge_policy_and_cases.py
 
 # quality-check processed datasets
 printf "***Checking processed data***\n"
-python code/src/data/multi_country/quality-check-processed-datasets.py
+python code/data/multi_country/quality-check-processed-datasets.py
 
 ## regression model estimation
 printf "***Estimating regression model and creating Figure 3, SI Table 3, SI Table 5, ED Figure 10***\n"

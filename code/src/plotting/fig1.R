@@ -38,7 +38,7 @@ notify <- function(country) {
 }
 
 # Cut off dates for analysis
-suppressWarnings(cut_dates <- read.csv("code/src/data/cutoff_dates.csv"))
+suppressWarnings(cut_dates <- read.csv("code/data/cutoff_dates.csv"))
 cut_dates$end_date <- as.Date(as.character(cut_dates$end_date), "%Y%m%d")
 
 ###########################################

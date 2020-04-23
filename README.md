@@ -152,7 +152,7 @@ The steps to obtain all data in <data/raw>, and then process this data into data
 For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Appendix. A version that was frozen at the time of submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](references/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
 #### Geographical and population data
-1. `python code/src/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries). **Note:** To run this script, you will need a U.S. Census API key. See [Setup](##Setup)
+1. `python code/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries). **Note:** To run this script, you will need a U.S. Census API key. See [Setup](##Setup)
 2. For Chinese city-level population data, the dataset is extracted from a compiled dataset of the 2010 Chinese City Statistical Yearbooks. We manually matched the city level population dataset to the city level COVID-19 epidemiology dataset. The resulting file is in [data/raw/china/china_city_pop.csv](data/raw/china/china_city_pop.csv).
 3. For Korean population data, download from [Statistics Korea](http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B040A3&vw_cd=MT_ZTITLE&list_id=A6&seqNo=&lang_mode=ko&language=kor&obj_var_id=&itm_id=&conn_path=MT_ZTITLE) (a similar page in English is available [here](http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B04005N&language=en))
 
@@ -178,13 +178,13 @@ Most policy and testing data was manually collected from a variety of sources. A
 Any policy/testing data that was scraped programmatically is formatted similar to the manual data sheet and saved to `data/interim/[country_name]/[country_name]_policy_data_sources_other.csv`. These programmatic steps are listed below:
 
 ##### United States
-1. `python code/src/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
-2. `python code/src/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py`: Check that detected testing regime changes make sense and discard any false detections. Because this can be an interactive step, there is also a corresponding [Notebook](code/src/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb) that you may run.
+1. `python code/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
+2. `python code/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py`: Check that detected testing regime changes make sense and discard any false detections. Because this can be an interactive step, there is also a corresponding [Notebook](code/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb) that you may run.
 
 #### Epidemiological data
 
 ##### Multi-country
-1. `Rscript code/src/data/multi_country/download_6_countries_JHU.R`: Downloads 6 countries' data from the Johns Hopkins University Data underlying [their dashboard](https://coronavirus.jhu.edu/map.html). **Note:** The JHU dataset format has been changing frequently, so it is possible that this script will need to be modified.
+1. `Rscript code/data/multi_country/download_6_countries_JHU.R`: Downloads 6 countries' data from the Johns Hopkins University Data underlying [their dashboard](https://coronavirus.jhu.edu/map.html). **Note:** The JHU dataset format has been changing frequently, so it is possible that this script will need to be modified.
 
 ##### China
 1. For data from January 24, 2020 onwards, we relied on [an open source GitHub project](https://github.com/BlankerL/DXY-COVID-19-Data). Download the data and save it to [data/raw/china/DXYArea.csv](data/raw/china/DXYArea.csv).
@@ -192,7 +192,7 @@ Any policy/testing data that was scraped programmatically is formatted similar t
 
 ##### France
 1. Download the March 12 file update for the number of confirmed cases per région from the [French government’s website](https://www.data.gouv.fr/en/datasets/fr-sars-cov-2/) and save it to [data/raw/france/fr-sars-cov-2-20200312.xlsx](data/raw/france/fr-sars-cov-2-YYYYMMDD.xlsx). This file only gets updated every 1-5 days, so we augment it with data scraped daily from a live website through March 25, 2020. At this point, the live website stopped reporting daily infections, and we're currently working to figure out if this periodically updated site will continue to produce updates.
-2. `stata -b do code/src/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset, set at the beginning the last sample date. Default is March 18th.
+2. `stata -b do code/data/france/format_infected.do`: Run in Stata to clean and format the French regional epidemiological dataset, set at the beginning the last sample date. Default is March 18th.
 
 ##### Iran
 1. Copy all of the date lines from the "New COVID-19 cases in Iran by province" table on the [Wikipedia page tracking this outbreak in Iran](https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Iran).
@@ -212,29 +212,29 @@ Epi data is downloaded and merged with policy data in one step, described in [th
 This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
 
 ##### USA
-1. `Rscript code/src/data/usa/download_and_clean_usafacts.R`: Downloads county- and state-level data from [usafacts.org](https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/)
+1. `Rscript code/data/usa/download_and_clean_usafacts.R`: Downloads county- and state-level data from [usafacts.org](https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/)
 
 #### Merge all data for each country
-Run the following scripts to merge epi, policy, testing, and population data for each country. After completion, you may run [code/src/data/multi_country/quality-check-processed-datasets.py](code/src/data/multi_country/quality-check-processed-datasets.py), to make sure all of the fully processed datasets are correctly and consistently formatted.
+Run the following scripts to merge epi, policy, testing, and population data for each country. After completion, you may run [code/data/multi_country/quality-check-processed-datasets.py](code/data/multi_country/quality-check-processed-datasets.py), to make sure all of the fully processed datasets are correctly and consistently formatted.
 
 ##### China
-1. `python code/src/data/china/collate_data.py`
+1. `python code/data/china/collate_data.py`
 
 ##### France
-1. `stata -b do code/src/data/france/format_policy.do`
+1. `stata -b do code/data/france/format_policy.do`
 
 ##### Iran
-1. `Rscript code/src/data/iran/iran_cleaning.R`
-2. `python code/src/data/iran/iran-split-interim-into-processed.py`
+1. `Rscript code/data/iran/iran_cleaning.R`
+2. `python code/data/iran/iran-split-interim-into-processed.py`
 
 ##### Italy
-1. `python code/src/data/italy/italy-download-cases-merge-policies.py`
+1. `python code/data/italy/italy-download-cases-merge-policies.py`
 
 ##### South Korea
-1. `Rscript code/src/data/korea/generate_KOR_processed.R`
+1. `Rscript code/data/korea/generate_KOR_processed.R`
 
 ##### United States
-1. `python code/src/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
+1. `python code/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
 
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
@@ -278,7 +278,7 @@ Note that the outputs of [code/src/plotting/fig1.R](code/src/plotting/fig1.R) ar
 
 #### Extended Data Figure 1
 
-1. `Rscript code/src/data/korea/make_JHU_comparison_data.R`: Create [data/interim/korea/KOR_JHU_data_comparison.csv](data/interim/korea/KOR_JHU_data_comparison.csv)
+1. `Rscript code/data/korea/make_JHU_comparison_data.R`: Create [data/interim/korea/KOR_JHU_data_comparison.csv](data/interim/korea/KOR_JHU_data_comparison.csv)
 2. `python code/src/plotting/figED1.py`: Generate 2 outputs that constitute ED Figure 1 (`results/figures/appendix/EDFigure1-2.pdf` and `results/figures/appendix/EDFigure1-2.pdf`)
 
 #### Extended Data Figure 2

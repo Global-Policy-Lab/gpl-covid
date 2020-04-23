@@ -1,5 +1,5 @@
 suppressPackageStartupMessages(library(tidyverse))
-source("code/src/data/multi_country/get_JHU_country_data.R")
+source("code/data/multi_country/get_JHU_country_data.R")
 france_data <- get_jhu_data("France") %>% 
   filter(is.na(province_state))
 
