@@ -226,20 +226,21 @@ Each of the individual country regressions are available to be run within [codes
 ### SIR model projections
 Once the regression coefficients have been estimated in the above models, run the following code to generate projections of active and cumulative infections using an SIR model:
 
-1. `python codes/models/get_gamma.py`: Estimates removal rate to use in projections from data that contains both cumulative cases and active cases.
-2. `Rscript codes/models/run_all_CB_simulations.R`: Generates the csv inputs for Figure 4.
-3. `Rscript codes/models/output_underlying_projection_output.R`: outputs the raw projection output if you wish to examine the underlying output.
+1. `python codes/models/get_gamma.py`: Estimate removal rate to use in projections from data that contains both cumulative cases and active cases.
+2. `Rscript codes/models/run_all_CB_simulations.R`: Generate the csv inputs for Figure 4.
+3. `Rscript codes/models/output_underlying_projection_output.R`: Output the raw projection output if you wish to examine the underlying output.
 
 ### Figure creation
-To generate the four figures in the paper, run the following scripts. Figure 1 only requires the data collection steps to be complete. Figures 2 and 3 require the regression step to be complete, and Figure 4 requires the projection step to be complete.
+To generate the four figures in the paper, run the following scripts. Figure 1 only requires the data collection steps to be complete. Figures 2 and 3 require the regression step to be complete, and Figure 4 requires the projection step to be complete and to have previously run the code for Figure 1. Each of the Extended Data Figures and Supplementary Information Tables may require different steps of the analysis to be finalized.
 
 #### Figure 1
 
-`Rscript codes/plotting/fig1.R`: Generates 12 outputs that constitute Figure 1 (`*_timeseries.pdf`, and `*_map.pdf` for each of the 6 countries). **Note:** This script requires [data/raw/china/match_china_city_name_w_adm2.csv](data/raw/china/match_china_city_name_w_adm2.csv), a manually generated crosswalk of Chinese city names.
+1. `Rscript codes/plotting/fig1.R`: Generate 12 outputs that constitute Figure 1 (`*_timeseries.pdf`, and `*_map.pdf` for each of the 6 countries). **Note:** This script requires [data/raw/china/match_china_city_name_w_adm2.csv](data/raw/china/match_china_city_name_w_adm2.csv), a manually generated crosswalk of Chinese city names.
+2. `python codes/plotting/aggregate_fig1_source_data.py`: Combine csv's into the "source_data" excel file.
 
 #### Figure 2
 
-`Rscript codes/plotting/fig2.R`: Generates 3 outputs that constitute Figure 2, in `results/figures/fig2`:
+`Rscript codes/plotting/fig2.R`: Generate 3 outputs that constitute Figure 2, in `results/figures/fig2`:
 - *Panel A*: `Fig2A_nopolicy.pdf`
 - *Panel B*: `Fig2B_comb.pdf`
 - *Panel C*: `Fig2C_ind.pdf`
@@ -257,12 +258,12 @@ Note that the outputs of [codes/plotting/fig1.R](codes/plotting/fig1.R) are requ
 
 #### Extended Data Figure 1
 
-1. `Rscript codes/data/korea/make_JHU_comparison_data.R`: Creates [data/interim/korea/KOR_JHU_data_comparison.csv](data/interim/korea/KOR_JHU_data_comparison.csv)
-2. `python codes/plotting/figED1.py`: Generates 2 outputs that constitute ED Figure 1 (`results/figures/appendix/EDFigure1-2.pdf` and `results/figures/appendix/EDFigure1-2.pdf`)
+1. `Rscript codes/data/korea/make_JHU_comparison_data.R`: Create [data/interim/korea/KOR_JHU_data_comparison.csv](data/interim/korea/KOR_JHU_data_comparison.csv)
+2. `python codes/plotting/figED1.py`: Generate 2 outputs that constitute ED Figure 1 (`results/figures/appendix/EDFigure1-2.pdf` and `results/figures/appendix/EDFigure1-2.pdf`)
 
 #### Extended Data Figure 2
 
-`Rscript codes/plotting/figED2.R`: Generates ED Figure 2 (`results/figures/appendix/figED2.pdf`).
+`Rscript codes/plotting/figED2.R`: Generate ED Figure 2 (`results/figures/appendix/figED2.pdf`).
 
 #### Extended Data Figures 3-4
 

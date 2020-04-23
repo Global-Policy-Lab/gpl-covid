@@ -133,6 +133,7 @@ Rscript codes/models/output_underlying_projection_output.R
 # Fig 1
 printf "***Creating Fig 1***\n"
 Rscript codes/plotting/fig1.R
+python codes/plotting/aggregate_fig1_source_data.py
 
 # Fig 2
 printf "***Creating Fig 2***\n"
