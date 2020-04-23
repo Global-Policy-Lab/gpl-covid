@@ -67,17 +67,22 @@ codes
 │   │   └── make_JHU_comparison_data.R
 │   ├── multi_country
 │   │   ├── download_6_countries_JHU.R
+│   │   ├── download_russell_underreporting_estimates.R
 │   │   ├── get_JHU_country_data.R
 │   │   ├── get_adm_info.py
 │   │   └── quality-check-processed-datasets.py
 │   └── usa
 │       ├── add_testing_regimes_to_covidtrackingdotcom_data.ipynb
+│       ├── add_testing_regimes_to_covidtrackingdotcom_data.py
 │       ├── check_health_data.R
 │       ├── download_and_clean_JHU_usa.R
 │       ├── download_and_clean_usafacts.R
 │       ├── download_latest_covidtrackingdotcom_data.py
+│       ├── gen_state_name_abbrev_xwalk.R
 │       ├── get_usafacts_data.R
 │       └── merge_policy_and_cases.py
+├── impute.py
+├── merge.py
 ├── models
 │   ├── CHN_create_CBs.R
 │   ├── CHN_generate_data_and_model_projection.R
@@ -98,19 +103,34 @@ codes
 │   │   ├── ITA_adm2.do
 │   │   ├── KOR_adm1.do
 │   │   ├── MASTER_run_all_reg.do
-│   │   └── USA_adm1.do
+│   │   ├── USA_adm1.do
+│   │   └── disaggregated_policies
+│   │       ├── FRA_adm1_disag.do
+│   │       ├── IRN_adm1_disag.do
+│   │       ├── ITA_adm2_disag.do
+│   │       ├── KOR_adm1_disag.do
+│   │       ├── MASTER_run_all_reg_disag.do
+│   │       └── USA_adm1_disag.do
+│   ├── epi.py
 │   ├── get_gamma.py
+│   ├── output_underlying_projection_output.R
 │   ├── predict_felm.R
 │   ├── projection_helper_functions.R
-│   └── run_all_CB_simulations.R
+│   ├── run_all_CB_simulations.R
+│   └── run_projection_with_multiple_gammas.R
 ├── plotting
+│   ├── aggregate_fig1_source_data.py
 │   ├── count-policies.py
 │   ├── examine_lagged_relationship_between_new_deaths_recoveries_and_older_cases.R
+│   ├── extended_data_fig3_4.do
+│   ├── extended_data_fig5.do
 │   ├── fig1.R
 │   ├── fig2.R
 │   ├── fig4_analysis.py
-│   ├── figA2.py
-│   └── gen_fig4.py
+│   ├── figED1.py
+│   ├── figED2.R
+│   ├── gen_fig4.py
+│   └── sims.py
 ├── pop.py
 └── utils.py
 ```

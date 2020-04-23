@@ -1,5 +1,5 @@
-import pandas as pd
 import codes.utils as cutil
+import pandas as pd
 
 out_dir = cutil.RESULTS / "source_data"
 
@@ -11,5 +11,5 @@ for f in files:
     names.append(f.stem)
 
 with pd.ExcelWriter(out_dir / "Figure1_data.xlsx") as writer:
-    for ix,i in enumerate(dfs):
+    for ix, i in enumerate(dfs):
         i.to_excel(writer, index=False, sheet_name=names[ix], float_format="%.3f")
