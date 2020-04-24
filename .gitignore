@@ -149,8 +149,6 @@ results/*
 !results/source_data/
 results/source_data/indiv
 
-**/archive/
-
 # isort
 default.profraw
 
