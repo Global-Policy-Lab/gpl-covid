@@ -524,6 +524,14 @@ foreach lags of num 0/15{
 		matrix rsq[`lags'+1,2] = _se[_bs_1]
 		matrix rsq[`lags'+1,3] = `lags'
 	}
+	else {
+		reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure ///
+		national_lockdown testing_regime_*, absorb(i.adm1_id i.dow) 
+		matrix rsq[`lags'+1,1] = e(r2)
+		matrix rsq[`lags'+1,2] = .
+		matrix rsq[`lags'+1,3] = `lags'	
+	}
+	
 	foreach var in pck_social_distance school_closure national_lockdown{
 		qui replace `var' = `var'_copy
 		qui drop `var'_copy

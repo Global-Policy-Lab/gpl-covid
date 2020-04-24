@@ -427,6 +427,13 @@ foreach lags of num 0/15{
 		matrix rsq[`lags'+1,2] = _se[_bs_1]
 		matrix rsq[`lags'+1,3] = `lags'
 	}
+	else {
+		reghdfe D_l_active_cases testing_regime_change_* p_1 p_2 p_3 p_4, absorb(i.adm1_id i.dow) 
+
+		matrix rsq[`lags'+1,1] = e(r2)
+		matrix rsq[`lags'+1,2] = .
+		matrix rsq[`lags'+1,3] = `lags'	
+	}
 	foreach var in p_1 p_2 p_3 p_4 {
 		qui replace `var' = `var'_copy
 		qui drop `var'_copy
@@ -438,7 +445,7 @@ clear
 svmat rsq
 rename (rsq1 rsq2 rsq3) (r2 se lag_length)
 outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_KOR.csv", replace	
-restore
+restore}
 
 drop if L0_b == .
 keep *_at *_ll1 *_ul1 *_b

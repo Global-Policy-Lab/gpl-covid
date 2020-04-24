@@ -409,6 +409,12 @@ foreach lags of num 0/15{
 		matrix rsq[`lags'+1,2] = _se[_bs_1]
 		matrix rsq[`lags'+1,3] = `lags'
 	}
+	else {
+	reghdfe D_l_cum_confirmed_cases p_1 p_2 p_3 p_4 p_5 p_6 , absorb(i.adm2_id i.dow)
+	matrix rsq[`lags'+1,1] = e(r2)
+	matrix rsq[`lags'+1,2] = .
+	matrix rsq[`lags'+1,3] = `lags'
+	}
 	foreach var in p_1 p_2 p_3 p_4 p_5 p_6{
 		qui replace `var' = `var'_copy
 		qui drop `var'_copy
