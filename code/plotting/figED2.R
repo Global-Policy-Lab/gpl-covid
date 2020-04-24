@@ -6,11 +6,11 @@
 # Set up paths and parameters ---------------------------------------------
 
 # Load libraries
-library(tidyverse)
-library(padr)
-library(mgcv)
-require(gridExtra)
-require(ggplot2)
+library(tidyverse, warn.conflicts = FALSE)
+library(padr, warn.conflicts = FALSE)
+library(mgcv, warn.conflicts = FALSE)
+library(gridExtra, warn.conflicts = FALSE)
+library(ggplot2, warn.conflicts = FALSE)
 
 args <- commandArgs()
 nd <- args[length(args)] == "--nd"
@@ -90,17 +90,17 @@ hospitalisation_to_death_truncated <- function(x) {
   plnorm(x + 1, muHDT, sigmaHDT) - plnorm(x, muHDT, sigmaHDT)
 }
 
-cutoff_date <- read_csv("code/data/cutoff_dates.csv")
+cutoff_date <- read_csv("code/data/cutoff_dates.csv", col_types = cols())
 cutoff_date <- cutoff_date[cutoff_date$tag == 'default', 'end_date'] %>%
   unlist() %>%
   lubridate::ymd()
 
 # Load data -----------------------------------------------------
 if (nd) {
-  allDat <- read_csv("data/raw/multi_country/ecdc.csv")
+  allDat <- read_csv("data/raw/multi_country/ecdc.csv", col_types = cols())
 } else {
   httr::GET("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv", httr::authenticate(":", ":", type="ntlm"), httr::write_disk(tf <- tempfile(fileext = ".csv")))
-  allDat <- read_csv(tf)
+  allDat <- read_csv(tf, col_types = cols())
 }
 
 allDatDesc <- allDat %>% 
