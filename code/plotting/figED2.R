@@ -10,7 +10,6 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(padr))
 suppressPackageStartupMessages(library(mgcv))
 suppressPackageStartupMessages(library(gridExtra))
-suppressPackageStartupMessages(library(ggplot2))
 
 args <- commandArgs()
 nd <- args[length(args)] == "--nd"
