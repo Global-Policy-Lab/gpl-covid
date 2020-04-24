@@ -6,11 +6,7 @@
 # Set up paths and parameters ---------------------------------------------
 
 # Load libraries
-library(tidyverse, warn.conflicts = FALSE)
-library(padr, warn.conflicts = FALSE)
-library(mgcv, warn.conflicts = FALSE)
-library(gridExtra, warn.conflicts = FALSE)
-library(ggplot2, warn.conflicts = FALSE)
+suppressPackageStartupMessages(library(tidyverse, padr, mgcv, gridExtra, ggplot2))
 
 args <- commandArgs()
 nd <- args[length(args)] == "--nd"
