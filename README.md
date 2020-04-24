@@ -26,7 +26,7 @@ To execute the full `run.sh` script, which runs the analysis from start to finis
 python -m ipykernel install --user --name gpl-covid
 ```
 
-To run one of the scripts (`get_adm_info.py`), you will also need an API key for the US Census API, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `api_keys.json` in the root directory of this repo with the following format:
+To run one of the scripts (`get_adm_info.py`), you will also need an API key for the US Census API, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `code/api_keys.json` with the following format (a template file is provided):
 
 ```json
 {
@@ -141,7 +141,7 @@ code
 ```
 
 ## Data Documentation
-A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README.
+A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README. A description of the variables appearing in `data/processed/[adm]/[country]_processed.csv` is available in [data/raw/multi_country/data_dictionary.xlsx](data/raw/multi_country/data_dictionary.xlsx)
 
 ## Replication Steps
 
@@ -151,7 +151,15 @@ There are four stages to our analysis:
 3. SIR model projections
 4. Figure creation
 
-The entire pipeline can be run by calling `bash code/run.sh`. If you would rather do it step by step, see the description of each stage below.
+The end dates of the data analyzed, and of the "cases averted" projections, are controlled by `code/data/cutoff_dates.csv`
+
+### Run full pipeline
+The entire pipeline can be run by calling `bash code/run.sh`. If you would rather do it step by step, see the description of each stage below. There are four flags that can be passed to that script to change the default behavior, described below:
+
+- `-s|--no-stata`: Don't run the Stata scripts (must include this flag if you do not have Stata). In this case, the regression steps will be skipped and you will rely on previously computed regression results.
+- `-c|--census`: Run `code/data/multi_country/get_adm_info.py` because you have supplied a valid Census Data API value in `code/api_keys.py`. This just means that you will redownload geographic and population information for the majority of subnational units analyzed (some population information is obtained manually or through separate scripts)
+- `p|--num-proj`: Integer that controls both (a) the number of bootstrap samples when calculating projection uncertainty bounds in Fig. 4 and (b) the number of Monte Carlo samples used to create synthetic outbreaks (Extended Data Figures 8 and 9). Default 1000.
+- `d|--download`: Download new raw data, rather than using that which has already been downloaded. This may affect results slightly if, e.g. a country retroactivly adjusts their reported cases.
 
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was performed through manual downloading and/or processing of datasets and is described in as much detail as possible. The sections should be run in the order listed, as some files from later sections will depend on those from earlier sections (e.g. the geographical and population data).

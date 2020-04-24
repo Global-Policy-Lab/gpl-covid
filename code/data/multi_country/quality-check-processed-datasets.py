@@ -62,7 +62,7 @@ use_cutoff = cutil.PROCESSED_DATA_DATE_CUTOFF
 
 path_cutoff_dates = cutil.CODE / "data" / "cutoff_dates.csv"
 path_template = cutil.DATA_PROCESSED / "[country]_processed.csv"
-path_data_dictionary = cutil.HOME / "references" / "data_dictionary.xlsx"
+path_data_dictionary = cutil.DATA_RAW / "multi_country" / "data_dictionary.xlsx"
 
 
 def test_condition(condition, country, adm, message, errors=default_error_behavior):

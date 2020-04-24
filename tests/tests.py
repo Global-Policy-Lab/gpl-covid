@@ -70,7 +70,7 @@ def test_pipeline(tmp_path):
 
     # run pipeline
     cmd = shlex.split(
-        "bash code/run.sh --no-download --nostata --nocensus --num-proj 2"
+        "bash code/run.sh --nostata --num-proj 2"
     )
     subprocess.run(cmd, check=True)
 
