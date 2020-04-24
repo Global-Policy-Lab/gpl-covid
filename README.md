@@ -148,6 +148,8 @@ There are four stages to our analysis:
 3. SIR model projections
 4. Figure creation
 
+The entire pipeline can be run by calling `bash code/run.sh`. If you would rather do it step by step, see the description of each stage below.
+
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was performed through manual downloading and/or processing of datasets and is described in as much detail as possible. The sections should be run in the order listed, as some files from later sections will depend on those from earlier sections (e.g. the geographical and population data).
 
