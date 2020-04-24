@@ -69,9 +69,7 @@ def test_pipeline(tmp_path):
     old_mtimes = {i: i.stat().st_mtime for i in old_files}
 
     # run pipeline
-    cmd = shlex.split(
-        "bash code/run.sh --nostata --num-proj 2"
-    )
+    cmd = shlex.split("bash code/run.sh --nostata --num-proj 2")
     subprocess.run(cmd, check=True)
 
     bad_files = []
