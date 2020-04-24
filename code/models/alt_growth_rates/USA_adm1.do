@@ -408,7 +408,7 @@ preserve
 	lab(3 "w/o NY") region(lstyle(none))) ///
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/USA.pdf, replace
-	graph export results/figures/appendix/cross_valid/USA.png, replace	
+	capture graph export results/figures/appendix/cross_valid/USA.png, replace	
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_USA.csv", comma replace
 restore
 

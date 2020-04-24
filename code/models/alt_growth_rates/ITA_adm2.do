@@ -326,7 +326,7 @@ preserve
 	lab(3 "w/o Lombardia") region(lstyle(none)) rows(1)) ///
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/ITA.pdf, replace
-	graph export results/figures/appendix/cross_valid/ITA.png, replace	
+	capture graph export results/figures/appendix/cross_valid/ITA.png, replace	
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_ITA.csv", comma replace	
 restore
 
