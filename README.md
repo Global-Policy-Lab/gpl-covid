@@ -309,7 +309,7 @@ Note that the outputs of [code/plotting/fig1.R](code/plotting/fig1.R) are requir
 
 #### Extended Data Figures 8 and 9
 
-1. `papermill notebooks/simulate-and-regress.ipynb - -k gpl-covid`: Run Monte Carlo simulations of synthetic outbreaks
+1. `papermill code/notebooks/simulate-and-regress.ipynb code/notebooks/simulate-and-regress-log.ipynb -k gpl-covid`: Run Monte Carlo simulations of synthetic outbreaks
 2. `python code/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/sims --source-dir "results/source_data/ExtendedDataFigure89.csv"`: Create figures
 
 #### Extended Data Figure 10
