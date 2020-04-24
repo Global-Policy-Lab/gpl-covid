@@ -6,11 +6,13 @@
 # Set up paths and parameters ---------------------------------------------
 
 # Load libraries
-library(tidyverse)
-library(padr)
-library(mgcv)
-require(gridExtra)
-require(ggplot2)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(padr))
+suppressPackageStartupMessages(library(mgcv))
+suppressPackageStartupMessages(library(gridExtra))
+
+args <- commandArgs()
+nd <- args[length(args)] == "--nd"
 
 scale_cfr_temporal <- function(data_1_in, delay_fun = hospitalisation_to_death_truncated){
   
@@ -87,23 +89,32 @@ hospitalisation_to_death_truncated <- function(x) {
   plnorm(x + 1, muHDT, sigmaHDT) - plnorm(x, muHDT, sigmaHDT)
 }
 
+cutoff_date <- read_csv("code/data/cutoff_dates.csv", col_types = cols())
+cutoff_date <- cutoff_date[cutoff_date$tag == 'default', 'end_date'] %>%
+  unlist() %>%
+  lubridate::ymd()
 
 # Load data -----------------------------------------------------
-httr::GET("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv", httr::authenticate(":", ":", type="ntlm"), httr::write_disk(tf <- tempfile(fileext = ".csv")))
-allDat <- read_csv(tf)
-
+if (nd) {
+  allDat <- read_csv("data/raw/multi_country/ecdc.csv", col_types = cols())
+} else {
+  httr::GET("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv", httr::authenticate(":", ":", type="ntlm"), httr::write_disk(tf <- tempfile(fileext = ".csv")))
+  allDat <- read_csv(tf, col_types = cols())
+}
 
 allDatDesc <- allDat %>% 
   dplyr::arrange(countriesAndTerritories, dateRep) %>% 
   dplyr::mutate(dateRep = lubridate::dmy(dateRep))%>% 
   dplyr::rename(date = dateRep, new_cases = cases, new_deaths = deaths, country = countriesAndTerritories) %>%
   dplyr::select(date, country, new_cases, new_deaths) %>%
-  dplyr::filter(country %in% c("China", "United_States_of_America", "Italy", "Iran", "France", "South_Korea"))
+  dplyr::filter(country %in% c("China", "United_States_of_America", "Italy", "Iran", "France", "South_Korea")) %>%
+  dplyr::filter(date <= cutoff_date) %>%
+  dplyr::arrange(country, date)
 
 # Do analysis
 allTogetherCleanA <- allDatDesc %>%
   dplyr::group_by(country) %>%
-  padr::pad() %>%
+  padr::pad(interval="day") %>%
   dplyr::mutate(new_cases = tidyr::replace_na(new_cases, 0),
                 new_deaths = tidyr::replace_na(new_deaths, 0)) %>%
   #What is this doing?
