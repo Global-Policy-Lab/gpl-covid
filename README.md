@@ -1,6 +1,6 @@
 # The Effect of Large-Scale Anti-Contagion Policies on the Coronavirus (COVID-19) Pandemic
 
-This repository contains code and data necessary to replicate the findings of our paper [INSERT arXiv CITATION].
+This repository contains code and data necessary to replicate the findings of [our paper](https://www.medrxiv.org/content/10.1101/2020.03.22.20040642v2).
 
 ## Setup
 Scripts in this repository are written in R, Python, and Stata. Note that you will need a Stata license to fully replicate the analysis. Throughout this Readme, it is assumed that you’ll execute scripts from the repo root directory. In addition, we assume that you have an environment of Python and R packages described in <environment.yml>.
@@ -18,7 +18,7 @@ Once you have activated this environment, to run some of the Python scripts, you
 pip install -e .
 ```
 
-To execute the full `run` script, which runs the analysis from start to finish, you will also need to add this conda environment to the kernels that Jupyter is able to use (this is only needed to run simulations used to create Extended Data Figures 8 and 9). You do this with the following command (from inside the `gpl-covid` conda environment):
+To execute the full `run.sh` script, which runs the analysis from start to finish, you will also need to add this conda environment to the kernels that Jupyter is able to use (this is only needed to run simulations used to create Extended Data Figures 8 and 9). You do this with the following command (from inside the `gpl-covid` conda environment):
 
 ```bash
 python -m ipykernel install --user --name gpl-covid
@@ -33,6 +33,7 @@ To run one of the scripts (`get_adm_info.py`), you will also need an API key for
 ```
 
 Finally, to estimate the regression models, you will need several package installed in Stata. To add them, launch Stata and run:
+
 ```
 ssc install reghdfe, replace
 ssc install ftools, replace # the latest version of reghdfe would also require the installation of ftools
@@ -153,7 +154,7 @@ The entire pipeline can be run by calling `bash code/run.sh`. If you would rathe
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was performed through manual downloading and/or processing of datasets and is described in as much detail as possible. The sections should be run in the order listed, as some files from later sections will depend on those from earlier sections (e.g. the geographical and population data).
 
-For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Appendix. A version that was frozen at the time of submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](references/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
+For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Appendix. A version that was frozen at the time of latest submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](references/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
 #### Geographical and population data
 1. `python code/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries). **Note:** To run this script, you will need a U.S. Census API key. See [Setup](##Setup)
