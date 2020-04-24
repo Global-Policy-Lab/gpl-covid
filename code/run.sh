@@ -38,39 +38,39 @@ done
 
 
 ### Geography/population
-printf "***Downloading shape and population info for all countries***\n"
 if $CENSUS
 then
+    printf "***Downloading shape and population info for all countries***\n"
     python code/data/multi_country/get_adm_info.py
 fi
 
 ### Policy
-printf "***Downloading USA testing data***\n"
 if $DOWNLOAD
 then
+    printf "***Downloading USA testing data***\n"
     python code/data/usa/download_latest_covidtrackingdotcom_data.py
     python code/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py
 fi
 
 ### Epi
 #### Multi-country
-printf "***Downloading Johns Hopkins U data for all countries***\n"
 if $DOWNLOAD
 then
+    printf "***Downloading Johns Hopkins U data for all countries***\n"
     Rscript code/data/multi_country/download_6_countries_JHU.R
 fi
 
 #### FRA
-printf "***Processing FRA epi data***\n"
 if $STATA
 then
+    printf "***Processing FRA epi data***\n"
     stata -b do code/data/france/format_infected.do
 fi
 
 #### USA
-printf "***Processing USA epi data***\n"
 if $DOWNLOAD
 then
+    printf "***Processing USA epi data***\n"
     Rscript code/data/usa/download_and_clean_usafacts.R
 fi
 
@@ -80,9 +80,9 @@ printf "***Processing and merging CHN data***\n"
 python code/data/china/collate_data.py
 
 #### FRA
-printf "***Merging FRA data***\n"
 if $STATA
 then
+    printf "***Merging FRA data***\n"
     stata -b do code/data/france/format_policy.do
 fi
 
@@ -113,9 +113,9 @@ printf "***Checking processed data***\n"
 python code/data/multi_country/quality-check-processed-datasets.py
 
 ## regression model estimation
-printf "***Estimating regression model and creating Figure 3, SI Table 3, SI Table 5, ED Figure 10***\n"
 if $STATA
 then
+    printf "***Estimating regression model and creating Figure 3, SI Table 3, SI Table 5, ED Figure 10***\n"
     stata -b do code/models/alt_growth_rates/MASTER_run_all_reg.do
 fi
 
@@ -159,25 +159,28 @@ fi
 # ED Figure 2
 if $DOWNLOAD
 then
+    printf "***Creating ED Fig 2***\n"
     Rscript code/plotting/figED2.R
 fi
 
 # ED Figure 3-4
 if $STATA
 then
+    printf "***Creating ED Fig 3 and 4***\n"
     stata -b do code/plotting/extended_data_fig3_4.do
 fi
 
 # ED Figure 5
 if $STATA
 then
+    printf "***Creating ED Fig 5***\n"
     stata -b do code/plotting/extended_data_fig5.do
 fi
 
 # ED Figure 6
-printf "***Estimating regression model with disaggregated policy variables and creating ED Figure 6 and SI Table 4***\n"
 if $STATA
 then
+    printf "***Estimating regression model with disaggregated policy variables and creating ED Figure 6 and SI Table 4***\n"
     stata -b do code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
 fi
 
