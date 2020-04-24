@@ -188,7 +188,7 @@ Rscript code/models/run_projection_with_multiple_gammas.R
 # ED Figure 8/9
 printf "***Creating ED Fig 8/9***\n"
 printf "Running simulations..."
-papermill notebooks/simulate-and-regress.ipynb notebooks/simulate-and-regress-log.ipynb -p n_samples $NUMPROJ -k gpl-covid
+papermill code/notebooks/simulate-and-regress.ipynb notebooks/simulate-and-regress-log.ipynb -p n_samples $NUMPROJ -k gpl-covid
 printf "Making Figures..."
 if [ $NUMPROJ = 1000 ]; then
     python code/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/sims --source-data "results/source_data/ExtendedDataFigure89.csv"
