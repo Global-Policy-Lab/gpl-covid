@@ -164,6 +164,8 @@ if $DOWNLOAD
 then
     printf "***Creating ED Fig 2***\n"
     Rscript code/plotting/figED2.R
+else
+    Rscript code/plotting/figED2.R --nd
 fi
 
 # ED Figure 3-4
