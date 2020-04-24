@@ -115,7 +115,7 @@ allDatDesc <- allDat %>%
 # Do analysis
 allTogetherCleanA <- allDatDesc %>%
   dplyr::group_by(country) %>%
-  padr::pad() %>%
+  padr::pad(interval="day") %>%
   dplyr::mutate(new_cases = tidyr::replace_na(new_cases, 0),
                 new_deaths = tidyr::replace_na(new_deaths, 0)) %>%
   #What is this doing?
