@@ -9,7 +9,7 @@ import pandas as pd
 def test_readme():
     with open("README.md", "r") as f:
         readme = f.read()
-    with open("run", "r") as f:
+    with open("code/run.sh", "r") as f:
         for l in f:
             for prog in ["python", "Rscript", "stata"]:
                 # skip quality check, which is not in readme
@@ -20,7 +20,7 @@ def test_readme():
 
 def test_pipeline(tmp_path):
 
-    ## list all files that we know will not get updated
+    # list all files that we know will not get updated
     # 1) bootstraps are run with only 2 samples in tests, so don't check those
     # 2) excluded data in "models" and "results/source_data" is created by stata code
     #    that does not run in CI (unless otherwise described below)
@@ -69,7 +69,9 @@ def test_pipeline(tmp_path):
     old_mtimes = {i: i.stat().st_mtime for i in old_files}
 
     # run pipeline
-    cmd = shlex.split("bash run --no-download --nostata --nocensus --num-proj 2")
+    cmd = shlex.split(
+        "bash code/run.sh --no-download --nostata --nocensus --num-proj 2"
+    )
     subprocess.run(cmd, check=True)
 
     bad_files = []
@@ -97,8 +99,10 @@ def test_pipeline(tmp_path):
             )
         except UnicodeDecodeError:
             pass
-        except:
+        except AssertionError:
             bad_files.append((str(other_file), str(p)))
+        except:
+            raise
 
     # raise errors
     if len(missing_files.union(not_generated, bad_files)) > 0:
@@ -110,12 +114,12 @@ def test_pipeline(tmp_path):
                 cmd = shlex.split(f"cat {p}")
                 subprocess.run(cmd)
         raise AssertionError(
-            f"""The following files produced by this code do not match the version saved 
+            f"""The following files produced by this code do not match the version saved
             in the repo: {set([x for x, _ in bad_files])}.
-            
+
             The following files contained in this commit are NOT created by the code:
             {not_generated}
-            
+
             The following files produced by the code are NOT contained in the commit:
             {missing_files}
             """
