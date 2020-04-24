@@ -419,8 +419,8 @@ foreach lags of num 0/15{
 	}
 	drop *_fixelag
 	}
-	if $BS == 1 {
-		bootstrap e(r2), rep(1000) seed(1) : ///
+	if $BS != 0 {
+		bootstrap e(r2), rep($BS) seed(1) : ///
 		reghdfe D_l_active_cases testing_regime_change_* p_1 p_2 p_3 p_4, absorb(i.adm1_id i.dow) 
 
 		matrix rsq[`lags'+1,1] = _b[_bs_1]
@@ -433,14 +433,12 @@ foreach lags of num 0/15{
 	}
 }
 
-if $BS == 1 {
-	preserve
-	clear
-	svmat rsq
-	rename (rsq1 rsq2 rsq3) (r2 se lag_length)
-	outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_KOR.csv", replace	
-	restore
-}
+preserve
+clear
+svmat rsq
+rename (rsq1 rsq2 rsq3) (r2 se lag_length)
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_KOR.csv", replace	
+restore
 
 drop if L0_b == .
 keep *_at *_ll1 *_ul1 *_b

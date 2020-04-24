@@ -6,22 +6,31 @@ clear all
 capture set scheme covid19_fig3 
 
 // create folders for figure output 
-capture mkdir "results/"
-capture mkdir "results/figures/"
-capture mkdir "results/figures/fig3/" 
+capture mkdir "results"
+capture mkdir "results/figures"
+capture mkdir "results/figures/fig3" 
 capture mkdir "results/figures/fig3/raw" 
-capture mkdir "results/figures/appendix/" 
+capture mkdir "results/figures/appendix" 
 capture mkdir "results/figures/appendix/error_dist" 
 capture mkdir "results/figures/appendix/subnatl_growth_rates" 
 capture mkdir "results/figures/appendix/cross_valid" 
 capture mkdir "results/figures/appendix/fixed_lag" 
-capture mkdir "results/tables/" 
+capture mkdir "results/tables" 
 capture mkdir "results/tables/reg_results" 
 capture mkdir "results/tables/ATE_fixed_lag" 
 capture mkdir "results/source_data" 
-capture mkdir "results/source_data/indiv" 
+capture mkdir "results/source_data/indiv"
+capture mkdir "models"
+capture mkdir "models/reg_data"
 
-global BS = 0 // set to 1 to run bootstrap CI on fig A3-b (add 2-3 hours)
+// Number of bootstraps to run to create UI in Fig ED3-b is determined by CLI arg
+// Running 1000 bootstraps adds ~2-3 hours
+if "`0'" == "" {
+    global BS = 0
+}
+else {
+    global BS = `0'
+}
 
 // run .do files
 do "code/models/alt_growth_rates/CHN_adm2.do"

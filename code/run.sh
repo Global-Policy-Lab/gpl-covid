@@ -119,7 +119,7 @@ python code/data/multi_country/quality-check-processed-datasets.py
 if $STATA
 then
     printf "***Estimating regression model and creating Figure 3, SI Table 3, SI Table 5, ED Figure 10***\n"
-    stata -b do code/models/alt_growth_rates/MASTER_run_all_reg.do
+    stata -b do code/models/alt_growth_rates/MASTER_run_all_reg.do $NUMPROJ
 fi
 
 
