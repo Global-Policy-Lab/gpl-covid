@@ -17,6 +17,6 @@ jobs:
       # STATA_TESTS: false
     steps:
       - uses: actions/checkout@v2
-      - shell: bash
+      - shell: bash -l {0}
         name: Run all tests
         run: conda activate gpl-covid && bash tests/run_tests.sh
