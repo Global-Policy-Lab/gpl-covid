@@ -11,7 +11,7 @@ jobs:
     runs-on: self-hosted
 #     runs-on: ubuntu-latest
     env:
-      CONDA: ~/miniconda
+      CONDA: ~/miniconda3
       STATA_TESTS: true
     steps:
       - uses: actions/checkout@v2
