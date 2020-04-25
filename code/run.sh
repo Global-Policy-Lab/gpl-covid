@@ -41,7 +41,7 @@ done
 
 
 ### Geography/population
-if $CENSUS
+if $CENSUS && $DOWNLOAD
 then
     printf "***Downloading shape and population info for all countries***\n"
     python code/data/multi_country/get_adm_info.py
