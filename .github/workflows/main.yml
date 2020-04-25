@@ -8,17 +8,15 @@ on:
 jobs:
   test:
     name: Testing pipeline
+    ## to switch to github-hosted runner, change runs-on to "ubuntu-latest"
+    ## and STATA_TESTS to false
     runs-on: self-hosted
-#     runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
     env:
       STATA_TESTS: true
+      # STATA_TESTS: false
     steps:
       - uses: actions/checkout@v2
-      - uses: goanpeca/setup-miniconda@v1
-        with:
-          auto-update-conda: ""
-          auto-activate-base: ""
-          activate-environment: gpl-covid
-      - shell: bash -l {0}
+      - shell: bash
         name: Run all tests
         run: bash tests/run_tests.sh
