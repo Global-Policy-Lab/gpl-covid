@@ -116,7 +116,7 @@ foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolati
 "no_gathering_inside" "no_gathering_inside_popw" "school_closure" "school_closure_popw" ///
 "social_distance" "social_distance_popw" "school_closure_regional" "business_closure" ///
 "no_gathering"  "school_closure_national" "social_distance_national" ///
-"social_distance_opt" {
+"social_distance_opt" "testing_regime" {
 	replace `var' = 0 if `var' == .
 	sort adm1 date	
 	by adm1: replace `var' = sum(`var')
