@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
-pip install -e .
+# set working directory to root of gpl-covid as assumed by some scripts
+cd "$(dirname "$0")/.."
 
+# install our utilities
+pip install -e code
 
 ## parse flags to not run certain things
 STATA=true
-CENSUS=true
+CENSUS=false
 NUMPROJ=1000
-DOWNLOAD=true
+DOWNLOAD=false
 for arg in "$@"
 do
     case $arg in
@@ -16,8 +19,8 @@ do
             STATA=false
             shift
         ;;
-        -c|--nocensus)
-            CENSUS=false
+        -c|--census)
+            CENSUS=true
             shift
         ;;
         -p|--num-proj)
@@ -25,8 +28,8 @@ do
             shift
             shift
         ;;
-      	-d|--no-download)
-      	    DOWNLOAD=false
+      	-d|--download)
+      	    DOWNLOAD=true
       	    shift
       	;;
     esac

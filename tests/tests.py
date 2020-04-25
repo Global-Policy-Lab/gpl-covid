@@ -28,8 +28,6 @@ def test_pipeline(tmp_path):
     # 4) SITable2.xlsx is created manually
     # 5) TODO: Figure out why fig1 is getting randomly sorted differently by different
     #    OS so that we can properly test it
-    # 6) TODO: Once ED Fig 2 is using cutoff dates so that it doesn't change with new
-    #    downloads, remove it from the exclude list
     files_to_exclude = set(
         list(Path("models/reg_data").glob("*.csv"))
         + list(Path("models").glob("*_preds.csv"))  # created by stata
@@ -39,7 +37,6 @@ def test_pipeline(tmp_path):
             for i in [
                 "Figure2_data.csv",
                 "Figure3_data.csv",
-                "ExtendedDataFigure2.csv",
                 "ExtendedDataFigure3_cross_valid.csv",
                 "ExtendedDataFigure4_cross_valid.csv",
                 "ExtendedDataFigure5_lags.xlsx",
@@ -69,9 +66,7 @@ def test_pipeline(tmp_path):
     old_mtimes = {i: i.stat().st_mtime for i in old_files}
 
     # run pipeline
-    cmd = shlex.split(
-        "bash code/run.sh --no-download --nostata --nocensus --num-proj 2"
-    )
+    cmd = shlex.split("bash code/run.sh --nostata --num-proj 2")
     subprocess.run(cmd, check=True)
 
     bad_files = []

@@ -26,7 +26,7 @@ PROCESSED_DATA_DATE_CUTOFF = False
 
 COLORS = {"effect": "#27408B", "no_policy_growth_rate": "#8B0000"}
 
-with open(HOME / "api_keys.json", "r") as f:
+with open(CODE / "api_keys.json", "r") as f:
     API_KEYS = json.load(f)
 
 
