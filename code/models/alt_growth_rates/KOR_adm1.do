@@ -445,7 +445,7 @@ clear
 svmat rsq
 rename (rsq1 rsq2 rsq3) (r2 se lag_length)
 outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_KOR.csv", replace	
-restore}
+restore
 
 drop if L0_b == .
 keep *_at *_ll1 *_ul1 *_b
