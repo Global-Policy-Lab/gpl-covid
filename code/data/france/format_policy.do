@@ -5,7 +5,7 @@ import delim "data/raw/france/FRA_policy_data_sources.csv", clear
 replace policy = policy + "_opt" if optional == "Y"
 keep *_name policy no_gathering_size date_start policy_intensity
 g Date = date(date_start,"MDY",2000)
-drop date
+drop date adm0_name
 rename Date date
 format date %td
 rename *_name *
@@ -19,7 +19,7 @@ preserve
 	drop adm1 adm2
 	replace size = policy_intensity if size == .
 	drop policy_int
-	reshape wide size, i(date adm0) j(policy) string
+	reshape wide size, i(date) j(policy) string
 	rename size* *
 	foreach var in "no_gathering" "school_closure" "social_distance"{
 		replace `var' = 0 if `var' == .
@@ -67,12 +67,12 @@ replace pop = 327283 if adm1 == 94 & adm2 == 2
 
 drop departement_name  region_id
 sort adm1 date
-collapse policy_intensity (sum) running_var pop, by(date adm0 adm1 adm1_name policy)
+collapse policy_intensity (sum) running_var pop, by(date adm1 adm1_name policy)
 rename policy pol //shortern variable name before reshape
 replace running_var = policy_int if pol != "school_closure"
 drop policy_int
 
-reshape wide running_var pop, i(adm0 adm1 date) j(pol) string
+reshape wide running_var pop, i(adm1 date) j(pol) string
 rename running_var* *_size
 rename population* *_popw
 merge m:1 adm1 using "data/interim/france/region_ID.dta", nogen keep(1 3)
@@ -92,25 +92,24 @@ save `Local'
 
 import delim "data/interim/france/france_confirmed_cases_by_region.csv", clear
 drop adm1_name
-rename adm0_name adm0
 g Date = date(date,"MDY",2020)
 drop date
 rename Date date
 format date %td
 
+
 merge 1:1 date adm1 using `Local', nogen update
 merge m:1 date adm1 using `regional',nogen update
-merge m:1 date adm0 using `national', nogen update
+merge m:1 date using `national', nogen update
 rename no_gathering_national no_gathering
 drop adm1_name //reload region name, corrupted accent due to import csv above
 merge m:1 adm1 using "data/interim/france/region_ID.dta", keep(1 3) keepusing(adm1_name adm1_pop) nogen update
 replace adm1_name = "Corse" if adm1 == 94
 replace adm1_pop = 327283 if adm1 == 94
-replace adm0 = "France" if adm1 == 94
 
 
 
-order adm0 adm1 adm1_name date cum_c* 
+order adm1 adm1_name date cum_c* 
 sort adm1 date
 
 foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolation_popw" ///
@@ -152,7 +151,6 @@ format date %tdCCYY-NN-DD
 rename (adm1_pop adm1) (population adm1_id)	
 rename *_popw *_popwt
 rename hospitalization cum_hospitalized
-rename adm0 adm0_name
+g adm0_name = "FRA"
+order adm0_name
 outsheet * using "data/processed/adm1/FRA_processed.csv", replace comma
-
-

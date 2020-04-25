@@ -338,9 +338,9 @@ foreach lags of num 0/15{
 	drop *_fixelag
 	xtset adm1_id t
 	}
-	if $BS == 1 {
-		mat j = J(1000,1,0)
-		forvalues i = 1/1000 {
+	if $BS != 0 {
+		mat j = J($BS,1,0)
+		forvalues i = 1/$BS {
 		preserve
 		bsample
 		qui reghdfe D_l_cum_confirmed_cases p_1 p_2 testing_regime_*, absorb(i.adm1_id i.dow)
@@ -357,20 +357,27 @@ foreach lags of num 0/15{
 			matrix rsq[`lags'+1,3] = `lags'
 		restore
 	}
+	else {
+		qui reghdfe D_l_cum_confirmed_cases p_1 p_2 testing_regime_*, absorb(i.adm1_id i.dow)	
+		matrix rsq[`lags'+1,1] = e(r2)
+		matrix rsq[`lags'+1,2] = .
+		matrix rsq[`lags'+1,3] = `lags'		
+	}
+	
+	
 	foreach var in p_1 p_2{
 		qui replace `var' = `var'_copy
 		qui drop `var'_copy
 	}	
 
 }
-if $BS == 1 {
-	preserve
-	clear
-	svmat rsq
-	rename (rsq1 rsq2 rsq3) (r2 se lag_length)
-	outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_IRN.csv", replace	
-	restore
-}
+
+preserve
+clear
+svmat rsq
+rename (rsq1 rsq2 rsq3) (r2 se lag_length)
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_IRN.csv", replace	
+restore
 
 drop if L0_b == .
 keep *_at *_ll1 *_ul1 *_b
@@ -449,6 +456,6 @@ preserve
 	region(lstyle(none))) ///
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/IRN.pdf, replace
-	graph export results/figures/appendix/cross_valid/IRN.png, replace	
+	capture graph export results/figures/appendix/cross_valid/IRN.png, replace	
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure4_cross_valid_IRN.csv", comma replace
 restore
