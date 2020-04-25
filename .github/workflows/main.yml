@@ -27,7 +27,6 @@ jobs:
           python-version: 3.7
           activate-environment: gpl-covid
           environment-file: ./environment.yml
-          miniconda-version: 'latest'
       - shell: bash -l {0}
         name: Run all tests
         run: bash tests/run_tests.sh
