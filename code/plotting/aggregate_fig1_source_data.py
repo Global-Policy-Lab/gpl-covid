@@ -1,5 +1,5 @@
-import src.utils as cutil
 import pandas as pd
+import src.utils as cutil
 
 out_dir = cutil.RESULTS / "source_data"
 

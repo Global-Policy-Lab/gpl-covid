@@ -3,11 +3,11 @@ import datetime
 import warnings
 from urllib.error import HTTPError
 
-import src.utils as cutil
 import matplotlib
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
+import src.utils as cutil
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

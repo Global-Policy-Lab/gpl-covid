@@ -1,8 +1,8 @@
+import os
 import shlex
 import subprocess
 from pathlib import Path
 from shutil import copytree
-import os
 
 import pandas as pd
 
@@ -26,7 +26,7 @@ def test_pipeline(tmp_path):
     # list all files that we know will not get updated
     # 1) bootstraps are run with only 2 samples in tests, so don't check those
     # 2) excluded data in "models" and "results/source_data" is created by stata code
-    #    that does not run in CI (unless otherwise described below)
+    #    that does not run in CI
     # 3) ExtendedDataFigure89.csv takes a long time to write so is excluded from tests
     # 4) SITable2.xlsx is created manually
     # 5) TODO: Figure out why fig1 is getting randomly sorted differently by different
@@ -37,6 +37,14 @@ def test_pipeline(tmp_path):
         + list(Path("models").glob("*_ATE.csv"))  # created by stata
         + [  # created by stata
             Path("results") / "source_data" / i
+            for i in ["ExtendedDataFigure89.csv", "SITable2.xlsx",]
+        ]
+        + list(Path("models/projections").glob("*_bootstrap_projection.csv"))
+        + list(Path("results/source_data").glob("fig1*.csv"))
+    )
+    if not run_stata:
+        files_to_exclude += [
+            Path("results") / "source_data" / i
             for i in [
                 "Figure2_data.csv",
                 "Figure3_data.csv",
@@ -44,14 +52,9 @@ def test_pipeline(tmp_path):
                 "ExtendedDataFigure4_cross_valid.csv",
                 "ExtendedDataFigure5_lags.xlsx",
                 "ExtendedDataFigure6.xlsx",
-                "ExtendedDataFigure89.csv",
                 "ExtendedDataFigure10_e.csv",
-                "SITable2.xlsx",
             ]
         ]
-        + list(Path("models/projections").glob("*_bootstrap_projection.csv"))
-        + list(Path("results/source_data").glob("fig1*.csv"))
-    )
 
     tmp_model_path = tmp_path / "models"
     tmp_results_path = tmp_path / "results" / "source_data"

@@ -10,8 +10,8 @@ import geopandas as gpd
 import pandas as pd
 from bs4 import BeautifulSoup
 from census import Census
-from src import utils as cutil
 from fuzzywuzzy import fuzz, process
+from src import utils as cutil
 
 idx = pd.IndexSlice
 
