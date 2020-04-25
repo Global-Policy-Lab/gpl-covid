@@ -5,6 +5,7 @@ on:
   schedule:
     - cron: '0 0 */1 * *'
       
+
 jobs:
   test:
     name: Testing pipeline
