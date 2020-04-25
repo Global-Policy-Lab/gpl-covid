@@ -70,7 +70,6 @@ def test_pipeline(tmp_path):
 
     # run pipeline
     cmd = f"bash code/run.sh{stata_flag} --num-proj 2"
-    print("Running cmd: {cmd}")
     subprocess.run(shlex.split(cmd), check=True)
 
     bad_files = []
