@@ -25,7 +25,6 @@ rename region_id adm1
 collapse adm1 (sum) pop, by(adm1_name)
 rename pop adm1_pop
 replace adm1_name = "IledeFrance" if adm1 == 11
-g adm0_name = "France"
 save "data/interim/france/region_ID.dta", replace
 
 
@@ -45,14 +44,13 @@ drop if infectedFrancemétropolitaine == 191
 reshape long infected, i(date) j(adm1_name) string
 g last_date = mdy(03,13,2020)
 drop if date > last_date
-g adm0_name = "France"
 rename infected cumulative_confirmed_cases
 
 // merge scraped and manually filled data
 preserve
 	// data for march 9 found on regional websites
 	import delim "data/raw/france/france_confirmed_cases_by_region_20200309.csv", clear
-	keep adm1 date adm0 cumulative
+	keep adm1 date cumulative
 	tempfile f0
 	save `f0'
 	//iterate for each day after march 13 until last available date
@@ -71,7 +69,7 @@ preserve
 			continue, break
 		}
 		drop if cumulative == .
-		keep adm1 date adm0 cumulative
+		keep adm1 date cumulative
 		tempfile f`D'
 		save `f`D''
 		local D = `D' + 1
