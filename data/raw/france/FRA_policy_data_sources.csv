@@ -53,7 +53,7 @@ FRA,75,47,school_closure_3,NA,three schools closed after students tested positiv
 FRA,All,All,no_gathering,100,limit gatherings of more than 100,1,N,3/13/2020,NA,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,
 FRA,11,75,social_distance,NA,louvres' closure,1,N,3/13/2020,NA,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,
 FRA,11,78,social_distance,NA,versailles' closure,1,N,3/13/2020,NA,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,
-FRA,All,All,testing_regime,NA,"With the ""stade 3"" declared by the government, test are to be used in priority at the hospital",1,N,3/13/2020,NA,https://www.lemonde.fr/planete/article/2020/03/14/coronavirus-en-quoi-consiste-le-stade-3-de-l-epidemie_6033115_3244.html,4/13/2020,
+FRA,All,All,testing_regime,NA,"With the ""stade 3"" declared by the government, test are to be used in priority at the hospital",1,N,3/15/2020,NA,https://www.lemonde.fr/planete/article/2020/03/14/coronavirus-en-quoi-consiste-le-stade-3-de-l-epidemie_6033115_3244.html,4/13/2020,
 FRA,44,67,no_gathering_inside,50,"excludes shops, businesses, restaurants, bars, wedding, funerals, public transit",1,N,3/14/2020,NA,https://www.grand-est.ars.sante.fr/system/files/2020-03/CP_Coronavirus_Mesuresrenforc%C3%A9esBas-Rhin_130320.pdf,3/14/2020,
 FRA,All,All,business_closure,NA,,1,N,3/15/2020,NA,https://www.gouvernement.fr/info-coronavirus,3/17/2020,
 FRA,All,All,school_closure_all,NA,for minimum of 15 days or as long as necessary,1,N,3/16/2020,NA,https://www.gouvernement.fr/info-coronavirus,3/14/2020,
