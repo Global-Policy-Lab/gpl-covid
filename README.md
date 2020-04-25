@@ -151,13 +151,13 @@ There are four stages to our analysis:
 3. SIR model projections
 4. Figure creation
 
-The end dates of the data analyzed, and of the "cases averted" projections, are controlled by `code/data/cutoff_dates.csv`
+The end dates of the data analyzed, and of the "cases averted" projections, are controlled by `code/data/cutoff_dates.csv`.
 
 ### Run full pipeline
 The entire pipeline can be run by calling `bash code/run.sh`. If you would rather do it step by step, see the description of each stage below. There are four flags that can be passed to that script to change the default behavior, described below:
 
 - `-s|--no-stata`: Don't run the Stata scripts (must include this flag if you do not have Stata). In this case, the regression steps will be skipped and you will rely on previously computed regression results.
-- `-c|--census`: Run `code/data/multi_country/get_adm_info.py` because you have supplied a valid Census Data API value in `code/api_keys.py`. This just means that you will redownload geographic and population information for the majority of subnational units analyzed (some population information is obtained manually or through separate scripts)
+- `-c|--census`: Run `code/data/multi_country/get_adm_info.py` because you have supplied a valid Census Data API value in `code/api_keys.json`. This just means that you will redownload geographic and population information for the majority of subnational units analyzed (some population information is obtained manually or through separate scripts).
 - `p|--num-proj`: Integer that controls both (a) the number of bootstrap samples when calculating projection uncertainty bounds in Fig. 4 and (b) the number of Monte Carlo samples used to create synthetic outbreaks (Extended Data Figures 8 and 9). Default 1000.
 - `d|--download`: Download new raw data, rather than using that which has already been downloaded. This may affect results slightly if, e.g. a country retroactivly adjusts their reported cases.
 

@@ -142,7 +142,7 @@ gpl-covid.Rproj
 
 # other
 .vscode
-code/api_keys.py
+code/api_keys.json
 
 # Results
 results/*
