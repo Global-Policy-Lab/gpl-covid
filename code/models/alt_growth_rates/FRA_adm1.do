@@ -582,7 +582,7 @@ lab(4 "L1") lab(6 "L2") lab(8 "L3") lab(10 "L4") lab(12 "L5") ///
 lab(14 "Hospitalization (end 04/06)") lab(16 "L1") lab(18 "L2") lab(20 "L3") ///
 lab(22 "L4") lab(24 "L5")  cols(6) region(lstyle(none))) 
 graph export results/figures/appendix/fixed_lag/FRA.pdf, replace
-graph export results/figures/appendix/fixed_lag/FRA.png, replace
+cap graph export results/figures/appendix/fixed_lag/FRA.png, replace
 drop if L0_b == .
 keep *_at *_ll1 *_ul1 *_b
 egen policy = seq()
