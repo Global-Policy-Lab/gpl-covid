@@ -16,6 +16,7 @@ dependencies:
     - jupyterlab=2.1
     - lxml=4.5
     - netcdf4=1.5
+    - nodejs=13.13
     - openpyxl=3.0
     - papermill=2.1
     - pip=20.0
@@ -42,3 +43,6 @@ dependencies:
     - r-cowplot=1.0
     - r-padr=0.5
     - r-patchwork=1.0
+    - pip:
+        - ipystata==0.3
+        - stata_kernel==1.11
