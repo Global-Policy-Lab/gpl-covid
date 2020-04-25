@@ -13,7 +13,7 @@ cmd=""
 if [ "$1" = "do" ] && [ "$args" -gt 1 ]
 then
     log="`basename -s .do "$2"`.log"
-    # mimic Stata's behavior (stata-se -b do "foo bar.do" -> foo.log)
+    # mimic Stata's behavior (stata-mp -b do "foo bar.do" -> foo.log)
     log=${log/% */.log}
 # Stata requires explicit -do- command, but we relax this to permit just the
 # name of a single do-file
@@ -28,7 +28,7 @@ else
 fi
 
 # in batch mode, nothing sent to stdout (is this guaranteed?)
-stderr=`stata-se -b $cmd "$@" 2>&1`
+stderr=`stata-mp -b $cmd "$@" 2>&1`
 rc=$?
 if [ -n "$stderr" ]  # typically usage info
 then

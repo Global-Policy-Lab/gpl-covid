@@ -2,6 +2,7 @@ import shlex
 import subprocess
 from pathlib import Path
 from shutil import copytree
+import os
 
 import pandas as pd
 
@@ -20,6 +21,8 @@ def test_readme():
 
 def test_pipeline(tmp_path):
 
+    run_stata = str(os.environ.get("STATA_TESTS", "false")).lower() == "true"
+    stata_flag = "" if run_stata else " --nostata"
     # list all files that we know will not get updated
     # 1) bootstraps are run with only 2 samples in tests, so don't check those
     # 2) excluded data in "models" and "results/source_data" is created by stata code
@@ -66,8 +69,8 @@ def test_pipeline(tmp_path):
     old_mtimes = {i: i.stat().st_mtime for i in old_files}
 
     # run pipeline
-    cmd = shlex.split("bash code/run.sh --nostata --num-proj 2")
-    subprocess.run(cmd, check=True)
+    cmd = f"bash code/run.sh{stata_flag} --num-proj 2"
+    subprocess.run(shlex.split(cmd), check=True)
 
     bad_files = []
 
@@ -96,8 +99,6 @@ def test_pipeline(tmp_path):
             pass
         except AssertionError:
             bad_files.append((str(other_file), str(p)))
-        except:
-            raise
 
     # raise errors
     if len(missing_files.union(not_generated, bad_files)) > 0:
