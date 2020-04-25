@@ -29,6 +29,7 @@ dependencies:
 #     - rstudio=1.1
     - r-data.table=1.12
     - r-downloader=0.4
+    - r-irkernel=1.1
     - r-lfe=2.8
     - r-lubridate=1.7
     - r-mvtnorm=1.1
