@@ -4,7 +4,6 @@ on:
   pull_request:
   schedule:
     - cron: '0 0 */1 * *'
-      
 
 jobs:
   test:
