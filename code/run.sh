@@ -67,7 +67,7 @@ fi
 if $STATA
 then
     printf "***Processing FRA epi data***\n"
-    stata -b do code/data/france/format_infected.do
+    code/statab.sh code/data/france/format_infected.do
 fi
 
 #### USA
@@ -86,7 +86,7 @@ python code/data/china/collate_data.py
 if $STATA
 then
     printf "***Merging FRA data***\n"
-    stata -b do code/data/france/format_policy.do
+    code/statab.sh code/data/france/format_policy.do
 fi
 
 # IRN
@@ -119,7 +119,7 @@ python code/data/multi_country/quality-check-processed-datasets.py
 if $STATA
 then
     printf "***Estimating regression model and creating Figure 3, SI Table 3, SI Table 5, ED Figure 10***\n"
-    stata -b do code/models/alt_growth_rates/MASTER_run_all_reg.do
+    code/statab.sh code/models/alt_growth_rates/MASTER_run_all_reg.do $NUMPROJ
 fi
 
 
@@ -172,21 +172,21 @@ fi
 if $STATA
 then
     printf "***Creating ED Fig 3 and 4***\n"
-    stata -b do code/plotting/extended_data_fig3_4.do
+    code/statab.sh code/plotting/extended_data_fig3_4.do
 fi
 
 # ED Figure 5
 if $STATA
 then
     printf "***Creating ED Fig 5***\n"
-    stata -b do code/plotting/extended_data_fig5.do
+    code/statab.sh code/plotting/extended_data_fig5.do
 fi
 
 # ED Figure 6
 if $STATA
 then
     printf "***Estimating regression model with disaggregated policy variables and creating ED Figure 6 and SI Table 4***\n"
-    stata -b do code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
+    code/statab.sh code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
 fi
 
 # ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
