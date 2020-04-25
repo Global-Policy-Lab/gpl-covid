@@ -152,6 +152,8 @@ format date %tdCCYY-NN-DD
 rename (adm1_pop adm1) (population adm1_id)	
 rename *_popw *_popwt
 rename hospitalization cum_hospitalized
+g adm0_name = "FRA"
+drop adm0
 outsheet * using "data/processed/adm1/FRA_processed.csv", replace comma
 
 
