@@ -43,18 +43,20 @@ def test_pipeline(tmp_path):
         + list(Path("results/source_data").glob("fig1*.csv"))
     )
     if not run_stata:
-        files_to_exclude += set([
-            Path("results") / "source_data" / i
-            for i in [
-                "Figure2_data.csv",
-                "Figure3_data.csv",
-                "ExtendedDataFigure3_cross_valid.csv",
-                "ExtendedDataFigure4_cross_valid.csv",
-                "ExtendedDataFigure5_lags.xlsx",
-                "ExtendedDataFigure6.xlsx",
-                "ExtendedDataFigure10_e.csv",
+        files_to_exclude += set(
+            [
+                Path("results") / "source_data" / i
+                for i in [
+                    "Figure2_data.csv",
+                    "Figure3_data.csv",
+                    "ExtendedDataFigure3_cross_valid.csv",
+                    "ExtendedDataFigure4_cross_valid.csv",
+                    "ExtendedDataFigure5_lags.xlsx",
+                    "ExtendedDataFigure6.xlsx",
+                    "ExtendedDataFigure10_e.csv",
+                ]
             ]
-        ])
+        )
 
     tmp_model_path = tmp_path / "models"
     tmp_results_path = tmp_path / "results" / "source_data"
