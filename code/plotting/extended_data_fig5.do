@@ -130,7 +130,6 @@ graph export results/figures/appendix/fixed_lag/fig5_FL.pdf, replace
 export excel adm0 policy beta lower upper using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_a") firstrow(var) sheetreplace
 
 import delim "results/source_data/indiv/ExtendedDataFigure5_b.csv", clear
-rename ïlags lags
 export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_b") firstrow(var) sheetreplace
 
 import delim "results/source_data/indiv/ExtendedDataFigure5_CHN_event_study.csv", clear
