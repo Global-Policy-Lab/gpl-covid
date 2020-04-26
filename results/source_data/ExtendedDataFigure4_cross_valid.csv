@@ -589,471 +589,471 @@ adm0	sample	policy	beta	i	grp
 "ITA"	"Veneto"	"p_4"	-.095	39	3
 "ITA"	"Veneto"	"p_5"	-.144	40	3
 "ITA"	"Veneto"	"p_6"	.072	41	3
-"USA"	"full_sample"	"p_1"	-.105	58	5
+"USA"	"full_sample"	"p_1"	-.097	58	5
 "USA"	"full_sample"	"p_2"	-.117	59	5
 "USA"	"full_sample"	"p_3"	-.11	60	5
-"USA"	"full_sample"	"p_4"	.075	61	5
-"USA"	"full_sample"	"p_5"	.015	62	5
-"USA"	"full_sample"	"p_6"	.038	63	5
-"USA"	"full_sample"	"p_7"	-.016	64	5
-"USA"	"full_sample"	"p_8"	-.057	65	5
-"USA"	"full_sample"	"p_9"	-.07	66	5
-"USA"	"Alabama"	"p_1"	-.109	58	5
+"USA"	"full_sample"	"p_4"	.069	61	5
+"USA"	"full_sample"	"p_5"	.014	62	5
+"USA"	"full_sample"	"p_6"	.042	63	5
+"USA"	"full_sample"	"p_7"	-.018	64	5
+"USA"	"full_sample"	"p_8"	-.061	65	5
+"USA"	"full_sample"	"p_9"	-.068	66	5
+"USA"	"Alabama"	"p_1"	-.101	58	5
 "USA"	"Alabama"	"p_2"	-.126	59	5
-"USA"	"Alabama"	"p_3"	-.094	60	5
-"USA"	"Alabama"	"p_4"	.073	61	5
-"USA"	"Alabama"	"p_5"	.017	62	5
-"USA"	"Alabama"	"p_6"	.042	63	5
-"USA"	"Alabama"	"p_7"	-.013	64	5
-"USA"	"Alabama"	"p_8"	-.053	65	5
-"USA"	"Alabama"	"p_9"	-.072	66	5
-"USA"	"Alaska"	"p_1"	-.104	58	5
-"USA"	"Alaska"	"p_2"	-.118	59	5
+"USA"	"Alabama"	"p_3"	-.095	60	5
+"USA"	"Alabama"	"p_4"	.067	61	5
+"USA"	"Alabama"	"p_5"	.016	62	5
+"USA"	"Alabama"	"p_6"	.046	63	5
+"USA"	"Alabama"	"p_7"	-.015	64	5
+"USA"	"Alabama"	"p_8"	-.058	65	5
+"USA"	"Alabama"	"p_9"	-.07	66	5
+"USA"	"Alaska"	"p_1"	-.096	58	5
+"USA"	"Alaska"	"p_2"	-.119	59	5
 "USA"	"Alaska"	"p_3"	-.111	60	5
-"USA"	"Alaska"	"p_4"	.074	61	5
-"USA"	"Alaska"	"p_5"	.019	62	5
-"USA"	"Alaska"	"p_6"	.035	63	5
-"USA"	"Alaska"	"p_7"	-.013	64	5
-"USA"	"Alaska"	"p_8"	-.056	65	5
-"USA"	"Alaska"	"p_9"	-.069	66	5
-"USA"	"Arizona"	"p_1"	-.086	58	5
+"USA"	"Alaska"	"p_4"	.068	61	5
+"USA"	"Alaska"	"p_5"	.018	62	5
+"USA"	"Alaska"	"p_6"	.039	63	5
+"USA"	"Alaska"	"p_7"	-.016	64	5
+"USA"	"Alaska"	"p_8"	-.06	65	5
+"USA"	"Alaska"	"p_9"	-.067	66	5
+"USA"	"Arizona"	"p_1"	-.077	58	5
 "USA"	"Arizona"	"p_2"	-.113	59	5
 "USA"	"Arizona"	"p_3"	-.135	60	5
-"USA"	"Arizona"	"p_4"	.063	61	5
-"USA"	"Arizona"	"p_5"	.015	62	5
-"USA"	"Arizona"	"p_6"	.027	63	5
-"USA"	"Arizona"	"p_7"	-.013	64	5
-"USA"	"Arizona"	"p_8"	-.06	65	5
-"USA"	"Arizona"	"p_9"	-.066	66	5
-"USA"	"Arkansas"	"p_1"	-.114	58	5
-"USA"	"Arkansas"	"p_2"	-.118	59	5
+"USA"	"Arizona"	"p_4"	.057	61	5
+"USA"	"Arizona"	"p_5"	.014	62	5
+"USA"	"Arizona"	"p_6"	.031	63	5
+"USA"	"Arizona"	"p_7"	-.015	64	5
+"USA"	"Arizona"	"p_8"	-.064	65	5
+"USA"	"Arizona"	"p_9"	-.065	66	5
+"USA"	"Arkansas"	"p_1"	-.106	58	5
+"USA"	"Arkansas"	"p_2"	-.119	59	5
 "USA"	"Arkansas"	"p_3"	-.114	60	5
-"USA"	"Arkansas"	"p_4"	.073	61	5
-"USA"	"Arkansas"	"p_5"	.019	62	5
-"USA"	"Arkansas"	"p_6"	.04	63	5
-"USA"	"Arkansas"	"p_7"	-.019	64	5
-"USA"	"Arkansas"	"p_8"	-.047	65	5
-"USA"	"Arkansas"	"p_9"	-.074	66	5
-"USA"	"California"	"p_1"	-.106	58	5
-"USA"	"California"	"p_2"	-.129	59	5
-"USA"	"California"	"p_3"	-.105	60	5
-"USA"	"California"	"p_4"	.071	61	5
-"USA"	"California"	"p_5"	.018	62	5
-"USA"	"California"	"p_6"	.041	63	5
-"USA"	"California"	"p_7"	-.021	64	5
-"USA"	"California"	"p_8"	-.059	65	5
-"USA"	"California"	"p_9"	-.07	66	5
-"USA"	"Colorado"	"p_1"	-.114	58	5
+"USA"	"Arkansas"	"p_4"	.067	61	5
+"USA"	"Arkansas"	"p_5"	.018	62	5
+"USA"	"Arkansas"	"p_6"	.045	63	5
+"USA"	"Arkansas"	"p_7"	-.021	64	5
+"USA"	"Arkansas"	"p_8"	-.051	65	5
+"USA"	"Arkansas"	"p_9"	-.073	66	5
+"USA"	"California"	"p_1"	-.1	58	5
+"USA"	"California"	"p_2"	-.128	59	5
+"USA"	"California"	"p_3"	-.106	60	5
+"USA"	"California"	"p_4"	.066	61	5
+"USA"	"California"	"p_5"	.017	62	5
+"USA"	"California"	"p_6"	.045	63	5
+"USA"	"California"	"p_7"	-.023	64	5
+"USA"	"California"	"p_8"	-.062	65	5
+"USA"	"California"	"p_9"	-.068	66	5
+"USA"	"Colorado"	"p_1"	-.106	58	5
 "USA"	"Colorado"	"p_2"	-.112	59	5
-"USA"	"Colorado"	"p_3"	-.11	60	5
-"USA"	"Colorado"	"p_4"	.09	61	5
-"USA"	"Colorado"	"p_5"	.02	62	5
-"USA"	"Colorado"	"p_6"	.033	63	5
-"USA"	"Colorado"	"p_7"	-.018	64	5
-"USA"	"Colorado"	"p_8"	-.056	65	5
-"USA"	"Colorado"	"p_9"	-.07	66	5
-"USA"	"Connecticut"	"p_1"	-.104	58	5
-"USA"	"Connecticut"	"p_2"	-.109	59	5
-"USA"	"Connecticut"	"p_3"	-.122	60	5
-"USA"	"Connecticut"	"p_4"	.073	61	5
+"USA"	"Colorado"	"p_3"	-.111	60	5
+"USA"	"Colorado"	"p_4"	.084	61	5
+"USA"	"Colorado"	"p_5"	.019	62	5
+"USA"	"Colorado"	"p_6"	.037	63	5
+"USA"	"Colorado"	"p_7"	-.02	64	5
+"USA"	"Colorado"	"p_8"	-.06	65	5
+"USA"	"Colorado"	"p_9"	-.068	66	5
+"USA"	"Connecticut"	"p_1"	-.096	58	5
+"USA"	"Connecticut"	"p_2"	-.11	59	5
+"USA"	"Connecticut"	"p_3"	-.123	60	5
+"USA"	"Connecticut"	"p_4"	.067	61	5
 "USA"	"Connecticut"	"p_5"	.015	62	5
-"USA"	"Connecticut"	"p_6"	.04	63	5
-"USA"	"Connecticut"	"p_7"	-.018	64	5
-"USA"	"Connecticut"	"p_8"	-.06	65	5
-"USA"	"Connecticut"	"p_9"	-.069	66	5
-"USA"	"Delaware"	"p_1"	-.106	58	5
+"USA"	"Connecticut"	"p_6"	.044	63	5
+"USA"	"Connecticut"	"p_7"	-.02	64	5
+"USA"	"Connecticut"	"p_8"	-.064	65	5
+"USA"	"Connecticut"	"p_9"	-.068	66	5
+"USA"	"Delaware"	"p_1"	-.098	58	5
 "USA"	"Delaware"	"p_2"	-.118	59	5
-"USA"	"Delaware"	"p_3"	-.109	60	5
-"USA"	"Delaware"	"p_4"	.076	61	5
+"USA"	"Delaware"	"p_3"	-.11	60	5
+"USA"	"Delaware"	"p_4"	.07	61	5
 "USA"	"Delaware"	"p_5"	.015	62	5
-"USA"	"Delaware"	"p_6"	.037	63	5
-"USA"	"Delaware"	"p_7"	-.016	64	5
-"USA"	"Delaware"	"p_8"	-.056	65	5
-"USA"	"Delaware"	"p_9"	-.069	66	5
-"USA"	"District of Columb"	"p_1"	-.098	58	5
+"USA"	"Delaware"	"p_6"	.041	63	5
+"USA"	"Delaware"	"p_7"	-.018	64	5
+"USA"	"Delaware"	"p_8"	-.06	65	5
+"USA"	"Delaware"	"p_9"	-.068	66	5
+"USA"	"District of Columb"	"p_1"	-.09	58	5
 "USA"	"District of Columb"	"p_2"	-.118	59	5
 "USA"	"District of Columb"	"p_3"	-.111	60	5
-"USA"	"District of Columb"	"p_4"	.064	61	5
+"USA"	"District of Columb"	"p_4"	.058	61	5
 "USA"	"District of Columb"	"p_5"	.014	62	5
-"USA"	"District of Columb"	"p_6"	.04	63	5
-"USA"	"District of Columb"	"p_7"	-.018	64	5
-"USA"	"District of Columb"	"p_8"	-.057	65	5
-"USA"	"District of Columb"	"p_9"	-.068	66	5
-"USA"	"Florida"	"p_1"	-.094	58	5
-"USA"	"Florida"	"p_2"	-.11	59	5
+"USA"	"District of Columb"	"p_6"	.044	63	5
+"USA"	"District of Columb"	"p_7"	-.02	64	5
+"USA"	"District of Columb"	"p_8"	-.061	65	5
+"USA"	"District of Columb"	"p_9"	-.066	66	5
+"USA"	"Florida"	"p_1"	-.085	58	5
+"USA"	"Florida"	"p_2"	-.111	59	5
 "USA"	"Florida"	"p_3"	-.113	60	5
-"USA"	"Florida"	"p_4"	.077	61	5
+"USA"	"Florida"	"p_4"	.071	61	5
 "USA"	"Florida"	"p_5"	.011	62	5
-"USA"	"Florida"	"p_6"	.038	63	5
-"USA"	"Florida"	"p_7"	-.012	64	5
-"USA"	"Florida"	"p_8"	-.06	65	5
-"USA"	"Florida"	"p_9"	-.071	66	5
-"USA"	"Georgia"	"p_1"	-.104	58	5
+"USA"	"Florida"	"p_6"	.042	63	5
+"USA"	"Florida"	"p_7"	-.015	64	5
+"USA"	"Florida"	"p_8"	-.065	65	5
+"USA"	"Florida"	"p_9"	-.069	66	5
+"USA"	"Georgia"	"p_1"	-.095	58	5
 "USA"	"Georgia"	"p_2"	-.117	59	5
-"USA"	"Georgia"	"p_3"	-.11	60	5
-"USA"	"Georgia"	"p_4"	.076	61	5
-"USA"	"Georgia"	"p_5"	.014	62	5
-"USA"	"Georgia"	"p_6"	.037	63	5
-"USA"	"Georgia"	"p_7"	-.018	64	5
-"USA"	"Georgia"	"p_8"	-.055	65	5
-"USA"	"Georgia"	"p_9"	-.069	66	5
-"USA"	"Hawaii"	"p_1"	-.106	58	5
-"USA"	"Hawaii"	"p_2"	-.112	59	5
-"USA"	"Hawaii"	"p_3"	-.111	60	5
-"USA"	"Hawaii"	"p_4"	.073	61	5
-"USA"	"Hawaii"	"p_5"	.018	62	5
-"USA"	"Hawaii"	"p_6"	.04	63	5
-"USA"	"Hawaii"	"p_7"	-.015	64	5
-"USA"	"Hawaii"	"p_8"	-.06	65	5
-"USA"	"Hawaii"	"p_9"	-.069	66	5
-"USA"	"Idaho"	"p_1"	-.106	58	5
-"USA"	"Idaho"	"p_2"	-.117	59	5
+"USA"	"Georgia"	"p_3"	-.111	60	5
+"USA"	"Georgia"	"p_4"	.07	61	5
+"USA"	"Georgia"	"p_5"	.013	62	5
+"USA"	"Georgia"	"p_6"	.041	63	5
+"USA"	"Georgia"	"p_7"	-.02	64	5
+"USA"	"Georgia"	"p_8"	-.059	65	5
+"USA"	"Georgia"	"p_9"	-.068	66	5
+"USA"	"Hawaii"	"p_1"	-.098	58	5
+"USA"	"Hawaii"	"p_2"	-.113	59	5
+"USA"	"Hawaii"	"p_3"	-.112	60	5
+"USA"	"Hawaii"	"p_4"	.067	61	5
+"USA"	"Hawaii"	"p_5"	.017	62	5
+"USA"	"Hawaii"	"p_6"	.044	63	5
+"USA"	"Hawaii"	"p_7"	-.018	64	5
+"USA"	"Hawaii"	"p_8"	-.064	65	5
+"USA"	"Hawaii"	"p_9"	-.067	66	5
+"USA"	"Idaho"	"p_1"	-.098	58	5
+"USA"	"Idaho"	"p_2"	-.118	59	5
 "USA"	"Idaho"	"p_3"	-.109	60	5
-"USA"	"Idaho"	"p_4"	.073	61	5
+"USA"	"Idaho"	"p_4"	.067	61	5
 "USA"	"Idaho"	"p_5"	.016	62	5
-"USA"	"Idaho"	"p_6"	.042	63	5
-"USA"	"Idaho"	"p_7"	-.025	64	5
-"USA"	"Idaho"	"p_8"	-.059	65	5
-"USA"	"Idaho"	"p_9"	-.069	66	5
-"USA"	"Illinois"	"p_1"	-.107	58	5
+"USA"	"Idaho"	"p_6"	.046	63	5
+"USA"	"Idaho"	"p_7"	-.027	64	5
+"USA"	"Idaho"	"p_8"	-.063	65	5
+"USA"	"Idaho"	"p_9"	-.067	66	5
+"USA"	"Illinois"	"p_1"	-.099	58	5
 "USA"	"Illinois"	"p_2"	-.113	59	5
-"USA"	"Illinois"	"p_3"	-.11	60	5
-"USA"	"Illinois"	"p_4"	.077	61	5
-"USA"	"Illinois"	"p_5"	.015	62	5
-"USA"	"Illinois"	"p_6"	.034	63	5
-"USA"	"Illinois"	"p_7"	-.012	64	5
-"USA"	"Illinois"	"p_8"	-.056	65	5
-"USA"	"Illinois"	"p_9"	-.07	66	5
-"USA"	"Indiana"	"p_1"	-.091	58	5
-"USA"	"Indiana"	"p_2"	-.111	59	5
+"USA"	"Illinois"	"p_3"	-.111	60	5
+"USA"	"Illinois"	"p_4"	.071	61	5
+"USA"	"Illinois"	"p_5"	.014	62	5
+"USA"	"Illinois"	"p_6"	.038	63	5
+"USA"	"Illinois"	"p_7"	-.014	64	5
+"USA"	"Illinois"	"p_8"	-.06	65	5
+"USA"	"Illinois"	"p_9"	-.068	66	5
+"USA"	"Indiana"	"p_1"	-.083	58	5
+"USA"	"Indiana"	"p_2"	-.112	59	5
 "USA"	"Indiana"	"p_3"	-.108	60	5
-"USA"	"Indiana"	"p_4"	.059	61	5
+"USA"	"Indiana"	"p_4"	.052	61	5
 "USA"	"Indiana"	"p_5"	.008	62	5
-"USA"	"Indiana"	"p_6"	.036	63	5
-"USA"	"Indiana"	"p_7"	-.022	64	5
-"USA"	"Indiana"	"p_8"	-.057	65	5
-"USA"	"Indiana"	"p_9"	-.07	66	5
-"USA"	"Iowa"	"p_1"	-.104	58	5
+"USA"	"Indiana"	"p_6"	.04	63	5
+"USA"	"Indiana"	"p_7"	-.024	64	5
+"USA"	"Indiana"	"p_8"	-.062	65	5
+"USA"	"Indiana"	"p_9"	-.069	66	5
+"USA"	"Iowa"	"p_1"	-.095	58	5
 "USA"	"Iowa"	"p_2"	-.127	59	5
 "USA"	"Iowa"	"p_3"	-.106	60	5
-"USA"	"Iowa"	"p_4"	.072	61	5
+"USA"	"Iowa"	"p_4"	.066	61	5
 "USA"	"Iowa"	"p_5"	.019	62	5
-"USA"	"Iowa"	"p_6"	.034	63	5
-"USA"	"Iowa"	"p_7"	-.012	64	5
-"USA"	"Iowa"	"p_8"	-.059	65	5
-"USA"	"Iowa"	"p_9"	-.067	66	5
-"USA"	"Kansas"	"p_1"	-.105	58	5
-"USA"	"Kansas"	"p_2"	-.116	59	5
+"USA"	"Iowa"	"p_6"	.038	63	5
+"USA"	"Iowa"	"p_7"	-.014	64	5
+"USA"	"Iowa"	"p_8"	-.064	65	5
+"USA"	"Iowa"	"p_9"	-.065	66	5
+"USA"	"Kansas"	"p_1"	-.097	58	5
+"USA"	"Kansas"	"p_2"	-.117	59	5
 "USA"	"Kansas"	"p_3"	-.109	60	5
-"USA"	"Kansas"	"p_4"	.075	61	5
-"USA"	"Kansas"	"p_5"	.015	62	5
-"USA"	"Kansas"	"p_6"	.038	63	5
-"USA"	"Kansas"	"p_7"	-.017	64	5
-"USA"	"Kansas"	"p_8"	-.058	65	5
-"USA"	"Kansas"	"p_9"	-.068	66	5
-"USA"	"Kentucky"	"p_1"	-.106	58	5
+"USA"	"Kansas"	"p_4"	.069	61	5
+"USA"	"Kansas"	"p_5"	.014	62	5
+"USA"	"Kansas"	"p_6"	.042	63	5
+"USA"	"Kansas"	"p_7"	-.019	64	5
+"USA"	"Kansas"	"p_8"	-.063	65	5
+"USA"	"Kansas"	"p_9"	-.066	66	5
+"USA"	"Kentucky"	"p_1"	-.098	58	5
 "USA"	"Kentucky"	"p_2"	-.12	59	5
-"USA"	"Kentucky"	"p_3"	-.108	60	5
-"USA"	"Kentucky"	"p_4"	.077	61	5
-"USA"	"Kentucky"	"p_5"	.017	62	5
-"USA"	"Kentucky"	"p_6"	.037	63	5
-"USA"	"Kentucky"	"p_7"	-.014	64	5
-"USA"	"Kentucky"	"p_8"	-.059	65	5
-"USA"	"Kentucky"	"p_9"	-.069	66	5
-"USA"	"Louisiana"	"p_1"	-.113	58	5
-"USA"	"Louisiana"	"p_2"	-.108	59	5
+"USA"	"Kentucky"	"p_3"	-.109	60	5
+"USA"	"Kentucky"	"p_4"	.071	61	5
+"USA"	"Kentucky"	"p_5"	.016	62	5
+"USA"	"Kentucky"	"p_6"	.041	63	5
+"USA"	"Kentucky"	"p_7"	-.016	64	5
+"USA"	"Kentucky"	"p_8"	-.063	65	5
+"USA"	"Kentucky"	"p_9"	-.067	66	5
+"USA"	"Louisiana"	"p_1"	-.105	58	5
+"USA"	"Louisiana"	"p_2"	-.109	59	5
 "USA"	"Louisiana"	"p_3"	-.113	60	5
-"USA"	"Louisiana"	"p_4"	.078	61	5
+"USA"	"Louisiana"	"p_4"	.072	61	5
 "USA"	"Louisiana"	"p_5"	.01	62	5
-"USA"	"Louisiana"	"p_6"	.044	63	5
-"USA"	"Louisiana"	"p_7"	-.023	64	5
-"USA"	"Louisiana"	"p_8"	-.054	65	5
-"USA"	"Louisiana"	"p_9"	-.069	66	5
-"USA"	"Maine"	"p_1"	-.103	58	5
-"USA"	"Maine"	"p_2"	-.116	59	5
+"USA"	"Louisiana"	"p_6"	.048	63	5
+"USA"	"Louisiana"	"p_7"	-.025	64	5
+"USA"	"Louisiana"	"p_8"	-.058	65	5
+"USA"	"Louisiana"	"p_9"	-.067	66	5
+"USA"	"Maine"	"p_1"	-.095	58	5
+"USA"	"Maine"	"p_2"	-.117	59	5
 "USA"	"Maine"	"p_3"	-.112	60	5
-"USA"	"Maine"	"p_4"	.074	61	5
-"USA"	"Maine"	"p_5"	.013	62	5
-"USA"	"Maine"	"p_6"	.035	63	5
-"USA"	"Maine"	"p_7"	-.015	64	5
-"USA"	"Maine"	"p_8"	-.05	65	5
-"USA"	"Maine"	"p_9"	-.072	66	5
-"USA"	"Maryland"	"p_1"	-.097	58	5
+"USA"	"Maine"	"p_4"	.068	61	5
+"USA"	"Maine"	"p_5"	.012	62	5
+"USA"	"Maine"	"p_6"	.039	63	5
+"USA"	"Maine"	"p_7"	-.017	64	5
+"USA"	"Maine"	"p_8"	-.054	65	5
+"USA"	"Maine"	"p_9"	-.071	66	5
+"USA"	"Maryland"	"p_1"	-.088	58	5
 "USA"	"Maryland"	"p_2"	-.119	59	5
-"USA"	"Maryland"	"p_3"	-.11	60	5
-"USA"	"Maryland"	"p_4"	.067	61	5
-"USA"	"Maryland"	"p_5"	.015	62	5
-"USA"	"Maryland"	"p_6"	.037	63	5
-"USA"	"Maryland"	"p_7"	-.016	64	5
-"USA"	"Maryland"	"p_8"	-.057	65	5
-"USA"	"Maryland"	"p_9"	-.07	66	5
-"USA"	"Massachusetts"	"p_1"	-.094	58	5
-"USA"	"Massachusetts"	"p_2"	-.103	59	5
+"USA"	"Maryland"	"p_3"	-.111	60	5
+"USA"	"Maryland"	"p_4"	.061	61	5
+"USA"	"Maryland"	"p_5"	.014	62	5
+"USA"	"Maryland"	"p_6"	.041	63	5
+"USA"	"Maryland"	"p_7"	-.019	64	5
+"USA"	"Maryland"	"p_8"	-.061	65	5
+"USA"	"Maryland"	"p_9"	-.068	66	5
+"USA"	"Massachusetts"	"p_1"	-.086	58	5
+"USA"	"Massachusetts"	"p_2"	-.104	59	5
 "USA"	"Massachusetts"	"p_3"	-.113	60	5
-"USA"	"Massachusetts"	"p_4"	.079	61	5
+"USA"	"Massachusetts"	"p_4"	.073	61	5
 "USA"	"Massachusetts"	"p_5"	.013	62	5
-"USA"	"Massachusetts"	"p_6"	.034	63	5
-"USA"	"Massachusetts"	"p_7"	-.007	64	5
-"USA"	"Massachusetts"	"p_8"	-.061	65	5
-"USA"	"Massachusetts"	"p_9"	-.074	66	5
-"USA"	"Michigan"	"p_1"	-.112	58	5
-"USA"	"Michigan"	"p_2"	-.112	59	5
-"USA"	"Michigan"	"p_3"	-.112	60	5
-"USA"	"Michigan"	"p_4"	.081	61	5
+"USA"	"Massachusetts"	"p_6"	.038	63	5
+"USA"	"Massachusetts"	"p_7"	-.009	64	5
+"USA"	"Massachusetts"	"p_8"	-.065	65	5
+"USA"	"Massachusetts"	"p_9"	-.073	66	5
+"USA"	"Michigan"	"p_1"	-.104	58	5
+"USA"	"Michigan"	"p_2"	-.113	59	5
+"USA"	"Michigan"	"p_3"	-.113	60	5
+"USA"	"Michigan"	"p_4"	.075	61	5
 "USA"	"Michigan"	"p_5"	.011	62	5
-"USA"	"Michigan"	"p_6"	.036	63	5
-"USA"	"Michigan"	"p_7"	-.013	64	5
-"USA"	"Michigan"	"p_8"	-.052	65	5
-"USA"	"Michigan"	"p_9"	-.069	66	5
-"USA"	"Minnesota"	"p_1"	-.115	58	5
-"USA"	"Minnesota"	"p_2"	-.104	59	5
-"USA"	"Minnesota"	"p_3"	-.111	60	5
-"USA"	"Minnesota"	"p_4"	.079	61	5
-"USA"	"Minnesota"	"p_5"	.013	62	5
-"USA"	"Minnesota"	"p_6"	.044	63	5
-"USA"	"Minnesota"	"p_7"	-.019	64	5
-"USA"	"Minnesota"	"p_8"	-.061	65	5
-"USA"	"Minnesota"	"p_9"	-.067	66	5
-"USA"	"Mississippi"	"p_1"	-.099	58	5
-"USA"	"Mississippi"	"p_2"	-.117	59	5
+"USA"	"Michigan"	"p_6"	.04	63	5
+"USA"	"Michigan"	"p_7"	-.015	64	5
+"USA"	"Michigan"	"p_8"	-.056	65	5
+"USA"	"Michigan"	"p_9"	-.068	66	5
+"USA"	"Minnesota"	"p_1"	-.107	58	5
+"USA"	"Minnesota"	"p_2"	-.105	59	5
+"USA"	"Minnesota"	"p_3"	-.112	60	5
+"USA"	"Minnesota"	"p_4"	.073	61	5
+"USA"	"Minnesota"	"p_5"	.012	62	5
+"USA"	"Minnesota"	"p_6"	.049	63	5
+"USA"	"Minnesota"	"p_7"	-.022	64	5
+"USA"	"Minnesota"	"p_8"	-.065	65	5
+"USA"	"Minnesota"	"p_9"	-.065	66	5
+"USA"	"Mississippi"	"p_1"	-.091	58	5
+"USA"	"Mississippi"	"p_2"	-.118	59	5
 "USA"	"Mississippi"	"p_3"	-.098	60	5
-"USA"	"Mississippi"	"p_4"	.074	61	5
+"USA"	"Mississippi"	"p_4"	.068	61	5
 "USA"	"Mississippi"	"p_5"	.01	62	5
-"USA"	"Mississippi"	"p_6"	.034	63	5
-"USA"	"Mississippi"	"p_7"	-.015	64	5
-"USA"	"Mississippi"	"p_8"	-.056	65	5
-"USA"	"Mississippi"	"p_9"	-.071	66	5
-"USA"	"Missouri"	"p_1"	-.109	58	5
-"USA"	"Missouri"	"p_2"	-.122	59	5
+"USA"	"Mississippi"	"p_6"	.039	63	5
+"USA"	"Mississippi"	"p_7"	-.017	64	5
+"USA"	"Mississippi"	"p_8"	-.06	65	5
+"USA"	"Mississippi"	"p_9"	-.069	66	5
+"USA"	"Missouri"	"p_1"	-.101	58	5
+"USA"	"Missouri"	"p_2"	-.123	59	5
 "USA"	"Missouri"	"p_3"	-.111	60	5
-"USA"	"Missouri"	"p_4"	.07	61	5
-"USA"	"Missouri"	"p_5"	.014	62	5
-"USA"	"Missouri"	"p_6"	.046	63	5
-"USA"	"Missouri"	"p_7"	-.019	64	5
-"USA"	"Missouri"	"p_8"	-.055	65	5
-"USA"	"Missouri"	"p_9"	-.069	66	5
-"USA"	"Montana"	"p_1"	-.105	58	5
+"USA"	"Missouri"	"p_4"	.064	61	5
+"USA"	"Missouri"	"p_5"	.013	62	5
+"USA"	"Missouri"	"p_6"	.05	63	5
+"USA"	"Missouri"	"p_7"	-.021	64	5
+"USA"	"Missouri"	"p_8"	-.059	65	5
+"USA"	"Missouri"	"p_9"	-.067	66	5
+"USA"	"Montana"	"p_1"	-.097	58	5
 "USA"	"Montana"	"p_2"	-.115	59	5
 "USA"	"Montana"	"p_3"	-.11	60	5
-"USA"	"Montana"	"p_4"	.075	61	5
-"USA"	"Montana"	"p_5"	.016	62	5
-"USA"	"Montana"	"p_6"	.038	63	5
-"USA"	"Montana"	"p_7"	-.009	64	5
-"USA"	"Montana"	"p_8"	-.059	65	5
-"USA"	"Montana"	"p_9"	-.071	66	5
-"USA"	"Nebraska"	"p_1"	-.104	58	5
+"USA"	"Montana"	"p_4"	.069	61	5
+"USA"	"Montana"	"p_5"	.015	62	5
+"USA"	"Montana"	"p_6"	.042	63	5
+"USA"	"Montana"	"p_7"	-.011	64	5
+"USA"	"Montana"	"p_8"	-.064	65	5
+"USA"	"Montana"	"p_9"	-.069	66	5
+"USA"	"Nebraska"	"p_1"	-.095	58	5
 "USA"	"Nebraska"	"p_2"	-.134	59	5
 "USA"	"Nebraska"	"p_3"	-.114	60	5
-"USA"	"Nebraska"	"p_4"	.075	61	5
+"USA"	"Nebraska"	"p_4"	.069	61	5
 "USA"	"Nebraska"	"p_5"	.017	62	5
-"USA"	"Nebraska"	"p_6"	.037	63	5
-"USA"	"Nebraska"	"p_7"	-.014	64	5
-"USA"	"Nebraska"	"p_8"	-.055	65	5
-"USA"	"Nebraska"	"p_9"	-.068	66	5
-"USA"	"Nevada"	"p_1"	-.108	58	5
-"USA"	"Nevada"	"p_2"	-.115	59	5
-"USA"	"Nevada"	"p_3"	-.111	60	5
-"USA"	"Nevada"	"p_4"	.083	61	5
-"USA"	"Nevada"	"p_5"	.015	62	5
-"USA"	"Nevada"	"p_6"	.034	63	5
-"USA"	"Nevada"	"p_7"	-.018	64	5
-"USA"	"Nevada"	"p_8"	-.058	65	5
-"USA"	"Nevada"	"p_9"	-.067	66	5
-"USA"	"New Hampshire"	"p_1"	-.102	58	5
-"USA"	"New Hampshire"	"p_2"	-.112	59	5
-"USA"	"New Hampshire"	"p_3"	-.111	60	5
-"USA"	"New Hampshire"	"p_4"	.073	61	5
-"USA"	"New Hampshire"	"p_5"	.014	62	5
-"USA"	"New Hampshire"	"p_6"	.036	63	5
-"USA"	"New Hampshire"	"p_7"	-.018	64	5
-"USA"	"New Hampshire"	"p_8"	-.054	65	5
-"USA"	"New Hampshire"	"p_9"	-.071	66	5
-"USA"	"New Jersey"	"p_1"	-.121	58	5
-"USA"	"New Jersey"	"p_2"	-.107	59	5
-"USA"	"New Jersey"	"p_3"	-.11	60	5
-"USA"	"New Jersey"	"p_4"	.078	61	5
+"USA"	"Nebraska"	"p_6"	.041	63	5
+"USA"	"Nebraska"	"p_7"	-.017	64	5
+"USA"	"Nebraska"	"p_8"	-.059	65	5
+"USA"	"Nebraska"	"p_9"	-.066	66	5
+"USA"	"Nevada"	"p_1"	-.1	58	5
+"USA"	"Nevada"	"p_2"	-.116	59	5
+"USA"	"Nevada"	"p_3"	-.112	60	5
+"USA"	"Nevada"	"p_4"	.077	61	5
+"USA"	"Nevada"	"p_5"	.014	62	5
+"USA"	"Nevada"	"p_6"	.038	63	5
+"USA"	"Nevada"	"p_7"	-.02	64	5
+"USA"	"Nevada"	"p_8"	-.062	65	5
+"USA"	"Nevada"	"p_9"	-.065	66	5
+"USA"	"New Hampshire"	"p_1"	-.094	58	5
+"USA"	"New Hampshire"	"p_2"	-.113	59	5
+"USA"	"New Hampshire"	"p_3"	-.112	60	5
+"USA"	"New Hampshire"	"p_4"	.067	61	5
+"USA"	"New Hampshire"	"p_5"	.013	62	5
+"USA"	"New Hampshire"	"p_6"	.04	63	5
+"USA"	"New Hampshire"	"p_7"	-.02	64	5
+"USA"	"New Hampshire"	"p_8"	-.059	65	5
+"USA"	"New Hampshire"	"p_9"	-.069	66	5
+"USA"	"New Jersey"	"p_1"	-.113	58	5
+"USA"	"New Jersey"	"p_2"	-.108	59	5
+"USA"	"New Jersey"	"p_3"	-.111	60	5
+"USA"	"New Jersey"	"p_4"	.072	61	5
 "USA"	"New Jersey"	"p_5"	.018	62	5
-"USA"	"New Jersey"	"p_6"	.04	63	5
-"USA"	"New Jersey"	"p_7"	-.016	64	5
-"USA"	"New Jersey"	"p_8"	-.058	65	5
-"USA"	"New Jersey"	"p_9"	-.069	66	5
-"USA"	"New Mexico"	"p_1"	-.107	58	5
+"USA"	"New Jersey"	"p_6"	.044	63	5
+"USA"	"New Jersey"	"p_7"	-.019	64	5
+"USA"	"New Jersey"	"p_8"	-.062	65	5
+"USA"	"New Jersey"	"p_9"	-.067	66	5
+"USA"	"New Mexico"	"p_1"	-.099	58	5
 "USA"	"New Mexico"	"p_2"	-.117	59	5
-"USA"	"New Mexico"	"p_3"	-.108	60	5
-"USA"	"New Mexico"	"p_4"	.077	61	5
+"USA"	"New Mexico"	"p_3"	-.109	60	5
+"USA"	"New Mexico"	"p_4"	.071	61	5
 "USA"	"New Mexico"	"p_5"	.011	62	5
-"USA"	"New Mexico"	"p_6"	.036	63	5
-"USA"	"New Mexico"	"p_7"	-.016	64	5
-"USA"	"New Mexico"	"p_8"	-.054	65	5
-"USA"	"New Mexico"	"p_9"	-.072	66	5
-"USA"	"New York"	"p_1"	-.114	58	5
-"USA"	"New York"	"p_2"	-.104	59	5
+"USA"	"New Mexico"	"p_6"	.04	63	5
+"USA"	"New Mexico"	"p_7"	-.018	64	5
+"USA"	"New Mexico"	"p_8"	-.058	65	5
+"USA"	"New Mexico"	"p_9"	-.07	66	5
+"USA"	"New York"	"p_1"	-.105	58	5
+"USA"	"New York"	"p_2"	-.105	59	5
 "USA"	"New York"	"p_3"	-.088	60	5
-"USA"	"New York"	"p_4"	.084	61	5
+"USA"	"New York"	"p_4"	.078	61	5
 "USA"	"New York"	"p_5"	.02	62	5
-"USA"	"New York"	"p_6"	.033	63	5
-"USA"	"New York"	"p_7"	-.014	64	5
-"USA"	"New York"	"p_8"	-.06	65	5
-"USA"	"New York"	"p_9"	-.068	66	5
-"USA"	"North Carolina"	"p_1"	-.101	58	5
-"USA"	"North Carolina"	"p_2"	-.115	59	5
-"USA"	"North Carolina"	"p_3"	-.11	60	5
-"USA"	"North Carolina"	"p_4"	.07	61	5
+"USA"	"New York"	"p_6"	.037	63	5
+"USA"	"New York"	"p_7"	-.017	64	5
+"USA"	"New York"	"p_8"	-.064	65	5
+"USA"	"New York"	"p_9"	-.067	66	5
+"USA"	"North Carolina"	"p_1"	-.093	58	5
+"USA"	"North Carolina"	"p_2"	-.116	59	5
+"USA"	"North Carolina"	"p_3"	-.111	60	5
+"USA"	"North Carolina"	"p_4"	.064	61	5
 "USA"	"North Carolina"	"p_5"	.015	62	5
-"USA"	"North Carolina"	"p_6"	.04	63	5
-"USA"	"North Carolina"	"p_7"	-.016	64	5
-"USA"	"North Carolina"	"p_8"	-.058	65	5
-"USA"	"North Carolina"	"p_9"	-.07	66	5
-"USA"	"North Dakota"	"p_1"	-.104	58	5
-"USA"	"North Dakota"	"p_2"	-.122	59	5
+"USA"	"North Carolina"	"p_6"	.044	63	5
+"USA"	"North Carolina"	"p_7"	-.018	64	5
+"USA"	"North Carolina"	"p_8"	-.062	65	5
+"USA"	"North Carolina"	"p_9"	-.069	66	5
+"USA"	"North Dakota"	"p_1"	-.096	58	5
+"USA"	"North Dakota"	"p_2"	-.123	59	5
 "USA"	"North Dakota"	"p_3"	-.116	60	5
-"USA"	"North Dakota"	"p_4"	.074	61	5
-"USA"	"North Dakota"	"p_5"	.016	62	5
-"USA"	"North Dakota"	"p_6"	.039	63	5
-"USA"	"North Dakota"	"p_7"	-.016	64	5
-"USA"	"North Dakota"	"p_8"	-.056	65	5
-"USA"	"North Dakota"	"p_9"	-.069	66	5
-"USA"	"Ohio"	"p_1"	-.101	58	5
-"USA"	"Ohio"	"p_2"	-.114	59	5
+"USA"	"North Dakota"	"p_4"	.068	61	5
+"USA"	"North Dakota"	"p_5"	.015	62	5
+"USA"	"North Dakota"	"p_6"	.043	63	5
+"USA"	"North Dakota"	"p_7"	-.018	64	5
+"USA"	"North Dakota"	"p_8"	-.061	65	5
+"USA"	"North Dakota"	"p_9"	-.067	66	5
+"USA"	"Ohio"	"p_1"	-.094	58	5
+"USA"	"Ohio"	"p_2"	-.115	59	5
 "USA"	"Ohio"	"p_3"	-.113	60	5
-"USA"	"Ohio"	"p_4"	.07	61	5
-"USA"	"Ohio"	"p_5"	.02	62	5
-"USA"	"Ohio"	"p_6"	.041	63	5
-"USA"	"Ohio"	"p_7"	-.015	64	5
-"USA"	"Ohio"	"p_8"	-.061	65	5
-"USA"	"Ohio"	"p_9"	-.068	66	5
-"USA"	"Oklahoma"	"p_1"	-.11	58	5
+"USA"	"Ohio"	"p_4"	.064	61	5
+"USA"	"Ohio"	"p_5"	.019	62	5
+"USA"	"Ohio"	"p_6"	.046	63	5
+"USA"	"Ohio"	"p_7"	-.017	64	5
+"USA"	"Ohio"	"p_8"	-.065	65	5
+"USA"	"Ohio"	"p_9"	-.067	66	5
+"USA"	"Oklahoma"	"p_1"	-.101	58	5
 "USA"	"Oklahoma"	"p_2"	-.124	59	5
 "USA"	"Oklahoma"	"p_3"	-.109	60	5
-"USA"	"Oklahoma"	"p_4"	.076	61	5
-"USA"	"Oklahoma"	"p_5"	.014	62	5
-"USA"	"Oklahoma"	"p_6"	.039	63	5
-"USA"	"Oklahoma"	"p_7"	-.013	64	5
-"USA"	"Oklahoma"	"p_8"	-.055	65	5
-"USA"	"Oklahoma"	"p_9"	-.07	66	5
-"USA"	"Oregon"	"p_1"	-.114	58	5
-"USA"	"Oregon"	"p_2"	-.115	59	5
+"USA"	"Oklahoma"	"p_4"	.07	61	5
+"USA"	"Oklahoma"	"p_5"	.013	62	5
+"USA"	"Oklahoma"	"p_6"	.043	63	5
+"USA"	"Oklahoma"	"p_7"	-.016	64	5
+"USA"	"Oklahoma"	"p_8"	-.059	65	5
+"USA"	"Oklahoma"	"p_9"	-.068	66	5
+"USA"	"Oregon"	"p_1"	-.106	58	5
+"USA"	"Oregon"	"p_2"	-.116	59	5
 "USA"	"Oregon"	"p_3"	-.104	60	5
-"USA"	"Oregon"	"p_4"	.075	61	5
-"USA"	"Oregon"	"p_5"	.005	62	5
-"USA"	"Oregon"	"p_6"	.041	63	5
-"USA"	"Oregon"	"p_7"	-.023	64	5
-"USA"	"Oregon"	"p_8"	-.056	65	5
-"USA"	"Oregon"	"p_9"	-.07	66	5
-"USA"	"Pennsylvania"	"p_1"	-.11	58	5
-"USA"	"Pennsylvania"	"p_2"	-.116	59	5
-"USA"	"Pennsylvania"	"p_3"	-.107	60	5
-"USA"	"Pennsylvania"	"p_4"	.078	61	5
-"USA"	"Pennsylvania"	"p_5"	.016	62	5
-"USA"	"Pennsylvania"	"p_6"	.036	63	5
-"USA"	"Pennsylvania"	"p_7"	-.019	64	5
-"USA"	"Pennsylvania"	"p_8"	-.059	65	5
-"USA"	"Pennsylvania"	"p_9"	-.066	66	5
-"USA"	"Rhode Island"	"p_1"	-.112	58	5
-"USA"	"Rhode Island"	"p_2"	-.113	59	5
-"USA"	"Rhode Island"	"p_3"	-.107	60	5
-"USA"	"Rhode Island"	"p_4"	.083	61	5
+"USA"	"Oregon"	"p_4"	.068	61	5
+"USA"	"Oregon"	"p_5"	.004	62	5
+"USA"	"Oregon"	"p_6"	.045	63	5
+"USA"	"Oregon"	"p_7"	-.026	64	5
+"USA"	"Oregon"	"p_8"	-.06	65	5
+"USA"	"Oregon"	"p_9"	-.068	66	5
+"USA"	"Pennsylvania"	"p_1"	-.102	58	5
+"USA"	"Pennsylvania"	"p_2"	-.117	59	5
+"USA"	"Pennsylvania"	"p_3"	-.108	60	5
+"USA"	"Pennsylvania"	"p_4"	.072	61	5
+"USA"	"Pennsylvania"	"p_5"	.015	62	5
+"USA"	"Pennsylvania"	"p_6"	.041	63	5
+"USA"	"Pennsylvania"	"p_7"	-.021	64	5
+"USA"	"Pennsylvania"	"p_8"	-.064	65	5
+"USA"	"Pennsylvania"	"p_9"	-.064	66	5
+"USA"	"Rhode Island"	"p_1"	-.103	58	5
+"USA"	"Rhode Island"	"p_2"	-.114	59	5
+"USA"	"Rhode Island"	"p_3"	-.108	60	5
+"USA"	"Rhode Island"	"p_4"	.077	61	5
 "USA"	"Rhode Island"	"p_5"	.019	62	5
-"USA"	"Rhode Island"	"p_6"	.033	63	5
-"USA"	"Rhode Island"	"p_7"	-.022	64	5
-"USA"	"Rhode Island"	"p_8"	-.055	65	5
-"USA"	"Rhode Island"	"p_9"	-.073	66	5
-"USA"	"South Carolina"	"p_1"	-.106	58	5
+"USA"	"Rhode Island"	"p_6"	.037	63	5
+"USA"	"Rhode Island"	"p_7"	-.024	64	5
+"USA"	"Rhode Island"	"p_8"	-.06	65	5
+"USA"	"Rhode Island"	"p_9"	-.071	66	5
+"USA"	"South Carolina"	"p_1"	-.098	58	5
 "USA"	"South Carolina"	"p_2"	-.113	59	5
 "USA"	"South Carolina"	"p_3"	-.112	60	5
-"USA"	"South Carolina"	"p_4"	.066	61	5
-"USA"	"South Carolina"	"p_5"	.013	62	5
-"USA"	"South Carolina"	"p_6"	.038	63	5
-"USA"	"South Carolina"	"p_7"	-.018	64	5
-"USA"	"South Carolina"	"p_8"	-.051	65	5
-"USA"	"South Carolina"	"p_9"	-.071	66	5
-"USA"	"South Dakota"	"p_1"	-.101	58	5
-"USA"	"South Dakota"	"p_2"	-.136	59	5
+"USA"	"South Carolina"	"p_4"	.06	61	5
+"USA"	"South Carolina"	"p_5"	.012	62	5
+"USA"	"South Carolina"	"p_6"	.042	63	5
+"USA"	"South Carolina"	"p_7"	-.02	64	5
+"USA"	"South Carolina"	"p_8"	-.056	65	5
+"USA"	"South Carolina"	"p_9"	-.07	66	5
+"USA"	"South Dakota"	"p_1"	-.093	58	5
+"USA"	"South Dakota"	"p_2"	-.137	59	5
 "USA"	"South Dakota"	"p_3"	-.107	60	5
-"USA"	"South Dakota"	"p_4"	.074	61	5
-"USA"	"South Dakota"	"p_5"	.01	62	5
-"USA"	"South Dakota"	"p_6"	.039	63	5
-"USA"	"South Dakota"	"p_7"	-.023	64	5
-"USA"	"South Dakota"	"p_8"	-.05	65	5
-"USA"	"South Dakota"	"p_9"	-.067	66	5
-"USA"	"Tennessee"	"p_1"	-.099	58	5
+"USA"	"South Dakota"	"p_4"	.068	61	5
+"USA"	"South Dakota"	"p_5"	.009	62	5
+"USA"	"South Dakota"	"p_6"	.043	63	5
+"USA"	"South Dakota"	"p_7"	-.025	64	5
+"USA"	"South Dakota"	"p_8"	-.055	65	5
+"USA"	"South Dakota"	"p_9"	-.065	66	5
+"USA"	"Tennessee"	"p_1"	-.091	58	5
 "USA"	"Tennessee"	"p_2"	-.114	59	5
 "USA"	"Tennessee"	"p_3"	-.113	60	5
-"USA"	"Tennessee"	"p_4"	.067	61	5
-"USA"	"Tennessee"	"p_5"	.022	62	5
-"USA"	"Tennessee"	"p_6"	.038	63	5
-"USA"	"Tennessee"	"p_7"	-.017	64	5
-"USA"	"Tennessee"	"p_8"	-.057	65	5
-"USA"	"Tennessee"	"p_9"	-.072	66	5
-"USA"	"Texas"	"p_1"	-.11	58	5
-"USA"	"Texas"	"p_2"	-.118	59	5
+"USA"	"Tennessee"	"p_4"	.061	61	5
+"USA"	"Tennessee"	"p_5"	.021	62	5
+"USA"	"Tennessee"	"p_6"	.042	63	5
+"USA"	"Tennessee"	"p_7"	-.02	64	5
+"USA"	"Tennessee"	"p_8"	-.061	65	5
+"USA"	"Tennessee"	"p_9"	-.07	66	5
+"USA"	"Texas"	"p_1"	-.101	58	5
+"USA"	"Texas"	"p_2"	-.119	59	5
 "USA"	"Texas"	"p_3"	-.109	60	5
-"USA"	"Texas"	"p_4"	.078	61	5
-"USA"	"Texas"	"p_5"	.016	62	5
-"USA"	"Texas"	"p_6"	.036	63	5
-"USA"	"Texas"	"p_7"	-.006	64	5
-"USA"	"Texas"	"p_8"	-.059	65	5
-"USA"	"Texas"	"p_9"	-.068	66	5
-"USA"	"Utah"	"p_1"	-.106	58	5
-"USA"	"Utah"	"p_2"	-.119	59	5
+"USA"	"Texas"	"p_4"	.072	61	5
+"USA"	"Texas"	"p_5"	.015	62	5
+"USA"	"Texas"	"p_6"	.041	63	5
+"USA"	"Texas"	"p_7"	-.008	64	5
+"USA"	"Texas"	"p_8"	-.064	65	5
+"USA"	"Texas"	"p_9"	-.067	66	5
+"USA"	"Utah"	"p_1"	-.097	58	5
+"USA"	"Utah"	"p_2"	-.12	59	5
 "USA"	"Utah"	"p_3"	-.107	60	5
-"USA"	"Utah"	"p_4"	.076	61	5
-"USA"	"Utah"	"p_5"	.015	62	5
-"USA"	"Utah"	"p_6"	.033	63	5
-"USA"	"Utah"	"p_7"	-.015	64	5
-"USA"	"Utah"	"p_8"	-.05	65	5
-"USA"	"Utah"	"p_9"	-.072	66	5
-"USA"	"Vermont"	"p_1"	-.107	58	5
-"USA"	"Vermont"	"p_2"	-.12	59	5
+"USA"	"Utah"	"p_4"	.07	61	5
+"USA"	"Utah"	"p_5"	.014	62	5
+"USA"	"Utah"	"p_6"	.037	63	5
+"USA"	"Utah"	"p_7"	-.018	64	5
+"USA"	"Utah"	"p_8"	-.055	65	5
+"USA"	"Utah"	"p_9"	-.07	66	5
+"USA"	"Vermont"	"p_1"	-.099	58	5
+"USA"	"Vermont"	"p_2"	-.121	59	5
 "USA"	"Vermont"	"p_3"	-.109	60	5
-"USA"	"Vermont"	"p_4"	.076	61	5
-"USA"	"Vermont"	"p_5"	.015	62	5
-"USA"	"Vermont"	"p_6"	.037	63	5
-"USA"	"Vermont"	"p_7"	-.012	64	5
-"USA"	"Vermont"	"p_8"	-.058	65	5
-"USA"	"Vermont"	"p_9"	-.067	66	5
-"USA"	"Virginia"	"p_1"	-.107	58	5
-"USA"	"Virginia"	"p_2"	-.135	59	5
+"USA"	"Vermont"	"p_4"	.07	61	5
+"USA"	"Vermont"	"p_5"	.014	62	5
+"USA"	"Vermont"	"p_6"	.041	63	5
+"USA"	"Vermont"	"p_7"	-.015	64	5
+"USA"	"Vermont"	"p_8"	-.062	65	5
+"USA"	"Vermont"	"p_9"	-.065	66	5
+"USA"	"Virginia"	"p_1"	-.104	58	5
+"USA"	"Virginia"	"p_2"	-.137	59	5
 "USA"	"Virginia"	"p_3"	-.106	60	5
-"USA"	"Virginia"	"p_4"	.078	61	5
-"USA"	"Virginia"	"p_5"	.018	62	5
+"USA"	"Virginia"	"p_4"	.076	61	5
+"USA"	"Virginia"	"p_5"	.019	62	5
 "USA"	"Virginia"	"p_6"	.037	63	5
-"USA"	"Virginia"	"p_7"	-.017	64	5
+"USA"	"Virginia"	"p_7"	-.018	64	5
 "USA"	"Virginia"	"p_8"	-.055	65	5
 "USA"	"Virginia"	"p_9"	-.068	66	5
-"USA"	"Washington"	"p_1"	-.084	58	5
-"USA"	"Washington"	"p_2"	-.132	59	5
-"USA"	"Washington"	"p_3"	-.107	60	5
-"USA"	"Washington"	"p_4"	.08	61	5
-"USA"	"Washington"	"p_5"	.009	62	5
-"USA"	"Washington"	"p_6"	.038	63	5
-"USA"	"Washington"	"p_7"	-.024	64	5
-"USA"	"Washington"	"p_8"	-.052	65	5
-"USA"	"Washington"	"p_9"	-.069	66	5
-"USA"	"West Virginia"	"p_1"	-.104	58	5
-"USA"	"West Virginia"	"p_2"	-.109	59	5
-"USA"	"West Virginia"	"p_3"	-.111	60	5
-"USA"	"West Virginia"	"p_4"	.074	61	5
-"USA"	"West Virginia"	"p_5"	.016	62	5
-"USA"	"West Virginia"	"p_6"	.036	63	5
-"USA"	"West Virginia"	"p_7"	-.012	64	5
-"USA"	"West Virginia"	"p_8"	-.058	65	5
-"USA"	"West Virginia"	"p_9"	-.071	66	5
-"USA"	"Wisconsin"	"p_1"	-.105	58	5
+"USA"	"Washington"	"p_1"	-.075	58	5
+"USA"	"Washington"	"p_2"	-.133	59	5
+"USA"	"Washington"	"p_3"	-.108	60	5
+"USA"	"Washington"	"p_4"	.074	61	5
+"USA"	"Washington"	"p_5"	.008	62	5
+"USA"	"Washington"	"p_6"	.042	63	5
+"USA"	"Washington"	"p_7"	-.027	64	5
+"USA"	"Washington"	"p_8"	-.056	65	5
+"USA"	"Washington"	"p_9"	-.067	66	5
+"USA"	"West Virginia"	"p_1"	-.096	58	5
+"USA"	"West Virginia"	"p_2"	-.11	59	5
+"USA"	"West Virginia"	"p_3"	-.112	60	5
+"USA"	"West Virginia"	"p_4"	.068	61	5
+"USA"	"West Virginia"	"p_5"	.015	62	5
+"USA"	"West Virginia"	"p_6"	.04	63	5
+"USA"	"West Virginia"	"p_7"	-.014	64	5
+"USA"	"West Virginia"	"p_8"	-.063	65	5
+"USA"	"West Virginia"	"p_9"	-.07	66	5
+"USA"	"Wisconsin"	"p_1"	-.097	58	5
 "USA"	"Wisconsin"	"p_2"	-.113	59	5
-"USA"	"Wisconsin"	"p_3"	-.111	60	5
-"USA"	"Wisconsin"	"p_4"	.072	61	5
-"USA"	"Wisconsin"	"p_5"	.014	62	5
-"USA"	"Wisconsin"	"p_6"	.042	63	5
-"USA"	"Wisconsin"	"p_7"	-.017	64	5
-"USA"	"Wisconsin"	"p_8"	-.058	65	5
-"USA"	"Wisconsin"	"p_9"	-.07	66	5
-"USA"	"Wyoming"	"p_1"	-.107	58	5
+"USA"	"Wisconsin"	"p_3"	-.112	60	5
+"USA"	"Wisconsin"	"p_4"	.066	61	5
+"USA"	"Wisconsin"	"p_5"	.013	62	5
+"USA"	"Wisconsin"	"p_6"	.046	63	5
+"USA"	"Wisconsin"	"p_7"	-.019	64	5
+"USA"	"Wisconsin"	"p_8"	-.062	65	5
+"USA"	"Wisconsin"	"p_9"	-.068	66	5
+"USA"	"Wyoming"	"p_1"	-.099	58	5
 "USA"	"Wyoming"	"p_2"	-.112	59	5
-"USA"	"Wyoming"	"p_3"	-.109	60	5
-"USA"	"Wyoming"	"p_4"	.075	61	5
-"USA"	"Wyoming"	"p_5"	.016	62	5
-"USA"	"Wyoming"	"p_6"	.039	63	5
-"USA"	"Wyoming"	"p_7"	-.021	64	5
-"USA"	"Wyoming"	"p_8"	-.059	65	5
-"USA"	"Wyoming"	"p_9"	-.069	66	5
+"USA"	"Wyoming"	"p_3"	-.11	60	5
+"USA"	"Wyoming"	"p_4"	.07	61	5
+"USA"	"Wyoming"	"p_5"	.015	62	5
+"USA"	"Wyoming"	"p_6"	.043	63	5
+"USA"	"Wyoming"	"p_7"	-.023	64	5
+"USA"	"Wyoming"	"p_8"	-.063	65	5
+"USA"	"Wyoming"	"p_9"	-.068	66	5
