@@ -31,7 +31,7 @@ def test_pipeline(tmp_path):
     # 4) SITable2.xlsx is created manually
     # 5) TODO: Figure out why fig1 is getting randomly sorted differently by different
     #    OS so that we can properly test it
-    files_to_exclude = set(
+    files_to_exclude = (
         list(Path("models/reg_data").glob("*.csv"))
         + list(Path("models").glob("*_preds.csv"))  # created by stata
         + list(Path("models").glob("*_ATE.csv"))  # created by stata
@@ -43,20 +43,19 @@ def test_pipeline(tmp_path):
         + list(Path("results/source_data").glob("fig1*.csv"))
     )
     if not run_stata:
-        files_to_exclude += set(
-            [
-                Path("results") / "source_data" / i
-                for i in [
-                    "Figure2_data.csv",
-                    "Figure3_data.csv",
-                    "ExtendedDataFigure3_cross_valid.csv",
-                    "ExtendedDataFigure4_cross_valid.csv",
-                    "ExtendedDataFigure5_lags.xlsx",
-                    "ExtendedDataFigure6.xlsx",
-                    "ExtendedDataFigure10_e.csv",
-                ]
+        files_to_exclude += [
+            Path("results") / "source_data" / i
+            for i in [
+                "Figure2_data.csv",
+                "Figure3_data.csv",
+                "ExtendedDataFigure3_cross_valid.csv",
+                "ExtendedDataFigure4_cross_valid.csv",
+                "ExtendedDataFigure5_lags.xlsx",
+                "ExtendedDataFigure6.xlsx",
+                "ExtendedDataFigure10_e.csv",
             ]
-        )
+        ]
+    files_to_exclude = set(files_to_exclude)
 
     tmp_model_path = tmp_path / "models"
     tmp_results_path = tmp_path / "results" / "source_data"
@@ -96,6 +95,7 @@ def test_pipeline(tmp_path):
     to_test = new_files - missing_files - not_generated
     for other_file in to_test:
         p = tmp_path / other_file
+        print(f"Testing {p}...")
         try:
             pd.testing.assert_frame_equal(
                 pd.read_csv(p), pd.read_csv(other_file), check_like=True
