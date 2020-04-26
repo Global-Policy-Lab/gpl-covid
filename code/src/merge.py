@@ -3,8 +3,8 @@ import datetime
 import pickle
 
 import numpy as np
-
 import pandas as pd
+
 import src.pop as cpop
 
 popweighted_suffix = "popwt"

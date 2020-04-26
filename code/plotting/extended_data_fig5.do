@@ -127,13 +127,16 @@ yline(`yline4', lc(black) lp(dot)) legend(off) ysize(20) xline(0, lc(black))
 graph export results/figures/appendix/fixed_lag/fig5_FL.pdf, replace
 
 // output source data for ED fig 5
-export excel adm0 policy beta lower upper using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_a") firstrow(var) sheetreplace
+// Will pass "nosave" as argument during tests so that we don't overwrite
+if "`0'" == "" {
+    export excel adm0 policy beta lower upper using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_a") firstrow(var) sheetreplace
 
-import delim "results/source_data/indiv/ExtendedDataFigure5_b.csv", clear
-export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_b") firstrow(var) sheetreplace
+    import delim "results/source_data/indiv/ExtendedDataFigure5_b.csv", clear
+    export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_b") firstrow(var) sheetreplace
 
-import delim "results/source_data/indiv/ExtendedDataFigure5_CHN_event_study.csv", clear
-export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_c") firstrow(var) sheetreplace
+    import delim "results/source_data/indiv/ExtendedDataFigure5_CHN_event_study.csv", clear
+    export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_c") firstrow(var) sheetreplace
+}
 
 /*
 tw rspike upper lower seq if hosp != 1 & adm0 == "USA", xline(0, lc(black)) hor mc(gs10) lw(thin) ///

@@ -179,7 +179,11 @@ fi
 if $STATA
 then
     printf "***Creating ED Fig 5***\n"
-    code/statab.sh code/plotting/extended_data_fig5.do
+    if [ $NUMPROJ == 1000 ]; then
+        code/statab.sh code/plotting/extended_data_fig5.do
+    else
+        code/statab.sh code/plotting/extended_data_fig5.do nosave
+    fi
 fi
 
 # ED Figure 6

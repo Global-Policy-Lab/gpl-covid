@@ -21,25 +21,18 @@ def test_readme():
 
 def exclude_files(fileset, run_stata):
     """List all files that we know will not get updated or don't want to check:
-    1) bootstraps, ED Fig 5, and ED Fig 8/9 are run with only 2 samples in tests, so 
-       don't check those.
+    1) Ignore all files ``in source_data/indiv``
     2) SITable2.xlsx is created manually
-    3) Ignore all files ``in source_data/indiv``
-    4) excluded data in "models" and "results/source_data" is created by stata code
-       (will not be created in SI if run on github-hosted runner)
-    5) TODO: Figure out why fig1 is getting randomly sorted differently by different
+    3) Extra excluded data in "models" and "results/source_data" is created by stata 
+       code (will not be created in SI if run on github-hosted runner)
+    4) TODO: Figure out why Fig 1 is getting randomly sorted differently by different
        OS so that we can properly test it
     """
 
-    files_to_exclude = (
-        list(Path("models/projections").glob("*_bootstrap_projection.csv"))
-        + [
-            Path("results") / "source_data" / i
-            for i in ["ExtendedDataFigure5_lags.xlsx", "ExtendedDataFigure89.csv", "SITable2.xlsx",]
-        ]
-        + list(Path("results/source_data/indiv").glob("*"))
-        + list(Path("results/source_data").glob("fig1*.csv"))
-    )
+    files_to_exclude = list(Path("results/source_data/indiv").glob("*")) + [
+        Path("results") / "source_data" / i
+        for i in ["Figure1_data.xlsx", "SITable2.xlsx",]
+    ]
     if not run_stata:
         files_to_exclude += (
             list(Path("models/reg_data").glob("*.csv"))

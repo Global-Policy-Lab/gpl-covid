@@ -1,8 +1,8 @@
 import os
 
 import numpy as np
-
 import pandas as pd
+
 import src.utils as cutil
 
 states_url = "https://covidtracking.com/api/states/daily"

@@ -1,10 +1,10 @@
 import os
 
 import numpy as np
+import pandas as pd
 
 # local imports
 import download_latest_covidtrackingdotcom_data as data_loader
-import pandas as pd
 import src.utils as cutil
 
 # flag whether to save this output in the /data/interim/usa folder
