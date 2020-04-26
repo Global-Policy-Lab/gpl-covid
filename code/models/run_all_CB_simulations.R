@@ -2,7 +2,7 @@
 args = commandArgs(trailingOnly=TRUE)
 
 if(length(args) > 0){
-  times <- args
+  times <- strtoi(args)
 } else {
   times = 1000  
 }
