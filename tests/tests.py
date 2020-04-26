@@ -19,43 +19,53 @@ def test_readme():
                     assert tocomp in readme, tocomp
 
 
+def _get_files_to_exclude(run_stata):
+    """List all files that we know will not get updated or don't want to check:
+    1) bootstraps and ED Fig 8/9 are run with only 2 samples in tests, so don't check 
+       those
+    2) SITable2.xlsx is created manually
+    3) Ignore all files ``in source_data/indiv``
+    4) excluded data in "models" and "results/source_data" is created by stata code
+       (will not be created in SI if run on github-hosted runner)
+    5) TODO: Figure out why fig1 is getting randomly sorted differently by different
+       OS so that we can properly test it
+    """
+
+    files_to_exclude = (
+        list(Path("models/projections").glob("*_bootstrap_projection.csv"))
+        + [
+            Path("results") / "source_data" / i
+            for i in ["ExtendedDataFigure89.csv", "SITable2.xlsx",]
+        ]
+        + list(Path("results/source_data/indiv").glob("*"))
+        + list(Path("results/source_data").glob("fig1*.csv"))
+    )
+    if not run_stata:
+        files_to_exclude += (
+            list(Path("models/reg_data").glob("*.csv"))
+            + list(Path("models").glob("*_preds.csv"))  # created by stata
+            + list(Path("models").glob("*_ATE.csv"))  # created by stata
+            + [
+                Path("results") / "source_data" / i
+                for i in [
+                    "Figure2_data.csv",
+                    "Figure3_data.csv",
+                    "ExtendedDataFigure3_cross_valid.csv",
+                    "ExtendedDataFigure4_cross_valid.csv",
+                    "ExtendedDataFigure5_lags.xlsx",
+                    "ExtendedDataFigure6.xlsx",
+                    "ExtendedDataFigure10_e.csv",
+                ]
+            ]
+        )
+    files_to_exclude = set(files_to_exclude)
+    return files_to_exclude
+
+
 def test_pipeline(tmp_path):
 
     run_stata = str(os.environ.get("STATA_TESTS", "false")).lower() == "true"
     stata_flag = "" if run_stata else " --nostata"
-    # list all files that we know will not get updated
-    # 1) bootstraps are run with only 2 samples in tests, so don't check those
-    # 2) excluded data in "models" and "results/source_data" is created by stata code
-    #    that does not run in CI
-    # 3) ExtendedDataFigure89.csv takes a long time to write so is excluded from tests
-    # 4) SITable2.xlsx is created manually
-    # 5) TODO: Figure out why fig1 is getting randomly sorted differently by different
-    #    OS so that we can properly test it
-    files_to_exclude = (
-        list(Path("models/reg_data").glob("*.csv"))
-        + list(Path("models").glob("*_preds.csv"))  # created by stata
-        + list(Path("models").glob("*_ATE.csv"))  # created by stata
-        + [  # created by stata
-            Path("results") / "source_data" / i
-            for i in ["ExtendedDataFigure89.csv", "SITable2.xlsx",]
-        ]
-        + list(Path("models/projections").glob("*_bootstrap_projection.csv"))
-        + list(Path("results/source_data").glob("fig1*.csv"))
-    )
-    if not run_stata:
-        files_to_exclude += [
-            Path("results") / "source_data" / i
-            for i in [
-                "Figure2_data.csv",
-                "Figure3_data.csv",
-                "ExtendedDataFigure3_cross_valid.csv",
-                "ExtendedDataFigure4_cross_valid.csv",
-                "ExtendedDataFigure5_lags.xlsx",
-                "ExtendedDataFigure6.xlsx",
-                "ExtendedDataFigure10_e.csv",
-            ]
-        ]
-    files_to_exclude = set(files_to_exclude)
 
     tmp_model_path = tmp_path / "models"
     tmp_results_path = tmp_path / "results" / "source_data"
@@ -67,7 +77,6 @@ def test_pipeline(tmp_path):
         [i for i in Path("models").rglob("*") if i.is_file()]
         + [i for i in Path("results/source_data").rglob("*") if i.is_file()]
     )
-    old_files = old_files - files_to_exclude
 
     # know when last modified
     old_mtimes = {i: i.stat().st_mtime for i in old_files}
@@ -76,12 +85,11 @@ def test_pipeline(tmp_path):
     cmd = f"bash code/run.sh{stata_flag} --num-proj 2"
     subprocess.run(shlex.split(cmd), check=True)
 
-    bad_files = []
-
     new_files = set(
         [i for i in Path("models").rglob("*") if i.is_file()]
         + [i for i in Path("results/source_data").rglob("*") if i.is_file()]
     )
+    files_to_exclude = _get_files_to_exclude(run_stata)
     new_files = new_files - files_to_exclude
 
     # know when last modified
@@ -90,33 +98,43 @@ def test_pipeline(tmp_path):
     # find all files that either weren't created with code or were created with code
     # yet weren't already in repo
     missing_files = set([i for i in new_files if i not in old_files])
-    not_generated = set([i for i in old_files if old_mtimes[i] == new_mtimes[i]])
+    not_generated = set(
+        [i for i in old_files if i not in new_files or old_mtimes[i] == new_mtimes[i]]
+    )
 
     to_test = new_files - missing_files - not_generated
-    for other_file in to_test:
+    not_checked = []
+    bad_files = []
+    for other_file in new_files:
         p = tmp_path / other_file
         print(f"Testing {p}...")
-        try:
-            pd.testing.assert_frame_equal(
-                pd.read_csv(p), pd.read_csv(other_file), check_like=True
-            )
-        except UnicodeDecodeError:
-            pass
-        except AssertionError:
-            bad_files.append((str(other_file), str(p)))
+        if p.suffix == ".csv":
+            these_dfs = {"0": pd.read_csv(other_file)}
+            comp_dfs = {"0": pd.read_csv(p)}
+        elif p.suffix == ".xlsx":
+            these_dfs = pd.read_excel(other_file, sheet_name=None)
+            comp_dfs = pd.read_excel(p, sheet_name=None)
+        else:
+            not_checked.append(other_file)
+        if p.suffix in [".csv", ".xlsx"]:
+            for k in these_dfs.keys():
+                try:
+                    pd.testing.assert_frame_equal(
+                        these_dfs[k], comp_dfs[k], check_like=True
+                    )
+                except AssertionError:
+                    bad_files.append(str(other_file))
+                    print("Comparing the different files")
+                    print(these_dfs[k])
+                    print(comp_dfs[k])
 
     # raise errors
+    if len(not_checked) > 0:
+        warnings.warn(f"The following files were not checked: {not_checked}")
     if len(missing_files.union(not_generated, bad_files)) > 0:
-        if len(bad_files) > 0:
-            print("Dumped contents of non-matched files:\n")
-            for other_file, p in bad_files:
-                cmd = shlex.split(f"cat {other_file}")
-                subprocess.run(cmd)
-                cmd = shlex.split(f"cat {p}")
-                subprocess.run(cmd)
         raise AssertionError(
             f"""The following files produced by this code do not match the version saved
-            in the repo: {set([x for x, _ in bad_files])}.
+            in the repo: {set(bad_files)}.
 
             The following files contained in this commit are NOT created by the code:
             {not_generated}
