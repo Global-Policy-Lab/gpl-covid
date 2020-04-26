@@ -19,10 +19,10 @@ def test_readme():
                     assert tocomp in readme, tocomp
 
 
-def _get_files_to_exclude(run_stata):
+def exclude_files(fileset, run_stata):
     """List all files that we know will not get updated or don't want to check:
-    1) bootstraps and ED Fig 8/9 are run with only 2 samples in tests, so don't check 
-       those
+    1) bootstraps, ED Fig 5, and ED Fig 8/9 are run with only 2 samples in tests, so 
+       don't check those.
     2) SITable2.xlsx is created manually
     3) Ignore all files ``in source_data/indiv``
     4) excluded data in "models" and "results/source_data" is created by stata code
@@ -35,7 +35,7 @@ def _get_files_to_exclude(run_stata):
         list(Path("models/projections").glob("*_bootstrap_projection.csv"))
         + [
             Path("results") / "source_data" / i
-            for i in ["ExtendedDataFigure89.csv", "SITable2.xlsx",]
+            for i in ["ExtendedDataFigure5_lags.xlsx", "ExtendedDataFigure89.csv", "SITable2.xlsx",]
         ]
         + list(Path("results/source_data/indiv").glob("*"))
         + list(Path("results/source_data").glob("fig1*.csv"))
@@ -52,14 +52,13 @@ def _get_files_to_exclude(run_stata):
                     "Figure3_data.csv",
                     "ExtendedDataFigure3_cross_valid.csv",
                     "ExtendedDataFigure4_cross_valid.csv",
-                    "ExtendedDataFigure5_lags.xlsx",
                     "ExtendedDataFigure6.xlsx",
                     "ExtendedDataFigure10_e.csv",
                 ]
             ]
         )
     files_to_exclude = set(files_to_exclude)
-    return files_to_exclude
+    return fileset - files_to_exclude
 
 
 def test_pipeline(tmp_path):
@@ -77,6 +76,7 @@ def test_pipeline(tmp_path):
         [i for i in Path("models").rglob("*") if i.is_file()]
         + [i for i in Path("results/source_data").rglob("*") if i.is_file()]
     )
+    old_files = exclude_files(old_files, run_stata)
 
     # know when last modified
     old_mtimes = {i: i.stat().st_mtime for i in old_files}
@@ -89,8 +89,7 @@ def test_pipeline(tmp_path):
         [i for i in Path("models").rglob("*") if i.is_file()]
         + [i for i in Path("results/source_data").rglob("*") if i.is_file()]
     )
-    files_to_exclude = _get_files_to_exclude(run_stata)
-    new_files = new_files - files_to_exclude
+    new_files = exclude_files(new_files, run_stata)
 
     # know when last modified
     new_mtimes = {i: i.stat().st_mtime for i in new_files}
@@ -107,7 +106,6 @@ def test_pipeline(tmp_path):
     bad_files = []
     for other_file in new_files:
         p = tmp_path / other_file
-        print(f"Testing {p}...")
         if p.suffix == ".csv":
             these_dfs = {"0": pd.read_csv(other_file)}
             comp_dfs = {"0": pd.read_csv(p)}
@@ -122,11 +120,9 @@ def test_pipeline(tmp_path):
                     pd.testing.assert_frame_equal(
                         these_dfs[k], comp_dfs[k], check_like=True
                     )
-                except AssertionError:
+                except AssertionError as err:
                     bad_files.append(str(other_file))
-                    print("Comparing the different files")
-                    print(these_dfs[k])
-                    print(comp_dfs[k])
+                    print(f"{other_file} DOES NOT MATCH: {err}")
 
     # raise errors
     if len(not_checked) > 0:
