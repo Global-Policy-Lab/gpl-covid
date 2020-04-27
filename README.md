@@ -14,7 +14,7 @@ conda env create -f environment.yml
 conda activate gpl-covid
 ```
 
-Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Ensure you are currently located inside the repo root directory (`cd gpl-covid`), then execute
+Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Ensure you are currently located inside the code directory within the repo (`cd gpl-covid/code/`), then execute
 
 ```bash
 pip install -e .
