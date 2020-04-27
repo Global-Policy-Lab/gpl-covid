@@ -1,9 +1,11 @@
-import src.utils as cutil
 import pandas as pd
 
-out_dir = cutil.RESULTS / "source_data"
+import src.utils as cutil
 
-files = (out_dir).glob("fig1_*.csv")
+out_dir = cutil.RESULTS / "source_data"
+source_dir = out_dir / "indiv"
+
+files = (source_dir).glob("fig1_*.csv")
 dfs = []
 names = []
 for f in files:

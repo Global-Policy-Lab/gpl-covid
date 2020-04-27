@@ -408,7 +408,7 @@ preserve
 	lab(3 "w/o NY") region(lstyle(none))) ///
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/USA.pdf, replace
-	graph export results/figures/appendix/cross_valid/USA.png, replace	
+	capture graph export results/figures/appendix/cross_valid/USA.png, replace	
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_USA.csv", comma replace
 restore
 
@@ -485,9 +485,9 @@ foreach lags of num 0/15{
 	}
 	drop *_fixelag
 	}
-	if $BS == 1 {
-		mat j = J(1000,1,0)
-		forvalues i = 1/1000 {
+	if $BS != 0 {
+		mat j = J($BS,1,0)
+		forvalues i = 1/$BS {
 		preserve
 		bsample, cluster(adm1_id)
 		qui reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9, absorb(i.adm1_id i.dow) 
@@ -504,20 +504,25 @@ foreach lags of num 0/15{
 			matrix rsq[`lags'+1,3] = `lags'
 		restore
 	}
+	else {
+		qui reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9, absorb(i.adm1_id i.dow) 	
+		matrix rsq[`lags'+1,1] = e(r2)
+		matrix rsq[`lags'+1,2] = .
+		matrix rsq[`lags'+1,3] = `lags'	
+	}
+	
 	foreach var in p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 {
 	qui replace `var' = `var'_copy
 	qui drop `var'_copy
 	}
 }
 
-if $BS == 1 {
-	preserve
-	clear
-	svmat rsq
-	rename (rsq1 rsq2 rsq3) (r2 se lag_length)
-	outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_USA.csv", replace	
-	restore
-}
+preserve
+clear
+svmat rsq
+rename (rsq1 rsq2 rsq3) (r2 se lag_length)
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_r2_USA.csv", replace	
+restore
 
 drop if L0_b == .
 keep *_at *_ll1 *_ul1 *_b

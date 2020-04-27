@@ -1,9 +1,8 @@
 import json
 from pathlib import Path
 
-import requests
-
 import pandas as pd
+import requests
 
 from . import __file__ as pkg_init_name
 

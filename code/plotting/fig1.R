@@ -22,7 +22,7 @@ suppressPackageStartupMessages(library(tigris))
 # Input and output paths 
 data_dir <- "data/"
 output_dir <- "results/figures/fig1/"
-source_dir <- "results/source_data/"
+source_dir <- "results/source_data/indiv/"
 
 if (!dir.exists(output_dir)){ #make dir if it doesn't exist
   dir.create(output_dir, recursive=TRUE)
