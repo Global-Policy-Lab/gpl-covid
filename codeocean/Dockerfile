@@ -35,6 +35,7 @@ RUN install=Miniconda3-latest-Linux-x86_64.sh \
     && conda env create -f /tmp/environment.yml \
     && conda activate gpl-covid \
     && python -m ipykernel install --user --name gpl-covid \
+    && R -e 'IRkernel::installspec()' \
     && conda activate \
     && ipython -c "import ipystata; \
         from ipystata.config import config_stata; \
