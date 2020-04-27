@@ -1,26 +1,24 @@
 name: CI
-
 on:
   push:
+  pull_request:
   schedule:
     - cron: '0 0 */1 * *'
-
+      
 jobs:
   test:
     name: Testing pipeline
-    ## to switch to github-hosted runner, change runs-on to "ubuntu-latest"
-    ## and STATA_TESTS to false
-    runs-on: self-hosted
-    # runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     env:
-      STATA_TESTS: true
-      # STATA_TESTS: false
+      STATA_TESTS: false
     steps:
       - uses: actions/checkout@v2
+      - uses: goanpeca/setup-miniconda@v1
+        with:
+          auto-update-conda: true
+          python-version: 3.7
+          activate-environment: gpl-covid
+          environment-file: ./environment.yml
       - shell: bash -l {0}
         name: Run all tests
-        run: |
-          source $CONDA_PREFIX/etc/profile.d/conda.sh
-          conda env update -n gpl-covid-test -f environment.yml --prune
-          conda activate gpl-covid-test
-          bash tests/run_tests.sh
+        run: bash tests/run_tests.sh
