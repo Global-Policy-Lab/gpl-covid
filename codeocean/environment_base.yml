@@ -1,0 +1,13 @@
+name: base
+channels:
+    - conda-forge
+dependencies:
+    - jupyter
+    - nodejs
+    - pip
+    - python
+    - jupyterlab
+    - rstudio
+    - pip:
+        - ipystata
+        - stata_kernel
