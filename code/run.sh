@@ -4,8 +4,10 @@ set -e
 # set working directory to root of gpl-covid as assumed by some scripts
 cd "$(dirname "$0")/.."
 
-source $CONDA_PREFIX_1/etc/profile.d/conda.sh
-conda activate gpl-covid
+if [ "$CONDA_DEFAULT_ENV" != "gpl-covid" ]; then
+    source $CONDA_PREFIX/etc/profile.d/conda.sh
+    conda activate gpl-covid
+fi
 
 # install our utilities
 pip install -e code
