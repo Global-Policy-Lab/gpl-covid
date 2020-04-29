@@ -19,7 +19,7 @@ from src import utils as cutil
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--nr",
+    "--nd",
     dest="r",
     action="store_false",
     help="do not reload raw health (GitHub) datasets",

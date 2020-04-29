@@ -339,20 +339,20 @@ adm0	sample	policy	beta	i	grp	pol	seq
 "KOR"	"Seoul"	"no_policy rate"	.394	46	5	5	25
 "KOR"	"Ulsan"	"no_policy rate"	.317	46	5	5	25
 "KOR"	"full_sample"	"no_policy rate"	.314	46	5	5	25
-"USA"	"Alabama"	"comb. policy"	-.336	56	1	1	1
+"USA"	"Alabama"	"comb. policy"	-.335	56	1	1	1
 "USA"	"Alaska"	"comb. policy"	-.343	56	1	1	1
-"USA"	"Arizona"	"comb. policy"	-.368	56	1	1	1
+"USA"	"Arizona"	"comb. policy"	-.369	56	1	1	1
 "USA"	"Arkansas"	"comb. policy"	-.354	56	1	1	1
-"USA"	"California"	"comb. policy"	-.359	56	1	1	1
+"USA"	"California"	"comb. policy"	-.36	56	1	1	1
 "USA"	"Colorado"	"comb. policy"	-.337	56	1	1	1
 "USA"	"Connecticut"	"comb. policy"	-.354	56	1	1	1
 "USA"	"Delaware"	"comb. policy"	-.346	56	1	1	1
 "USA"	"District of Columb"	"comb. policy"	-.352	56	1	1	1
-"USA"	"Florida"	"comb. policy"	-.334	56	1	1	1
+"USA"	"Florida"	"comb. policy"	-.333	56	1	1	1
 "USA"	"Georgia"	"comb. policy"	-.346	56	1	1	1
 "USA"	"Hawaii"	"comb. policy"	-.342	56	1	1	1
-"USA"	"Idaho"	"comb. policy"	-.354	56	1	1	1
-"USA"	"Illinois"	"comb. policy"	-.343	56	1	1	1
+"USA"	"Idaho"	"comb. policy"	-.353	56	1	1	1
+"USA"	"Illinois"	"comb. policy"	-.342	56	1	1	1
 "USA"	"Indiana"	"comb. policy"	-.358	56	1	1	1
 "USA"	"Iowa"	"comb. policy"	-.349	56	1	1	1
 "USA"	"Kansas"	"comb. policy"	-.346	56	1	1	1
@@ -360,23 +360,23 @@ adm0	sample	policy	beta	i	grp	pol	seq
 "USA"	"Louisiana"	"comb. policy"	-.348	56	1	1	1
 "USA"	"Maine"	"comb. policy"	-.348	56	1	1	1
 "USA"	"Maryland"	"comb. policy"	-.349	56	1	1	1
-"USA"	"Massachusetts"	"comb. policy"	-.327	56	1	1	1
-"USA"	"Michigan"	"comb. policy"	-.343	56	1	1	1
+"USA"	"Massachusetts"	"comb. policy"	-.326	56	1	1	1
+"USA"	"Michigan"	"comb. policy"	-.342	56	1	1	1
 "USA"	"Minnesota"	"comb. policy"	-.342	56	1	1	1
 "USA"	"Mississippi"	"comb. policy"	-.337	56	1	1	1
 "USA"	"Missouri"	"comb. policy"	-.355	56	1	1	1
-"USA"	"Montana"	"comb. policy"	-.341	56	1	1	1
-"USA"	"Nebraska"	"comb. policy"	-.359	56	1	1	1
+"USA"	"Montana"	"comb. policy"	-.34	56	1	1	1
+"USA"	"Nebraska"	"comb. policy"	-.358	56	1	1	1
 "USA"	"Nevada"	"comb. policy"	-.345	56	1	1	1
 "USA"	"New Hampshire"	"comb. policy"	-.346	56	1	1	1
 "USA"	"New Jersey"	"comb. policy"	-.345	56	1	1	1
 "USA"	"New Mexico"	"comb. policy"	-.349	56	1	1	1
 "USA"	"New York"	"comb. policy"	-.312	56	1	1	1
 "USA"	"North Carolina"	"comb. policy"	-.347	56	1	1	1
-"USA"	"North Dakota"	"comb. policy"	-.355	56	1	1	1
-"USA"	"Ohio"	"comb. policy"	-.341	56	1	1	1
+"USA"	"North Dakota"	"comb. policy"	-.354	56	1	1	1
+"USA"	"Ohio"	"comb. policy"	-.34	56	1	1	1
 "USA"	"Oklahoma"	"comb. policy"	-.35	56	1	1	1
-"USA"	"Oregon"	"comb. policy"	-.363	56	1	1	1
+"USA"	"Oregon"	"comb. policy"	-.362	56	1	1	1
 "USA"	"Pennsylvania"	"comb. policy"	-.347	56	1	1	1
 "USA"	"Rhode Island"	"comb. policy"	-.347	56	1	1	1
 "USA"	"South Carolina"	"comb. policy"	-.353	56	1	1	1
@@ -385,61 +385,61 @@ adm0	sample	policy	beta	i	grp	pol	seq
 "USA"	"Texas"	"comb. policy"	-.34	56	1	1	1
 "USA"	"Utah"	"comb. policy"	-.345	56	1	1	1
 "USA"	"Vermont"	"comb. policy"	-.345	56	1	1	1
-"USA"	"Virginia"	"comb. policy"	-.356	56	1	1	1
+"USA"	"Virginia"	"comb. policy"	-.355	56	1	1	1
 "USA"	"Washington"	"comb. policy"	-.342	56	1	1	1
 "USA"	"West Virginia"	"comb. policy"	-.34	56	1	1	1
 "USA"	"Wisconsin"	"comb. policy"	-.347	56	1	1	1
 "USA"	"Wyoming"	"comb. policy"	-.347	56	1	1	1
 "USA"	"full_sample"	"comb. policy"	-.347	56	1	1	1
-"USA"	"Alabama"	"no_policy rate"	.296	57	1	5	17
-"USA"	"Alaska"	"no_policy rate"	.297	57	1	5	17
-"USA"	"Arizona"	"no_policy rate"	.303	57	1	5	17
-"USA"	"Arkansas"	"no_policy rate"	.3	57	1	5	17
-"USA"	"California"	"no_policy rate"	.304	57	1	5	17
-"USA"	"Colorado"	"no_policy rate"	.292	57	1	5	17
-"USA"	"Connecticut"	"no_policy rate"	.296	57	1	5	17
-"USA"	"Delaware"	"no_policy rate"	.298	57	1	5	17
-"USA"	"District of Columb"	"no_policy rate"	.303	57	1	5	17
-"USA"	"Florida"	"no_policy rate"	.287	57	1	5	17
-"USA"	"Georgia"	"no_policy rate"	.296	57	1	5	17
-"USA"	"Hawaii"	"no_policy rate"	.297	57	1	5	17
-"USA"	"Idaho"	"no_policy rate"	.298	57	1	5	17
-"USA"	"Illinois"	"no_policy rate"	.297	57	1	5	17
-"USA"	"Indiana"	"no_policy rate"	.306	57	1	5	17
-"USA"	"Iowa"	"no_policy rate"	.304	57	1	5	17
-"USA"	"Kansas"	"no_policy rate"	.299	57	1	5	17
-"USA"	"Kentucky"	"no_policy rate"	.297	57	1	5	17
-"USA"	"Louisiana"	"no_policy rate"	.295	57	1	5	17
-"USA"	"Maine"	"no_policy rate"	.298	57	1	5	17
-"USA"	"Maryland"	"no_policy rate"	.299	57	1	5	17
-"USA"	"Massachusetts"	"no_policy rate"	.287	57	1	5	17
-"USA"	"Michigan"	"no_policy rate"	.294	57	1	5	17
-"USA"	"Minnesota"	"no_policy rate"	.298	57	1	5	17
-"USA"	"Mississippi"	"no_policy rate"	.295	57	1	5	17
-"USA"	"Missouri"	"no_policy rate"	.3	57	1	5	17
-"USA"	"Montana"	"no_policy rate"	.297	57	1	5	17
-"USA"	"Nebraska"	"no_policy rate"	.301	57	1	5	17
-"USA"	"Nevada"	"no_policy rate"	.294	57	1	5	17
-"USA"	"New Hampshire"	"no_policy rate"	.298	57	1	5	17
-"USA"	"New Jersey"	"no_policy rate"	.301	57	1	5	17
-"USA"	"New Mexico"	"no_policy rate"	.299	57	1	5	17
-"USA"	"New York"	"no_policy rate"	.289	57	1	5	17
-"USA"	"North Carolina"	"no_policy rate"	.299	57	1	5	17
-"USA"	"North Dakota"	"no_policy rate"	.3	57	1	5	17
-"USA"	"Ohio"	"no_policy rate"	.295	57	1	5	17
-"USA"	"Oklahoma"	"no_policy rate"	.297	57	1	5	17
-"USA"	"Oregon"	"no_policy rate"	.308	57	1	5	17
-"USA"	"Pennsylvania"	"no_policy rate"	.299	57	1	5	17
-"USA"	"Rhode Island"	"no_policy rate"	.299	57	1	5	17
-"USA"	"South Carolina"	"no_policy rate"	.305	57	1	5	17
-"USA"	"South Dakota"	"no_policy rate"	.301	57	1	5	17
-"USA"	"Tennessee"	"no_policy rate"	.298	57	1	5	17
-"USA"	"Texas"	"no_policy rate"	.299	57	1	5	17
-"USA"	"Utah"	"no_policy rate"	.299	57	1	5	17
-"USA"	"Vermont"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Alabama"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Alaska"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Arizona"	"no_policy rate"	.305	57	1	5	17
+"USA"	"Arkansas"	"no_policy rate"	.302	57	1	5	17
+"USA"	"California"	"no_policy rate"	.306	57	1	5	17
+"USA"	"Colorado"	"no_policy rate"	.294	57	1	5	17
+"USA"	"Connecticut"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Delaware"	"no_policy rate"	.3	57	1	5	17
+"USA"	"District of Columb"	"no_policy rate"	.305	57	1	5	17
+"USA"	"Florida"	"no_policy rate"	.289	57	1	5	17
+"USA"	"Georgia"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Hawaii"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Idaho"	"no_policy rate"	.3	57	1	5	17
+"USA"	"Illinois"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Indiana"	"no_policy rate"	.307	57	1	5	17
+"USA"	"Iowa"	"no_policy rate"	.307	57	1	5	17
+"USA"	"Kansas"	"no_policy rate"	.301	57	1	5	17
+"USA"	"Kentucky"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Louisiana"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Maine"	"no_policy rate"	.3	57	1	5	17
+"USA"	"Maryland"	"no_policy rate"	.301	57	1	5	17
+"USA"	"Massachusetts"	"no_policy rate"	.289	57	1	5	17
+"USA"	"Michigan"	"no_policy rate"	.296	57	1	5	17
+"USA"	"Minnesota"	"no_policy rate"	.3	57	1	5	17
+"USA"	"Mississippi"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Missouri"	"no_policy rate"	.302	57	1	5	17
+"USA"	"Montana"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Nebraska"	"no_policy rate"	.303	57	1	5	17
+"USA"	"Nevada"	"no_policy rate"	.297	57	1	5	17
+"USA"	"New Hampshire"	"no_policy rate"	.3	57	1	5	17
+"USA"	"New Jersey"	"no_policy rate"	.303	57	1	5	17
+"USA"	"New Mexico"	"no_policy rate"	.301	57	1	5	17
+"USA"	"New York"	"no_policy rate"	.292	57	1	5	17
+"USA"	"North Carolina"	"no_policy rate"	.301	57	1	5	17
+"USA"	"North Dakota"	"no_policy rate"	.302	57	1	5	17
+"USA"	"Ohio"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Oklahoma"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Oregon"	"no_policy rate"	.31	57	1	5	17
+"USA"	"Pennsylvania"	"no_policy rate"	.301	57	1	5	17
+"USA"	"Rhode Island"	"no_policy rate"	.301	57	1	5	17
+"USA"	"South Carolina"	"no_policy rate"	.307	57	1	5	17
+"USA"	"South Dakota"	"no_policy rate"	.303	57	1	5	17
+"USA"	"Tennessee"	"no_policy rate"	.3	57	1	5	17
+"USA"	"Texas"	"no_policy rate"	.301	57	1	5	17
+"USA"	"Utah"	"no_policy rate"	.301	57	1	5	17
+"USA"	"Vermont"	"no_policy rate"	.301	57	1	5	17
 "USA"	"Virginia"	"no_policy rate"	.301	57	1	5	17
-"USA"	"Washington"	"no_policy rate"	.281	57	1	5	17
-"USA"	"West Virginia"	"no_policy rate"	.296	57	1	5	17
-"USA"	"Wisconsin"	"no_policy rate"	.297	57	1	5	17
-"USA"	"Wyoming"	"no_policy rate"	.297	57	1	5	17
-"USA"	"full_sample"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Washington"	"no_policy rate"	.283	57	1	5	17
+"USA"	"West Virginia"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Wisconsin"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Wyoming"	"no_policy rate"	.299	57	1	5	17
+"USA"	"full_sample"	"no_policy rate"	.3	57	1	5	17

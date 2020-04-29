@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import argparse
 from pathlib import Path
 
 import numpy as np
@@ -9,30 +10,13 @@ import requests
 from bs4 import BeautifulSoup
 
 import geopandas as gpd
-from census import Census
 from fuzzywuzzy import fuzz, process
 from src import utils as cutil
 
 idx = pd.IndexSlice
 
-if cutil.API_KEYS["census"] == "YOUR_API_KEY":
-    raise ValueError(
-        """To run this script, you will need a U.S. Census API key, which can be obtained"""
-        """here: https://api.census.gov/data/key_signup.html. You will need to save this """
-        """key to `api_keys.json` in the root directory of this repo with the following format:"""
-        """
-        
-        {
-            "census": "API_KEY_STRING"
-        }
-        """
-    )
-datestamp = "20200320"
-
 adm1_shp_path = (
-    cutil.DATA_RAW
-    / "multi_country"
-    / f"ne_10m_admin_1_states_provinces_{datestamp}.zip"
+    cutil.DATA_RAW / "multi_country" / f"ne_10m_admin_1_states_provinces.zip"
 )
 adm_url_fmt = (
     "https://biogeo.ucdavis.edu/data/gadm3.6/{ftype}/gadm36_{iso3}_{ftype}.zip"
@@ -60,13 +44,16 @@ def process_gadm(in_gdf):
     return in_gdf
 
 
-def main():
+def main(download):
     # ## Global adm1
 
     # get file
     print("Downloading and processing global adm1 data...")
-    adm1_url = "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces.zip"
-    cutil.download_zip(adm1_url, adm1_shp_path, overwrite=False)
+    adm1_url = (
+        "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/"
+        "cultural/ne_10m_admin_1_states_provinces.zip"
+    )
+    cutil.download_file(adm1_url, adm1_shp_path, overwrite=download)
 
     # process
     in_gdf = gpd.read_file(cutil.zipify_path(adm1_shp_path))
@@ -112,12 +99,16 @@ def main():
     # ### FRA
     print("Downloading and processing FRA population data...")
     # First, download population data and make adm2 to adm1 mapping
+    fra_raw = cutil.DATA_RAW / "france"
 
     xwalk_fra_url = (
         "https://www.insee.fr/fr/statistiques/fichier/3720946/departement2019-csv.zip"
     )
+    xwalk_fra_path = fra_raw / "xwalk_fra.zip"
+    cutil.download_file(xwalk_fra_url, xwalk_fra_path, overwrite=download)
+
     xwalk_fra = pd.read_csv(
-        xwalk_fra_url,
+        xwalk_fra_path,
         usecols=[0, 1],
         index_col=0,
         names=["num", "region_id"],
@@ -126,8 +117,11 @@ def main():
     )
 
     pop_fra_url = "https://www.insee.fr/fr/statistiques/fichier/2012713/TCRD_004.xls"
+    pop_fra_path = fra_raw / "pop_fra.xls"
+    cutil.download_file(pop_fra_url, pop_fra_path, overwrite=download)
+
     pop_fra = pd.read_excel(
-        pop_fra_url,
+        pop_fra_path,
         sheet_name="DEP",
         skiprows=3,
         index_col=[0, 1],
@@ -139,7 +133,7 @@ def main():
     pop_fra = pop_fra.drop(index="M", level="num")
 
     region_xwalk = pd.read_excel(
-        pop_fra_url,
+        pop_fra_path,
         sheet_name="REG",
         skiprows=3,
         index_col=[0],
@@ -157,11 +151,10 @@ def main():
         .sort_index()
     )
 
+    # save b/c will be used by other France code
     out_dir = cutil.DATA_INTERIM / "france"
     out_dir.mkdir(parents=True, exist_ok=True)
-
-    # save b/c will be used by other France code
-    pop_fra.to_csv(cutil.DATA_INTERIM / "france" / "adm2_to_adm1.csv")
+    pop_fra.to_csv(out_dir / "adm2_to_adm1.csv")
 
     # Next merge this into adm info
 
@@ -231,9 +224,10 @@ def main():
             ftype = "shp"
         else:
             ftype = "gpkg"
-        zip_path = cutil.get_adm_zip_path(iso3, datestamp)
-        if not zip_path.exists():
-            cutil.download_zip(adm_url_fmt.format(iso3=iso3, ftype=ftype), zip_path)
+        zip_path = cutil.get_adm_zip_path(iso3)
+        cutil.download_file(
+            adm_url_fmt.format(iso3=iso3, ftype=ftype), zip_path, overwrite=download
+        )
         if ftype == "gpkg":
             to_open = zip_path / f"gadm36_{iso3}.gpkg"
         else:
@@ -345,17 +339,13 @@ def main():
     # ## Pop
 
     # ### US
-    print("Downloading USA population data from US Census...")
-    c = Census(cutil.API_KEYS["census"])
-    pop_cty = pd.DataFrame(
-        c.acs5.state_county(("NAME", "B01003_001E"), Census.ALL, Census.ALL)
-    )
 
     ## get county-level populations
     hasc_fips_url = "http://www.statoids.com/yus.html"
-    data = requests.get(hasc_fips_url).text
-    text = BeautifulSoup(data, "lxml").pre.text
-    row_list = text.split("\r\n")[1:-1]
+    hasc_fips_path = cutil.DATA_RAW / "usa" / "hasc_fips_xwalk.txt"
+    text = cutil.get_scraped_text(hasc_fips_url, hasc_fips_path, overwrite=download)
+    text = text.pre.text
+    row_list = text.split("\n")[1:-1]
     headers = row_list[0].split()
     valid_rows = [r for r in row_list if r != "" and r[:4] not in ["Name", "----"]]
     name = [r[:23].rstrip() for r in valid_rows]
@@ -384,7 +374,7 @@ def main():
     # ##### Merge in us adm2 dataset
 
     us_gdf = gpd.read_file(
-        cutil.zipify_path(cutil.get_adm_zip_path("USA", datestamp) / "gadm36_USA.gpkg")
+        cutil.zipify_path(cutil.get_adm_zip_path("USA") / "gadm36_USA.gpkg")
     )
 
     # drop water bodies
@@ -455,52 +445,57 @@ def main():
     adm2_gdf = adm2_gdf.drop(columns="population_r")
 
     ## adm1
-    pop_st = pd.DataFrame(c.acs5.state(("NAME", "B01003_001E"), Census.ALL))
-    pop_st = pop_st.rename(
-        columns={"NAME": "adm1_name", "B01003_001E": "population_census"}
-    ).drop(columns="state")
-    pop_st["adm0_name"] = "USA"
-    pop_st = pop_st.set_index(["adm0_name", "adm1_name"], drop=True)
+    usa_raw = cutil.DATA_RAW / "usa"
+
+    # states
+    worldpop_base = "https://worldpopulationreview.com/"
+    st_pop_url = worldpop_base + "states/"
+    st_pop_path = usa_raw / "pop_st.txt"
+    table = cutil.get_scraped_text(st_pop_url, st_pop_path, overwrite=download).table
+    elements = [i.find_all("td") for i in table.tbody.find_all("tr")]
+    state, pop = [], []
+    for e in elements:
+        state.append(e[1].text)
+        pop.append(int(e[2].text.replace(",", "")))
+    pop_st = pd.Series(
+        pop, index=pd.Index(state, name="adm1_name"), name="population_worldpop"
+    )
 
     # add territories
-    terr_url = "https://worldpopulationreview.com/countries/united-states-territories/"
-    data = requests.get(terr_url).text
-    text = BeautifulSoup(data, "lxml")
-    table = text.table
-
+    terr_url = worldpop_base + "countries/united-states-territories/"
+    terr_path = usa_raw / "pop_territories.txt"
+    table = cutil.get_scraped_text(terr_url, terr_path, overwrite=download).table
     elements = [i.find_all("td") for i in table.tbody.find_all("tr")]
-    country, pop = [], []
+    terr, pop = [], []
     for e in elements:
-        country.append(e[0].text)
+        terr.append(e[0].text)
         pop.append(int(e[1].text.replace(",", "")))
-    pop_terr = pd.DataFrame(
-        {"adm1_name": country, "population_terr": pop, "adm0_name": "USA"}
-    ).set_index(["adm0_name", "adm1_name"])
+    pop_terr = pd.Series(
+        pop, index=pd.Index(terr, name="adm1_name"), name="population_worldpop"
+    )
+    # drop PR b/c in states data
+    pop_terr = pop_terr[pop_terr.index != "Puerto Rico"]
 
     # included US Virgin Islands in territories
-    terr_url = "https://worldpopulationreview.com/countries/united-states-virgin-islands-population/"
-    data = requests.get(terr_url).text
-    text = BeautifulSoup(data, "lxml")
+    terr_url = worldpop_base + "countries/united-states-virgin-islands-population/"
+    terr_path = usa_raw / "pop_territories_usvi.txt"
+    text = cutil.get_scraped_text(terr_url, terr_path, overwrite=download)
     pop_usvg = pd.Series(
         [int(text.find(attrs={"class": "popNumber"}).text.replace(",", ""))],
-        index=pd.MultiIndex.from_tuples(
-            (("USA", "US Virgin Islands"),), names=["adm0_name", "adm1_name"]
-        ),
-        name="population_terr",
+        index=pd.Index(["US Virgin Islands"], name="adm1_name"),
+        name="population_worldpop",
     )
-    pop_terr = pop_terr.append(pd.DataFrame(pop_usvg))
-
-    pop_st = pop_st.join(pop_terr, how="outer")
-    # taking population terr b/c more recent than ACS for puerto rico
-    pop_st.population_terr = pop_st.population_terr.fillna(pop_st.population_census)
-    pop_st = pop_st.drop(columns="population_census")
+    pop_st = pd.concat([pop_st, pop_terr, pop_usvg])
+    pop_st.index = pd.MultiIndex.from_product(
+        [["USA"], pop_st.index.values], names=["adm0_name", "adm1_name"]
+    )
 
     # merge back into global adm1 dataset
     adm1_gdf = adm1_gdf.join(pop_st, how="outer")
     adm1_gdf.loc[idx["USA", :], "population"] = adm1_gdf.loc[
-        idx["USA", :], "population_terr"
+        idx["USA", :], "population_worldpop"
     ]
-    adm1_gdf = adm1_gdf.drop(columns="population_terr")
+    adm1_gdf = adm1_gdf.drop(columns="population_worldpop")
 
     # ### ITA
 
@@ -509,8 +504,8 @@ def main():
     ita_pop_dir = cutil.DATA_RAW / "italy" / "population"
     for u in ["province", "regioni", "comuni"]:
         if not (ita_pop_dir / f"{u}.csv").exists():
-            cutil.download_zip(
-                url_fmt.format(lvl=u), ita_pop_dir / (u + ".zip"), overwrite=False
+            cutil.download_file(
+                url_fmt.format(lvl=u), ita_pop_dir / (u + ".zip"), overwrite=download
             )
 
     replace_provinces = {
@@ -623,9 +618,8 @@ def main():
 
     print("Downloading and processing IRN population data...")
     irn_url = r"https://www.citypopulation.de/en/iran/admin/"
-    r = requests.get(irn_url)
-    data = r.text
-    soup = BeautifulSoup(data, "lxml")
+    irn_path = cutil.DATA_RAW / "iran" / "pop_IRN.csv"
+    soup = cutil.get_scraped_text(irn_url, irn_path, overwrite=download)
     table = soup.table
 
     adm1s = table.find_all("tbody", {"class": "admin1"})
@@ -739,4 +733,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--nd",
+        dest="r",
+        action="store_false",
+        help="do not reload (re-download) population and geography datasets",
+    )
+    args = parser.parse_args()
+    main(args.r)
