@@ -5,33 +5,29 @@
 This repository contains code and data necessary to replicate the findings of [our paper](https://www.medrxiv.org/content/10.1101/2020.03.22.20040642v2).
 
 ## Setup
-Scripts in this repository are written in R, Python, and Stata. Note that you will need a Stata license to fully replicate the analysis. Throughout this Readme, it is assumed that you’ll execute scripts from the repo root directory. In addition, we assume that you have an environment of Python and R packages described in <environment.yml>.
+Scripts in this repository are written in R, Python, and Stata. Note that you will need a Stata license to fully replicate the analysis (provided in the CodeOcean capsule). Throughout this Readme, when indicating paths to code and data, it is assumed that you’ll execute scripts from the repo root directory.
 
-To create and activate this environment using [conda](https://docs.conda.io/projects/conda/en/latest/index.html) execute the following lines (**Note:** RStudio is commented out of the environment, because it causes dependency clashes in a Windows environment. If you are not in Windows, and would like to use the RStudio app, feel free to uncomment it before creating the environment):
+### CodeOcean Capsule
+The easiest way to interact with our code and data is via our CodeOcean capsule (link coming soon), because all of the relevant setup described below has been done for you. You may replicate the full analysis through the "Reproducible Run" feature or interact directly with our code through Jupyter Notebooks that run Python, R, and Stata. You may also utilize RStudio. If you wish to use the command line on a cloud workstation, you will want to activate our conda environment with `conda activate gpl-covid`.
+
+### Github Repository
+You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.3" is the tag that is associated with the current version of the manuscript (as of 04/28/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
 
 ```bash
 conda env create -f environment.yml
 conda activate gpl-covid
 ```
 
-Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Ensure you are currently located inside the code directory within the repo (`cd gpl-covid/code/`), then execute
+Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. 
 
 ```bash
-pip install -e .
+pip install -e code
 ```
 
 To execute the full `run.sh` script, which runs the analysis from start to finish, you will also need to add this conda environment to the kernels that Jupyter is able to use (this is only needed to run simulations used to create Extended Data Figures 8 and 9). You do this with the following command (from inside the `gpl-covid` conda environment):
 
 ```bash
 python -m ipykernel install --user --name gpl-covid
-```
-
-To run one of the scripts (`get_adm_info.py`), you will also need an API key for the US Census API, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `code/api_keys.json` with the following format (a template file is provided):
-
-```json
-{
-    "census": "API_KEY_STRING"
-}
 ```
 
 Finally, to estimate the regression models, you will need several package installed in Stata. To add them, launch Stata and run:
@@ -45,9 +41,19 @@ ssc install outreg2, replace
 
 ```
 
+### Census API
+Regardless of the mechanism you use to interact with our code, you will need an API key for the US Census API to run one of the scripts (`get_adm_info.py`). This can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `code/api_keys.json` with the following format (a template file is provided):
+
+```json
+{
+    "census": "API_KEY_STRING"
+}
+```
+
 ## Code Structure
 ```text
 code
+├── api_keys.json
 ├── data
 │   ├── china
 │   │   ├── collate_data.py
@@ -84,6 +90,7 @@ code
 │       ├── gen_state_name_abbrev_xwalk.R
 │       ├── get_usafacts_data.R
 │       └── merge_policy_and_cases.py
+├── default.profraw
 ├── models
 │   ├── CHN_create_CBs.R
 │   ├── CHN_generate_data_and_model_projection.R
@@ -118,6 +125,12 @@ code
 │   ├── projection_helper_functions.R
 │   ├── run_all_CB_simulations.R
 │   └── run_projection_with_multiple_gammas.R
+├── notebooks
+│   ├── archived
+│   │   ├── addl-sim-plots.ipynb
+│   │   └── resimulate-outbreaks.ipynb
+│   ├── iwb-misc.ipynb
+│   └── simulate-and-regress.ipynb
 ├── plotting
 │   ├── aggregate_fig1_source_data.py
 │   ├── count-policies.py
@@ -131,13 +144,16 @@ code
 │   ├── figED2.R
 │   ├── gen_fig4.py
 │   └── sims.py
-└── src
-    ├── impute.py
-    ├── merge.py
-    ├── models
-    │   └── epi.py
-    ├── pop.py
-    └── utils.py
+├── run.sh
+├── setup.py
+├── src
+│   ├── impute.py
+│   ├── merge.py
+│   ├── models
+│   │   └── epi.py
+│   ├── pop.py
+│   └── utils.py
+└── statab.sh
 ```
 
 ## Data Documentation
@@ -164,7 +180,7 @@ The entire pipeline can be run by calling `bash code/run.sh`. If you would rathe
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was performed through manual downloading and/or processing of datasets and is described in as much detail as possible. The sections should be run in the order listed, as some files from later sections will depend on those from earlier sections (e.g. the geographical and population data).
 
-For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Appendix. A version that was frozen at the time of latest submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](data/raw/multi_country/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
+For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Supplementary Information. A version that was frozen at the time of latest submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](data/raw/multi_country/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
 #### Geographical and population data
 1. `python code/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries). **Note:** To run this script, you will need a U.S. Census API key. See [Setup](##Setup)
