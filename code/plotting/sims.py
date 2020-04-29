@@ -3,8 +3,8 @@ import warnings
 from pathlib import Path
 from shutil import copyfile
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -173,7 +173,7 @@ def make_all_coeff_factorplots(
         dir_in, cols_to_keep=["effect", "Intercept", "S_min", "rmse"]
     )
     coeffs = epi.calc_cum_effects(coeffs)
-    
+
     if plot_dir is not None:
         plot_dir = Path(plot_dir)
         plot_dir.mkdir(exist_ok=True)
@@ -241,28 +241,30 @@ def make_all_coeff_factorplots(
                             bbox_inches="tight",
                         )
                     plt.clf()
-                    
+
     if save_paper_figs:
         source_path = Path(cutil.RESULTS / "source_data" / "ExtendedDataFigure89.csv")
         out_base = Path(cutil.RESULTS / "figures" / "appendix")
-        
+
         # source data
         coeff_lim = coeffs.sel(policy=["Intercept", "cum_effect"])[
             ["S_min", "coefficient", "coefficient_true"]
         ]
         df_a = coeff_lim.sel(LHS="I", pop=1e8).to_dataframe()
         df_b = coeff_lim.sel(LHS="IR", pop=1e5).to_dataframe()
-        pd.concat((df_a, df_b)).to_csv(
-            source_path, float_format="%.5f", index=True
-        )
-        
+        pd.concat((df_a, df_b)).to_csv(source_path, float_format="%.5f", index=True)
+
         # figures
         for t in (("Intercept", "FigED8"), ("cum_effect", "FigED9")):
             out_dir = out_base / t[1]
             out_dir.mkdir(parents=True, exist_ok=True)
-            copyfile(plot_dir / f"{t[0]}_pop_100000000_LHS_I.pdf", out_dir / f"{t[1]}_a.pdf")
-            copyfile(plot_dir / f"{t[0]}_pop_100000_LHS_IR.pdf", out_dir / f"{t[1]}_b.pdf")
-            
+            copyfile(
+                plot_dir / f"{t[0]}_pop_100000000_LHS_I.pdf", out_dir / f"{t[1]}_a.pdf"
+            )
+            copyfile(
+                plot_dir / f"{t[0]}_pop_100000_LHS_IR.pdf", out_dir / f"{t[1]}_b.pdf"
+            )
+
     return None
 
 
@@ -296,7 +298,7 @@ if __name__ == "__main__":
         ),
         action="store_true",
     )
-    
+
     args = parser.parse_args()
 
     sns.set(context="paper", style="ticks", font_scale=0.65)
@@ -306,5 +308,5 @@ if __name__ == "__main__":
         args.dir_in,
         plot_dir=args.dir_out,
         LHS_vars=args.LHS,
-        save_paper_figs=args.paper_figs
+        save_paper_figs=args.paper_figs,
     )

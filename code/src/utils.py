@@ -1,9 +1,9 @@
 import json
 from pathlib import Path
-from bs4 import BeautifulSoup
 
 import pandas as pd
 import requests
+from bs4 import BeautifulSoup
 
 from . import __file__ as pkg_init_name
 
@@ -44,7 +44,7 @@ def download_file(url, out_path, overwrite=False):
                 f.write(r.content)
     return None
 
-            
+
 def get_scraped_text(url, out_path, overwrite=False):
     if (not out_path.exists()) or overwrite:
         with open(out_path, "w") as f:

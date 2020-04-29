@@ -16,9 +16,7 @@ from src import utils as cutil
 idx = pd.IndexSlice
 
 adm1_shp_path = (
-    cutil.DATA_RAW
-    / "multi_country"
-    / f"ne_10m_admin_1_states_provinces.zip"
+    cutil.DATA_RAW / "multi_country" / f"ne_10m_admin_1_states_provinces.zip"
 )
 adm_url_fmt = (
     "https://biogeo.ucdavis.edu/data/gadm3.6/{ftype}/gadm36_{iso3}_{ftype}.zip"
@@ -102,13 +100,13 @@ def main(download):
     print("Downloading and processing FRA population data...")
     # First, download population data and make adm2 to adm1 mapping
     fra_raw = cutil.DATA_RAW / "france"
-    
+
     xwalk_fra_url = (
         "https://www.insee.fr/fr/statistiques/fichier/3720946/departement2019-csv.zip"
     )
     xwalk_fra_path = fra_raw / "xwalk_fra.zip"
     cutil.download_file(xwalk_fra_url, xwalk_fra_path, overwrite=download)
-    
+
     xwalk_fra = pd.read_csv(
         xwalk_fra_path,
         usecols=[0, 1],
@@ -121,7 +119,7 @@ def main(download):
     pop_fra_url = "https://www.insee.fr/fr/statistiques/fichier/2012713/TCRD_004.xls"
     pop_fra_path = fra_raw / "pop_fra.xls"
     cutil.download_file(pop_fra_url, pop_fra_path, overwrite=download)
-    
+
     pop_fra = pd.read_excel(
         pop_fra_path,
         sheet_name="DEP",
@@ -227,7 +225,9 @@ def main(download):
         else:
             ftype = "gpkg"
         zip_path = cutil.get_adm_zip_path(iso3)
-        cutil.download_file(adm_url_fmt.format(iso3=iso3, ftype=ftype), zip_path, overwrite=download)
+        cutil.download_file(
+            adm_url_fmt.format(iso3=iso3, ftype=ftype), zip_path, overwrite=download
+        )
         if ftype == "gpkg":
             to_open = zip_path / f"gadm36_{iso3}.gpkg"
         else:
@@ -446,7 +446,7 @@ def main(download):
 
     ## adm1
     usa_raw = cutil.DATA_RAW / "usa"
-    
+
     # states
     worldpop_base = "https://worldpopulationreview.com/"
     st_pop_url = worldpop_base + "states/"
@@ -457,7 +457,9 @@ def main(download):
     for e in elements:
         state.append(e[1].text)
         pop.append(int(e[2].text.replace(",", "")))
-    pop_st = pd.Series(pop, index=pd.Index(state, name="adm1_name"), name="population_worldpop")
+    pop_st = pd.Series(
+        pop, index=pd.Index(state, name="adm1_name"), name="population_worldpop"
+    )
 
     # add territories
     terr_url = worldpop_base + "countries/united-states-territories/"
@@ -468,9 +470,11 @@ def main(download):
     for e in elements:
         terr.append(e[0].text)
         pop.append(int(e[1].text.replace(",", "")))
-    pop_terr = pd.Series(pop, index=pd.Index(terr, name="adm1_name"), name="population_worldpop")
+    pop_terr = pd.Series(
+        pop, index=pd.Index(terr, name="adm1_name"), name="population_worldpop"
+    )
     # drop PR b/c in states data
-    pop_terr = pop_terr[pop_terr.index!="Puerto Rico"]
+    pop_terr = pop_terr[pop_terr.index != "Puerto Rico"]
 
     # included US Virgin Islands in territories
     terr_url = worldpop_base + "countries/united-states-virgin-islands-population/"
@@ -482,7 +486,9 @@ def main(download):
         name="population_worldpop",
     )
     pop_st = pd.concat([pop_st, pop_terr, pop_usvg])
-    pop_st.index = pd.MultiIndex.from_product([["USA"],pop_st.index.values], names=["adm0_name", "adm1_name"])
+    pop_st.index = pd.MultiIndex.from_product(
+        [["USA"], pop_st.index.values], names=["adm0_name", "adm1_name"]
+    )
 
     # merge back into global adm1 dataset
     adm1_gdf = adm1_gdf.join(pop_st, how="outer")
@@ -727,7 +733,7 @@ def main(download):
 
 
 if __name__ == "__main__":
-    
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--nd",
