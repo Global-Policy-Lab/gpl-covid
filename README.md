@@ -41,15 +41,6 @@ ssc install outreg2, replace
 
 ```
 
-### Census API
-Regardless of the mechanism you use to interact with our code, you will need an API key for the US Census API to run one of the scripts (`get_adm_info.py`). This can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `code/api_keys.json` with the following format (a template file is provided):
-
-```json
-{
-    "census": "API_KEY_STRING"
-}
-```
-
 ## Code Structure
 ```text
 code
@@ -173,7 +164,6 @@ The end dates of the data analyzed, and of the "cases averted" projections, are 
 The entire pipeline can be run by calling `bash code/run.sh`. If you would rather do it step by step, see the description of each stage below. There are four flags that can be passed to that script to change the default behavior, described below:
 
 - `-s|--no-stata`: Don't run the Stata scripts (must include this flag if you do not have Stata). In this case, the regression steps will be skipped and you will rely on previously computed regression results.
-- `-c|--census`: Run `code/data/multi_country/get_adm_info.py` because you have supplied a valid Census Data API value in `code/api_keys.json`. This just means that you will redownload geographic and population information for the majority of subnational units analyzed (some population information is obtained manually or through separate scripts).
 - `p|--num-proj`: Integer that controls both (a) the number of bootstrap samples when calculating projection uncertainty bounds in Fig. 4 and (b) the number of Monte Carlo samples used to create synthetic outbreaks (Extended Data Figures 8 and 9). Default 1000.
 - `d|--download`: Download new raw data, rather than using that which has already been downloaded. This may affect results slightly if, e.g. a country retroactivly adjusts their reported cases.
 
@@ -183,7 +173,7 @@ The steps to obtain all data in <data/raw>, and then process this data into data
 For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Supplementary Information. A version that was frozen at the time of latest submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](data/raw/multi_country/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
 #### Geographical and population data
-1. `python code/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries). **Note:** To run this script, you will need a U.S. Census API key. See [Setup](##Setup)
+1. `python code/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries).
 2. For Chinese city-level population data, the dataset is extracted from a compiled dataset of the 2010 Chinese City Statistical Yearbooks. We manually matched the city level population dataset to the city level COVID-19 epidemiology dataset. The resulting file is in [data/raw/china/china_city_pop.csv](data/raw/china/china_city_pop.csv).
 3. For Korean population data, download from [Statistics Korea](http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B040A3&vw_cd=MT_ZTITLE&list_id=A6&seqNo=&lang_mode=ko&language=kor&obj_var_id=&itm_id=&conn_path=MT_ZTITLE) (a similar page in English is available [here](http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B04005N&language=en))
 

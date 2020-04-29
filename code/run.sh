@@ -14,7 +14,6 @@ pip install -e code
 
 ## parse flags to not run certain things
 STATA=true
-CENSUS=false
 NUMPROJ=1000
 DOWNLOAD=false
 for arg in "$@"
@@ -22,10 +21,6 @@ do
     case $arg in
         -s|--nostata)
             STATA=false
-            shift
-        ;;
-        -c|--census)
-            CENSUS=true
             shift
         ;;
         -p|--num-proj)
@@ -44,7 +39,7 @@ done
 if $DOWNLOAD; then
     NDFLAG=""
 else
-    NDFLAG="-nd"
+    NDFLAG="--nd"
 fi
 
 
