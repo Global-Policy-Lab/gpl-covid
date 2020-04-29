@@ -339,19 +339,19 @@ adm0	sample	policy	beta	i	grp	pol	seq
 "KOR"	"Seoul"	"no_policy rate"	.394	46	5	5	25
 "KOR"	"Ulsan"	"no_policy rate"	.317	46	5	5	25
 "KOR"	"full_sample"	"no_policy rate"	.314	46	5	5	25
-"USA"	"Alabama"	"comb. policy"	-.336	56	1	1	1
+"USA"	"Alabama"	"comb. policy"	-.335	56	1	1	1
 "USA"	"Alaska"	"comb. policy"	-.343	56	1	1	1
-"USA"	"Arizona"	"comb. policy"	-.368	56	1	1	1
+"USA"	"Arizona"	"comb. policy"	-.369	56	1	1	1
 "USA"	"Arkansas"	"comb. policy"	-.354	56	1	1	1
 "USA"	"California"	"comb. policy"	-.36	56	1	1	1
 "USA"	"Colorado"	"comb. policy"	-.337	56	1	1	1
 "USA"	"Connecticut"	"comb. policy"	-.354	56	1	1	1
 "USA"	"Delaware"	"comb. policy"	-.346	56	1	1	1
 "USA"	"District of Columb"	"comb. policy"	-.352	56	1	1	1
-"USA"	"Florida"	"comb. policy"	-.334	56	1	1	1
+"USA"	"Florida"	"comb. policy"	-.333	56	1	1	1
 "USA"	"Georgia"	"comb. policy"	-.346	56	1	1	1
 "USA"	"Hawaii"	"comb. policy"	-.342	56	1	1	1
-"USA"	"Idaho"	"comb. policy"	-.354	56	1	1	1
+"USA"	"Idaho"	"comb. policy"	-.353	56	1	1	1
 "USA"	"Illinois"	"comb. policy"	-.342	56	1	1	1
 "USA"	"Indiana"	"comb. policy"	-.358	56	1	1	1
 "USA"	"Iowa"	"comb. policy"	-.349	56	1	1	1
@@ -361,7 +361,7 @@ adm0	sample	policy	beta	i	grp	pol	seq
 "USA"	"Maine"	"comb. policy"	-.348	56	1	1	1
 "USA"	"Maryland"	"comb. policy"	-.349	56	1	1	1
 "USA"	"Massachusetts"	"comb. policy"	-.326	56	1	1	1
-"USA"	"Michigan"	"comb. policy"	-.343	56	1	1	1
+"USA"	"Michigan"	"comb. policy"	-.342	56	1	1	1
 "USA"	"Minnesota"	"comb. policy"	-.342	56	1	1	1
 "USA"	"Mississippi"	"comb. policy"	-.337	56	1	1	1
 "USA"	"Missouri"	"comb. policy"	-.355	56	1	1	1
@@ -373,13 +373,13 @@ adm0	sample	policy	beta	i	grp	pol	seq
 "USA"	"New Mexico"	"comb. policy"	-.349	56	1	1	1
 "USA"	"New York"	"comb. policy"	-.312	56	1	1	1
 "USA"	"North Carolina"	"comb. policy"	-.347	56	1	1	1
-"USA"	"North Dakota"	"comb. policy"	-.355	56	1	1	1
+"USA"	"North Dakota"	"comb. policy"	-.354	56	1	1	1
 "USA"	"Ohio"	"comb. policy"	-.34	56	1	1	1
 "USA"	"Oklahoma"	"comb. policy"	-.35	56	1	1	1
-"USA"	"Oregon"	"comb. policy"	-.363	56	1	1	1
+"USA"	"Oregon"	"comb. policy"	-.362	56	1	1	1
 "USA"	"Pennsylvania"	"comb. policy"	-.347	56	1	1	1
 "USA"	"Rhode Island"	"comb. policy"	-.347	56	1	1	1
-"USA"	"South Carolina"	"comb. policy"	-.354	56	1	1	1
+"USA"	"South Carolina"	"comb. policy"	-.353	56	1	1	1
 "USA"	"South Dakota"	"comb. policy"	-.362	56	1	1	1
 "USA"	"Tennessee"	"comb. policy"	-.345	56	1	1	1
 "USA"	"Texas"	"comb. policy"	-.34	56	1	1	1
@@ -392,7 +392,7 @@ adm0	sample	policy	beta	i	grp	pol	seq
 "USA"	"Wyoming"	"comb. policy"	-.347	56	1	1	1
 "USA"	"full_sample"	"comb. policy"	-.347	56	1	1	1
 "USA"	"Alabama"	"no_policy rate"	.298	57	1	5	17
-"USA"	"Alaska"	"no_policy rate"	.3	57	1	5	17
+"USA"	"Alaska"	"no_policy rate"	.299	57	1	5	17
 "USA"	"Arizona"	"no_policy rate"	.305	57	1	5	17
 "USA"	"Arkansas"	"no_policy rate"	.302	57	1	5	17
 "USA"	"California"	"no_policy rate"	.306	57	1	5	17
@@ -401,11 +401,11 @@ adm0	sample	policy	beta	i	grp	pol	seq
 "USA"	"Delaware"	"no_policy rate"	.3	57	1	5	17
 "USA"	"District of Columb"	"no_policy rate"	.305	57	1	5	17
 "USA"	"Florida"	"no_policy rate"	.289	57	1	5	17
-"USA"	"Georgia"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Georgia"	"no_policy rate"	.298	57	1	5	17
 "USA"	"Hawaii"	"no_policy rate"	.299	57	1	5	17
 "USA"	"Idaho"	"no_policy rate"	.3	57	1	5	17
 "USA"	"Illinois"	"no_policy rate"	.299	57	1	5	17
-"USA"	"Indiana"	"no_policy rate"	.308	57	1	5	17
+"USA"	"Indiana"	"no_policy rate"	.307	57	1	5	17
 "USA"	"Iowa"	"no_policy rate"	.307	57	1	5	17
 "USA"	"Kansas"	"no_policy rate"	.301	57	1	5	17
 "USA"	"Kentucky"	"no_policy rate"	.299	57	1	5	17
@@ -422,7 +422,7 @@ adm0	sample	policy	beta	i	grp	pol	seq
 "USA"	"Nevada"	"no_policy rate"	.297	57	1	5	17
 "USA"	"New Hampshire"	"no_policy rate"	.3	57	1	5	17
 "USA"	"New Jersey"	"no_policy rate"	.303	57	1	5	17
-"USA"	"New Mexico"	"no_policy rate"	.302	57	1	5	17
+"USA"	"New Mexico"	"no_policy rate"	.301	57	1	5	17
 "USA"	"New York"	"no_policy rate"	.292	57	1	5	17
 "USA"	"North Carolina"	"no_policy rate"	.301	57	1	5	17
 "USA"	"North Dakota"	"no_policy rate"	.302	57	1	5	17
