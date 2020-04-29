@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from bs4 import BeautifulSoup
 
 import pandas as pd
 import requests
@@ -33,13 +34,23 @@ def zipify_path(path):
     return "zip://" + str(path)
 
 
-def download_zip(url, out_path, overwrite=False):
+def download_file(url, out_path, mode="w", overwrite=False):
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if (not out_path.exists()) or overwrite:
         r = requests.get(url, allow_redirects=True)
-        with open(out_path, "wb") as f:
+        with open(out_path, mode) as f:
             f.write(r.content)
+    return None
+
+            
+def get_scraped_text(url, out_path, overwrite=False):
+    if (not out_path.exists()) or overwrite:
+        with open(out_path, "wb") as f:
+            f.write(requests.get(url).content)
+    with open(out_path, "r") as f:
+        text = BeautifulSoup(f.read(), "lxml")
+    return text
 
 
 def iso_to_dirname(iso3):
