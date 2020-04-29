@@ -4,16 +4,6 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lfe))
 source("code/models/predict_felm.R")
 source("code/models/projection_helper_functions.R")
-underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
-                           col_types = cols(
-                             country = col_character(),
-                             total_cases = col_double(),
-                             total_deaths = col_double(),
-                             underreporting_estimate = col_double(),
-                             lower = col_double(),
-                             upper = col_double(),
-                             underreporting_estimate_clean = col_character()
-                           ))
 
 italy_data <- read_csv("models/reg_data/ITA_reg_data.csv",
                    col_types = cols(
@@ -29,6 +19,29 @@ italy_data <- read_csv("models/reg_data/ITA_reg_data.csv",
   arrange(adm1_name, adm2_name, date) %>%
   mutate(tmp_id = factor(adm2_id),
          day_of_week = factor(dow))
+if(!(exists("gamma") & class(gamma) != "function")){
+    gamma = readr::read_csv("models/gamma_est.csv",
+                            col_types = 
+                              cols(
+                                recovery_delay = col_double(),
+                                gamma = col_double()
+                              )) %>% 
+      filter(adm0_name %in% c("CHN", "KOR"), recovery_delay == 0) %>% 
+      pull(gamma) %>% 
+      mean()
+}
+if(!exists("underreporting")){
+    underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
+                               col_types = cols(
+                                 country = col_character(),
+                                 total_cases = col_double(),
+                                 total_deaths = col_double(),
+                                 underreporting_estimate = col_double(),
+                                 lower = col_double(),
+                                 upper = col_double(),
+                                 underreporting_estimate_clean = col_character()
+                               ))
+}
 
 changed = TRUE
 while(changed){

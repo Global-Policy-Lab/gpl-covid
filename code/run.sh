@@ -113,6 +113,11 @@ python code/data/usa/merge_policy_and_cases.py
 printf "***Checking processed data***\n"
 python code/data/multi_country/quality-check-processed-datasets.py
 
+# Under-reporting data
+if $DOWNLOAD; then
+    Rscript code/data/multi_country/download_russell_underreporting_estimates.R
+fi
+
 ## regression model estimation
 if $STATA
 then
