@@ -93,6 +93,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Alaska,336,336,9,9
 2020-04-23,USA,Alaska,338,338,9,9
 2020-04-24,USA,Alaska,340,340,9,9
+2020-04-25,USA,Alaska,340,340,9,9
+2020-04-26,USA,Alaska,342,342,9,9
 2020-01-22,USA,Alabama,0,0,0,0
 2020-01-23,USA,Alabama,0,0,0,0
 2020-01-24,USA,Alabama,0,0,0,0
@@ -187,6 +189,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Alabama,5598,5598,176,176
 2020-04-23,USA,Alabama,5825,5825,197,197
 2020-04-24,USA,Alabama,6026,6026,209,209
+2020-04-25,USA,Alabama,6213,6213,213,213
+2020-04-26,USA,Alabama,6417,6417,219,219
 2020-01-22,USA,Arkansas,0,0,0,0
 2020-01-23,USA,Arkansas,0,0,0,0
 2020-01-24,USA,Arkansas,0,0,0,0
@@ -280,7 +284,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-21,USA,Arkansas,2261,2261,43,43
 2020-04-22,USA,Arkansas,2392,2392,44,44
 2020-04-23,USA,Arkansas,2599,2599,45,45
-2020-04-24,USA,Arkansas,2809,2809,47,47
+2020-04-24,USA,Arkansas,2808,2808,47,47
+2020-04-25,USA,Arkansas,2908,2908,48,48
+2020-04-26,USA,Arkansas,3000,3000,50,50
 2020-01-22,USA,Arizona,0,0,0,0
 2020-01-23,USA,Arizona,0,0,0,0
 2020-01-24,USA,Arizona,0,0,0,0
@@ -375,6 +381,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Arizona,5459,5459,228,228
 2020-04-23,USA,Arizona,5768,5768,249,249
 2020-04-24,USA,Arizona,6043,6043,266,266
+2020-04-25,USA,Arizona,6280,6280,273,273
+2020-04-26,USA,Arizona,6526,6526,275,275
 2020-01-22,USA,California,0,0,0,0
 2020-01-23,USA,California,0,0,0,0
 2020-01-24,USA,California,0,0,0,0
@@ -469,6 +477,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,California,37667,37667,1432,1432
 2020-04-23,USA,California,39535,39535,1529,1529
 2020-04-24,USA,California,41296,41296,1614,1614
+2020-04-25,USA,California,42545,42545,1693,1693
+2020-04-26,USA,California,43653,43653,1716,1716
 2020-01-22,USA,Colorado,0,0,0,0
 2020-01-23,USA,Colorado,0,0,0,0
 2020-01-24,USA,Colorado,0,0,0,0
@@ -563,6 +573,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Colorado,10877,10877,508,508
 2020-04-23,USA,Colorado,11188,11188,550,550
 2020-04-24,USA,Colorado,12179,12179,672,672
+2020-04-25,USA,Colorado,12892,12892,670,670
+2020-04-26,USA,Colorado,13365,13365,678,678
 2020-01-22,USA,Connecticut,0,0,0,0
 2020-01-23,USA,Connecticut,0,0,0,0
 2020-01-24,USA,Connecticut,0,0,0,0
@@ -657,6 +669,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Connecticut,22469,22469,1544,1544
 2020-04-23,USA,Connecticut,23100,23100,1639,1639
 2020-04-24,USA,Connecticut,23921,23921,1764,1764
+2020-04-25,USA,Connecticut,24582,24582,1862,1862
+2020-04-26,USA,Connecticut,25269,25269,1924,1924
 2020-01-22,USA,District of Columbia,0,0,0,0
 2020-01-23,USA,District of Columbia,0,0,0,0
 2020-01-24,USA,District of Columbia,0,0,0,0
@@ -751,6 +765,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,District of Columbia,3206,3206,127,127
 2020-04-23,USA,District of Columbia,3361,3361,139,139
 2020-04-24,USA,District of Columbia,3528,3528,153,153
+2020-04-25,USA,District of Columbia,3699,3699,165,165
+2020-04-26,USA,District of Columbia,3841,3841,178,178
 2020-01-22,USA,Delaware,0,0,0,0
 2020-01-23,USA,Delaware,0,0,0,0
 2020-01-24,USA,Delaware,0,0,0,0
@@ -845,6 +861,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Delaware,3200,3200,89,89
 2020-04-23,USA,Delaware,3308,3308,92,92
 2020-04-24,USA,Delaware,3442,3442,100,100
+2020-04-25,USA,Delaware,3576,3576,112,112
+2020-04-26,USA,Delaware,4034,4034,120,120
 2020-01-22,USA,Florida,0,0,0,0
 2020-01-23,USA,Florida,0,0,0,0
 2020-01-24,USA,Florida,0,0,0,0
@@ -939,6 +957,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Florida,28576,28576,927,927
 2020-04-23,USA,Florida,29647,29647,987,987
 2020-04-24,USA,Florida,30533,30533,1046,1046
+2020-04-25,USA,Florida,30836,30836,1055,1055
+2020-04-26,USA,Florida,31527,31527,1074,1074
 2020-01-22,USA,Georgia,0,0,0,0
 2020-01-23,USA,Georgia,0,0,0,0
 2020-01-24,USA,Georgia,0,0,0,0
@@ -1022,17 +1042,19 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-11,USA,Georgia,12261,12261,432,432
 2020-04-12,USA,Georgia,12550,12550,442,442
 2020-04-13,USA,Georgia,13621,13621,442,442
-2020-04-14,USA,Georgia,14578,14578,524,524
-2020-04-15,USA,Georgia,15120,15120,576,576
-2020-04-16,USA,Georgia,16144,16144,617,617
-2020-04-17,USA,Georgia,17152,17152,667,667
-2020-04-18,USA,Georgia,17580,17580,675,675
-2020-04-19,USA,Georgia,18217,18217,689,689
-2020-04-20,USA,Georgia,19085,19085,768,768
-2020-04-21,USA,Georgia,19663,19663,818,818
-2020-04-22,USA,Georgia,20503,20503,845,845
-2020-04-23,USA,Georgia,21488,21488,881,881
-2020-04-24,USA,Georgia,22028,22028,899,899
+2020-04-14,USA,Georgia,14578,14578,523,523
+2020-04-15,USA,Georgia,15120,15120,575,575
+2020-04-16,USA,Georgia,16144,16144,616,616
+2020-04-17,USA,Georgia,17152,17152,666,666
+2020-04-18,USA,Georgia,17580,17580,674,674
+2020-04-19,USA,Georgia,18217,18217,688,688
+2020-04-20,USA,Georgia,19085,19085,767,767
+2020-04-21,USA,Georgia,19663,19663,816,816
+2020-04-22,USA,Georgia,20501,20501,843,843
+2020-04-23,USA,Georgia,21485,21485,879,879
+2020-04-24,USA,Georgia,22023,22023,896,896
+2020-04-25,USA,Georgia,22576,22576,903,903
+2020-04-26,USA,Georgia,22842,22842,913,913
 2020-01-22,USA,Hawaii,0,0,0,0
 2020-01-23,USA,Hawaii,0,0,0,0
 2020-01-24,USA,Hawaii,0,0,0,0
@@ -1127,6 +1149,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Hawaii,592,592,9,9
 2020-04-23,USA,Hawaii,596,596,9,9
 2020-04-24,USA,Hawaii,600,600,9,9
+2020-04-25,USA,Hawaii,604,604,9,9
+2020-04-26,USA,Hawaii,606,606,9,9
 2020-01-22,USA,Iowa,0,0,0,0
 2020-01-23,USA,Iowa,0,0,0,0
 2020-01-24,USA,Iowa,0,0,0,0
@@ -1221,6 +1245,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Iowa,3744,3744,90,90
 2020-04-23,USA,Iowa,3921,3921,96,96
 2020-04-24,USA,Iowa,4442,4442,107,107
+2020-04-25,USA,Iowa,5087,5087,112,112
+2020-04-26,USA,Iowa,5460,5460,118,118
 2020-01-22,USA,Idaho,0,0,0,0
 2020-01-23,USA,Idaho,0,0,0,0
 2020-01-24,USA,Idaho,0,0,0,0
@@ -1312,9 +1338,11 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-19,USA,Idaho,1672,1672,45,45
 2020-04-20,USA,Idaho,1736,1736,48,48
 2020-04-21,USA,Idaho,1766,1766,51,51
-2020-04-22,USA,Idaho,1802,1802,54,54
-2020-04-23,USA,Idaho,1833,1833,54,54
-2020-04-24,USA,Idaho,1866,1866,54,54
+2020-04-22,USA,Idaho,1800,1800,54,54
+2020-04-23,USA,Idaho,1831,1831,54,54
+2020-04-24,USA,Idaho,1864,1864,54,54
+2020-04-25,USA,Idaho,1885,1885,56,56
+2020-04-26,USA,Idaho,1893,1893,56,56
 2020-01-22,USA,Illinois,0,0,0,0
 2020-01-23,USA,Illinois,0,0,0,0
 2020-01-24,USA,Illinois,1,1,0,0
@@ -1409,6 +1437,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Illinois,35107,35107,1565,1565
 2020-04-23,USA,Illinois,36934,36934,1688,1688
 2020-04-24,USA,Illinois,39652,39652,1795,1795
+2020-04-25,USA,Illinois,41775,41775,1875,1875
+2020-04-26,USA,Illinois,43898,43898,1933,1933
 2020-01-22,USA,Indiana,0,0,0,0
 2020-01-23,USA,Indiana,0,0,0,0
 2020-01-24,USA,Indiana,0,0,0,0
@@ -1503,6 +1533,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Indiana,12436,12436,661,661
 2020-04-23,USA,Indiana,12436,12436,661,661
 2020-04-24,USA,Indiana,13621,13621,661,661
+2020-04-25,USA,Indiana,14311,14311,661,661
+2020-04-26,USA,Indiana,15012,15012,661,661
 2020-01-22,USA,Kansas,0,0,0,0
 2020-01-23,USA,Kansas,0,0,0,0
 2020-01-24,USA,Kansas,0,0,0,0
@@ -1591,12 +1623,14 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-16,USA,Kansas,1587,1587,80,80
 2020-04-17,USA,Kansas,1703,1703,84,84
 2020-04-18,USA,Kansas,1789,1789,86,86
-2020-04-19,USA,Kansas,1848,1848,92,92
-2020-04-20,USA,Kansas,1985,1985,100,100
-2020-04-21,USA,Kansas,2025,2025,100,100
-2020-04-22,USA,Kansas,2211,2211,110,110
-2020-04-23,USA,Kansas,2482,2482,112,112
-2020-04-24,USA,Kansas,2774,2774,112,112
+2020-04-19,USA,Kansas,1847,1847,92,92
+2020-04-20,USA,Kansas,1984,1984,100,100
+2020-04-21,USA,Kansas,2024,2024,100,100
+2020-04-22,USA,Kansas,2210,2210,110,110
+2020-04-23,USA,Kansas,2481,2481,112,112
+2020-04-24,USA,Kansas,2773,2773,112,112
+2020-04-25,USA,Kansas,3055,3055,117,117
+2020-04-26,USA,Kansas,3173,3173,118,118
 2020-01-22,USA,Kentucky,0,0,0,0
 2020-01-23,USA,Kentucky,0,0,0,0
 2020-01-24,USA,Kentucky,0,0,0,0
@@ -1657,40 +1691,42 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-03-19,USA,Kentucky,47,47,2,2
 2020-03-20,USA,Kentucky,NA,50,2,2
 2020-03-21,USA,Kentucky,53,53,3,3
-2020-03-22,USA,Kentucky,67,67,3,3
-2020-03-23,USA,Kentucky,122,122,4,4
-2020-03-24,USA,Kentucky,155,155,4,4
-2020-03-25,USA,Kentucky,194,194,5,5
-2020-03-26,USA,Kentucky,244,244,5,5
-2020-03-27,USA,Kentucky,298,298,9,9
-2020-03-28,USA,Kentucky,359,359,10,10
-2020-03-29,USA,Kentucky,391,391,10,10
-2020-03-30,USA,Kentucky,432,432,11,11
-2020-03-31,USA,Kentucky,531,531,18,18
-2020-04-01,USA,Kentucky,626,626,20,20
-2020-04-02,USA,Kentucky,717,717,31,31
-2020-04-03,USA,Kentucky,778,778,37,37
-2020-04-04,USA,Kentucky,874,874,40,40
-2020-04-05,USA,Kentucky,973,973,45,45
-2020-04-06,USA,Kentucky,1084,1084,59,59
-2020-04-07,USA,Kentucky,1143,1143,62,62
-2020-04-08,USA,Kentucky,1341,1341,66,66
-2020-04-09,USA,Kentucky,1512,1512,79,79
-2020-04-10,USA,Kentucky,1695,1695,90,90
-2020-04-11,USA,Kentucky,1844,1844,94,94
-2020-04-12,USA,Kentucky,1955,1955,96,96
-2020-04-13,USA,Kentucky,2040,2040,105,105
-2020-04-14,USA,Kentucky,2197,2197,115,115
-2020-04-15,USA,Kentucky,2282,2282,121,121
-2020-04-16,USA,Kentucky,2310,2310,129,129
-2020-04-17,USA,Kentucky,2517,2517,137,137
-2020-04-18,USA,Kentucky,2684,2684,144,144
-2020-04-19,USA,Kentucky,2947,2947,148,148
-2020-04-20,USA,Kentucky,3033,3033,154,154
-2020-04-21,USA,Kentucky,3184,3184,171,171
-2020-04-22,USA,Kentucky,3361,3361,185,185
-2020-04-23,USA,Kentucky,3476,3476,191,191
-2020-04-24,USA,Kentucky,3765,3765,200,200
+2020-03-22,USA,Kentucky,66,66,3,3
+2020-03-23,USA,Kentucky,121,121,4,4
+2020-03-24,USA,Kentucky,153,153,4,4
+2020-03-25,USA,Kentucky,192,192,5,5
+2020-03-26,USA,Kentucky,242,242,5,5
+2020-03-27,USA,Kentucky,296,296,9,9
+2020-03-28,USA,Kentucky,357,357,10,10
+2020-03-29,USA,Kentucky,389,389,10,10
+2020-03-30,USA,Kentucky,430,430,11,11
+2020-03-31,USA,Kentucky,529,529,18,18
+2020-04-01,USA,Kentucky,623,623,20,20
+2020-04-02,USA,Kentucky,714,714,31,31
+2020-04-03,USA,Kentucky,775,775,37,37
+2020-04-04,USA,Kentucky,871,871,40,40
+2020-04-05,USA,Kentucky,970,970,45,45
+2020-04-06,USA,Kentucky,1081,1081,59,59
+2020-04-07,USA,Kentucky,1140,1140,62,62
+2020-04-08,USA,Kentucky,1338,1338,66,66
+2020-04-09,USA,Kentucky,1509,1509,79,79
+2020-04-10,USA,Kentucky,1692,1692,90,90
+2020-04-11,USA,Kentucky,1841,1841,94,94
+2020-04-12,USA,Kentucky,1952,1952,96,96
+2020-04-13,USA,Kentucky,2037,2037,105,105
+2020-04-14,USA,Kentucky,2194,2194,115,115
+2020-04-15,USA,Kentucky,2279,2279,121,121
+2020-04-16,USA,Kentucky,2307,2307,129,129
+2020-04-17,USA,Kentucky,2514,2514,137,137
+2020-04-18,USA,Kentucky,2681,2681,144,144
+2020-04-19,USA,Kentucky,2944,2944,148,148
+2020-04-20,USA,Kentucky,3030,3030,154,154
+2020-04-21,USA,Kentucky,3180,3180,171,171
+2020-04-22,USA,Kentucky,3357,3357,185,185
+2020-04-23,USA,Kentucky,3472,3472,191,191
+2020-04-24,USA,Kentucky,3760,3760,200,200
+2020-04-25,USA,Kentucky,3891,3891,205,205
+2020-04-26,USA,Kentucky,4065,4065,208,208
 2020-01-22,USA,Louisiana,0,0,0,0
 2020-01-23,USA,Louisiana,0,0,0,0
 2020-01-24,USA,Louisiana,0,0,0,0
@@ -1785,6 +1821,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Louisiana,25253,25253,1472,1472
 2020-04-23,USA,Louisiana,25735,25735,1540,1540
 2020-04-24,USA,Louisiana,26138,26138,1601,1601
+2020-04-25,USA,Louisiana,26511,26511,1644,1644
+2020-04-26,USA,Louisiana,26773,26773,1669,1669
 2020-01-22,USA,Massachusetts,0,0,0,0
 2020-01-23,USA,Massachusetts,0,0,0,0
 2020-01-24,USA,Massachusetts,0,0,0,0
@@ -1879,6 +1917,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Massachusetts,42944,42944,2182,2182
 2020-04-23,USA,Massachusetts,46023,46023,2360,2360
 2020-04-24,USA,Massachusetts,50969,50969,2556,2556
+2020-04-25,USA,Massachusetts,53348,53348,2730,2730
+2020-04-26,USA,Massachusetts,54823,54823,2899,2899
 2020-01-22,USA,Maryland,0,0,0,0
 2020-01-23,USA,Maryland,0,0,0,0
 2020-01-24,USA,Maryland,0,0,0,0
@@ -1973,6 +2013,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Maryland,14775,14775,544,544
 2020-04-23,USA,Maryland,15735,15735,592,592
 2020-04-24,USA,Maryland,16616,16616,592,592
+2020-04-25,USA,Maryland,17766,17766,695,695
+2020-04-26,USA,Maryland,18581,18581,708,708
 2020-01-22,USA,Maine,0,0,0,0
 2020-01-23,USA,Maine,0,0,0,0
 2020-01-24,USA,Maine,0,0,0,0
@@ -2067,6 +2109,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Maine,907,907,39,39
 2020-04-23,USA,Maine,937,937,44,44
 2020-04-24,USA,Maine,965,965,47,47
+2020-04-25,USA,Maine,990,990,50,50
+2020-04-26,USA,Maine,1015,1015,50,50
 2020-01-22,USA,Michigan,0,0,0,0
 2020-01-23,USA,Michigan,0,0,0,0
 2020-01-24,USA,Michigan,0,0,0,0
@@ -2160,7 +2204,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-21,USA,Michigan,32964,32964,2702,2702
 2020-04-22,USA,Michigan,33961,33961,2815,2815
 2020-04-23,USA,Michigan,35288,35288,2979,2979
-2020-04-24,USA,Michigan,36635,36635,3087,3087
+2020-04-24,USA,Michigan,36634,36634,3087,3087
+2020-04-25,USA,Michigan,37199,37199,3276,3276
+2020-04-26,USA,Michigan,37760,37760,3318,3318
 2020-01-22,USA,Minnesota,0,0,0,0
 2020-01-23,USA,Minnesota,0,0,0,0
 2020-01-24,USA,Minnesota,0,0,0,0
@@ -2255,6 +2301,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Minnesota,2619,2619,179,179
 2020-04-23,USA,Minnesota,2782,2782,200,200
 2020-04-24,USA,Minnesota,2954,2954,221,221
+2020-04-25,USA,Minnesota,3128,3128,244,244
+2020-04-26,USA,Minnesota,3238,3238,272,272
 2020-01-22,USA,Missouri,0,0,0,0
 2020-01-23,USA,Missouri,0,0,0,0
 2020-01-24,USA,Missouri,0,0,0,0
@@ -2348,7 +2396,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-21,USA,Missouri,5937,5937,191,191
 2020-04-22,USA,Missouri,6131,6131,209,209
 2020-04-23,USA,Missouri,6313,6313,220,220
-2020-04-24,USA,Missouri,6619,6619,264,264
+2020-04-24,USA,Missouri,6615,6615,264,264
+2020-04-25,USA,Missouri,6795,6795,275,275
+2020-04-26,USA,Missouri,6963,6963,276,276
 2020-01-22,USA,Mississippi,0,0,0,0
 2020-01-23,USA,Mississippi,0,0,0,0
 2020-01-24,USA,Mississippi,0,0,0,0
@@ -2442,7 +2492,9 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-21,USA,Mississippi,4711,4711,183,183
 2020-04-22,USA,Mississippi,4893,4893,193,193
 2020-04-23,USA,Mississippi,5150,5150,201,201
-2020-04-24,USA,Mississippi,5431,5431,209,209
+2020-04-24,USA,Mississippi,5430,5430,209,209
+2020-04-25,USA,Mississippi,5711,5711,220,220
+2020-04-26,USA,Mississippi,5907,5907,226,226
 2020-01-22,USA,Montana,0,0,0,0
 2020-01-23,USA,Montana,0,0,0,0
 2020-01-24,USA,Montana,0,0,0,0
@@ -2537,6 +2589,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Montana,442,442,16,16
 2020-04-23,USA,Montana,445,445,16,16
 2020-04-24,USA,Montana,447,447,16,16
+2020-04-25,USA,Montana,448,448,16,16
+2020-04-26,USA,Montana,451,451,16,16
 2020-01-22,USA,North Carolina,0,0,0,0
 2020-01-23,USA,North Carolina,0,0,0,0
 2020-01-24,USA,North Carolina,0,0,0,0
@@ -2631,6 +2685,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,North Carolina,7074,7074,241,241
 2020-04-23,USA,North Carolina,7380,7380,253,253
 2020-04-24,USA,North Carolina,7783,7783,269,269
+2020-04-25,USA,North Carolina,8233,8233,289,289
+2020-04-26,USA,North Carolina,8481,8481,299,299
 2020-01-22,USA,North Dakota,0,0,0,0
 2020-01-23,USA,North Dakota,0,0,0,0
 2020-01-24,USA,North Dakota,0,0,0,0
@@ -2725,6 +2781,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,North Dakota,679,679,9,9
 2020-04-23,USA,North Dakota,709,709,9,9
 2020-04-24,USA,North Dakota,748,748,9,9
+2020-04-25,USA,North Dakota,803,803,9,9
+2020-04-26,USA,North Dakota,867,867,9,9
 2020-01-22,USA,Nebraska,0,0,0,0
 2020-01-23,USA,Nebraska,0,0,0,0
 2020-01-24,USA,Nebraska,0,0,0,0
@@ -2819,6 +2877,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Nebraska,1677,1677,14,14
 2020-04-23,USA,Nebraska,1896,1896,14,14
 2020-04-24,USA,Nebraska,2111,2111,14,14
+2020-04-25,USA,Nebraska,2395,2395,14,14
+2020-04-26,USA,Nebraska,2518,2518,14,14
 2020-01-22,USA,New Hampshire,0,0,0,0
 2020-01-23,USA,New Hampshire,0,0,0,0
 2020-01-24,USA,New Hampshire,0,0,0,0
@@ -2913,6 +2973,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,New Hampshire,1588,1588,48,48
 2020-04-23,USA,New Hampshire,1670,1670,51,51
 2020-04-24,USA,New Hampshire,1719,1719,53,53
+2020-04-25,USA,New Hampshire,1790,1790,60,60
+2020-04-26,USA,New Hampshire,1864,1864,60,60
 2020-01-22,USA,New Jersey,0,0,0,0
 2020-01-23,USA,New Jersey,0,0,0,0
 2020-01-24,USA,New Jersey,0,0,0,0
@@ -3007,6 +3069,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,New Jersey,95411,95411,4756,4756
 2020-04-23,USA,New Jersey,99989,99989,4756,4756
 2020-04-24,USA,New Jersey,102772,102772,5620,5620
+2020-04-25,USA,New Jersey,106074,106074,5866,5866
+2020-04-26,USA,New Jersey,109465,109465,5941,5941
 2020-01-22,USA,New Mexico,0,0,0,0
 2020-01-23,USA,New Mexico,0,0,0,0
 2020-01-24,USA,New Mexico,0,0,0,0
@@ -3101,6 +3165,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,New Mexico,2210,2210,71,71
 2020-04-23,USA,New Mexico,2376,2376,78,78
 2020-04-24,USA,New Mexico,2521,2521,84,84
+2020-04-25,USA,New Mexico,2660,2660,93,93
+2020-04-26,USA,New Mexico,2724,2724,99,99
 2020-01-22,USA,Nevada,0,0,0,0
 2020-01-23,USA,Nevada,0,0,0,0
 2020-01-24,USA,Nevada,0,0,0,0
@@ -3195,6 +3261,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Nevada,4092,4092,190,190
 2020-04-23,USA,Nevada,4225,4225,206,206
 2020-04-24,USA,Nevada,4373,4373,214,214
+2020-04-25,USA,Nevada,4547,4547,216,216
+2020-04-26,USA,Nevada,4642,4642,222,222
 2020-01-22,USA,New York,0,0,0,0
 2020-01-23,USA,New York,0,0,0,0
 2020-01-24,USA,New York,0,0,0,0
@@ -3289,6 +3357,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,New York,257607,257607,15300,15300
 2020-04-23,USA,New York,263529,263529,15738,15738
 2020-04-24,USA,New York,271659,271659,16158,16158
+2020-04-25,USA,New York,282212,282212,16599,16599
+2020-04-26,USA,New York,288114,288114,16966,16966
 2020-01-22,USA,Ohio,0,0,0,0
 2020-01-23,USA,Ohio,0,0,0,0
 2020-01-24,USA,Ohio,0,0,0,0
@@ -3381,8 +3451,10 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-20,USA,Ohio,12913,12913,509,509
 2020-04-21,USA,Ohio,13722,13722,557,557
 2020-04-22,USA,Ohio,14114,14114,609,609
-2020-04-23,USA,Ohio,14689,14689,656,656
-2020-04-24,USA,Ohio,15164,15164,690,690
+2020-04-23,USA,Ohio,14688,14688,656,656
+2020-04-24,USA,Ohio,15154,15154,690,690
+2020-04-25,USA,Ohio,15563,15563,709,709
+2020-04-26,USA,Ohio,15943,15943,726,726
 2020-01-22,USA,Oklahoma,0,0,0,0
 2020-01-23,USA,Oklahoma,0,0,0,0
 2020-01-24,USA,Oklahoma,0,0,0,0
@@ -3477,6 +3549,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Oklahoma,2893,2893,170,170
 2020-04-23,USA,Oklahoma,3015,3015,179,179
 2020-04-24,USA,Oklahoma,3015,3015,179,179
+2020-04-25,USA,Oklahoma,3192,3192,194,194
+2020-04-26,USA,Oklahoma,3252,3252,195,195
 2020-01-22,USA,Oregon,0,0,0,0
 2020-01-23,USA,Oregon,0,0,0,0
 2020-01-24,USA,Oregon,0,0,0,0
@@ -3571,6 +3645,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Oregon,2059,2059,78,78
 2020-04-23,USA,Oregon,2126,2126,83,83
 2020-04-24,USA,Oregon,2177,2177,86,86
+2020-04-25,USA,Oregon,2253,2253,87,87
+2020-04-26,USA,Oregon,2311,2311,91,91
 2020-01-22,USA,Pennsylvania,0,0,0,0
 2020-01-23,USA,Pennsylvania,0,0,0,0
 2020-01-24,USA,Pennsylvania,0,0,0,0
@@ -3665,6 +3741,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Pennsylvania,35679,35679,1413,1413
 2020-04-23,USA,Pennsylvania,37053,37053,1421,1421
 2020-04-24,USA,Pennsylvania,38652,38652,1492,1492
+2020-04-25,USA,Pennsylvania,40046,40046,1536,1536
+2020-04-26,USA,Pennsylvania,41164,41164,1549,1549
 2020-01-22,USA,Rhode Island,0,0,0,0
 2020-01-23,USA,Rhode Island,0,0,0,0
 2020-01-24,USA,Rhode Island,0,0,0,0
@@ -3759,6 +3837,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Rhode Island,5841,5841,181,181
 2020-04-23,USA,Rhode Island,6194,6194,189,189
 2020-04-24,USA,Rhode Island,6511,6511,202,202
+2020-04-25,USA,Rhode Island,6875,6875,215,215
+2020-04-26,USA,Rhode Island,7274,7274,226,226
 2020-01-22,USA,South Carolina,0,0,0,0
 2020-01-23,USA,South Carolina,0,0,0,0
 2020-01-24,USA,South Carolina,0,0,0,0
@@ -3853,6 +3933,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,South Carolina,4758,4758,140,140
 2020-04-23,USA,South Carolina,4916,4916,150,150
 2020-04-24,USA,South Carolina,5068,5068,157,157
+2020-04-25,USA,South Carolina,5243,5243,166,166
+2020-04-26,USA,South Carolina,5243,5243,166,166
 2020-01-22,USA,South Dakota,0,0,0,0
 2020-01-23,USA,South Dakota,0,0,0,0
 2020-01-24,USA,South Dakota,0,0,0,0
@@ -3947,6 +4029,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,South Dakota,1858,1858,9,9
 2020-04-23,USA,South Dakota,1956,1956,9,9
 2020-04-24,USA,South Dakota,2039,2039,9,9
+2020-04-25,USA,South Dakota,2147,2147,10,10
+2020-04-26,USA,South Dakota,2212,2212,11,11
 2020-01-22,USA,Tennessee,0,0,0,0
 2020-01-23,USA,Tennessee,0,0,0,0
 2020-01-24,USA,Tennessee,0,0,0,0
@@ -4041,6 +4125,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Tennessee,7835,7835,166,166
 2020-04-23,USA,Tennessee,8262,8262,170,170
 2020-04-24,USA,Tennessee,8722,8722,170,170
+2020-04-25,USA,Tennessee,9187,9187,178,178
+2020-04-26,USA,Tennessee,9663,9663,181,181
 2020-01-22,USA,Texas,0,0,0,0
 2020-01-23,USA,Texas,0,0,0,0
 2020-01-24,USA,Texas,0,0,0,0
@@ -4135,6 +4221,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Texas,21062,21062,543,543
 2020-04-23,USA,Texas,21943,21943,561,561
 2020-04-24,USA,Texas,22803,22803,593,593
+2020-04-25,USA,Texas,23770,23770,623,623
+2020-04-26,USA,Texas,24629,24629,647,647
 2020-01-22,USA,Utah,0,0,0,0
 2020-01-23,USA,Utah,0,0,0,0
 2020-01-24,USA,Utah,0,0,0,0
@@ -4229,6 +4317,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Utah,3454,3454,34,34
 2020-04-23,USA,Utah,3620,3620,35,35
 2020-04-24,USA,Utah,3777,3777,35,35
+2020-04-25,USA,Utah,3952,3952,41,41
+2020-04-26,USA,Utah,4122,4122,41,41
 2020-01-22,USA,Virginia,0,0,0,0
 2020-01-23,USA,Virginia,0,0,0,0
 2020-01-24,USA,Virginia,0,0,0,0
@@ -4323,6 +4413,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Virginia,10265,10265,348,348
 2020-04-23,USA,Virginia,10998,10998,372,372
 2020-04-24,USA,Virginia,12374,12374,440,440
+2020-04-25,USA,Virginia,12970,12970,440,440
+2020-04-26,USA,Virginia,12970,12970,436,436
 2020-01-22,USA,Vermont,0,0,0,0
 2020-01-23,USA,Vermont,0,0,0,0
 2020-01-24,USA,Vermont,0,0,0,0
@@ -4414,9 +4506,11 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-19,USA,Vermont,811,811,37,37
 2020-04-20,USA,Vermont,813,813,38,38
 2020-04-21,USA,Vermont,816,816,40,40
-2020-04-22,USA,Vermont,821,821,40,40
-2020-04-23,USA,Vermont,825,825,43,43
-2020-04-24,USA,Vermont,827,827,44,44
+2020-04-22,USA,Vermont,820,820,40,40
+2020-04-23,USA,Vermont,824,824,43,43
+2020-04-24,USA,Vermont,826,826,44,44
+2020-04-25,USA,Vermont,842,842,46,46
+2020-04-26,USA,Vermont,850,850,46,46
 2020-01-22,USA,Washington,1,1,0,0
 2020-01-23,USA,Washington,1,1,0,0
 2020-01-24,USA,Washington,1,1,0,0
@@ -4511,6 +4605,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Washington,12494,12494,692,692
 2020-04-23,USA,Washington,12752,12752,711,711
 2020-04-24,USA,Washington,12977,12977,723,723
+2020-04-25,USA,Washington,13316,13316,738,738
+2020-04-26,USA,Washington,13520,13520,749,749
 2020-01-22,USA,Wisconsin,0,0,0,0
 2020-01-23,USA,Wisconsin,0,0,0,0
 2020-01-24,USA,Wisconsin,0,0,0,0
@@ -4605,6 +4701,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Wisconsin,4845,4845,246,246
 2020-04-23,USA,Wisconsin,5050,5050,257,257
 2020-04-24,USA,Wisconsin,5354,5354,262,262
+2020-04-25,USA,Wisconsin,5686,5686,266,266
+2020-04-26,USA,Wisconsin,5911,5911,272,272
 2020-01-22,USA,West Virginia,0,0,0,0
 2020-01-23,USA,West Virginia,0,0,0,0
 2020-01-24,USA,West Virginia,0,0,0,0
@@ -4699,6 +4797,8 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,West Virginia,960,960,29,29
 2020-04-23,USA,West Virginia,980,980,31,31
 2020-04-24,USA,West Virginia,1019,1019,31,31
+2020-04-25,USA,West Virginia,1025,1025,33,33
+2020-04-26,USA,West Virginia,1050,1050,34,34
 2020-01-22,USA,Wyoming,0,0,0,0
 2020-01-23,USA,Wyoming,0,0,0,0
 2020-01-24,USA,Wyoming,0,0,0,0
@@ -4793,3 +4893,5 @@ date,adm0_name,adm1_name,cum_confirmed_cases,cum_confirmed_cases_imputed,cum_dea
 2020-04-22,USA,Wyoming,326,326,1,1
 2020-04-23,USA,Wyoming,332,332,1,1
 2020-04-24,USA,Wyoming,349,349,1,1
+2020-04-25,USA,Wyoming,361,361,1,1
+2020-04-26,USA,Wyoming,368,368,1,1
