@@ -2,13 +2,13 @@ import datetime
 import os
 
 import numpy as np
+import pandas as pd
 
-import src.utils as cutil
 import matplotlib.colors
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-import pandas as pd
 import seaborn as sns
+import src.utils as cutil
 
 # save the figure here
 save_fig = True

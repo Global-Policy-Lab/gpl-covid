@@ -5,33 +5,29 @@
 This repository contains code and data necessary to replicate the findings of [our paper](https://www.medrxiv.org/content/10.1101/2020.03.22.20040642v2).
 
 ## Setup
-Scripts in this repository are written in R, Python, and Stata. Note that you will need a Stata license to fully replicate the analysis. Throughout this Readme, it is assumed that you’ll execute scripts from the repo root directory. In addition, we assume that you have an environment of Python and R packages described in <environment.yml>.
+Scripts in this repository are written in R, Python, and Stata. Note that you will need a Stata license to fully replicate the analysis (provided in the CodeOcean capsule). Throughout this Readme, when indicating paths to code and data, it is assumed that you’ll execute scripts from the repo root directory.
 
-To create and activate this environment using [conda](https://docs.conda.io/projects/conda/en/latest/index.html) execute the following lines (**Note:** RStudio is commented out of the environment, because it causes dependency clashes in a Windows environment. If you are not in Windows, and would like to use the RStudio app, feel free to uncomment it before creating the environment):
+### CodeOcean Capsule
+The easiest way to interact with our code and data is via our [CodeOcean capsule](https://codeocean.com/capsule/1887579/tree/v1), because all of the relevant setup described below has been done for you. You may replicate the full analysis through the "Reproducible Run" feature or interact directly with our code through Jupyter Notebooks that run Python, R, and Stata. You may also utilize RStudio. If you wish to use the command line on a cloud workstation, you will want to activate our conda environment with `conda activate gpl-covid`.
+
+### Github Repository
+You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.3" is the tag that is associated with the current version of the manuscript (as of 04/28/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
 
 ```bash
 conda env create -f environment.yml
 conda activate gpl-covid
 ```
 
-Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. Ensure you are currently located inside the repo root directory (`cd gpl-covid`), then execute
+Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. 
 
 ```bash
-pip install -e .
+pip install -e code
 ```
 
 To execute the full `run.sh` script, which runs the analysis from start to finish, you will also need to add this conda environment to the kernels that Jupyter is able to use (this is only needed to run simulations used to create Extended Data Figures 8 and 9). You do this with the following command (from inside the `gpl-covid` conda environment):
 
 ```bash
 python -m ipykernel install --user --name gpl-covid
-```
-
-To run one of the scripts (`get_adm_info.py`), you will also need an API key for the US Census API, which can be obtained [here](https://api.census.gov/data/key_signup.html). You will need to save this key to `code/api_keys.json` with the following format (a template file is provided):
-
-```json
-{
-    "census": "API_KEY_STRING"
-}
 ```
 
 Finally, to estimate the regression models, you will need several package installed in Stata. To add them, launch Stata and run:
@@ -48,6 +44,7 @@ ssc install outreg2, replace
 ## Code Structure
 ```text
 code
+├── api_keys.json
 ├── data
 │   ├── china
 │   │   ├── collate_data.py
@@ -84,6 +81,7 @@ code
 │       ├── gen_state_name_abbrev_xwalk.R
 │       ├── get_usafacts_data.R
 │       └── merge_policy_and_cases.py
+├── default.profraw
 ├── models
 │   ├── CHN_create_CBs.R
 │   ├── CHN_generate_data_and_model_projection.R
@@ -118,6 +116,12 @@ code
 │   ├── projection_helper_functions.R
 │   ├── run_all_CB_simulations.R
 │   └── run_projection_with_multiple_gammas.R
+├── notebooks
+│   ├── archived
+│   │   ├── addl-sim-plots.ipynb
+│   │   └── resimulate-outbreaks.ipynb
+│   ├── iwb-misc.ipynb
+│   └── simulate-and-regress.ipynb
 ├── plotting
 │   ├── aggregate_fig1_source_data.py
 │   ├── count-policies.py
@@ -131,13 +135,16 @@ code
 │   ├── figED2.R
 │   ├── gen_fig4.py
 │   └── sims.py
-└── src
-    ├── impute.py
-    ├── merge.py
-    ├── models
-    │   └── epi.py
-    ├── pop.py
-    └── utils.py
+├── run.sh
+├── setup.py
+├── src
+│   ├── impute.py
+│   ├── merge.py
+│   ├── models
+│   │   └── epi.py
+│   ├── pop.py
+│   └── utils.py
+└── statab.sh
 ```
 
 ## Data Documentation
@@ -157,17 +164,16 @@ The end dates of the data analyzed, and of the "cases averted" projections, are 
 The entire pipeline can be run by calling `bash code/run.sh`. If you would rather do it step by step, see the description of each stage below. There are four flags that can be passed to that script to change the default behavior, described below:
 
 - `-s|--no-stata`: Don't run the Stata scripts (must include this flag if you do not have Stata). In this case, the regression steps will be skipped and you will rely on previously computed regression results.
-- `-c|--census`: Run `code/data/multi_country/get_adm_info.py` because you have supplied a valid Census Data API value in `code/api_keys.json`. This just means that you will redownload geographic and population information for the majority of subnational units analyzed (some population information is obtained manually or through separate scripts).
 - `p|--num-proj`: Integer that controls both (a) the number of bootstrap samples when calculating projection uncertainty bounds in Fig. 4 and (b) the number of Monte Carlo samples used to create synthetic outbreaks (Extended Data Figures 8 and 9). Default 1000.
 - `d|--download`: Download new raw data, rather than using that which has already been downloaded. This may affect results slightly if, e.g. a country retroactivly adjusts their reported cases.
 
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was performed through manual downloading and/or processing of datasets and is described in as much detail as possible. The sections should be run in the order listed, as some files from later sections will depend on those from earlier sections (e.g. the geographical and population data).
 
-For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Appendix. A version that was frozen at the time of latest submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](references/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
+For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Supplementary Information. A version that was frozen at the time of latest submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](data/raw/multi_country/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
 #### Geographical and population data
-1. `python code/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries). **Note:** To run this script, you will need a U.S. Census API key. See [Setup](##Setup)
+1. `python code/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries).
 2. For Chinese city-level population data, the dataset is extracted from a compiled dataset of the 2010 Chinese City Statistical Yearbooks. We manually matched the city level population dataset to the city level COVID-19 epidemiology dataset. The resulting file is in [data/raw/china/china_city_pop.csv](data/raw/china/china_city_pop.csv).
 3. For Korean population data, download from [Statistics Korea](http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B040A3&vw_cd=MT_ZTITLE&list_id=A6&seqNo=&lang_mode=ko&language=kor&obj_var_id=&itm_id=&conn_path=MT_ZTITLE) (a similar page in English is available [here](http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B04005N&language=en))
 
@@ -251,12 +257,17 @@ Run the following scripts to merge epi, policy, testing, and population data for
 ##### United States
 1. `python code/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
 
+#### Under-reporting data
+`Rscript code/data/multi_country/download_russell_underreporting_estimates.R`: Download estimates of case under-reporting by country.
+
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
 
 `stata -b do code/models/alt_growth_rates/MASTER_run_all_reg.do`
 
-Each of the individual country regressions are available to be run within [code/models/alt_growth_rates](code/models/alt_growth_rates).
+You can optionally pass an integer command line argument if you would like to include bootstrapped estimates of the r2 vs. fixed lag length analysis (ED Fig 5b).
+
+Each of the individual country regressions are also available to be run within [code/models/alt_growth_rates](code/models/alt_growth_rates).
 
 ### SIR model projections
 Once the regression coefficients have been estimated in the above models, run the following code to generate projections of active and cumulative infections using an SIR model:
@@ -306,8 +317,8 @@ Note that the outputs of [code/plotting/fig1.R](code/plotting/fig1.R) are requir
 
 #### Extended Data Figure 5
 
-1. panel a is part of the regression estimation step (`code/models/alt_growth_rates/MASTER_run_all_reg.do`)
-2. panel b and c are directly generated by `stata -b do code/plotting/extended_data_fig5.do` using result of the regression estimation step (`code/models/alt_growth_rates/MASTER_run_all_reg.do`)
+1. Panel a is part of the regression estimation step (`code/models/alt_growth_rates/MASTER_run_all_reg.do`).
+2. Panels b and c are directly generated by `stata -b do code/plotting/extended_data_fig5.do` using result of the regression estimation step (`code/models/alt_growth_rates/MASTER_run_all_reg.do`)
 
 #### Extended Data Figure 6
 

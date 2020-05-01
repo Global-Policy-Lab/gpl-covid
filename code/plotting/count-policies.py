@@ -5,10 +5,11 @@
 # - Save Google Sheet of policies as Excel file
 # - Calculate number of policies for each country / adm-level
 
-import src.utils as cutil
 import pandas as pd
 
-path_data_sources = cutil.HOME / "references" / "data_sources.xlsx"
+import src.utils as cutil
+
+path_data_sources = cutil.DATA_RAW / "multi_country" / "data_sources.xlsx"
 
 path_out_csv = (
     cutil.HOME / "results" / "tables" / "table_a1" / "policy_counts_table_raw.csv"

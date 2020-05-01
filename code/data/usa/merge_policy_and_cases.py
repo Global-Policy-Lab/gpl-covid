@@ -1,8 +1,9 @@
 import os
 
+import pandas as pd
+
 import src.merge as merge
 import src.utils as cutil
-import pandas as pd
 
 raw_data_dir = str(cutil.DATA_RAW / "usa")
 int_data_dir = str(cutil.DATA_INTERIM / "usa")

@@ -655,7 +655,7 @@ preserve
 	lab(3 "w/o Hubei") region(lstyle(none)) rows(1)) ///
 	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
 	graph export results/figures/appendix/cross_valid/CHN.pdf, replace
-	graph export results/figures/appendix/cross_valid/CHN.png, replace	
+	capture graph export results/figures/appendix/cross_valid/CHN.png, replace	
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_CHN.csv", comma replace
 restore
 

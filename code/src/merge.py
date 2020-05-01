@@ -3,9 +3,9 @@ import datetime
 import pickle
 
 import numpy as np
+import pandas as pd
 
 import src.pop as cpop
-import pandas as pd
 
 popweighted_suffix = "popwt"
 exclude_from_popweights = [

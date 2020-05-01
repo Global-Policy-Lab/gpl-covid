@@ -2,7 +2,7 @@
 args = commandArgs(trailingOnly=TRUE)
 
 if(length(args) > 0){
-  times <- args
+  times <- strtoi(args)
 } else {
   times = 1000  
 }
@@ -22,7 +22,6 @@ underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
                              upper = col_double(),
                              underreporting_estimate_clean = col_character()
                            ))
-# source("code/models/calculate_gamma_from_china_and_korea.R")
 gamma = readr::read_csv("models/gamma_est.csv",
                         col_types = 
                           cols(

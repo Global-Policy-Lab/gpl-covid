@@ -11,15 +11,15 @@
 import argparse
 
 import numpy as np
-
 import pandas as pd
+
 from src import impute as cimpute
 from src import merge as cmerge
 from src import utils as cutil
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--nr",
+    "--nd",
     dest="r",
     action="store_false",
     help="do not reload raw health (GitHub) datasets",

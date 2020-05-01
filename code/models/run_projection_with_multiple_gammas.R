@@ -1,6 +1,9 @@
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(ggsci))
 suppressPackageStartupMessages(library(patchwork))
+
+dir.create("results/figures/fig4", recursive=TRUE, showWarnings=FALSE)
+
 list.files("code/models", full.names = TRUE) %>% 
   str_subset("data_and_model_projection") %>% 
   walk(source)

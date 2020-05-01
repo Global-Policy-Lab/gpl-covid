@@ -1,7 +1,0 @@
-"","country","p1","p2","p3","p4","p5"
-"1","USA","no_gathering","travel_ban_local","social_distance","school_closure","business_closure"
-"2","IRN","school_closure","travel_ban_local_opt","home_isolation","work_from_home","religious_closure"
-"3","FRA","no_gathering","home_isolation","social_distance","school_closure","event_cancel"
-"4","KOR","emergency_declaration","no_demonstration","social_distance_opt","religious_closure","business_closure_opt"
-"5","ITA","school_closure","social_distance","travel_ban_local","home_isolation","pos_cases_quarantine"
-"6","CHN","travel_ban_local","home_isolation",NA,NA,NA
