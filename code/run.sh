@@ -14,7 +14,6 @@ pip install -e code
 
 ## parse flags to not run certain things
 STATA=true
-CENSUS=false
 NUMPROJ=1000
 DOWNLOAD=false
 for arg in "$@"
@@ -22,10 +21,6 @@ do
     case $arg in
         -s|--nostata)
             STATA=false
-            shift
-        ;;
-        -c|--census)
-            CENSUS=true
             shift
         ;;
         -p|--num-proj)
@@ -41,16 +36,19 @@ do
 
 done
 
+if $DOWNLOAD; then
+    NDFLAG=""
+else
+    NDFLAG="--nd"
+fi
+
 
 ## data scraping and processing
 
 
 ### Geography/population
-if $CENSUS && $DOWNLOAD
-then
-    printf "***Downloading shape and population info for all countries***\n"
-    python code/data/multi_country/get_adm_info.py
-fi
+printf "***Creating shape and population info for all countries***\n"
+python code/data/multi_country/get_adm_info.py $NDFLAG
 
 ### Policy
 if $DOWNLOAD
@@ -101,12 +99,7 @@ python code/data/iran/iran-split-interim-into-processed.py
 
 # ITA
 printf "***Processing  and merging ITA data***\n"
-if $DOWNLOAD
-then
-    python code/data/italy/italy-download-cases-merge-policies.py
-else
-    python code/data/italy/italy-download-cases-merge-policies.py --nr
-fi
+python code/data/italy/italy-download-cases-merge-policies.py $NDFLAG
 
 # KOR
 printf "***Processing  and merging KOR data***\n"
@@ -119,6 +112,11 @@ python code/data/usa/merge_policy_and_cases.py
 # quality-check processed datasets
 printf "***Checking processed data***\n"
 python code/data/multi_country/quality-check-processed-datasets.py
+
+# Under-reporting data
+if $DOWNLOAD; then
+    Rscript code/data/multi_country/download_russell_underreporting_estimates.R
+fi
 
 ## regression model estimation
 if $STATA
@@ -133,8 +131,6 @@ printf "***Projecting infections***\n"
 python code/models/get_gamma.py
 Rscript code/models/run_all_CB_simulations.R $NUMPROJ
 
-# This one outputs all the raw projection output for diagnostic purposes.
-Rscript code/models/output_underlying_projection_output.R
 
 ## Figures and tables
 
@@ -157,21 +153,11 @@ python code/plotting/fig4_analysis.py
 
 # ED Figure 1
 printf "***Creating ED Fig 1***\n"
-if $DOWNLOAD
-then
-    python code/plotting/figED1.py
-else
-    python code/plotting/figED1.py --nd
-fi
+python code/plotting/figED1.py $NDFLAG
 
 # ED Figure 2
-if $DOWNLOAD
-then
-    printf "***Creating ED Fig 2***\n"
-    Rscript code/plotting/figED2.R
-else
-    Rscript code/plotting/figED2.R --nd
-fi
+printf "***Creating ED Fig 2***\n"
+Rscript code/plotting/figED2.R $NDFLAG
 
 # ED Figure 3-4
 if $STATA
@@ -208,7 +194,7 @@ printf "Running simulations..."
 papermill code/notebooks/simulate-and-regress.ipynb code/notebooks/simulate-and-regress-log.ipynb -p n_samples $NUMPROJ -k gpl-covid
 printf "Making Figures..."
 if [ $NUMPROJ = 1000 ]; then
-    python code/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/sims --source-data "results/source_data/ExtendedDataFigure89.csv"
+    python code/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 results/figures/appendix/extra_sims --paper-figs
 else
     python code/plotting/sims.py results/other/sims/measNoise_0.05_betaNoise_Exp_gammaNoise_0.01_sigmaNoise_0.03 --LHS I
 fi

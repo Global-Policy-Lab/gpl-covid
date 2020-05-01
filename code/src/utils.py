@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 import requests
+from bs4 import BeautifulSoup
 
 from . import __file__ as pkg_init_name
 
@@ -17,7 +18,7 @@ REG_DATA = MODELS / "reg_data"
 CODE = HOME / "code"
 
 ISOS = ["USA", "ITA", "FRA", "CHN", "KOR", "IRN"]
-adm3_dir_fmt = "gadm36_{iso3}_{datestamp}.zip"
+adm3_dir_fmt = "gadm36_{iso3}.zip"
 
 CUM_CASE_MIN_FILTER = 10
 PROCESSED_DATA_ERROR_HANDLING = "raise"
@@ -25,21 +26,32 @@ PROCESSED_DATA_DATE_CUTOFF = False
 
 COLORS = {"effect": "#27408B", "no_policy_growth_rate": "#8B0000"}
 
-with open(CODE / "api_keys.json", "r") as f:
-    API_KEYS = json.load(f)
-
 
 def zipify_path(path):
     return "zip://" + str(path)
 
 
-def download_zip(url, out_path, overwrite=False):
+def download_file(url, out_path, overwrite=False):
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if (not out_path.exists()) or overwrite:
         r = requests.get(url, allow_redirects=True)
-        with open(out_path, "wb") as f:
-            f.write(r.content)
+        if Path(out_path).suffix in [".csv", ".txt"]:
+            with open(out_path, "w") as f:
+                f.write(r.text)
+        else:
+            with open(out_path, "wb") as f:
+                f.write(r.content)
+    return None
+
+
+def get_scraped_text(url, out_path, overwrite=False):
+    if (not out_path.exists()) or overwrite:
+        with open(out_path, "w") as f:
+            f.write(requests.get(url).text)
+    with open(out_path, "r") as f:
+        text = BeautifulSoup(f.read(), "lxml")
+    return text
 
 
 def iso_to_dirname(iso3):
@@ -54,10 +66,10 @@ def iso_to_dirname(iso3):
     return mapping[iso3]
 
 
-def get_adm_zip_path(iso3, datestamp):
+def get_adm_zip_path(iso3):
     dirname = iso_to_dirname(iso3)
     assert (DATA_RAW / dirname).is_dir(), DATA_RAW / dirname
-    return DATA_RAW / dirname / adm3_dir_fmt.format(iso3=iso3, datestamp=datestamp)
+    return DATA_RAW / dirname / adm3_dir_fmt.format(iso3=iso3)
 
 
 def downcast_floats(ser):

@@ -9,7 +9,6 @@ dependencies:
     - beautifulsoup4=4.9
     - black=19.10
     - blas=2.8=netlib
-    - census=0.8
     - fuzzywuzzy=0.17
     - geopandas=0.7
     - ipykernel=5.2
