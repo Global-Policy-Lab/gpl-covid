@@ -84,18 +84,8 @@ preserve
 	by adm1_name: drop if _n==1 //dropping 1st testing regime of state sample (no change to control for)
 	
 	// create label for testing_regime_change vars
-	// that notes the date and states for changes
-	bysort t: egen adm1_ct = count(adm1_name)
-	gen adm1_lbl = adm1_abb if adm1_ct<=5
-	replace adm1_lbl = string(adm1_ct) + " states" if adm1_lbl==""
-	
-	contract t adm1_lbl
-	bysort t: gen n = _n
-	reshape wide adm1_lbl, i(t) j(n)
-	egen adm1_lbl = concat(adm1_lbl*), punct(", ")
-	replace adm1_lbl = regexr(adm1_lbl, ",? ?,? ?,$", "")
-	
-	gen var_lbl = "Testing regime change on " + string(t, "%tdMon_DD,_YYYY") + " in " + adm1_lbl
+	// that notes the date and states for changes	
+	gen var_lbl = "Testing regime change on " + string(t, "%tdMon_DD,_YYYY") + " in " + adm1_abb
 	levelsof var_lbl, local(test_var_lbl)
 restore
 
@@ -104,11 +94,12 @@ foreach lbl of local test_var_lbl{
 	local t_lbl = substr("`lbl'", 26, 12)
 	local t_chg = date("`t_lbl'", "MDY")
 	local t_str = string(`t_chg', "%td")
+	local adm1 = substr("`lbl'", -2, .)
 	
-	gen testing_regime_change_`t_str' = t==`t_chg' * D.testing_regime
-	lab var testing_regime_change_`t_str' "`lbl'"
+	gen testing_regime_`t_str'_`adm1' = t==`t_chg' * D.testing_regime & adm1_abb=="`adm1'"
+	lab var testing_regime_`t_str'_`adm1' "`lbl'"
 }
-*order testing_regime_change_*mar*, before(testing_regime_change_*apr*)
+*order testing_regime_*mar*, before(testing_regime_*apr*)
 
 
 //------------------diagnostic
@@ -133,7 +124,7 @@ foreach var of varlist school_closure travel_ban_local business_closure social_d
 	gen `var'_comb_popwt = `var'_popwt + `var'_opt_popwt * 0.5
 }
 
-reghdfe D_l_cum_confirmed_cases testing_regime_change_* ///
+reghdfe D_l_cum_confirmed_cases testing_regime_* ///
 event_cancel_popwt no_gathering_comb_popwt social_distance_comb_popwt religious_closure_comb_popwt ///
 pos_cases_quarantine_comb_popwt paid_sick_leave_comb_popwt work_from_home_comb_popwt ///
 school_closure_comb_popwt travel_ban_local_comb_popwt transit_suspension_comb_popwt business_closure_comb_popwt home_isolation_comb_popwt, ///
@@ -147,19 +138,23 @@ lab var y_actual "predicted growth with actual policy"
 
 // predicting counterfactual growth for each obs
 predictnl y_counter = ///
-testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
-testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
-testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
-testing_regime_change_19mar2020 * _b[testing_regime_change_19mar2020] + /// 
-testing_regime_change_20mar2020 * _b[testing_regime_change_20mar2020] + /// 
-testing_regime_change_21mar2020 * _b[testing_regime_change_21mar2020] + /// 
-testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
-testing_regime_change_23mar2020 * _b[testing_regime_change_23mar2020] + /// 
-testing_regime_change_24mar2020 * _b[testing_regime_change_24mar2020] + /// 
-testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + /// 
-testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
-testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
-testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + /// 
+testing_regime_13mar2020_NY * _b[testing_regime_13mar2020_NY] + ///
+testing_regime_16mar2020_CA * _b[testing_regime_16mar2020_CA] + ///
+testing_regime_18mar2020_NC * _b[testing_regime_18mar2020_NC] + /// 
+testing_regime_19mar2020_CT * _b[testing_regime_19mar2020_CT] + /// 
+testing_regime_19mar2020_NV * _b[testing_regime_19mar2020_NV] + /// 
+testing_regime_19mar2020_UT * _b[testing_regime_19mar2020_UT] + /// 
+testing_regime_20mar2020_IA * _b[testing_regime_20mar2020_IA] + /// 
+testing_regime_21mar2020_TN * _b[testing_regime_21mar2020_TN] + /// 
+testing_regime_22mar2020_AL * _b[testing_regime_22mar2020_AL] + /// 
+testing_regime_23mar2020_HI * _b[testing_regime_23mar2020_HI] + /// 
+testing_regime_24mar2020_KS * _b[testing_regime_24mar2020_KS] + /// 
+testing_regime_24mar2020_NJ * _b[testing_regime_24mar2020_NJ] + /// 
+testing_regime_25mar2020_OH * _b[testing_regime_25mar2020_OH] + /// 
+testing_regime_27mar2020_AZ * _b[testing_regime_27mar2020_AZ] + /// 
+testing_regime_28mar2020_MD * _b[testing_regime_28mar2020_MD] + /// 
+testing_regime_28mar2020_MO * _b[testing_regime_28mar2020_MO] + /// 
+testing_regime_30mar2020_DE * _b[testing_regime_30mar2020_DE] + /// 
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of all policies combined (FOR FIG2)

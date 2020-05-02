@@ -84,18 +84,8 @@ preserve
 	by adm1_name: drop if _n==1 //dropping 1st testing regime of state sample (no change to control for)
 	
 	// create label for testing_regime_change vars
-	// that notes the date and states for changes
-	bysort t: egen adm1_ct = count(adm1_name!= "")
-	gen adm1_lbl = adm1_abb if adm1_ct<=5
-	replace adm1_lbl = string(adm1_ct) + " states" if adm1_lbl==""
-	
-	contract t adm1_lbl
-	bysort t: gen n = _n
-	reshape wide adm1_lbl, i(t) j(n)
-	egen adm1_lbl = concat(adm1_lbl*), punct(", ")
-	replace adm1_lbl = regexr(adm1_lbl, ",? ?,? ?,$", "")
-	
-	gen var_lbl = "Testing regime change on " + string(t, "%tdMon_DD,_YYYY") + " in " + adm1_lbl
+	// that notes the date and states for changes	
+	gen var_lbl = "Testing regime change on " + string(t, "%tdMon_DD,_YYYY") + " in " + adm1_abb
 	levelsof var_lbl, local(test_var_lbl)
 restore
 
@@ -104,11 +94,12 @@ foreach lbl of local test_var_lbl{
 	local t_lbl = substr("`lbl'", 26, 12)
 	local t_chg = date("`t_lbl'", "MDY")
 	local t_str = string(`t_chg', "%td")
+	local adm1 = substr("`lbl'", -2, .)
 	
-	gen testing_regime_change_`t_str' = t==`t_chg' * D.testing_regime
-	lab var testing_regime_change_`t_str' "`lbl'"
+	gen testing_regime_`t_str'_`adm1' = t==`t_chg' * D.testing_regime & adm1_abb=="`adm1'"
+	lab var testing_regime_`t_str'_`adm1' "`lbl'"
 }
-*order testing_regime_change_*mar*, before(testing_regime_change_*apr*)
+*order testing_regime_*mar*, before(testing_regime_*apr*)
 
 
 //------------------diagnostic
@@ -165,7 +156,7 @@ lab var p_9 "Home isolation"
 outsheet using "models/reg_data/USA_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
 outreg2 using "results/tables/reg_results/USA_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(State FE, "YES", Day-of-Week FE, "YES") title(United States, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
@@ -218,21 +209,26 @@ if e(sample)
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
 predictnl y_counter = ///
-testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
-testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
-testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
-testing_regime_change_19mar2020 * _b[testing_regime_change_19mar2020] + /// 
-testing_regime_change_20mar2020 * _b[testing_regime_change_20mar2020] + /// 
-testing_regime_change_21mar2020 * _b[testing_regime_change_21mar2020] + /// 
-testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
-testing_regime_change_23mar2020 * _b[testing_regime_change_23mar2020] + /// 
-testing_regime_change_24mar2020 * _b[testing_regime_change_24mar2020] + /// 
-testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + /// 
-testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
-testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
-testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + /// 
+testing_regime_13mar2020_NY * _b[testing_regime_13mar2020_NY] + ///
+testing_regime_16mar2020_CA * _b[testing_regime_16mar2020_CA] + ///
+testing_regime_18mar2020_NC * _b[testing_regime_18mar2020_NC] + /// 
+testing_regime_19mar2020_CT * _b[testing_regime_19mar2020_CT] + /// 
+testing_regime_19mar2020_NV * _b[testing_regime_19mar2020_NV] + /// 
+testing_regime_19mar2020_UT * _b[testing_regime_19mar2020_UT] + /// 
+testing_regime_20mar2020_IA * _b[testing_regime_20mar2020_IA] + /// 
+testing_regime_21mar2020_TN * _b[testing_regime_21mar2020_TN] + /// 
+testing_regime_22mar2020_AL * _b[testing_regime_22mar2020_AL] + /// 
+testing_regime_23mar2020_HI * _b[testing_regime_23mar2020_HI] + /// 
+testing_regime_24mar2020_KS * _b[testing_regime_24mar2020_KS] + /// 
+testing_regime_24mar2020_NJ * _b[testing_regime_24mar2020_NJ] + /// 
+testing_regime_25mar2020_OH * _b[testing_regime_25mar2020_OH] + /// 
+testing_regime_27mar2020_AZ * _b[testing_regime_27mar2020_AZ] + /// 
+testing_regime_28mar2020_MD * _b[testing_regime_28mar2020_MD] + /// 
+testing_regime_28mar2020_MO * _b[testing_regime_28mar2020_MO] + /// 
+testing_regime_30mar2020_DE * _b[testing_regime_30mar2020_DE] + /// 
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
+ 
 // effect of all policies combined (FOR FIG2)
 lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 + p_7 + p_8 + p_9
 post results ("USA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
@@ -328,7 +324,7 @@ tempfile results_file_crossV
 postfile results str18 adm0 str18 sample str18 policy beta se using `results_file_crossV', replace
 
 *Resave main effect
-reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
 foreach var of varlist p_*{
 	post results ("USA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
@@ -337,19 +333,23 @@ lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 + p_7 + p_8 + p_9
 post results ("USA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 predictnl `counter_CV' =  ///
-testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
-testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
-testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
-testing_regime_change_19mar2020 * _b[testing_regime_change_19mar2020] + /// 
-testing_regime_change_20mar2020 * _b[testing_regime_change_20mar2020] + /// 
-testing_regime_change_21mar2020 * _b[testing_regime_change_21mar2020] + /// 
-testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
-testing_regime_change_23mar2020 * _b[testing_regime_change_23mar2020] + /// 
-testing_regime_change_24mar2020 * _b[testing_regime_change_24mar2020] + /// 
-testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + /// 
-testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
-testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
-testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + /// 
+testing_regime_13mar2020_NY * _b[testing_regime_13mar2020_NY] + ///
+testing_regime_16mar2020_CA * _b[testing_regime_16mar2020_CA] + ///
+testing_regime_18mar2020_NC * _b[testing_regime_18mar2020_NC] + /// 
+testing_regime_19mar2020_CT * _b[testing_regime_19mar2020_CT] + /// 
+testing_regime_19mar2020_NV * _b[testing_regime_19mar2020_NV] + /// 
+testing_regime_19mar2020_UT * _b[testing_regime_19mar2020_UT] + /// 
+testing_regime_20mar2020_IA * _b[testing_regime_20mar2020_IA] + /// 
+testing_regime_21mar2020_TN * _b[testing_regime_21mar2020_TN] + /// 
+testing_regime_22mar2020_AL * _b[testing_regime_22mar2020_AL] + /// 
+testing_regime_23mar2020_HI * _b[testing_regime_23mar2020_HI] + /// 
+testing_regime_24mar2020_KS * _b[testing_regime_24mar2020_KS] + /// 
+testing_regime_24mar2020_NJ * _b[testing_regime_24mar2020_NJ] + /// 
+testing_regime_25mar2020_OH * _b[testing_regime_25mar2020_OH] + /// 
+testing_regime_27mar2020_AZ * _b[testing_regime_27mar2020_AZ] + /// 
+testing_regime_28mar2020_MD * _b[testing_regime_28mar2020_MD] + /// 
+testing_regime_28mar2020_MO * _b[testing_regime_28mar2020_MO] + /// 
+testing_regime_30mar2020_DE * _b[testing_regime_30mar2020_DE] + /// 
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
 sum `counter_CV'
 post results ("USA") ("full_sample") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
@@ -358,26 +358,30 @@ drop `counter_CV'
 *Estimate same model leaving out one region
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
-	reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_* if adm1_name != "`adm'", absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+	reghdfe D_l_cum_confirmed_cases testing_regime_* p_* if adm1_name != "`adm'", absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 	foreach var of varlist p_*{
 		post results ("USA") ("`adm'") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 	}
 	lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 + p_7 + p_8 + p_9
 	post results ("USA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 	predictnl `counter_CV' =  ///
-	testing_regime_change_13mar2020 * _b[testing_regime_change_13mar2020] + ///
-	testing_regime_change_16mar2020 * _b[testing_regime_change_16mar2020] + ///
-	testing_regime_change_18mar2020 * _b[testing_regime_change_18mar2020] + /// 
-	testing_regime_change_19mar2020 * _b[testing_regime_change_19mar2020] + /// 
-	testing_regime_change_20mar2020 * _b[testing_regime_change_20mar2020] + /// 
-	testing_regime_change_21mar2020 * _b[testing_regime_change_21mar2020] + /// 
-	testing_regime_change_22mar2020 * _b[testing_regime_change_22mar2020] + /// 
-	testing_regime_change_23mar2020 * _b[testing_regime_change_23mar2020] + /// 
-	testing_regime_change_24mar2020 * _b[testing_regime_change_24mar2020] + /// 
-	testing_regime_change_25mar2020 * _b[testing_regime_change_25mar2020] + /// 
-	testing_regime_change_27mar2020 * _b[testing_regime_change_27mar2020] + /// 
-	testing_regime_change_28mar2020 * _b[testing_regime_change_28mar2020] + /// 
-	testing_regime_change_30mar2020 * _b[testing_regime_change_30mar2020] + /// 
+	testing_regime_13mar2020_NY * _b[testing_regime_13mar2020_NY] + ///
+	testing_regime_16mar2020_CA * _b[testing_regime_16mar2020_CA] + ///
+	testing_regime_18mar2020_NC * _b[testing_regime_18mar2020_NC] + /// 
+	testing_regime_19mar2020_CT * _b[testing_regime_19mar2020_CT] + /// 
+	testing_regime_19mar2020_NV * _b[testing_regime_19mar2020_NV] + /// 
+	testing_regime_19mar2020_UT * _b[testing_regime_19mar2020_UT] + /// 
+	testing_regime_20mar2020_IA * _b[testing_regime_20mar2020_IA] + /// 
+	testing_regime_21mar2020_TN * _b[testing_regime_21mar2020_TN] + /// 
+	testing_regime_22mar2020_AL * _b[testing_regime_22mar2020_AL] + /// 
+	testing_regime_23mar2020_HI * _b[testing_regime_23mar2020_HI] + /// 
+	testing_regime_24mar2020_KS * _b[testing_regime_24mar2020_KS] + /// 
+	testing_regime_24mar2020_NJ * _b[testing_regime_24mar2020_NJ] + /// 
+	testing_regime_25mar2020_OH * _b[testing_regime_25mar2020_OH] + /// 
+	testing_regime_27mar2020_AZ * _b[testing_regime_27mar2020_AZ] + /// 
+	testing_regime_28mar2020_MD * _b[testing_regime_28mar2020_MD] + /// 
+	testing_regime_28mar2020_MO * _b[testing_regime_28mar2020_MO] + /// 
+	testing_regime_30mar2020_DE * _b[testing_regime_30mar2020_DE] + /// 
 	_b[_cons] + __hdfe1__ + __hdfe2__ if e(sample)
 	sum `counter_CV'
 	post results ("USA") ("`adm'") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
@@ -417,7 +421,7 @@ restore
 tempfile base_data
 save `base_data'
 
-reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid  
+reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid  
 coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
 local r2 = e(r2)
 
@@ -446,7 +450,7 @@ foreach lags of num 1 2 3 4 5{
 	drop *_fixelag 
 	
 	
-	reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+	reghdfe D_l_cum_confirmed_cases testing_regime_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 	coefplot, keep(p_*) gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
 	local r2 = e(r2)
 	
@@ -490,7 +494,7 @@ foreach lags of num 0/15{
 		forvalues i = 1/$BS {
 		preserve
 		bsample, cluster(adm1_id)
-		qui reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9, absorb(i.adm1_id i.dow) 
+		qui reghdfe D_l_cum_confirmed_cases testing_regime_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9, absorb(i.adm1_id i.dow) 
 		matrix j[`i',1] = e(r2)
 		restore
 		}
