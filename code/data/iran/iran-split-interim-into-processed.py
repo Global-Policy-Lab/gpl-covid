@@ -5,7 +5,7 @@
 # - Open interim Iran dataset
 # - Clean, standardize, and impute health data
 # - Merge populations
-# - Save outputs at `data/processed/adm0/IRN_processed.csv` and `data/processed/adm2/IRN_processed.csv`
+# - Save outputs at `data/processed/adm0/IRN_processed.csv` and `data/processed/adm1/IRN_processed.csv`
 
 import numpy as np
 import pandas as pd
@@ -38,11 +38,6 @@ adm1_pop_df = pd.read_csv(path_pop_adm1)
 
 
 # #### Clean `adm1_df` and `adm0_df`
-
-# Rename `adm2` to `adm1` (correct previous coding error), remove old `adm1`
-adm1_df = adm1_df.drop(columns=["adm1_name"])
-adm1_df = adm1_df.rename(columns={"adm2_name": "adm1_name"})
-
 
 # Drop unnecessary columns (these totals are accounted for in `cum_` columns
 adm0_df = adm0_df.drop(columns=["new_confirmed_cases", "new_deaths_national"])
@@ -144,7 +139,7 @@ def impute_cumulative_array(array):
 
 
 def impute_cumulative_df(df, src_col, dst_col, groupby_col):
-    """Calculates imputed columns and returns 
+    """Calculates imputed columns and returns
     Args:
         df (pandas.DataFrame): input DataFrame with a cumulative column
         src_col (str): name of cumulative column to impute
