@@ -20,7 +20,6 @@
 
 # Clean the workspace and load packages
 
-
 rm(list=ls())
 
 options (warn = -1)
@@ -145,7 +144,7 @@ for (i in 1:dim(policies.data)[1]) {
   
   } else {
     
-    locations.list <- strsplit(as.character(policies.data$Locations.affected[i]), ',')[[1]]
+    locations.list <- strsplit(as.character(policies.data$Locations.affected[i]), ', ')[[1]]
     my_filter <- (as.character(cases.data$adm2_name) %in% locations.list) & (cases.data$date >= d)
     cases.data[ my_filter, p ] <- 1
     
