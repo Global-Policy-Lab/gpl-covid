@@ -76,12 +76,11 @@ def copy_to_tmp(tmp_path, paths):
 
 
 def get_all_files(paths, run_stata):
-    files = set(
-        [i for i in Path("models").rglob("*") if i.is_file()]
-        + [i for i in Path("results/source_data").rglob("*") if i.is_file()]
-        + [i for i in Path("data/processed").rglob("*") if i.is_file()]
-    )
-    files = exclude_files(files, run_stata)
+    files_list = []
+    for p in paths:
+        files_list += [i for i in p.rglob("*") if i.is_file()]
+
+    files = exclude_files(set(files_list), run_stata)
 
     # know when last modified
     mtimes = {i: i.stat().st_mtime for i in files}
