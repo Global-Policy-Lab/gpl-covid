@@ -1,4 +1,4 @@
-date,adm0_name,adm1_name,school_closure,travel_ban_local,no_gathering,travel_ban_intl_out,work_from_home,testing_regime,home_isolation,religious_closure,cum_confirmed_cases,cum_confirmed_cases_imputed,population
+date,adm0_name,adm1_name,school_closure,travel_ban_local_opt,no_gathering,travel_ban_intl_out,work_from_home,testing_regime,home_isolation,religious_closure,cum_confirmed_cases,cum_confirmed_cases_imputed,population
 2020-02-19,IRN,Alborz,0,0,0,0,0,0,0,0,0.0,0,2712400.0
 2020-02-19,IRN,Ardebil,0,0,0,0,0,0,0,0,0.0,0,1270420.0
 2020-02-19,IRN,Bushehr,0,0,0,0,0,0,0,0,0.0,0,1163400.0
