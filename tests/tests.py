@@ -3,6 +3,7 @@ import shlex
 import subprocess
 from pathlib import Path
 from shutil import copytree
+import warnings
 
 import pandas as pd
 
@@ -25,7 +26,7 @@ def exclude_files(fileset, run_stata):
     2) SITable2.xlsx is created manually
     3) ED figures 5, 8, and 9 + bootstraps are created using 1000 samples, while testing
        runs only with 2
-    4) Extra excluded data in "models" and "results/source_data" is created by stata 
+    4) Extra excluded data in "models" and "results/source_data" is created by stata
        code (will not be created in SI if run on github-hosted runner)
     5) TODO: Figure out why Fig 1 is getting randomly sorted differently by different
        OS so that we can properly test it
@@ -43,6 +44,7 @@ def exclude_files(fileset, run_stata):
             ]
         ]
         + list(Path("models/projections").glob("*_bootstrap_projection.csv"))
+        + [Path("data/processed/[country]_processed.csv")]
     )
     if not run_stata:
         files_to_exclude += (
@@ -60,9 +62,31 @@ def exclude_files(fileset, run_stata):
                     "ExtendedDataFigure10_e.csv",
                 ]
             ]
+            + [Path("data/processed/adm1/FRA_processed.csv")]
         )
     files_to_exclude = set(files_to_exclude)
     return fileset - files_to_exclude
+
+
+def copy_to_tmp(tmp_path, paths):
+    for p in paths:
+        this_tmp_dir = tmp_path / p
+        copytree(p, this_tmp_dir)
+    return None
+
+
+def get_all_files(paths, run_stata):
+    files = set(
+        [i for i in Path("models").rglob("*") if i.is_file()]
+        + [i for i in Path("results/source_data").rglob("*") if i.is_file()]
+        + [i for i in Path("data/processed").rglob("*") if i.is_file()]
+    )
+    files = exclude_files(files, run_stata)
+
+    # know when last modified
+    mtimes = {i: i.stat().st_mtime for i in files}
+
+    return files, mtimes
 
 
 def test_pipeline(tmp_path):
@@ -70,33 +94,24 @@ def test_pipeline(tmp_path):
     run_stata = str(os.environ.get("STATA_TESTS", "false")).lower() == "true"
     stata_flag = "" if run_stata else " --nostata"
 
-    tmp_model_path = tmp_path / "models"
-    tmp_results_path = tmp_path / "results" / "source_data"
-    tmp_results_path.parent.mkdir()
-    copytree("models", tmp_model_path)
-    copytree("results/source_data", tmp_results_path)
+    paths_to_test = [
+        Path("models"),
+        Path("results/source_data"),
+        Path("data/processed"),
+    ]
 
-    old_files = set(
-        [i for i in Path("models").rglob("*") if i.is_file()]
-        + [i for i in Path("results/source_data").rglob("*") if i.is_file()]
-    )
-    old_files = exclude_files(old_files, run_stata)
+    # copy all pre-pipeline files to temp dir
+    copy_to_tmp(tmp_path, paths_to_test)
 
-    # know when last modified
-    old_mtimes = {i: i.stat().st_mtime for i in old_files}
+    # get all files and modification times in the directories pre-pipeline
+    old_files, old_mtimes = get_all_files(paths_to_test, run_stata)
 
     # run pipeline
     cmd = f"bash code/run.sh{stata_flag} --num-proj 2"
     subprocess.run(shlex.split(cmd), check=True)
 
-    new_files = set(
-        [i for i in Path("models").rglob("*") if i.is_file()]
-        + [i for i in Path("results/source_data").rglob("*") if i.is_file()]
-    )
-    new_files = exclude_files(new_files, run_stata)
-
-    # know when last modified
-    new_mtimes = {i: i.stat().st_mtime for i in new_files}
+    # get all files and modification times in the directories post-pipeline
+    new_files, new_mtimes = get_all_files(paths_to_test, run_stata)
 
     # find all files that either weren't created with code or were created with code
     # yet weren't already in repo
@@ -108,7 +123,7 @@ def test_pipeline(tmp_path):
     to_test = new_files - missing_files - not_generated
     not_checked = []
     bad_files = []
-    for other_file in new_files:
+    for other_file in to_test:
         p = tmp_path / other_file
         if p.suffix == ".csv":
             these_dfs = {"0": pd.read_csv(other_file)}
