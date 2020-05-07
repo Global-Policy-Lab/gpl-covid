@@ -11,20 +11,20 @@
 # 2) Disaggregate the national new cases on March 2 and 3 to
 #    the adm1 level, using March 1 new cases as adm1-weights.
 #
-# 	
+#
 # Widespread screening on 3/3/2020
-# The health minister, Saeed Namaki, on Sunday announced a plan to dispatch 
-# a force of 300,000 plainclothes Basij militiamen that would go house to 
-# house to screen residents and disinfect their homes.  Iranian doctors and 
-# politicians immediately criticized the plan, saying that untrained militiamen 
-# were more likely to spread the virus than to contain it.  The latest plan 
+# The health minister, Saeed Namaki, on Sunday announced a plan to dispatch
+# a force of 300,000 plainclothes Basij militiamen that would go house to
+# house to screen residents and disinfect their homes.  Iranian doctors and
+# politicians immediately criticized the plan, saying that untrained militiamen
+# were more likely to spread the virus than to contain it.  The latest plan
 # announced on Thursday did not mention door-to-door screening.
-# https://www.nytimes.com/2020/03/03/world/middleeast/coronavirus-iran.html, 
-# https://www.cnbc.com/2020/03/01/reuters-america-update-3-irans-coronavirus-death-toll-jumps-to-54-with-978-infected.html	
-# [This plan was cancelled. https://www.dailymail.co.uk/news/article-8082443/ANOTHER-senior-Iranian-official-dies-coronavirus.html]  
-# On Sunday, Namaki had said that 300,000 teams, including members of the Basij militia, 
-# would be sent out to perform door-to-door coronavirus screening.  
-# The plan sparked criticism from Iranians online about the possibility of 
+# https://www.nytimes.com/2020/03/03/world/middleeast/coronavirus-iran.html,
+# https://www.cnbc.com/2020/03/01/reuters-america-update-3-irans-coronavirus-death-toll-jumps-to-54-with-978-infected.html
+# [This plan was cancelled. https://www.dailymail.co.uk/news/article-8082443/ANOTHER-senior-Iranian-official-dies-coronavirus.html]
+# On Sunday, Namaki had said that 300,000 teams, including members of the Basij militia,
+# would be sent out to perform door-to-door coronavirus screening.
+# The plan sparked criticism from Iranians online about the possibility of
 # the teams spreading, rather than stopping, infections.
 # ^ this is capture in the testing_regime rows in data_sources.gsheet for 3/6/2020
 #
@@ -129,8 +129,11 @@ cases.data$date <- as.Date(cases.data$date, '%m/%d/%Y')
 
 
 ### Load and merge the policies
-policies.data <- read.csv(policies_in) %>% 
-  mutate(policy = if_else(optional=="Y", paste0(policy, "_opt"), policy))
+policies.data <- read.csv(policies_in) %>%
+  mutate(
+    policy = as.character(policy),
+    policy = if_else(optional=="Y", paste0(policy, "_opt"), policy)
+  )
 
 # policies.data.end <- min(which(policies.data$date_start==''))
 # policies.data <- policies.data[1:policies.data.end-1,]
