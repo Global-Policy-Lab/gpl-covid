@@ -1,0 +1,445 @@
+adm0	sample	policy	beta	i	grp	pol	seq
+"IRN"	"Alborz"	"comb. policy"	-.4	1	3	1	5
+"IRN"	"Ardebil"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"Bushehr"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"Chahar Mahall and "	"comb. policy"	-.435	1	3	1	5
+"IRN"	"East Azarbaijan"	"comb. policy"	-.461	1	3	1	5
+"IRN"	"Esfahan"	"comb. policy"	-.449	1	3	1	5
+"IRN"	"Fars"	"comb. policy"	-.426	1	3	1	5
+"IRN"	"Gilan"	"comb. policy"	-.459	1	3	1	5
+"IRN"	"Golestan"	"comb. policy"	-.461	1	3	1	5
+"IRN"	"Hamadan"	"comb. policy"	-.438	1	3	1	5
+"IRN"	"Hormozgan"	"comb. policy"	-.435	1	3	1	5
+"IRN"	"Ilam"	"comb. policy"	-.434	1	3	1	5
+"IRN"	"Kerman"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"Kermanshah"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"Khuzestan"	"comb. policy"	-.42	1	3	1	5
+"IRN"	"Kohgiluyeh and Buy"	"comb. policy"	-.433	1	3	1	5
+"IRN"	"Kordestan"	"comb. policy"	-.439	1	3	1	5
+"IRN"	"Lorestan"	"comb. policy"	-.439	1	3	1	5
+"IRN"	"Markazi"	"comb. policy"	-.398	1	3	1	5
+"IRN"	"Mazandaran"	"comb. policy"	-.458	1	3	1	5
+"IRN"	"North Khorasan"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"Qazvin"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"Qom"	"comb. policy"	-.442	1	3	1	5
+"IRN"	"Razavi Khorasan"	"comb. policy"	-.433	1	3	1	5
+"IRN"	"Semnan"	"comb. policy"	-.446	1	3	1	5
+"IRN"	"Sistan and Baluche"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"South Khorasan"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"Tehran"	"comb. policy"	-.421	1	3	1	5
+"IRN"	"West Azarbaijan"	"comb. policy"	-.434	1	3	1	5
+"IRN"	"Yazd"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"Zanjan"	"comb. policy"	-.438	1	3	1	5
+"IRN"	"full_sample"	"comb. policy"	-.436	1	3	1	5
+"IRN"	"Alborz"	"no_policy rate"	.49	2	3	5	21
+"IRN"	"Ardebil"	"no_policy rate"	.526	2	3	5	21
+"IRN"	"Bushehr"	"no_policy rate"	.527	2	3	5	21
+"IRN"	"Chahar Mahall and "	"no_policy rate"	.528	2	3	5	21
+"IRN"	"East Azarbaijan"	"no_policy rate"	.549	2	3	5	21
+"IRN"	"Esfahan"	"no_policy rate"	.539	2	3	5	21
+"IRN"	"Fars"	"no_policy rate"	.517	2	3	5	21
+"IRN"	"Gilan"	"no_policy rate"	.551	2	3	5	21
+"IRN"	"Golestan"	"no_policy rate"	.553	2	3	5	21
+"IRN"	"Hamadan"	"no_policy rate"	.53	2	3	5	21
+"IRN"	"Hormozgan"	"no_policy rate"	.527	2	3	5	21
+"IRN"	"Ilam"	"no_policy rate"	.524	2	3	5	21
+"IRN"	"Kerman"	"no_policy rate"	.526	2	3	5	21
+"IRN"	"Kermanshah"	"no_policy rate"	.526	2	3	5	21
+"IRN"	"Khuzestan"	"no_policy rate"	.511	2	3	5	21
+"IRN"	"Kohgiluyeh and Buy"	"no_policy rate"	.523	2	3	5	21
+"IRN"	"Kordestan"	"no_policy rate"	.529	2	3	5	21
+"IRN"	"Lorestan"	"no_policy rate"	.53	2	3	5	21
+"IRN"	"Markazi"	"no_policy rate"	.491	2	3	5	21
+"IRN"	"Mazandaran"	"no_policy rate"	.549	2	3	5	21
+"IRN"	"North Khorasan"	"no_policy rate"	.525	2	3	5	21
+"IRN"	"Qazvin"	"no_policy rate"	.527	2	3	5	21
+"IRN"	"Qom"	"no_policy rate"	.535	2	3	5	21
+"IRN"	"Razavi Khorasan"	"no_policy rate"	.523	2	3	5	21
+"IRN"	"Semnan"	"no_policy rate"	.537	2	3	5	21
+"IRN"	"Sistan and Baluche"	"no_policy rate"	.526	2	3	5	21
+"IRN"	"South Khorasan"	"no_policy rate"	.526	2	3	5	21
+"IRN"	"Tehran"	"no_policy rate"	.512	2	3	5	21
+"IRN"	"West Azarbaijan"	"no_policy rate"	.525	2	3	5	21
+"IRN"	"Yazd"	"no_policy rate"	.526	2	3	5	21
+"IRN"	"Zanjan"	"no_policy rate"	.528	2	3	5	21
+"IRN"	"full_sample"	"no_policy rate"	.527	2	3	5	21
+"FRA"	"AuvergneRhÃ´neAlpe"	"comb. policy"	-.289	12	2	1	3
+"FRA"	"BourgogneFrancheCo"	"comb. policy"	-.242	12	2	1	3
+"FRA"	"Bretagne"	"comb. policy"	-.287	12	2	1	3
+"FRA"	"Centre"	"comb. policy"	-.287	12	2	1	3
+"FRA"	"Corse"	"comb. policy"	-.281	12	2	1	3
+"FRA"	"GrandEst"	"comb. policy"	-.214	12	2	1	3
+"FRA"	"HautsdeFrance"	"comb. policy"	-.297	12	2	1	3
+"FRA"	"IledeFrance"	"comb. policy"	-.311	12	2	1	3
+"FRA"	"Normandie"	"comb. policy"	-.3	12	2	1	3
+"FRA"	"NouvelleAquitaine"	"comb. policy"	-.263	12	2	1	3
+"FRA"	"Occitanie"	"comb. policy"	-.262	12	2	1	3
+"FRA"	"Paca"	"comb. policy"	-.284	12	2	1	3
+"FRA"	"PaysdelaLoire"	"comb. policy"	-.298	12	2	1	3
+"FRA"	"full_sample"	"comb. policy"	-.279	12	2	1	3
+"FRA"	"AuvergneRhÃ´neAlpe"	"no_policy rate"	.354	14	2	5	19
+"FRA"	"BourgogneFrancheCo"	"no_policy rate"	.319	14	2	5	19
+"FRA"	"Bretagne"	"no_policy rate"	.356	14	2	5	19
+"FRA"	"Centre"	"no_policy rate"	.346	14	2	5	19
+"FRA"	"Corse"	"no_policy rate"	.348	14	2	5	19
+"FRA"	"GrandEst"	"no_policy rate"	.319	14	2	5	19
+"FRA"	"HautsdeFrance"	"no_policy rate"	.35	14	2	5	19
+"FRA"	"IledeFrance"	"no_policy rate"	.359	14	2	5	19
+"FRA"	"Normandie"	"no_policy rate"	.354	14	2	5	19
+"FRA"	"NouvelleAquitaine"	"no_policy rate"	.33	14	2	5	19
+"FRA"	"Occitanie"	"no_policy rate"	.334	14	2	5	19
+"FRA"	"Paca"	"no_policy rate"	.347	14	2	5	19
+"FRA"	"PaysdelaLoire"	"no_policy rate"	.361	14	2	5	19
+"FRA"	"full_sample"	"no_policy rate"	.345	14	2	5	19
+"CHN"	"Anhui"	"fifth week (home+t"	-.353	22	6	100	12
+"CHN"	"Beijing"	"fifth week (home+t"	-.339	22	6	100	12
+"CHN"	"Chongqing"	"fifth week (home+t"	-.338	22	6	100	12
+"CHN"	"Fujian"	"fifth week (home+t"	-.339	22	6	100	12
+"CHN"	"Gansu"	"fifth week (home+t"	-.338	22	6	100	12
+"CHN"	"Guangdong"	"fifth week (home+t"	-.34	22	6	100	12
+"CHN"	"Guangxi"	"fifth week (home+t"	-.337	22	6	100	12
+"CHN"	"Guizhou"	"fifth week (home+t"	-.339	22	6	100	12
+"CHN"	"Hainan"	"fifth week (home+t"	-.338	22	6	100	12
+"CHN"	"Hebei"	"fifth week (home+t"	-.339	22	6	100	12
+"CHN"	"Heilongjiang"	"fifth week (home+t"	-.352	22	6	100	12
+"CHN"	"Henan"	"fifth week (home+t"	-.334	22	6	100	12
+"CHN"	"Hubei"	"fifth week (home+t"	-.295	22	6	100	12
+"CHN"	"Hunan"	"fifth week (home+t"	-.334	22	6	100	12
+"CHN"	"Jiangsu"	"fifth week (home+t"	-.338	22	6	100	12
+"CHN"	"Jiangxi"	"fifth week (home+t"	-.341	22	6	100	12
+"CHN"	"Jilin"	"fifth week (home+t"	-.339	22	6	100	12
+"CHN"	"Liaoning"	"fifth week (home+t"	-.338	22	6	100	12
+"CHN"	"Neimenggu"	"fifth week (home+t"	-.337	22	6	100	12
+"CHN"	"Ningxia"	"fifth week (home+t"	-.35	22	6	100	12
+"CHN"	"Shaanxi"	"fifth week (home+t"	-.337	22	6	100	12
+"CHN"	"Shandong"	"fifth week (home+t"	-.338	22	6	100	12
+"CHN"	"Shanghai"	"fifth week (home+t"	-.339	22	6	100	12
+"CHN"	"Sichuan"	"fifth week (home+t"	-.336	22	6	100	12
+"CHN"	"Tianjin"	"fifth week (home+t"	-.338	22	6	100	12
+"CHN"	"Yunnan"	"fifth week (home+t"	-.339	22	6	100	12
+"CHN"	"Zhejiang"	"fifth week (home+t"	-.332	22	6	100	12
+"CHN"	"full_sample"	"fifth week (home+t"	-.339	22	6	100	12
+"CHN"	"Anhui"	"first week (home+t"	-.129	22	6	104	16
+"CHN"	"Beijing"	"first week (home+t"	-.134	22	6	104	16
+"CHN"	"Chongqing"	"first week (home+t"	-.135	22	6	104	16
+"CHN"	"Fujian"	"first week (home+t"	-.135	22	6	104	16
+"CHN"	"Gansu"	"first week (home+t"	-.136	22	6	104	16
+"CHN"	"Guangdong"	"first week (home+t"	-.132	22	6	104	16
+"CHN"	"Guangxi"	"first week (home+t"	-.137	22	6	104	16
+"CHN"	"Guizhou"	"first week (home+t"	-.136	22	6	104	16
+"CHN"	"Hainan"	"first week (home+t"	-.137	22	6	104	16
+"CHN"	"Hebei"	"first week (home+t"	-.136	22	6	104	16
+"CHN"	"Heilongjiang"	"first week (home+t"	-.144	22	6	104	16
+"CHN"	"Henan"	"first week (home+t"	-.137	22	6	104	16
+"CHN"	"Hubei"	"first week (home+t"	-.185	22	6	104	16
+"CHN"	"Hunan"	"first week (home+t"	-.137	22	6	104	16
+"CHN"	"Jiangsu"	"first week (home+t"	-.137	22	6	104	16
+"CHN"	"Jiangxi"	"first week (home+t"	-.132	22	6	104	16
+"CHN"	"Jilin"	"first week (home+t"	-.135	22	6	104	16
+"CHN"	"Liaoning"	"first week (home+t"	-.135	22	6	104	16
+"CHN"	"Neimenggu"	"first week (home+t"	-.136	22	6	104	16
+"CHN"	"Ningxia"	"first week (home+t"	-.135	22	6	104	16
+"CHN"	"Shaanxi"	"first week (home+t"	-.136	22	6	104	16
+"CHN"	"Shandong"	"first week (home+t"	-.137	22	6	104	16
+"CHN"	"Shanghai"	"first week (home+t"	-.135	22	6	104	16
+"CHN"	"Sichuan"	"first week (home+t"	-.137	22	6	104	16
+"CHN"	"Tianjin"	"first week (home+t"	-.136	22	6	104	16
+"CHN"	"Yunnan"	"first week (home+t"	-.135	22	6	104	16
+"CHN"	"Zhejiang"	"first week (home+t"	-.096	22	6	104	16
+"CHN"	"full_sample"	"first week (home+t"	-.136	22	6	104	16
+"CHN"	"Anhui"	"fourth week (home+"	-.347	22	6	101	13
+"CHN"	"Beijing"	"fourth week (home+"	-.337	22	6	101	13
+"CHN"	"Chongqing"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Fujian"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Gansu"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Guangdong"	"fourth week (home+"	-.337	22	6	101	13
+"CHN"	"Guangxi"	"fourth week (home+"	-.335	22	6	101	13
+"CHN"	"Guizhou"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Hainan"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Hebei"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Heilongjiang"	"fourth week (home+"	-.347	22	6	101	13
+"CHN"	"Henan"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Hubei"	"fourth week (home+"	-.297	22	6	101	13
+"CHN"	"Hunan"	"fourth week (home+"	-.335	22	6	101	13
+"CHN"	"Jiangsu"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Jiangxi"	"fourth week (home+"	-.338	22	6	101	13
+"CHN"	"Jilin"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Liaoning"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Neimenggu"	"fourth week (home+"	-.335	22	6	101	13
+"CHN"	"Ningxia"	"fourth week (home+"	-.335	22	6	101	13
+"CHN"	"Shaanxi"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Shandong"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Shanghai"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Sichuan"	"fourth week (home+"	-.335	22	6	101	13
+"CHN"	"Tianjin"	"fourth week (home+"	-.335	22	6	101	13
+"CHN"	"Yunnan"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Zhejiang"	"fourth week (home+"	-.334	22	6	101	13
+"CHN"	"full_sample"	"fourth week (home+"	-.336	22	6	101	13
+"CHN"	"Anhui"	"no_policy rate"	.205	22	6	5	26
+"CHN"	"Beijing"	"no_policy rate"	.213	22	6	5	26
+"CHN"	"Chongqing"	"no_policy rate"	.213	22	6	5	26
+"CHN"	"Fujian"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Gansu"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Guangdong"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Guangxi"	"no_policy rate"	.218	22	6	5	26
+"CHN"	"Guizhou"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Hainan"	"no_policy rate"	.215	22	6	5	26
+"CHN"	"Hebei"	"no_policy rate"	.215	22	6	5	26
+"CHN"	"Heilongjiang"	"no_policy rate"	.216	22	6	5	26
+"CHN"	"Henan"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Hubei"	"no_policy rate"	.189	22	6	5	26
+"CHN"	"Hunan"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Jiangsu"	"no_policy rate"	.22	22	6	5	26
+"CHN"	"Jiangxi"	"no_policy rate"	.215	22	6	5	26
+"CHN"	"Jilin"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Liaoning"	"no_policy rate"	.216	22	6	5	26
+"CHN"	"Neimenggu"	"no_policy rate"	.216	22	6	5	26
+"CHN"	"Ningxia"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Shaanxi"	"no_policy rate"	.215	22	6	5	26
+"CHN"	"Shandong"	"no_policy rate"	.218	22	6	5	26
+"CHN"	"Shanghai"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Sichuan"	"no_policy rate"	.218	22	6	5	26
+"CHN"	"Tianjin"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Yunnan"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Zhejiang"	"no_policy rate"	.205	22	6	5	26
+"CHN"	"full_sample"	"no_policy rate"	.214	22	6	5	26
+"CHN"	"Anhui"	"second week (home+"	-.313	22	6	103	15
+"CHN"	"Beijing"	"second week (home+"	-.298	22	6	103	15
+"CHN"	"Chongqing"	"second week (home+"	-.298	22	6	103	15
+"CHN"	"Fujian"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Gansu"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Guangdong"	"second week (home+"	-.297	22	6	103	15
+"CHN"	"Guangxi"	"second week (home+"	-.298	22	6	103	15
+"CHN"	"Guizhou"	"second week (home+"	-.298	22	6	103	15
+"CHN"	"Hainan"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Hebei"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Heilongjiang"	"second week (home+"	-.311	22	6	103	15
+"CHN"	"Henan"	"second week (home+"	-.297	22	6	103	15
+"CHN"	"Hubei"	"second week (home+"	-.268	22	6	103	15
+"CHN"	"Hunan"	"second week (home+"	-.298	22	6	103	15
+"CHN"	"Jiangsu"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Jiangxi"	"second week (home+"	-.295	22	6	103	15
+"CHN"	"Jilin"	"second week (home+"	-.298	22	6	103	15
+"CHN"	"Liaoning"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Neimenggu"	"second week (home+"	-.3	22	6	103	15
+"CHN"	"Ningxia"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Shaanxi"	"second week (home+"	-.298	22	6	103	15
+"CHN"	"Shandong"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Shanghai"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Sichuan"	"second week (home+"	-.301	22	6	103	15
+"CHN"	"Tianjin"	"second week (home+"	-.298	22	6	103	15
+"CHN"	"Yunnan"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Zhejiang"	"second week (home+"	-.288	22	6	103	15
+"CHN"	"full_sample"	"second week (home+"	-.299	22	6	103	15
+"CHN"	"Anhui"	"third week (home+t"	-.357	22	6	102	14
+"CHN"	"Beijing"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Chongqing"	"third week (home+t"	-.341	22	6	102	14
+"CHN"	"Fujian"	"third week (home+t"	-.341	22	6	102	14
+"CHN"	"Gansu"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Guangdong"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Guangxi"	"third week (home+t"	-.341	22	6	102	14
+"CHN"	"Guizhou"	"third week (home+t"	-.341	22	6	102	14
+"CHN"	"Hainan"	"third week (home+t"	-.341	22	6	102	14
+"CHN"	"Hebei"	"third week (home+t"	-.341	22	6	102	14
+"CHN"	"Heilongjiang"	"third week (home+t"	-.352	22	6	102	14
+"CHN"	"Henan"	"third week (home+t"	-.34	22	6	102	14
+"CHN"	"Hubei"	"third week (home+t"	-.298	22	6	102	14
+"CHN"	"Hunan"	"third week (home+t"	-.34	22	6	102	14
+"CHN"	"Jiangsu"	"third week (home+t"	-.34	22	6	102	14
+"CHN"	"Jiangxi"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Jilin"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Liaoning"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Neimenggu"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Ningxia"	"third week (home+t"	-.34	22	6	102	14
+"CHN"	"Shaanxi"	"third week (home+t"	-.341	22	6	102	14
+"CHN"	"Shandong"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Shanghai"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Sichuan"	"third week (home+t"	-.341	22	6	102	14
+"CHN"	"Tianjin"	"third week (home+t"	-.341	22	6	102	14
+"CHN"	"Yunnan"	"third week (home+t"	-.342	22	6	102	14
+"CHN"	"Zhejiang"	"third week (home+t"	-.338	22	6	102	14
+"CHN"	"full_sample"	"third week (home+t"	-.341	22	6	102	14
+"ITA"	"Abruzzo"	"comb. policy"	-.409	34	4	1	7
+"ITA"	"Basilicata"	"comb. policy"	-.408	34	4	1	7
+"ITA"	"Calabria"	"comb. policy"	-.407	34	4	1	7
+"ITA"	"Campania"	"comb. policy"	-.4	34	4	1	7
+"ITA"	"Emilia Romagna"	"comb. policy"	-.37	34	4	1	7
+"ITA"	"Friuli Venezia Giu"	"comb. policy"	-.426	34	4	1	7
+"ITA"	"Lazio"	"comb. policy"	-.4	34	4	1	7
+"ITA"	"Liguria"	"comb. policy"	-.394	34	4	1	7
+"ITA"	"Lombardia"	"comb. policy"	-.413	34	4	1	7
+"ITA"	"Marche"	"comb. policy"	-.414	34	4	1	7
+"ITA"	"Molise"	"comb. policy"	-.419	34	4	1	7
+"ITA"	"P.A. Bolzano"	"comb. policy"	-.409	34	4	1	7
+"ITA"	"P.A. Trento"	"comb. policy"	-.408	34	4	1	7
+"ITA"	"Piemonte"	"comb. policy"	-.398	34	4	1	7
+"ITA"	"Puglia"	"comb. policy"	-.402	34	4	1	7
+"ITA"	"Sardegna"	"comb. policy"	-.413	34	4	1	7
+"ITA"	"Sicilia"	"comb. policy"	-.425	34	4	1	7
+"ITA"	"Toscana"	"comb. policy"	-.417	34	4	1	7
+"ITA"	"Umbria"	"comb. policy"	-.4	34	4	1	7
+"ITA"	"Valle d'Aosta"	"comb. policy"	-.405	34	4	1	7
+"ITA"	"Veneto"	"comb. policy"	-.442	34	4	1	7
+"ITA"	"full_sample"	"comb. policy"	-.409	34	4	1	7
+"ITA"	"Abruzzo"	"no_policy rate"	.372	35	4	5	23
+"ITA"	"Basilicata"	"no_policy rate"	.372	35	4	5	23
+"ITA"	"Calabria"	"no_policy rate"	.373	35	4	5	23
+"ITA"	"Campania"	"no_policy rate"	.373	35	4	5	23
+"ITA"	"Emilia Romagna"	"no_policy rate"	.343	35	4	5	23
+"ITA"	"Friuli Venezia Giu"	"no_policy rate"	.372	35	4	5	23
+"ITA"	"Lazio"	"no_policy rate"	.36	35	4	5	23
+"ITA"	"Liguria"	"no_policy rate"	.373	35	4	5	23
+"ITA"	"Lombardia"	"no_policy rate"	.371	35	4	5	23
+"ITA"	"Marche"	"no_policy rate"	.371	35	4	5	23
+"ITA"	"Molise"	"no_policy rate"	.373	35	4	5	23
+"ITA"	"P.A. Bolzano"	"no_policy rate"	.372	35	4	5	23
+"ITA"	"P.A. Trento"	"no_policy rate"	.372	35	4	5	23
+"ITA"	"Piemonte"	"no_policy rate"	.388	35	4	5	23
+"ITA"	"Puglia"	"no_policy rate"	.372	35	4	5	23
+"ITA"	"Sardegna"	"no_policy rate"	.374	35	4	5	23
+"ITA"	"Sicilia"	"no_policy rate"	.371	35	4	5	23
+"ITA"	"Toscana"	"no_policy rate"	.374	35	4	5	23
+"ITA"	"Umbria"	"no_policy rate"	.372	35	4	5	23
+"ITA"	"Valle d'Aosta"	"no_policy rate"	.372	35	4	5	23
+"ITA"	"Veneto"	"no_policy rate"	.407	35	4	5	23
+"ITA"	"full_sample"	"no_policy rate"	.373	35	4	5	23
+"KOR"	"Busan"	"comb. policy"	-.455	45	5	1	9
+"KOR"	"Chungcheongbuk-do"	"comb. policy"	-.493	45	5	1	9
+"KOR"	"Chungcheongnam-do"	"comb. policy"	-.503	45	5	1	9
+"KOR"	"Daegu"	"comb. policy"	-.431	45	5	1	9
+"KOR"	"Daejeon"	"comb. policy"	-.495	45	5	1	9
+"KOR"	"Gangwon-do"	"comb. policy"	-.497	45	5	1	9
+"KOR"	"Gwangju"	"comb. policy"	-.495	45	5	1	9
+"KOR"	"Gyeonggi-do"	"comb. policy"	-.496	45	5	1	9
+"KOR"	"Gyeongsangbuk-do"	"comb. policy"	-.507	45	5	1	9
+"KOR"	"Gyeongsangnam-do"	"comb. policy"	-.487	45	5	1	9
+"KOR"	"Incheon"	"comb. policy"	-.494	45	5	1	9
+"KOR"	"Jeju"	"comb. policy"	-.494	45	5	1	9
+"KOR"	"Jeollabuk-do"	"comb. policy"	-.496	45	5	1	9
+"KOR"	"Jeollanam-do"	"comb. policy"	-.494	45	5	1	9
+"KOR"	"Sejong"	"comb. policy"	-.494	45	5	1	9
+"KOR"	"Seoul"	"comb. policy"	-.626	45	5	1	9
+"KOR"	"Ulsan"	"comb. policy"	-.495	45	5	1	9
+"KOR"	"full_sample"	"comb. policy"	-.494	45	5	1	9
+"KOR"	"Busan"	"no_policy rate"	.292	46	5	5	25
+"KOR"	"Chungcheongbuk-do"	"no_policy rate"	.315	46	5	5	25
+"KOR"	"Chungcheongnam-do"	"no_policy rate"	.316	46	5	5	25
+"KOR"	"Daegu"	"no_policy rate"	.294	46	5	5	25
+"KOR"	"Daejeon"	"no_policy rate"	.317	46	5	5	25
+"KOR"	"Gangwon-do"	"no_policy rate"	.323	46	5	5	25
+"KOR"	"Gwangju"	"no_policy rate"	.316	46	5	5	25
+"KOR"	"Gyeonggi-do"	"no_policy rate"	.323	46	5	5	25
+"KOR"	"Gyeongsangbuk-do"	"no_policy rate"	.283	46	5	5	25
+"KOR"	"Gyeongsangnam-do"	"no_policy rate"	.311	46	5	5	25
+"KOR"	"Incheon"	"no_policy rate"	.308	46	5	5	25
+"KOR"	"Jeju"	"no_policy rate"	.314	46	5	5	25
+"KOR"	"Jeollabuk-do"	"no_policy rate"	.314	46	5	5	25
+"KOR"	"Jeollanam-do"	"no_policy rate"	.314	46	5	5	25
+"KOR"	"Sejong"	"no_policy rate"	.32	46	5	5	25
+"KOR"	"Seoul"	"no_policy rate"	.394	46	5	5	25
+"KOR"	"Ulsan"	"no_policy rate"	.317	46	5	5	25
+"KOR"	"full_sample"	"no_policy rate"	.314	46	5	5	25
+"USA"	"Alabama"	"comb. policy"	-.335	56	1	1	1
+"USA"	"Alaska"	"comb. policy"	-.343	56	1	1	1
+"USA"	"Arizona"	"comb. policy"	-.369	56	1	1	1
+"USA"	"Arkansas"	"comb. policy"	-.354	56	1	1	1
+"USA"	"California"	"comb. policy"	-.359	56	1	1	1
+"USA"	"Colorado"	"comb. policy"	-.337	56	1	1	1
+"USA"	"Connecticut"	"comb. policy"	-.355	56	1	1	1
+"USA"	"Delaware"	"comb. policy"	-.346	56	1	1	1
+"USA"	"District of Columb"	"comb. policy"	-.352	56	1	1	1
+"USA"	"Florida"	"comb. policy"	-.334	56	1	1	1
+"USA"	"Georgia"	"comb. policy"	-.346	56	1	1	1
+"USA"	"Hawaii"	"comb. policy"	-.342	56	1	1	1
+"USA"	"Idaho"	"comb. policy"	-.354	56	1	1	1
+"USA"	"Illinois"	"comb. policy"	-.343	56	1	1	1
+"USA"	"Indiana"	"comb. policy"	-.358	56	1	1	1
+"USA"	"Iowa"	"comb. policy"	-.349	56	1	1	1
+"USA"	"Kansas"	"comb. policy"	-.346	56	1	1	1
+"USA"	"Kentucky"	"comb. policy"	-.345	56	1	1	1
+"USA"	"Louisiana"	"comb. policy"	-.348	56	1	1	1
+"USA"	"Maine"	"comb. policy"	-.348	56	1	1	1
+"USA"	"Maryland"	"comb. policy"	-.349	56	1	1	1
+"USA"	"Massachusetts"	"comb. policy"	-.327	56	1	1	1
+"USA"	"Michigan"	"comb. policy"	-.342	56	1	1	1
+"USA"	"Minnesota"	"comb. policy"	-.342	56	1	1	1
+"USA"	"Mississippi"	"comb. policy"	-.336	56	1	1	1
+"USA"	"Missouri"	"comb. policy"	-.355	56	1	1	1
+"USA"	"Montana"	"comb. policy"	-.34	56	1	1	1
+"USA"	"Nebraska"	"comb. policy"	-.359	56	1	1	1
+"USA"	"Nevada"	"comb. policy"	-.342	56	1	1	1
+"USA"	"New Hampshire"	"comb. policy"	-.346	56	1	1	1
+"USA"	"New Jersey"	"comb. policy"	-.345	56	1	1	1
+"USA"	"New Mexico"	"comb. policy"	-.349	56	1	1	1
+"USA"	"New York"	"comb. policy"	-.311	56	1	1	1
+"USA"	"North Carolina"	"comb. policy"	-.347	56	1	1	1
+"USA"	"North Dakota"	"comb. policy"	-.355	56	1	1	1
+"USA"	"Ohio"	"comb. policy"	-.34	56	1	1	1
+"USA"	"Oklahoma"	"comb. policy"	-.351	56	1	1	1
+"USA"	"Oregon"	"comb. policy"	-.363	56	1	1	1
+"USA"	"Pennsylvania"	"comb. policy"	-.347	56	1	1	1
+"USA"	"Rhode Island"	"comb. policy"	-.347	56	1	1	1
+"USA"	"South Carolina"	"comb. policy"	-.353	56	1	1	1
+"USA"	"South Dakota"	"comb. policy"	-.362	56	1	1	1
+"USA"	"Tennessee"	"comb. policy"	-.345	56	1	1	1
+"USA"	"Texas"	"comb. policy"	-.339	56	1	1	1
+"USA"	"Utah"	"comb. policy"	-.348	56	1	1	1
+"USA"	"Vermont"	"comb. policy"	-.345	56	1	1	1
+"USA"	"Virginia"	"comb. policy"	-.356	56	1	1	1
+"USA"	"Washington"	"comb. policy"	-.342	56	1	1	1
+"USA"	"West Virginia"	"comb. policy"	-.34	56	1	1	1
+"USA"	"Wisconsin"	"comb. policy"	-.347	56	1	1	1
+"USA"	"Wyoming"	"comb. policy"	-.347	56	1	1	1
+"USA"	"full_sample"	"comb. policy"	-.347	56	1	1	1
+"USA"	"Alabama"	"no_policy rate"	.295	57	1	5	17
+"USA"	"Alaska"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Arizona"	"no_policy rate"	.302	57	1	5	17
+"USA"	"Arkansas"	"no_policy rate"	.299	57	1	5	17
+"USA"	"California"	"no_policy rate"	.303	57	1	5	17
+"USA"	"Colorado"	"no_policy rate"	.291	57	1	5	17
+"USA"	"Connecticut"	"no_policy rate"	.296	57	1	5	17
+"USA"	"Delaware"	"no_policy rate"	.297	57	1	5	17
+"USA"	"District of Columb"	"no_policy rate"	.303	57	1	5	17
+"USA"	"Florida"	"no_policy rate"	.286	57	1	5	17
+"USA"	"Georgia"	"no_policy rate"	.296	57	1	5	17
+"USA"	"Hawaii"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Idaho"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Illinois"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Indiana"	"no_policy rate"	.305	57	1	5	17
+"USA"	"Iowa"	"no_policy rate"	.304	57	1	5	17
+"USA"	"Kansas"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Kentucky"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Louisiana"	"no_policy rate"	.294	57	1	5	17
+"USA"	"Maine"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Maryland"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Massachusetts"	"no_policy rate"	.286	57	1	5	17
+"USA"	"Michigan"	"no_policy rate"	.293	57	1	5	17
+"USA"	"Minnesota"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Mississippi"	"no_policy rate"	.295	57	1	5	17
+"USA"	"Missouri"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Montana"	"no_policy rate"	.296	57	1	5	17
+"USA"	"Nebraska"	"no_policy rate"	.301	57	1	5	17
+"USA"	"Nevada"	"no_policy rate"	.294	57	1	5	17
+"USA"	"New Hampshire"	"no_policy rate"	.298	57	1	5	17
+"USA"	"New Jersey"	"no_policy rate"	.3	57	1	5	17
+"USA"	"New Mexico"	"no_policy rate"	.299	57	1	5	17
+"USA"	"New York"	"no_policy rate"	.289	57	1	5	17
+"USA"	"North Carolina"	"no_policy rate"	.299	57	1	5	17
+"USA"	"North Dakota"	"no_policy rate"	.3	57	1	5	17
+"USA"	"Ohio"	"no_policy rate"	.294	57	1	5	17
+"USA"	"Oklahoma"	"no_policy rate"	.296	57	1	5	17
+"USA"	"Oregon"	"no_policy rate"	.308	57	1	5	17
+"USA"	"Pennsylvania"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Rhode Island"	"no_policy rate"	.298	57	1	5	17
+"USA"	"South Carolina"	"no_policy rate"	.305	57	1	5	17
+"USA"	"South Dakota"	"no_policy rate"	.3	57	1	5	17
+"USA"	"Tennessee"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Texas"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Utah"	"no_policy rate"	.299	57	1	5	17
+"USA"	"Vermont"	"no_policy rate"	.298	57	1	5	17
+"USA"	"Virginia"	"no_policy rate"	.3	57	1	5	17
+"USA"	"Washington"	"no_policy rate"	.28	57	1	5	17
+"USA"	"West Virginia"	"no_policy rate"	.296	57	1	5	17
+"USA"	"Wisconsin"	"no_policy rate"	.297	57	1	5	17
+"USA"	"Wyoming"	"no_policy rate"	.297	57	1	5	17
+"USA"	"full_sample"	"no_policy rate"	.297	57	1	5	17

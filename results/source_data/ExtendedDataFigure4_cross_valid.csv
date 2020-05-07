@@ -1,0 +1,1059 @@
+adm0	sample	policy	beta	i	grp
+"CHN"	"full_sample"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"full_sample"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"full_sample"	"home_isolation_L15"	-.153	31	2
+"CHN"	"full_sample"	"home_isolation_L22"	-.159	30	2
+"CHN"	"full_sample"	"home_isolation_L29"	-.161	29	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Anhui"	"home_isolation_L0_"	-.102	33	2
+"CHN"	"Anhui"	"home_isolation_L8_"	-.141	32	2
+"CHN"	"Anhui"	"home_isolation_L15"	-.159	31	2
+"CHN"	"Anhui"	"home_isolation_L22"	-.165	30	2
+"CHN"	"Anhui"	"home_isolation_L29"	-.165	29	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.026	27	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.171	26	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.199	25	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.182	24	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.188	23	2
+"CHN"	"Beijing"	"home_isolation_L0_"	-.092	33	2
+"CHN"	"Beijing"	"home_isolation_L8_"	-.133	32	2
+"CHN"	"Beijing"	"home_isolation_L15"	-.151	31	2
+"CHN"	"Beijing"	"home_isolation_L22"	-.157	30	2
+"CHN"	"Beijing"	"home_isolation_L29"	-.159	29	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.042	27	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.165	26	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.191	25	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.179	24	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.18	23	2
+"CHN"	"Chongqing"	"home_isolation_L0_"	-.093	33	2
+"CHN"	"Chongqing"	"home_isolation_L8_"	-.134	32	2
+"CHN"	"Chongqing"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Chongqing"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Chongqing"	"home_isolation_L29"	-.16	29	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.042	27	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.179	23	2
+"CHN"	"Fujian"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Fujian"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Fujian"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Fujian"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Fujian"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Gansu"	"home_isolation_L0_"	-.095	33	2
+"CHN"	"Gansu"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Gansu"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Gansu"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Gansu"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Guangdong"	"home_isolation_L0_"	-.089	33	2
+"CHN"	"Guangdong"	"home_isolation_L8_"	-.129	32	2
+"CHN"	"Guangdong"	"home_isolation_L15"	-.148	31	2
+"CHN"	"Guangdong"	"home_isolation_L22"	-.154	30	2
+"CHN"	"Guangdong"	"home_isolation_L29"	-.155	29	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.043	27	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.168	26	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.195	25	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.183	24	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.184	23	2
+"CHN"	"Guangxi"	"home_isolation_L0_"	-.097	33	2
+"CHN"	"Guangxi"	"home_isolation_L8_"	-.137	32	2
+"CHN"	"Guangxi"	"home_isolation_L15"	-.156	31	2
+"CHN"	"Guangxi"	"home_isolation_L22"	-.162	30	2
+"CHN"	"Guangxi"	"home_isolation_L29"	-.164	29	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.04	27	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.161	26	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.185	25	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.173	24	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.173	23	2
+"CHN"	"Guizhou"	"home_isolation_L0_"	-.095	33	2
+"CHN"	"Guizhou"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Guizhou"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Guizhou"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Guizhou"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Hainan"	"home_isolation_L0_"	-.097	33	2
+"CHN"	"Hainan"	"home_isolation_L8_"	-.137	32	2
+"CHN"	"Hainan"	"home_isolation_L15"	-.154	31	2
+"CHN"	"Hainan"	"home_isolation_L22"	-.161	30	2
+"CHN"	"Hainan"	"home_isolation_L29"	-.163	29	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.162	26	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.187	25	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.175	24	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.176	23	2
+"CHN"	"Hebei"	"home_isolation_L0_"	-.095	33	2
+"CHN"	"Hebei"	"home_isolation_L8_"	-.136	32	2
+"CHN"	"Hebei"	"home_isolation_L15"	-.154	31	2
+"CHN"	"Hebei"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Hebei"	"home_isolation_L29"	-.162	29	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Heilongjiang"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Heilongjiang"	"home_isolation_L8_"	-.134	32	2
+"CHN"	"Heilongjiang"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Heilongjiang"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Heilongjiang"	"home_isolation_L29"	-.162	29	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.05	27	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.177	26	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.2	25	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.188	24	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.19	23	2
+"CHN"	"Henan"	"home_isolation_L0_"	-.093	33	2
+"CHN"	"Henan"	"home_isolation_L8_"	-.132	32	2
+"CHN"	"Henan"	"home_isolation_L15"	-.149	31	2
+"CHN"	"Henan"	"home_isolation_L22"	-.155	30	2
+"CHN"	"Henan"	"home_isolation_L29"	-.151	29	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.043	27	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.165	26	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.192	25	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.181	24	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.184	23	2
+"CHN"	"Hubei"	"home_isolation_L0_"	-.1	33	2
+"CHN"	"Hubei"	"home_isolation_L8_"	-.142	32	2
+"CHN"	"Hubei"	"home_isolation_L15"	-.161	31	2
+"CHN"	"Hubei"	"home_isolation_L22"	-.168	30	2
+"CHN"	"Hubei"	"home_isolation_L29"	-.17	29	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.085	27	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.126	26	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.137	25	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.129	24	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.125	23	2
+"CHN"	"Hunan"	"home_isolation_L0_"	-.096	33	2
+"CHN"	"Hunan"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Hunan"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Hunan"	"home_isolation_L22"	-.158	30	2
+"CHN"	"Hunan"	"home_isolation_L29"	-.156	29	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.042	27	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Jiangsu"	"home_isolation_L0_"	-.096	33	2
+"CHN"	"Jiangsu"	"home_isolation_L8_"	-.136	32	2
+"CHN"	"Jiangsu"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Jiangsu"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Jiangsu"	"home_isolation_L29"	-.159	29	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.179	23	2
+"CHN"	"Jiangxi"	"home_isolation_L0_"	-.088	33	2
+"CHN"	"Jiangxi"	"home_isolation_L8_"	-.127	32	2
+"CHN"	"Jiangxi"	"home_isolation_L15"	-.145	31	2
+"CHN"	"Jiangxi"	"home_isolation_L22"	-.152	30	2
+"CHN"	"Jiangxi"	"home_isolation_L29"	-.153	29	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.044	27	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.168	26	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.197	25	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.186	24	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.188	23	2
+"CHN"	"Jilin"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Jilin"	"home_isolation_L8_"	-.134	32	2
+"CHN"	"Jilin"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Jilin"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Jilin"	"home_isolation_L29"	-.16	29	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.042	27	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.19	25	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.178	24	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.179	23	2
+"CHN"	"Liaoning"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Liaoning"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Liaoning"	"home_isolation_L15"	-.154	31	2
+"CHN"	"Liaoning"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Liaoning"	"home_isolation_L29"	-.162	29	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Neimenggu"	"home_isolation_L0_"	-.096	33	2
+"CHN"	"Neimenggu"	"home_isolation_L8_"	-.138	32	2
+"CHN"	"Neimenggu"	"home_isolation_L15"	-.156	31	2
+"CHN"	"Neimenggu"	"home_isolation_L22"	-.162	30	2
+"CHN"	"Neimenggu"	"home_isolation_L29"	-.163	29	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.04	27	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.162	26	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.186	25	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.173	24	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.174	23	2
+"CHN"	"Ningxia"	"home_isolation_L0_"	-.095	33	2
+"CHN"	"Ningxia"	"home_isolation_L8_"	-.136	32	2
+"CHN"	"Ningxia"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Ningxia"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Ningxia"	"home_isolation_L29"	-.172	29	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Shaanxi"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Shaanxi"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Shaanxi"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Shaanxi"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Shaanxi"	"home_isolation_L29"	-.16	29	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Shandong"	"home_isolation_L0_"	-.097	33	2
+"CHN"	"Shandong"	"home_isolation_L8_"	-.138	32	2
+"CHN"	"Shandong"	"home_isolation_L15"	-.156	31	2
+"CHN"	"Shandong"	"home_isolation_L22"	-.162	30	2
+"CHN"	"Shandong"	"home_isolation_L29"	-.164	29	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.04	27	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.162	26	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.186	25	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.173	24	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.174	23	2
+"CHN"	"Shanghai"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Shanghai"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Shanghai"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Shanghai"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Shanghai"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Sichuan"	"home_isolation_L0_"	-.097	33	2
+"CHN"	"Sichuan"	"home_isolation_L8_"	-.139	32	2
+"CHN"	"Sichuan"	"home_isolation_L15"	-.156	31	2
+"CHN"	"Sichuan"	"home_isolation_L22"	-.163	30	2
+"CHN"	"Sichuan"	"home_isolation_L29"	-.163	29	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.04	27	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.161	26	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.185	25	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.172	24	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.173	23	2
+"CHN"	"Tianjin"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Tianjin"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Tianjin"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Tianjin"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Tianjin"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Yunnan"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Yunnan"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Yunnan"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Yunnan"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Yunnan"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Zhejiang"	"home_isolation_L0_"	-.085	33	2
+"CHN"	"Zhejiang"	"home_isolation_L8_"	-.129	32	2
+"CHN"	"Zhejiang"	"home_isolation_L15"	-.149	31	2
+"CHN"	"Zhejiang"	"home_isolation_L22"	-.157	30	2
+"CHN"	"Zhejiang"	"home_isolation_L29"	-.16	29	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.011	27	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.158	26	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.171	23	2
+"FRA"	"full_sample"	"national_lockdown"	-.048	13	1
+"FRA"	"full_sample"	"school_closure"	-.005	16	1
+"FRA"	"full_sample"	"pck_social_distanc"	-.227	15	1
+"FRA"	"AuvergneRhÃ´neAlpe"	"national_lockdown"	-.049	13	1
+"FRA"	"AuvergneRhÃ´neAlpe"	"school_closure"	.002	16	1
+"FRA"	"AuvergneRhÃ´neAlpe"	"pck_social_distanc"	-.242	15	1
+"FRA"	"BourgogneFrancheCo"	"national_lockdown"	-.056	13	1
+"FRA"	"BourgogneFrancheCo"	"school_closure"	.013	16	1
+"FRA"	"BourgogneFrancheCo"	"pck_social_distanc"	-.199	15	1
+"FRA"	"Bretagne"	"national_lockdown"	-.044	13	1
+"FRA"	"Bretagne"	"school_closure"	-.003	16	1
+"FRA"	"Bretagne"	"pck_social_distanc"	-.24	15	1
+"FRA"	"Centre"	"national_lockdown"	-.06	13	1
+"FRA"	"Centre"	"school_closure"	.006	16	1
+"FRA"	"Centre"	"pck_social_distanc"	-.233	15	1
+"FRA"	"Corse"	"national_lockdown"	-.035	13	1
+"FRA"	"Corse"	"school_closure"	-.011	16	1
+"FRA"	"Corse"	"pck_social_distanc"	-.235	15	1
+"FRA"	"GrandEst"	"national_lockdown"	-.067	13	1
+"FRA"	"GrandEst"	"school_closure"	-.047	16	1
+"FRA"	"GrandEst"	"pck_social_distanc"	-.1	15	1
+"FRA"	"HautsdeFrance"	"national_lockdown"	-.051	13	1
+"FRA"	"HautsdeFrance"	"school_closure"	.007	16	1
+"FRA"	"HautsdeFrance"	"pck_social_distanc"	-.252	15	1
+"FRA"	"IledeFrance"	"national_lockdown"	-.035	13	1
+"FRA"	"IledeFrance"	"school_closure"	-.013	16	1
+"FRA"	"IledeFrance"	"pck_social_distanc"	-.263	15	1
+"FRA"	"Normandie"	"national_lockdown"	-.032	13	1
+"FRA"	"Normandie"	"school_closure"	-.011	16	1
+"FRA"	"Normandie"	"pck_social_distanc"	-.258	15	1
+"FRA"	"NouvelleAquitaine"	"national_lockdown"	-.052	13	1
+"FRA"	"NouvelleAquitaine"	"school_closure"	.011	16	1
+"FRA"	"NouvelleAquitaine"	"pck_social_distanc"	-.223	15	1
+"FRA"	"Occitanie"	"national_lockdown"	-.051	13	1
+"FRA"	"Occitanie"	"school_closure"	-.001	16	1
+"FRA"	"Occitanie"	"pck_social_distanc"	-.21	15	1
+"FRA"	"Paca"	"national_lockdown"	-.045	13	1
+"FRA"	"Paca"	"school_closure"	-.004	16	1
+"FRA"	"Paca"	"pck_social_distanc"	-.235	15	1
+"FRA"	"PaysdelaLoire"	"national_lockdown"	-.045	13	1
+"FRA"	"PaysdelaLoire"	"school_closure"	-.008	16	1
+"FRA"	"PaysdelaLoire"	"pck_social_distanc"	-.244	15	1
+"IRN"	"full_sample"	"p_1"	-.285	3	0
+"IRN"	"full_sample"	"p_2"	-.151	4	0
+"IRN"	"Alborz"	"p_1"	-.248	3	0
+"IRN"	"Alborz"	"p_2"	-.152	4	0
+"IRN"	"Ardebil"	"p_1"	-.283	3	0
+"IRN"	"Ardebil"	"p_2"	-.153	4	0
+"IRN"	"Bushehr"	"p_1"	-.284	3	0
+"IRN"	"Bushehr"	"p_2"	-.152	4	0
+"IRN"	"Chahar Mahall and "	"p_1"	-.285	3	0
+"IRN"	"Chahar Mahall and "	"p_2"	-.15	4	0
+"IRN"	"East Azarbaijan"	"p_1"	-.308	3	0
+"IRN"	"East Azarbaijan"	"p_2"	-.153	4	0
+"IRN"	"Esfahan"	"p_1"	-.301	3	0
+"IRN"	"Esfahan"	"p_2"	-.148	4	0
+"IRN"	"Fars"	"p_1"	-.274	3	0
+"IRN"	"Fars"	"p_2"	-.152	4	0
+"IRN"	"Gilan"	"p_1"	-.306	3	0
+"IRN"	"Gilan"	"p_2"	-.153	4	0
+"IRN"	"Golestan"	"p_1"	-.311	3	0
+"IRN"	"Golestan"	"p_2"	-.15	4	0
+"IRN"	"Hamadan"	"p_1"	-.292	3	0
+"IRN"	"Hamadan"	"p_2"	-.146	4	0
+"IRN"	"Hormozgan"	"p_1"	-.288	3	0
+"IRN"	"Hormozgan"	"p_2"	-.147	4	0
+"IRN"	"Ilam"	"p_1"	-.285	3	0
+"IRN"	"Ilam"	"p_2"	-.149	4	0
+"IRN"	"Kerman"	"p_1"	-.284	3	0
+"IRN"	"Kerman"	"p_2"	-.152	4	0
+"IRN"	"Kermanshah"	"p_1"	-.282	3	0
+"IRN"	"Kermanshah"	"p_2"	-.154	4	0
+"IRN"	"Khuzestan"	"p_1"	-.265	3	0
+"IRN"	"Khuzestan"	"p_2"	-.155	4	0
+"IRN"	"Kohgiluyeh and Buy"	"p_1"	-.283	3	0
+"IRN"	"Kohgiluyeh and Buy"	"p_2"	-.15	4	0
+"IRN"	"Kordestan"	"p_1"	-.289	3	0
+"IRN"	"Kordestan"	"p_2"	-.15	4	0
+"IRN"	"Lorestan"	"p_1"	-.291	3	0
+"IRN"	"Lorestan"	"p_2"	-.147	4	0
+"IRN"	"Markazi"	"p_1"	-.249	3	0
+"IRN"	"Markazi"	"p_2"	-.149	4	0
+"IRN"	"Mazandaran"	"p_1"	-.314	3	0
+"IRN"	"Mazandaran"	"p_2"	-.144	4	0
+"IRN"	"North Khorasan"	"p_1"	-.282	3	0
+"IRN"	"North Khorasan"	"p_2"	-.154	4	0
+"IRN"	"Qazvin"	"p_1"	-.286	3	0
+"IRN"	"Qazvin"	"p_2"	-.15	4	0
+"IRN"	"Qom"	"p_1"	-.29	3	0
+"IRN"	"Qom"	"p_2"	-.153	4	0
+"IRN"	"Razavi Khorasan"	"p_1"	-.283	3	0
+"IRN"	"Razavi Khorasan"	"p_2"	-.15	4	0
+"IRN"	"Semnan"	"p_1"	-.299	3	0
+"IRN"	"Semnan"	"p_2"	-.147	4	0
+"IRN"	"Sistan and Baluche"	"p_1"	-.281	3	0
+"IRN"	"Sistan and Baluche"	"p_2"	-.154	4	0
+"IRN"	"South Khorasan"	"p_1"	-.283	3	0
+"IRN"	"South Khorasan"	"p_2"	-.153	4	0
+"IRN"	"Tehran"	"p_1"	-.268	3	0
+"IRN"	"Tehran"	"p_2"	-.153	4	0
+"IRN"	"West Azarbaijan"	"p_1"	-.284	3	0
+"IRN"	"West Azarbaijan"	"p_2"	-.15	4	0
+"IRN"	"Yazd"	"p_1"	-.283	3	0
+"IRN"	"Yazd"	"p_2"	-.153	4	0
+"IRN"	"Zanjan"	"p_1"	-.289	3	0
+"IRN"	"Zanjan"	"p_2"	-.149	4	0
+"KOR"	"full_sample"	"p_1"	-.083	47	4
+"KOR"	"full_sample"	"p_2"	-.304	48	4
+"KOR"	"full_sample"	"p_3"	-.127	49	4
+"KOR"	"full_sample"	"p_4"	.02	50	4
+"KOR"	"Busan"	"p_1"	-.096	47	4
+"KOR"	"Busan"	"p_2"	-.257	48	4
+"KOR"	"Busan"	"p_3"	-.126	49	4
+"KOR"	"Busan"	"p_4"	.024	50	4
+"KOR"	"Chungcheongbuk-do"	"p_1"	-.083	47	4
+"KOR"	"Chungcheongbuk-do"	"p_2"	-.304	48	4
+"KOR"	"Chungcheongbuk-do"	"p_3"	-.128	49	4
+"KOR"	"Chungcheongbuk-do"	"p_4"	.023	50	4
+"KOR"	"Chungcheongnam-do"	"p_1"	-.064	47	4
+"KOR"	"Chungcheongnam-do"	"p_2"	-.319	48	4
+"KOR"	"Chungcheongnam-do"	"p_3"	-.135	49	4
+"KOR"	"Chungcheongnam-do"	"p_4"	.015	50	4
+"KOR"	"Daegu"	"p_1"	-.087	47	4
+"KOR"	"Daegu"	"p_2"	-.288	48	4
+"KOR"	"Daegu"	"p_3"	-.076	49	4
+"KOR"	"Daegu"	"p_4"	.02	50	4
+"KOR"	"Daejeon"	"p_1"	-.084	47	4
+"KOR"	"Daejeon"	"p_2"	-.304	48	4
+"KOR"	"Daejeon"	"p_3"	-.126	49	4
+"KOR"	"Daejeon"	"p_4"	.019	50	4
+"KOR"	"Gangwon-do"	"p_1"	-.083	47	4
+"KOR"	"Gangwon-do"	"p_2"	-.302	48	4
+"KOR"	"Gangwon-do"	"p_3"	-.125	49	4
+"KOR"	"Gangwon-do"	"p_4"	.014	50	4
+"KOR"	"Gwangju"	"p_1"	-.088	47	4
+"KOR"	"Gwangju"	"p_2"	-.3	48	4
+"KOR"	"Gwangju"	"p_3"	-.125	49	4
+"KOR"	"Gwangju"	"p_4"	.018	50	4
+"KOR"	"Gyeonggi-do"	"p_1"	-.1	47	4
+"KOR"	"Gyeonggi-do"	"p_2"	-.306	48	4
+"KOR"	"Gyeonggi-do"	"p_3"	-.117	49	4
+"KOR"	"Gyeonggi-do"	"p_4"	.028	50	4
+"KOR"	"Gyeongsangbuk-do"	"p_1"	-.086	47	4
+"KOR"	"Gyeongsangbuk-do"	"p_2"	-.256	48	4
+"KOR"	"Gyeongsangbuk-do"	"p_3"	-.183	49	4
+"KOR"	"Gyeongsangbuk-do"	"p_4"	.019	50	4
+"KOR"	"Gyeongsangnam-do"	"p_1"	-.082	47	4
+"KOR"	"Gyeongsangnam-do"	"p_2"	-.295	48	4
+"KOR"	"Gyeongsangnam-do"	"p_3"	-.127	49	4
+"KOR"	"Gyeongsangnam-do"	"p_4"	.016	50	4
+"KOR"	"Incheon"	"p_1"	-.082	47	4
+"KOR"	"Incheon"	"p_2"	-.306	48	4
+"KOR"	"Incheon"	"p_3"	-.128	49	4
+"KOR"	"Incheon"	"p_4"	.022	50	4
+"KOR"	"Jeju"	"p_1"	-.083	47	4
+"KOR"	"Jeju"	"p_2"	-.304	48	4
+"KOR"	"Jeju"	"p_3"	-.127	49	4
+"KOR"	"Jeju"	"p_4"	.02	50	4
+"KOR"	"Jeollabuk-do"	"p_1"	-.083	47	4
+"KOR"	"Jeollabuk-do"	"p_2"	-.304	48	4
+"KOR"	"Jeollabuk-do"	"p_3"	-.127	49	4
+"KOR"	"Jeollabuk-do"	"p_4"	.019	50	4
+"KOR"	"Jeollanam-do"	"p_1"	-.084	47	4
+"KOR"	"Jeollanam-do"	"p_2"	-.304	48	4
+"KOR"	"Jeollanam-do"	"p_3"	-.127	49	4
+"KOR"	"Jeollanam-do"	"p_4"	.022	50	4
+"KOR"	"Sejong"	"p_1"	-.08	47	4
+"KOR"	"Sejong"	"p_2"	-.309	48	4
+"KOR"	"Sejong"	"p_3"	-.13	49	4
+"KOR"	"Sejong"	"p_4"	.026	50	4
+"KOR"	"Seoul"	"p_1"	-.065	47	4
+"KOR"	"Seoul"	"p_2"	-.463	48	4
+"KOR"	"Seoul"	"p_3"	-.115	49	4
+"KOR"	"Seoul"	"p_4"	.017	50	4
+"KOR"	"Ulsan"	"p_1"	-.081	47	4
+"KOR"	"Ulsan"	"p_2"	-.309	48	4
+"KOR"	"Ulsan"	"p_3"	-.129	49	4
+"KOR"	"Ulsan"	"p_4"	.022	50	4
+"ITA"	"full_sample"	"p_1"	.148	36	3
+"ITA"	"full_sample"	"p_2"	-.106	37	3
+"ITA"	"full_sample"	"p_3"	-.303	38	3
+"ITA"	"full_sample"	"p_4"	-.076	39	3
+"ITA"	"full_sample"	"p_5"	-.142	40	3
+"ITA"	"full_sample"	"p_6"	.069	41	3
+"ITA"	"Abruzzo"	"p_1"	.147	36	3
+"ITA"	"Abruzzo"	"p_2"	-.106	37	3
+"ITA"	"Abruzzo"	"p_3"	-.303	38	3
+"ITA"	"Abruzzo"	"p_4"	-.075	39	3
+"ITA"	"Abruzzo"	"p_5"	-.14	40	3
+"ITA"	"Abruzzo"	"p_6"	.068	41	3
+"ITA"	"Basilicata"	"p_1"	.148	36	3
+"ITA"	"Basilicata"	"p_2"	-.106	37	3
+"ITA"	"Basilicata"	"p_3"	-.3	38	3
+"ITA"	"Basilicata"	"p_4"	-.076	39	3
+"ITA"	"Basilicata"	"p_5"	-.142	40	3
+"ITA"	"Basilicata"	"p_6"	.068	41	3
+"ITA"	"Calabria"	"p_1"	.149	36	3
+"ITA"	"Calabria"	"p_2"	-.106	37	3
+"ITA"	"Calabria"	"p_3"	-.298	38	3
+"ITA"	"Calabria"	"p_4"	-.077	39	3
+"ITA"	"Calabria"	"p_5"	-.145	40	3
+"ITA"	"Calabria"	"p_6"	.07	41	3
+"ITA"	"Campania"	"p_1"	.098	36	3
+"ITA"	"Campania"	"p_2"	-.065	37	3
+"ITA"	"Campania"	"p_3"	-.272	38	3
+"ITA"	"Campania"	"p_4"	-.075	39	3
+"ITA"	"Campania"	"p_5"	-.165	40	3
+"ITA"	"Campania"	"p_6"	.079	41	3
+"ITA"	"Emilia Romagna"	"p_1"	.171	36	3
+"ITA"	"Emilia Romagna"	"p_2"	-.075	37	3
+"ITA"	"Emilia Romagna"	"p_3"	-.294	38	3
+"ITA"	"Emilia Romagna"	"p_4"	-.088	39	3
+"ITA"	"Emilia Romagna"	"p_5"	-.154	40	3
+"ITA"	"Emilia Romagna"	"p_6"	.07	41	3
+"ITA"	"Friuli Venezia Giu"	"p_1"	.145	36	3
+"ITA"	"Friuli Venezia Giu"	"p_2"	-.113	37	3
+"ITA"	"Friuli Venezia Giu"	"p_3"	-.331	38	3
+"ITA"	"Friuli Venezia Giu"	"p_4"	-.07	39	3
+"ITA"	"Friuli Venezia Giu"	"p_5"	-.117	40	3
+"ITA"	"Friuli Venezia Giu"	"p_6"	.061	41	3
+"ITA"	"Lazio"	"p_1"	.145	36	3
+"ITA"	"Lazio"	"p_2"	-.095	37	3
+"ITA"	"Lazio"	"p_3"	-.306	38	3
+"ITA"	"Lazio"	"p_4"	-.074	39	3
+"ITA"	"Lazio"	"p_5"	-.139	40	3
+"ITA"	"Lazio"	"p_6"	.067	41	3
+"ITA"	"Liguria"	"p_1"	.161	36	3
+"ITA"	"Liguria"	"p_2"	-.107	37	3
+"ITA"	"Liguria"	"p_3"	-.279	38	3
+"ITA"	"Liguria"	"p_4"	-.083	39	3
+"ITA"	"Liguria"	"p_5"	-.164	40	3
+"ITA"	"Liguria"	"p_6"	.079	41	3
+"ITA"	"Lombardia"	"p_1"	.095	36	3
+"ITA"	"Lombardia"	"p_2"	-.099	37	3
+"ITA"	"Lombardia"	"p_3"	-.335	38	3
+"ITA"	"Lombardia"	"p_4"	-.061	39	3
+"ITA"	"Lombardia"	"p_5"	-.126	40	3
+"ITA"	"Lombardia"	"p_6"	.113	41	3
+"ITA"	"Marche"	"p_1"	.142	36	3
+"ITA"	"Marche"	"p_2"	-.111	37	3
+"ITA"	"Marche"	"p_3"	-.312	38	3
+"ITA"	"Marche"	"p_4"	-.066	39	3
+"ITA"	"Marche"	"p_5"	-.13	40	3
+"ITA"	"Marche"	"p_6"	.063	41	3
+"ITA"	"Molise"	"p_1"	.14	36	3
+"ITA"	"Molise"	"p_2"	-.103	37	3
+"ITA"	"Molise"	"p_3"	-.315	38	3
+"ITA"	"Molise"	"p_4"	-.068	39	3
+"ITA"	"Molise"	"p_5"	-.136	40	3
+"ITA"	"Molise"	"p_6"	.063	41	3
+"ITA"	"P.A. Bolzano"	"p_1"	.147	36	3
+"ITA"	"P.A. Bolzano"	"p_2"	-.106	37	3
+"ITA"	"P.A. Bolzano"	"p_3"	-.301	38	3
+"ITA"	"P.A. Bolzano"	"p_4"	-.076	39	3
+"ITA"	"P.A. Bolzano"	"p_5"	-.141	40	3
+"ITA"	"P.A. Bolzano"	"p_6"	.068	41	3
+"ITA"	"P.A. Trento"	"p_1"	.148	36	3
+"ITA"	"P.A. Trento"	"p_2"	-.107	37	3
+"ITA"	"P.A. Trento"	"p_3"	-.302	38	3
+"ITA"	"P.A. Trento"	"p_4"	-.078	39	3
+"ITA"	"P.A. Trento"	"p_5"	-.138	40	3
+"ITA"	"P.A. Trento"	"p_6"	.07	41	3
+"ITA"	"Piemonte"	"p_1"	.189	36	3
+"ITA"	"Piemonte"	"p_2"	-.142	37	3
+"ITA"	"Piemonte"	"p_3"	-.261	38	3
+"ITA"	"Piemonte"	"p_4"	-.084	39	3
+"ITA"	"Piemonte"	"p_5"	-.168	40	3
+"ITA"	"Piemonte"	"p_6"	.066	41	3
+"ITA"	"Puglia"	"p_1"	.153	36	3
+"ITA"	"Puglia"	"p_2"	-.106	37	3
+"ITA"	"Puglia"	"p_3"	-.289	38	3
+"ITA"	"Puglia"	"p_4"	-.074	39	3
+"ITA"	"Puglia"	"p_5"	-.154	40	3
+"ITA"	"Puglia"	"p_6"	.066	41	3
+"ITA"	"Sardegna"	"p_1"	.148	36	3
+"ITA"	"Sardegna"	"p_2"	-.107	37	3
+"ITA"	"Sardegna"	"p_3"	-.309	38	3
+"ITA"	"Sardegna"	"p_4"	-.076	39	3
+"ITA"	"Sardegna"	"p_5"	-.142	40	3
+"ITA"	"Sardegna"	"p_6"	.074	41	3
+"ITA"	"Sicilia"	"p_1"	.15	36	3
+"ITA"	"Sicilia"	"p_2"	-.112	37	3
+"ITA"	"Sicilia"	"p_3"	-.332	38	3
+"ITA"	"Sicilia"	"p_4"	-.068	39	3
+"ITA"	"Sicilia"	"p_5"	-.125	40	3
+"ITA"	"Sicilia"	"p_6"	.062	41	3
+"ITA"	"Toscana"	"p_1"	.151	36	3
+"ITA"	"Toscana"	"p_2"	-.112	37	3
+"ITA"	"Toscana"	"p_3"	-.318	38	3
+"ITA"	"Toscana"	"p_4"	-.077	39	3
+"ITA"	"Toscana"	"p_5"	-.133	40	3
+"ITA"	"Toscana"	"p_6"	.071	41	3
+"ITA"	"Umbria"	"p_1"	.152	36	3
+"ITA"	"Umbria"	"p_2"	-.106	37	3
+"ITA"	"Umbria"	"p_3"	-.287	38	3
+"ITA"	"Umbria"	"p_4"	-.078	39	3
+"ITA"	"Umbria"	"p_5"	-.149	40	3
+"ITA"	"Umbria"	"p_6"	.068	41	3
+"ITA"	"Valle d'Aosta"	"p_1"	.149	36	3
+"ITA"	"Valle d'Aosta"	"p_2"	-.106	37	3
+"ITA"	"Valle d'Aosta"	"p_3"	-.295	38	3
+"ITA"	"Valle d'Aosta"	"p_4"	-.075	39	3
+"ITA"	"Valle d'Aosta"	"p_5"	-.144	40	3
+"ITA"	"Valle d'Aosta"	"p_6"	.066	41	3
+"ITA"	"Veneto"	"p_1"	.174	36	3
+"ITA"	"Veneto"	"p_2"	-.137	37	3
+"ITA"	"Veneto"	"p_3"	-.312	38	3
+"ITA"	"Veneto"	"p_4"	-.095	39	3
+"ITA"	"Veneto"	"p_5"	-.144	40	3
+"ITA"	"Veneto"	"p_6"	.072	41	3
+"USA"	"full_sample"	"p_1"	-.094	58	5
+"USA"	"full_sample"	"p_2"	-.119	59	5
+"USA"	"full_sample"	"p_3"	-.108	60	5
+"USA"	"full_sample"	"p_4"	.068	61	5
+"USA"	"full_sample"	"p_5"	.014	62	5
+"USA"	"full_sample"	"p_6"	.042	63	5
+"USA"	"full_sample"	"p_7"	-.02	64	5
+"USA"	"full_sample"	"p_8"	-.064	65	5
+"USA"	"full_sample"	"p_9"	-.066	66	5
+"USA"	"Alabama"	"p_1"	-.098	58	5
+"USA"	"Alabama"	"p_2"	-.128	59	5
+"USA"	"Alabama"	"p_3"	-.092	60	5
+"USA"	"Alabama"	"p_4"	.066	61	5
+"USA"	"Alabama"	"p_5"	.016	62	5
+"USA"	"Alabama"	"p_6"	.047	63	5
+"USA"	"Alabama"	"p_7"	-.017	64	5
+"USA"	"Alabama"	"p_8"	-.061	65	5
+"USA"	"Alabama"	"p_9"	-.069	66	5
+"USA"	"Alaska"	"p_1"	-.092	58	5
+"USA"	"Alaska"	"p_2"	-.121	59	5
+"USA"	"Alaska"	"p_3"	-.109	60	5
+"USA"	"Alaska"	"p_4"	.067	61	5
+"USA"	"Alaska"	"p_5"	.018	62	5
+"USA"	"Alaska"	"p_6"	.04	63	5
+"USA"	"Alaska"	"p_7"	-.017	64	5
+"USA"	"Alaska"	"p_8"	-.063	65	5
+"USA"	"Alaska"	"p_9"	-.066	66	5
+"USA"	"Arizona"	"p_1"	-.074	58	5
+"USA"	"Arizona"	"p_2"	-.116	59	5
+"USA"	"Arizona"	"p_3"	-.134	60	5
+"USA"	"Arizona"	"p_4"	.056	61	5
+"USA"	"Arizona"	"p_5"	.013	62	5
+"USA"	"Arizona"	"p_6"	.032	63	5
+"USA"	"Arizona"	"p_7"	-.017	64	5
+"USA"	"Arizona"	"p_8"	-.067	65	5
+"USA"	"Arizona"	"p_9"	-.063	66	5
+"USA"	"Arkansas"	"p_1"	-.102	58	5
+"USA"	"Arkansas"	"p_2"	-.121	59	5
+"USA"	"Arkansas"	"p_3"	-.112	60	5
+"USA"	"Arkansas"	"p_4"	.066	61	5
+"USA"	"Arkansas"	"p_5"	.018	62	5
+"USA"	"Arkansas"	"p_6"	.045	63	5
+"USA"	"Arkansas"	"p_7"	-.023	64	5
+"USA"	"Arkansas"	"p_8"	-.054	65	5
+"USA"	"Arkansas"	"p_9"	-.071	66	5
+"USA"	"California"	"p_1"	-.097	58	5
+"USA"	"California"	"p_2"	-.13	59	5
+"USA"	"California"	"p_3"	-.104	60	5
+"USA"	"California"	"p_4"	.065	61	5
+"USA"	"California"	"p_5"	.017	62	5
+"USA"	"California"	"p_6"	.046	63	5
+"USA"	"California"	"p_7"	-.025	64	5
+"USA"	"California"	"p_8"	-.065	65	5
+"USA"	"California"	"p_9"	-.066	66	5
+"USA"	"Colorado"	"p_1"	-.103	58	5
+"USA"	"Colorado"	"p_2"	-.114	59	5
+"USA"	"Colorado"	"p_3"	-.109	60	5
+"USA"	"Colorado"	"p_4"	.082	61	5
+"USA"	"Colorado"	"p_5"	.019	62	5
+"USA"	"Colorado"	"p_6"	.038	63	5
+"USA"	"Colorado"	"p_7"	-.022	64	5
+"USA"	"Colorado"	"p_8"	-.063	65	5
+"USA"	"Colorado"	"p_9"	-.066	66	5
+"USA"	"Connecticut"	"p_1"	-.092	58	5
+"USA"	"Connecticut"	"p_2"	-.112	59	5
+"USA"	"Connecticut"	"p_3"	-.122	60	5
+"USA"	"Connecticut"	"p_4"	.066	61	5
+"USA"	"Connecticut"	"p_5"	.015	62	5
+"USA"	"Connecticut"	"p_6"	.045	63	5
+"USA"	"Connecticut"	"p_7"	-.022	64	5
+"USA"	"Connecticut"	"p_8"	-.067	65	5
+"USA"	"Connecticut"	"p_9"	-.066	66	5
+"USA"	"Delaware"	"p_1"	-.095	58	5
+"USA"	"Delaware"	"p_2"	-.12	59	5
+"USA"	"Delaware"	"p_3"	-.108	60	5
+"USA"	"Delaware"	"p_4"	.069	61	5
+"USA"	"Delaware"	"p_5"	.015	62	5
+"USA"	"Delaware"	"p_6"	.042	63	5
+"USA"	"Delaware"	"p_7"	-.02	64	5
+"USA"	"Delaware"	"p_8"	-.063	65	5
+"USA"	"Delaware"	"p_9"	-.066	66	5
+"USA"	"District of Columb"	"p_1"	-.086	58	5
+"USA"	"District of Columb"	"p_2"	-.12	59	5
+"USA"	"District of Columb"	"p_3"	-.109	60	5
+"USA"	"District of Columb"	"p_4"	.057	61	5
+"USA"	"District of Columb"	"p_5"	.014	62	5
+"USA"	"District of Columb"	"p_6"	.045	63	5
+"USA"	"District of Columb"	"p_7"	-.022	64	5
+"USA"	"District of Columb"	"p_8"	-.064	65	5
+"USA"	"District of Columb"	"p_9"	-.065	66	5
+"USA"	"Florida"	"p_1"	-.082	58	5
+"USA"	"Florida"	"p_2"	-.113	59	5
+"USA"	"Florida"	"p_3"	-.111	60	5
+"USA"	"Florida"	"p_4"	.069	61	5
+"USA"	"Florida"	"p_5"	.011	62	5
+"USA"	"Florida"	"p_6"	.043	63	5
+"USA"	"Florida"	"p_7"	-.016	64	5
+"USA"	"Florida"	"p_8"	-.068	65	5
+"USA"	"Florida"	"p_9"	-.068	66	5
+"USA"	"Georgia"	"p_1"	-.092	58	5
+"USA"	"Georgia"	"p_2"	-.119	59	5
+"USA"	"Georgia"	"p_3"	-.109	60	5
+"USA"	"Georgia"	"p_4"	.069	61	5
+"USA"	"Georgia"	"p_5"	.013	62	5
+"USA"	"Georgia"	"p_6"	.042	63	5
+"USA"	"Georgia"	"p_7"	-.022	64	5
+"USA"	"Georgia"	"p_8"	-.063	65	5
+"USA"	"Georgia"	"p_9"	-.066	66	5
+"USA"	"Hawaii"	"p_1"	-.094	58	5
+"USA"	"Hawaii"	"p_2"	-.115	59	5
+"USA"	"Hawaii"	"p_3"	-.11	60	5
+"USA"	"Hawaii"	"p_4"	.066	61	5
+"USA"	"Hawaii"	"p_5"	.017	62	5
+"USA"	"Hawaii"	"p_6"	.045	63	5
+"USA"	"Hawaii"	"p_7"	-.019	64	5
+"USA"	"Hawaii"	"p_8"	-.067	65	5
+"USA"	"Hawaii"	"p_9"	-.065	66	5
+"USA"	"Idaho"	"p_1"	-.094	58	5
+"USA"	"Idaho"	"p_2"	-.12	59	5
+"USA"	"Idaho"	"p_3"	-.107	60	5
+"USA"	"Idaho"	"p_4"	.066	61	5
+"USA"	"Idaho"	"p_5"	.016	62	5
+"USA"	"Idaho"	"p_6"	.047	63	5
+"USA"	"Idaho"	"p_7"	-.029	64	5
+"USA"	"Idaho"	"p_8"	-.066	65	5
+"USA"	"Idaho"	"p_9"	-.066	66	5
+"USA"	"Illinois"	"p_1"	-.095	58	5
+"USA"	"Illinois"	"p_2"	-.115	59	5
+"USA"	"Illinois"	"p_3"	-.109	60	5
+"USA"	"Illinois"	"p_4"	.069	61	5
+"USA"	"Illinois"	"p_5"	.014	62	5
+"USA"	"Illinois"	"p_6"	.038	63	5
+"USA"	"Illinois"	"p_7"	-.016	64	5
+"USA"	"Illinois"	"p_8"	-.063	65	5
+"USA"	"Illinois"	"p_9"	-.067	66	5
+"USA"	"Indiana"	"p_1"	-.08	58	5
+"USA"	"Indiana"	"p_2"	-.114	59	5
+"USA"	"Indiana"	"p_3"	-.106	60	5
+"USA"	"Indiana"	"p_4"	.051	61	5
+"USA"	"Indiana"	"p_5"	.008	62	5
+"USA"	"Indiana"	"p_6"	.04	63	5
+"USA"	"Indiana"	"p_7"	-.026	64	5
+"USA"	"Indiana"	"p_8"	-.065	65	5
+"USA"	"Indiana"	"p_9"	-.067	66	5
+"USA"	"Iowa"	"p_1"	-.092	58	5
+"USA"	"Iowa"	"p_2"	-.13	59	5
+"USA"	"Iowa"	"p_3"	-.104	60	5
+"USA"	"Iowa"	"p_4"	.065	61	5
+"USA"	"Iowa"	"p_5"	.019	62	5
+"USA"	"Iowa"	"p_6"	.039	63	5
+"USA"	"Iowa"	"p_7"	-.016	64	5
+"USA"	"Iowa"	"p_8"	-.067	65	5
+"USA"	"Iowa"	"p_9"	-.063	66	5
+"USA"	"Kansas"	"p_1"	-.094	58	5
+"USA"	"Kansas"	"p_2"	-.118	59	5
+"USA"	"Kansas"	"p_3"	-.107	60	5
+"USA"	"Kansas"	"p_4"	.068	61	5
+"USA"	"Kansas"	"p_5"	.014	62	5
+"USA"	"Kansas"	"p_6"	.043	63	5
+"USA"	"Kansas"	"p_7"	-.021	64	5
+"USA"	"Kansas"	"p_8"	-.066	65	5
+"USA"	"Kansas"	"p_9"	-.064	66	5
+"USA"	"Kentucky"	"p_1"	-.095	58	5
+"USA"	"Kentucky"	"p_2"	-.122	59	5
+"USA"	"Kentucky"	"p_3"	-.107	60	5
+"USA"	"Kentucky"	"p_4"	.07	61	5
+"USA"	"Kentucky"	"p_5"	.016	62	5
+"USA"	"Kentucky"	"p_6"	.042	63	5
+"USA"	"Kentucky"	"p_7"	-.018	64	5
+"USA"	"Kentucky"	"p_8"	-.066	65	5
+"USA"	"Kentucky"	"p_9"	-.065	66	5
+"USA"	"Louisiana"	"p_1"	-.102	58	5
+"USA"	"Louisiana"	"p_2"	-.111	59	5
+"USA"	"Louisiana"	"p_3"	-.111	60	5
+"USA"	"Louisiana"	"p_4"	.071	61	5
+"USA"	"Louisiana"	"p_5"	.01	62	5
+"USA"	"Louisiana"	"p_6"	.049	63	5
+"USA"	"Louisiana"	"p_7"	-.027	64	5
+"USA"	"Louisiana"	"p_8"	-.061	65	5
+"USA"	"Louisiana"	"p_9"	-.065	66	5
+"USA"	"Maine"	"p_1"	-.092	58	5
+"USA"	"Maine"	"p_2"	-.119	59	5
+"USA"	"Maine"	"p_3"	-.11	60	5
+"USA"	"Maine"	"p_4"	.067	61	5
+"USA"	"Maine"	"p_5"	.012	62	5
+"USA"	"Maine"	"p_6"	.039	63	5
+"USA"	"Maine"	"p_7"	-.019	64	5
+"USA"	"Maine"	"p_8"	-.057	65	5
+"USA"	"Maine"	"p_9"	-.069	66	5
+"USA"	"Maryland"	"p_1"	-.085	58	5
+"USA"	"Maryland"	"p_2"	-.121	59	5
+"USA"	"Maryland"	"p_3"	-.109	60	5
+"USA"	"Maryland"	"p_4"	.06	61	5
+"USA"	"Maryland"	"p_5"	.014	62	5
+"USA"	"Maryland"	"p_6"	.042	63	5
+"USA"	"Maryland"	"p_7"	-.02	64	5
+"USA"	"Maryland"	"p_8"	-.064	65	5
+"USA"	"Maryland"	"p_9"	-.066	66	5
+"USA"	"Massachusetts"	"p_1"	-.083	58	5
+"USA"	"Massachusetts"	"p_2"	-.106	59	5
+"USA"	"Massachusetts"	"p_3"	-.111	60	5
+"USA"	"Massachusetts"	"p_4"	.072	61	5
+"USA"	"Massachusetts"	"p_5"	.013	62	5
+"USA"	"Massachusetts"	"p_6"	.039	63	5
+"USA"	"Massachusetts"	"p_7"	-.011	64	5
+"USA"	"Massachusetts"	"p_8"	-.068	65	5
+"USA"	"Massachusetts"	"p_9"	-.071	66	5
+"USA"	"Michigan"	"p_1"	-.101	58	5
+"USA"	"Michigan"	"p_2"	-.115	59	5
+"USA"	"Michigan"	"p_3"	-.11	60	5
+"USA"	"Michigan"	"p_4"	.074	61	5
+"USA"	"Michigan"	"p_5"	.011	62	5
+"USA"	"Michigan"	"p_6"	.041	63	5
+"USA"	"Michigan"	"p_7"	-.017	64	5
+"USA"	"Michigan"	"p_8"	-.059	65	5
+"USA"	"Michigan"	"p_9"	-.066	66	5
+"USA"	"Minnesota"	"p_1"	-.104	58	5
+"USA"	"Minnesota"	"p_2"	-.107	59	5
+"USA"	"Minnesota"	"p_3"	-.11	60	5
+"USA"	"Minnesota"	"p_4"	.072	61	5
+"USA"	"Minnesota"	"p_5"	.012	62	5
+"USA"	"Minnesota"	"p_6"	.049	63	5
+"USA"	"Minnesota"	"p_7"	-.023	64	5
+"USA"	"Minnesota"	"p_8"	-.068	65	5
+"USA"	"Minnesota"	"p_9"	-.064	66	5
+"USA"	"Mississippi"	"p_1"	-.088	58	5
+"USA"	"Mississippi"	"p_2"	-.12	59	5
+"USA"	"Mississippi"	"p_3"	-.096	60	5
+"USA"	"Mississippi"	"p_4"	.067	61	5
+"USA"	"Mississippi"	"p_5"	.01	62	5
+"USA"	"Mississippi"	"p_6"	.039	63	5
+"USA"	"Mississippi"	"p_7"	-.019	64	5
+"USA"	"Mississippi"	"p_8"	-.063	65	5
+"USA"	"Mississippi"	"p_9"	-.068	66	5
+"USA"	"Missouri"	"p_1"	-.097	58	5
+"USA"	"Missouri"	"p_2"	-.125	59	5
+"USA"	"Missouri"	"p_3"	-.109	60	5
+"USA"	"Missouri"	"p_4"	.063	61	5
+"USA"	"Missouri"	"p_5"	.013	62	5
+"USA"	"Missouri"	"p_6"	.051	63	5
+"USA"	"Missouri"	"p_7"	-.023	64	5
+"USA"	"Missouri"	"p_8"	-.062	65	5
+"USA"	"Missouri"	"p_9"	-.065	66	5
+"USA"	"Montana"	"p_1"	-.093	58	5
+"USA"	"Montana"	"p_2"	-.117	59	5
+"USA"	"Montana"	"p_3"	-.108	60	5
+"USA"	"Montana"	"p_4"	.068	61	5
+"USA"	"Montana"	"p_5"	.015	62	5
+"USA"	"Montana"	"p_6"	.042	63	5
+"USA"	"Montana"	"p_7"	-.013	64	5
+"USA"	"Montana"	"p_8"	-.067	65	5
+"USA"	"Montana"	"p_9"	-.068	66	5
+"USA"	"Nebraska"	"p_1"	-.092	58	5
+"USA"	"Nebraska"	"p_2"	-.136	59	5
+"USA"	"Nebraska"	"p_3"	-.112	60	5
+"USA"	"Nebraska"	"p_4"	.068	61	5
+"USA"	"Nebraska"	"p_5"	.017	62	5
+"USA"	"Nebraska"	"p_6"	.042	63	5
+"USA"	"Nebraska"	"p_7"	-.018	64	5
+"USA"	"Nebraska"	"p_8"	-.062	65	5
+"USA"	"Nebraska"	"p_9"	-.065	66	5
+"USA"	"Nevada"	"p_1"	-.099	58	5
+"USA"	"Nevada"	"p_2"	-.116	59	5
+"USA"	"Nevada"	"p_3"	-.107	60	5
+"USA"	"Nevada"	"p_4"	.077	61	5
+"USA"	"Nevada"	"p_5"	.014	62	5
+"USA"	"Nevada"	"p_6"	.038	63	5
+"USA"	"Nevada"	"p_7"	-.021	64	5
+"USA"	"Nevada"	"p_8"	-.063	65	5
+"USA"	"Nevada"	"p_9"	-.064	66	5
+"USA"	"New Hampshire"	"p_1"	-.091	58	5
+"USA"	"New Hampshire"	"p_2"	-.115	59	5
+"USA"	"New Hampshire"	"p_3"	-.11	60	5
+"USA"	"New Hampshire"	"p_4"	.066	61	5
+"USA"	"New Hampshire"	"p_5"	.013	62	5
+"USA"	"New Hampshire"	"p_6"	.041	63	5
+"USA"	"New Hampshire"	"p_7"	-.021	64	5
+"USA"	"New Hampshire"	"p_8"	-.062	65	5
+"USA"	"New Hampshire"	"p_9"	-.068	66	5
+"USA"	"New Jersey"	"p_1"	-.109	58	5
+"USA"	"New Jersey"	"p_2"	-.11	59	5
+"USA"	"New Jersey"	"p_3"	-.109	60	5
+"USA"	"New Jersey"	"p_4"	.071	61	5
+"USA"	"New Jersey"	"p_5"	.018	62	5
+"USA"	"New Jersey"	"p_6"	.045	63	5
+"USA"	"New Jersey"	"p_7"	-.021	64	5
+"USA"	"New Jersey"	"p_8"	-.065	65	5
+"USA"	"New Jersey"	"p_9"	-.065	66	5
+"USA"	"New Mexico"	"p_1"	-.095	58	5
+"USA"	"New Mexico"	"p_2"	-.119	59	5
+"USA"	"New Mexico"	"p_3"	-.107	60	5
+"USA"	"New Mexico"	"p_4"	.07	61	5
+"USA"	"New Mexico"	"p_5"	.011	62	5
+"USA"	"New Mexico"	"p_6"	.041	63	5
+"USA"	"New Mexico"	"p_7"	-.02	64	5
+"USA"	"New Mexico"	"p_8"	-.061	65	5
+"USA"	"New Mexico"	"p_9"	-.068	66	5
+"USA"	"New York"	"p_1"	-.102	58	5
+"USA"	"New York"	"p_2"	-.107	59	5
+"USA"	"New York"	"p_3"	-.086	60	5
+"USA"	"New York"	"p_4"	.077	61	5
+"USA"	"New York"	"p_5"	.02	62	5
+"USA"	"New York"	"p_6"	.038	63	5
+"USA"	"New York"	"p_7"	-.018	64	5
+"USA"	"New York"	"p_8"	-.067	65	5
+"USA"	"New York"	"p_9"	-.065	66	5
+"USA"	"North Carolina"	"p_1"	-.09	58	5
+"USA"	"North Carolina"	"p_2"	-.118	59	5
+"USA"	"North Carolina"	"p_3"	-.109	60	5
+"USA"	"North Carolina"	"p_4"	.063	61	5
+"USA"	"North Carolina"	"p_5"	.015	62	5
+"USA"	"North Carolina"	"p_6"	.044	63	5
+"USA"	"North Carolina"	"p_7"	-.019	64	5
+"USA"	"North Carolina"	"p_8"	-.065	65	5
+"USA"	"North Carolina"	"p_9"	-.067	66	5
+"USA"	"North Dakota"	"p_1"	-.092	58	5
+"USA"	"North Dakota"	"p_2"	-.125	59	5
+"USA"	"North Dakota"	"p_3"	-.114	60	5
+"USA"	"North Dakota"	"p_4"	.067	61	5
+"USA"	"North Dakota"	"p_5"	.015	62	5
+"USA"	"North Dakota"	"p_6"	.044	63	5
+"USA"	"North Dakota"	"p_7"	-.019	64	5
+"USA"	"North Dakota"	"p_8"	-.064	65	5
+"USA"	"North Dakota"	"p_9"	-.066	66	5
+"USA"	"Ohio"	"p_1"	-.09	58	5
+"USA"	"Ohio"	"p_2"	-.117	59	5
+"USA"	"Ohio"	"p_3"	-.111	60	5
+"USA"	"Ohio"	"p_4"	.063	61	5
+"USA"	"Ohio"	"p_5"	.019	62	5
+"USA"	"Ohio"	"p_6"	.046	63	5
+"USA"	"Ohio"	"p_7"	-.018	64	5
+"USA"	"Ohio"	"p_8"	-.068	65	5
+"USA"	"Ohio"	"p_9"	-.065	66	5
+"USA"	"Oklahoma"	"p_1"	-.098	58	5
+"USA"	"Oklahoma"	"p_2"	-.126	59	5
+"USA"	"Oklahoma"	"p_3"	-.107	60	5
+"USA"	"Oklahoma"	"p_4"	.069	61	5
+"USA"	"Oklahoma"	"p_5"	.013	62	5
+"USA"	"Oklahoma"	"p_6"	.044	63	5
+"USA"	"Oklahoma"	"p_7"	-.018	64	5
+"USA"	"Oklahoma"	"p_8"	-.062	65	5
+"USA"	"Oklahoma"	"p_9"	-.066	66	5
+"USA"	"Oregon"	"p_1"	-.102	58	5
+"USA"	"Oregon"	"p_2"	-.118	59	5
+"USA"	"Oregon"	"p_3"	-.102	60	5
+"USA"	"Oregon"	"p_4"	.067	61	5
+"USA"	"Oregon"	"p_5"	.004	62	5
+"USA"	"Oregon"	"p_6"	.046	63	5
+"USA"	"Oregon"	"p_7"	-.027	64	5
+"USA"	"Oregon"	"p_8"	-.063	65	5
+"USA"	"Oregon"	"p_9"	-.066	66	5
+"USA"	"Pennsylvania"	"p_1"	-.099	58	5
+"USA"	"Pennsylvania"	"p_2"	-.119	59	5
+"USA"	"Pennsylvania"	"p_3"	-.105	60	5
+"USA"	"Pennsylvania"	"p_4"	.071	61	5
+"USA"	"Pennsylvania"	"p_5"	.015	62	5
+"USA"	"Pennsylvania"	"p_6"	.041	63	5
+"USA"	"Pennsylvania"	"p_7"	-.023	64	5
+"USA"	"Pennsylvania"	"p_8"	-.067	65	5
+"USA"	"Pennsylvania"	"p_9"	-.062	66	5
+"USA"	"Rhode Island"	"p_1"	-.1	58	5
+"USA"	"Rhode Island"	"p_2"	-.116	59	5
+"USA"	"Rhode Island"	"p_3"	-.106	60	5
+"USA"	"Rhode Island"	"p_4"	.076	61	5
+"USA"	"Rhode Island"	"p_5"	.019	62	5
+"USA"	"Rhode Island"	"p_6"	.038	63	5
+"USA"	"Rhode Island"	"p_7"	-.026	64	5
+"USA"	"Rhode Island"	"p_8"	-.062	65	5
+"USA"	"Rhode Island"	"p_9"	-.07	66	5
+"USA"	"South Carolina"	"p_1"	-.094	58	5
+"USA"	"South Carolina"	"p_2"	-.116	59	5
+"USA"	"South Carolina"	"p_3"	-.11	60	5
+"USA"	"South Carolina"	"p_4"	.059	61	5
+"USA"	"South Carolina"	"p_5"	.012	62	5
+"USA"	"South Carolina"	"p_6"	.043	63	5
+"USA"	"South Carolina"	"p_7"	-.021	64	5
+"USA"	"South Carolina"	"p_8"	-.059	65	5
+"USA"	"South Carolina"	"p_9"	-.068	66	5
+"USA"	"South Dakota"	"p_1"	-.09	58	5
+"USA"	"South Dakota"	"p_2"	-.139	59	5
+"USA"	"South Dakota"	"p_3"	-.105	60	5
+"USA"	"South Dakota"	"p_4"	.067	61	5
+"USA"	"South Dakota"	"p_5"	.009	62	5
+"USA"	"South Dakota"	"p_6"	.044	63	5
+"USA"	"South Dakota"	"p_7"	-.027	64	5
+"USA"	"South Dakota"	"p_8"	-.057	65	5
+"USA"	"South Dakota"	"p_9"	-.063	66	5
+"USA"	"Tennessee"	"p_1"	-.088	58	5
+"USA"	"Tennessee"	"p_2"	-.116	59	5
+"USA"	"Tennessee"	"p_3"	-.111	60	5
+"USA"	"Tennessee"	"p_4"	.06	61	5
+"USA"	"Tennessee"	"p_5"	.021	62	5
+"USA"	"Tennessee"	"p_6"	.043	63	5
+"USA"	"Tennessee"	"p_7"	-.021	64	5
+"USA"	"Tennessee"	"p_8"	-.064	65	5
+"USA"	"Tennessee"	"p_9"	-.068	66	5
+"USA"	"Texas"	"p_1"	-.098	58	5
+"USA"	"Texas"	"p_2"	-.121	59	5
+"USA"	"Texas"	"p_3"	-.107	60	5
+"USA"	"Texas"	"p_4"	.07	61	5
+"USA"	"Texas"	"p_5"	.015	62	5
+"USA"	"Texas"	"p_6"	.042	63	5
+"USA"	"Texas"	"p_7"	-.009	64	5
+"USA"	"Texas"	"p_8"	-.067	65	5
+"USA"	"Texas"	"p_9"	-.065	66	5
+"USA"	"Utah"	"p_1"	-.096	58	5
+"USA"	"Utah"	"p_2"	-.12	59	5
+"USA"	"Utah"	"p_3"	-.11	60	5
+"USA"	"Utah"	"p_4"	.069	61	5
+"USA"	"Utah"	"p_5"	.014	62	5
+"USA"	"Utah"	"p_6"	.038	63	5
+"USA"	"Utah"	"p_7"	-.018	64	5
+"USA"	"Utah"	"p_8"	-.055	65	5
+"USA"	"Utah"	"p_9"	-.069	66	5
+"USA"	"Vermont"	"p_1"	-.096	58	5
+"USA"	"Vermont"	"p_2"	-.123	59	5
+"USA"	"Vermont"	"p_3"	-.107	60	5
+"USA"	"Vermont"	"p_4"	.069	61	5
+"USA"	"Vermont"	"p_5"	.014	62	5
+"USA"	"Vermont"	"p_6"	.042	63	5
+"USA"	"Vermont"	"p_7"	-.016	64	5
+"USA"	"Vermont"	"p_8"	-.065	65	5
+"USA"	"Vermont"	"p_9"	-.063	66	5
+"USA"	"Virginia"	"p_1"	-.101	58	5
+"USA"	"Virginia"	"p_2"	-.139	59	5
+"USA"	"Virginia"	"p_3"	-.103	60	5
+"USA"	"Virginia"	"p_4"	.075	61	5
+"USA"	"Virginia"	"p_5"	.019	62	5
+"USA"	"Virginia"	"p_6"	.038	63	5
+"USA"	"Virginia"	"p_7"	-.02	64	5
+"USA"	"Virginia"	"p_8"	-.058	65	5
+"USA"	"Virginia"	"p_9"	-.066	66	5
+"USA"	"Washington"	"p_1"	-.071	58	5
+"USA"	"Washington"	"p_2"	-.135	59	5
+"USA"	"Washington"	"p_3"	-.106	60	5
+"USA"	"Washington"	"p_4"	.073	61	5
+"USA"	"Washington"	"p_5"	.008	62	5
+"USA"	"Washington"	"p_6"	.043	63	5
+"USA"	"Washington"	"p_7"	-.028	64	5
+"USA"	"Washington"	"p_8"	-.059	65	5
+"USA"	"Washington"	"p_9"	-.066	66	5
+"USA"	"West Virginia"	"p_1"	-.092	58	5
+"USA"	"West Virginia"	"p_2"	-.112	59	5
+"USA"	"West Virginia"	"p_3"	-.11	60	5
+"USA"	"West Virginia"	"p_4"	.067	61	5
+"USA"	"West Virginia"	"p_5"	.015	62	5
+"USA"	"West Virginia"	"p_6"	.041	63	5
+"USA"	"West Virginia"	"p_7"	-.016	64	5
+"USA"	"West Virginia"	"p_8"	-.065	65	5
+"USA"	"West Virginia"	"p_9"	-.068	66	5
+"USA"	"Wisconsin"	"p_1"	-.094	58	5
+"USA"	"Wisconsin"	"p_2"	-.115	59	5
+"USA"	"Wisconsin"	"p_3"	-.11	60	5
+"USA"	"Wisconsin"	"p_4"	.065	61	5
+"USA"	"Wisconsin"	"p_5"	.013	62	5
+"USA"	"Wisconsin"	"p_6"	.047	63	5
+"USA"	"Wisconsin"	"p_7"	-.021	64	5
+"USA"	"Wisconsin"	"p_8"	-.065	65	5
+"USA"	"Wisconsin"	"p_9"	-.066	66	5
+"USA"	"Wyoming"	"p_1"	-.096	58	5
+"USA"	"Wyoming"	"p_2"	-.114	59	5
+"USA"	"Wyoming"	"p_3"	-.108	60	5
+"USA"	"Wyoming"	"p_4"	.069	61	5
+"USA"	"Wyoming"	"p_5"	.015	62	5
+"USA"	"Wyoming"	"p_6"	.044	63	5
+"USA"	"Wyoming"	"p_7"	-.025	64	5
+"USA"	"Wyoming"	"p_8"	-.066	65	5
+"USA"	"Wyoming"	"p_9"	-.066	66	5
