@@ -26,7 +26,6 @@
 # would be sent out to perform door-to-door coronavirus screening.
 # The plan sparked criticism from Iranians online about the possibility of
 # the teams spreading, rather than stopping, infections.
-# ^ this is capture in the testing_regime rows in data_sources.gsheet for 3/6/2020
 #
 # Andy Hultgren, hultgren@berkeley.edu
 # 3/15/20
@@ -135,8 +134,6 @@ policies.data <- read.csv(policies_in) %>%
     policy = if_else(optional=="Y", paste0(policy, "_opt"), policy)
   )
 
-# policies.data.end <- min(which(policies.data$date_start==''))
-# policies.data <- policies.data[1:policies.data.end-1,]
 policy.types <- unique(as.character(policies.data$policy))
 policies.data$date <- as.Date(policies.data$date_start, '%m/%d/%Y')
 
