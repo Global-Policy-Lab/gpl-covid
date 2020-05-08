@@ -16,12 +16,18 @@ exclude_from_popweights = [
     "travel_ban_intl_out",
 ]
 
-intensity_cols = ['intensity_group', 'intensity_group2', 'intensity_group3',
-                  'intensity_group4', 'intensity_group5']
+intensity_cols = [
+    "intensity_group",
+    "intensity_group2",
+    "intensity_group3",
+    "intensity_group4",
+    "intensity_group5",
+]
 
-path_intensity_coding_rules = cutil.DATA_RAW / 'usa' / 'intensity_coding_rules.json'
+path_intensity_coding_rules = cutil.DATA_RAW / "usa" / "intensity_coding_rules.json"
 with open(path_intensity_coding_rules) as js:
     us_intensity_rules = json.load(js)
+
 
 def count_policies_enacted(df, policy_list):
     """Count number of (non-pop-weighted) policy variables enacted on each row of `df`
@@ -146,12 +152,14 @@ def get_intensities(policies, adm_level):
 
     return total_intensity, max_intensity
 
+
 def preduce(policies, replaces):
     """Reduce a set of policies by removing all policies that are subsumed by another policy"""
     for p in set(replaces) & policies:
         policies = policies - set(replaces[p])
 
     return policies
+
 
 def pintensity(policies, weights):
     """Get the total intensity of a given bin of policies"""
@@ -161,20 +169,32 @@ def pintensity(policies, weights):
 
     return total
 
+
 def calculate_intensities_usa(policies_to_date, adm_level, policy):
     """
     Calculate policy intensities for each adm-unit in the US, based on weights
     and rules defined in `us_intensity_rules`
     """
 
-    weights = us_intensity_rules[policy]['weights']
-    replaces = us_intensity_rules[policy]['replaces']
+    weights = us_intensity_rules[policy]["weights"]
+    replaces = us_intensity_rules[policy]["replaces"]
 
-    pcols = ['adm2_name', 'adm3_name', 'policy_level', 'intensity_group', 'intensity_group2',
-             'intensity_group3', 'intensity_group4', 'intensity_group5', 'adm2_pop', 'adm3_pop', 'adm1_pop']
+    pcols = [
+        "adm2_name",
+        "adm3_name",
+        "policy_level",
+        "intensity_group",
+        "intensity_group2",
+        "intensity_group3",
+        "intensity_group4",
+        "intensity_group5",
+        "adm2_pop",
+        "adm3_pop",
+        "adm1_pop",
+    ]
 
     # Get all policies at adm-levels 0 or 1
-    level1 = policies_to_date[policies_to_date['policy_level'].isin([0, 1])][pcols]
+    level1 = policies_to_date[policies_to_date["policy_level"].isin([0, 1])][pcols]
 
     level1_policies = set()
     for c in intensity_cols:
@@ -183,14 +203,15 @@ def calculate_intensities_usa(policies_to_date, adm_level, policy):
 
     level1_policies = preduce(level1_policies, replaces)
     intensity = pintensity(level1_policies, weights)
-    policies_to_date['policy_intensity'] = intensity
+    policies_to_date["policy_intensity"] = intensity
 
     # Get all policies at adm-level 2 (or 0 or 1)
     level2_policies = dict()
-    for adm2 in policies_to_date[policies_to_date['policy_level'] == 2]['adm2_name'].unique():
-        l2_mask = (
-            (policies_to_date['policy_level'] == 2)
-            & (policies_to_date['adm2_name'] == adm2)
+    for adm2 in policies_to_date[policies_to_date["policy_level"] == 2][
+        "adm2_name"
+    ].unique():
+        l2_mask = (policies_to_date["policy_level"] == 2) & (
+            policies_to_date["adm2_name"] == adm2
         )
 
         level2_adm = policies_to_date[l2_mask][pcols]
@@ -205,15 +226,21 @@ def calculate_intensities_usa(policies_to_date, adm_level, policy):
         l2_adm_policies = preduce(l2_adm_policies, replaces)
         level2_policies[adm2] = l2_adm_policies
         intensity = pintensity(l2_adm_policies, weights)
-        policies_to_date.loc[l2_mask, 'policy_intensity'] = intensity
+        policies_to_date.loc[l2_mask, "policy_intensity"] = intensity
 
     # Get all policies at adm-level 3 (or 0 or 1 or 2)
     level3_policies = dict()
-    for adm2, adm3 in policies_to_date[policies_to_date['policy_level'] == 3][['adm2_name', 'adm3_name']].drop_duplicates().to_numpy():
+    for adm2, adm3 in (
+        policies_to_date[policies_to_date["policy_level"] == 3][
+            ["adm2_name", "adm3_name"]
+        ]
+        .drop_duplicates()
+        .to_numpy()
+    ):
         l3_mask = (
-            (policies_to_date['policy_level'] == 3)
-            & (policies_to_date['adm3_name'] == adm3)
-            & (policies_to_date['adm2_name'] == adm2)
+            (policies_to_date["policy_level"] == 3)
+            & (policies_to_date["adm3_name"] == adm3)
+            & (policies_to_date["adm2_name"] == adm2)
         )
         level3_adm = policies_to_date[l3_mask][pcols]
 
@@ -229,17 +256,22 @@ def calculate_intensities_usa(policies_to_date, adm_level, policy):
 
         l3_adm_policies = preduce(l3_adm_policies, replaces)
         intensity = pintensity(l3_adm_policies, weights)
-        policies_to_date.loc[l3_mask, 'policy_intensity'] = intensity
+        policies_to_date.loc[l3_mask, "policy_intensity"] = intensity
 
-    policies_to_date['optional'] = 0
+    policies_to_date["optional"] = 0
     return policies_to_date
 
-def calculate_intensities_adm_day_policy(policies_to_date, adm_level, policy, method='ITA'):
-    if method == 'USA':
+
+def calculate_intensities_adm_day_policy(
+    policies_to_date, adm_level, policy, method="ITA"
+):
+    if method == "USA":
         if policy in us_intensity_rules:
-            policies_to_date = calculate_intensities_usa(policies_to_date, adm_level, policy)
+            policies_to_date = calculate_intensities_usa(
+                policies_to_date, adm_level, policy
+            )
         else:
-            policies_to_date['policy_intensity'] = 1
+            policies_to_date["policy_intensity"] = 1
 
     adm_name = f"adm{adm_level}_name"
     adm_intensity = f"adm{adm_level}_policy_intensity"
@@ -337,7 +369,9 @@ def calculate_intensities_adm_day_policy(policies_to_date, adm_level, policy, me
     return result
 
 
-def get_policy_vals(policies, policy, date, adm, adm1, adm_level, policy_pickle_dict, method="ITA"):
+def get_policy_vals(
+    policies, policy, date, adm, adm1, adm_level, policy_pickle_dict, method="ITA"
+):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
         policies (pandas.DataFrame): table of policies, listed by date and regions affected
@@ -385,7 +419,9 @@ def get_policy_vals(policies, policy, date, adm, adm1, adm_level, policy_pickle_
     if psave in policy_pickle_dict[adm]:
         return policy_pickle_dict[adm][psave]
     else:
-        result = calculate_intensities_adm_day_policy(policies_to_date, adm_level, policy, method)
+        result = calculate_intensities_adm_day_policy(
+            policies_to_date, adm_level, policy, method
+        )
         policy_pickle_dict[adm][psave] = result
 
     return result
@@ -424,7 +460,13 @@ def initialize_panel(cases_df, cases_level, policy_list, policy_popwts):
 
 
 def assign_policies_to_panel(
-    cases_df, policies, cases_level, aggregate_vars=[], get_latlons=True, errors="raise", method="ITA"
+    cases_df,
+    policies,
+    cases_level,
+    aggregate_vars=[],
+    get_latlons=True,
+    errors="raise",
+    method="ITA",
 ):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
@@ -470,7 +512,7 @@ def assign_policies_to_panel(
     # Assign policy_level to distinguish policies specified at different admin-unit levels
     policies["policy_level"] = policies.apply(get_policy_level, axis=1)
 
-    if method == 'USA':
+    if method == "USA":
         for c in intensity_cols:
             policies[c] = policies[c].astype(str).str.strip()
 
