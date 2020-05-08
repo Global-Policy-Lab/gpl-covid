@@ -56,25 +56,16 @@ replace cum_confirmed_cases = . if cum_confirmed_cases < 10
 // drop cities if they never report when policies are implemented (e.g. could not find due to news censorship)
 bysort adm12_id : egen ever_policy1 = max(home_isolation) 
 bysort adm12_id : egen ever_policy2 = max(travel_ban_local) 
-gen ever_policy = ever_policy1 + ever_policy2
+bysort adm12_id : egen ever_policy3 = max(emergency_declaration) 
+// gen ever_policy = ever_policy1 + ever_policy2 + ever_policy3
+// br if ever_policy==0 //Macau but no cases
+gen ever_policy = ever_policy1 + ever_policy2 // only keeping 116 cities where we find at least one of travel ban or home iso b/c unlikely that the rest of cities did not implement
 keep if ever_policy > 0
 
 // count cities with only home_iso but no travel ban
 preserve
 	contract adm1_name adm2_name adm12_id if ever_policy==1 & ever_policy2==0 & cum_confirmed_cases!=.
 	count //80 cities out of 116 cities
-restore
-
-// look at distribution of days pre any policy
-preserve
-	keep if cum_confirmed_cases!=.
-	gen any_policy = (travel_ban_local + home_isolation)>0
-	collapse (min) t, by(adm1_name adm2_name adm12_id any_policy)
-	bysort adm1_name adm2_name adm12_id: egen t_start = min(t)
-	gen t_diff = t - t_start
-
-	hist t_diff if any_policy==1, freq width(1) discrete ///
-	tit(China) xtit(Days til first policy) ytit(Number of cities) lcolor(white) fcolor(navy) xsize(5)	
 restore
 
 // flag which admin unit has longest series
@@ -119,6 +110,7 @@ replace D_l_active_cases = transmissionrate if D_l_active_cases_raw < 0.04
 replace D_l_active_cases = . if D_l_active_cases > 1.5  // quality control
 replace D_l_active_cases = . if D_l_active_cases < 0  // trying to not model recoveries
 replace D_l_active_cases = . if D_l_active_cases == 0 & month == 1 // period of no case growth, not part of this analysis
+	// only for January b/c later dates represent end of pandemic in CHN so 0 growth rates is likely true
 
 
 //--------------testing regime changes
@@ -155,78 +147,53 @@ lab var day_avg "Observed avg change in log cases"
 tw (sc D_l_active_cases t, msize(tiny))(line sample_avg t)(sc day_avg t)
 
 
-//--------------------gen treatment for home isolation with lags
+//--------------------gen treatment with lags
 
-gen home_isolation_L0_to_L7 = 0
-forvalues i = 0/7 {
-	replace home_isolation_L0_to_L7 = 1 if L`i'.D.home_isolation == 1
+foreach var of varlist home_isolation travel_ban_local emergency_declaration{
+
+	gen `var'_L0_to_L7 = 0
+	forvalues i = 0/7 {
+		replace `var'_L0_to_L7 = 1 if L`i'.D.`var' == 1
+	}
+
+	gen `var'_L8_to_L14 = 0
+	forvalues i = 8/14 {
+		replace `var'_L8_to_L14 = 1 if L`i'.D.`var' == 1
+	}
+
+	gen `var'_L15_to_L21 = 0
+	forvalues i = 15/21 {
+		replace `var'_L15_to_L21 = 1 if L`i'.D.`var' == 1
+	}
+
+	gen `var'_L22_to_L28 = 0
+	forvalues i = 22/28 {
+		replace `var'_L22_to_L28 = 1 if L`i'.D.`var' == 1
+	}
+
+	gen `var'_L29_to_L70 = 0
+	forvalues i = 29/70 {
+		replace `var'_L29_to_L70 = 1 if L`i'.D.`var' == 1
+	}
+	
+	local lbl0 = strproper(subinstr("`var'", "_", " ", .))
+	local lbl = regexr("`lbl0'", " Local", "")
+	lab var `var'_L0_to_L7 "`lbl', Week 1"
+	lab var `var'_L8_to_L14 "`lbl', Week 2"
+	lab var `var'_L15_to_L21 "`lbl', Week 3"
+	lab var `var'_L22_to_L28 "`lbl', Week 4"
+	lab var `var'_L29_to_L70 "`lbl', Week 5"
 }
 
-gen home_isolation_L8_to_L14 = 0
-forvalues i = 8/14 {
-	replace home_isolation_L8_to_L14 = 1 if L`i'.D.home_isolation == 1
-}
+// check that lags are not overlapping
+egen x1 = rowtotal(home_isolation_L*)
+egen x2 = rowtotal(travel_ban_local_L*)
+egen x3 = rowtotal(emergency_declaration_L*)
 
-gen home_isolation_L15_to_L21 = 0
-forvalues i = 15/21 {
-	replace home_isolation_L15_to_L21 = 1 if L`i'.D.home_isolation == 1
-}
-
-gen home_isolation_L22_to_L28 = 0
-forvalues i = 22/28 {
-	replace home_isolation_L22_to_L28 = 1 if L`i'.D.home_isolation == 1
-}
-
-gen home_isolation_L29_to_L70 = 0
-forvalues i = 29/70 {
-	replace home_isolation_L29_to_L70 = 1 if L`i'.D.home_isolation == 1
-}
-
-lab var home_isolation_L0_to_L7 "Home isolation, Week 1"
-lab var home_isolation_L8_to_L14 "Home isolation, Week 2"
-lab var home_isolation_L15_to_L21 "Home isolation, Week 3"
-lab var home_isolation_L22_to_L28 "Home isolation, Week 4"
-lab var home_isolation_L29_to_L70 "Home isolation, Week 5"
-
-//--------------------gen treatment for travel ban with lags
-
-gen travel_ban_local_L0_to_L7 = 0
-forvalues i = 0/7 {
-	replace travel_ban_local_L0_to_L7 = 1 if L`i'.D.travel_ban_local == 1
-}
-
-gen travel_ban_local_L8_to_L14 = 0
-forvalues i = 8/14 {
-	replace travel_ban_local_L8_to_L14 = 1 if L`i'.D.travel_ban_local == 1
-}
-
-gen travel_ban_local_L15_to_L21 = 0
-forvalues i = 15/21 {
-	replace travel_ban_local_L15_to_L21 = 1 if L`i'.D.travel_ban_local == 1
-}
-
-gen travel_ban_local_L22_to_L28 = 0
-forvalues i = 22/28 {
-	replace travel_ban_local_L22_to_L28 = 1 if L`i'.D.travel_ban_local == 1
-}
-
-gen travel_ban_local_L29_to_L70 = 0
-forvalues i = 29/70 {
-	replace travel_ban_local_L29_to_L70 = 1 if L`i'.D.travel_ban_local == 1
-}
-
-lab var travel_ban_local_L0_to_L7 "Travel ban, Week 1"
-lab var travel_ban_local_L8_to_L14 "Travel ban, Week 2"
-lab var travel_ban_local_L15_to_L21 "Travel ban, Week 3"
-lab var travel_ban_local_L22_to_L28 "Travel ban, Week 4"
-lab var travel_ban_local_L29_to_L70 "Travel ban, Week 5"
-
-// -----------diagnostic: should be non-overlapping lags
-
-gen x1 = home_isolation_L0_to_L7+ home_isolation_L8_to_L14 +home_isolation_L15_to_L21+ home_isolation_L22_to_L28+ home_isolation_L29_to_L70
-gen x2 = travel_ban_local_L0_to_L7+ travel_ban_local_L8_to_L14 +travel_ban_local_L15_to_L21+ travel_ban_local_L22_to_L28+ travel_ban_local_L29_to_L70
 tab t x1
 tab t x2
+tab t x3
+drop x1 x2 x3
 
 //------------------main estimates
 
@@ -234,46 +201,19 @@ tab t x2
 outsheet using "models/reg_data/CHN_reg_data.csv", comma replace
 
 // main regression model
-reghdfe D_l_active_cases travel_ban_local_* home_isolation_* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
+reghdfe D_l_active_cases emergency_declaration_L* travel_ban_local_L* home_isolation_L* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
 local r2 = e(r2)
 outreg2 using "results/tables/reg_results/CHN_estimates_table", sideway noparen nodepvar word replace label ///
- addtext(City FE, "YES", Day-of-Week FE, "NO") title(China, "Dependent variable: Growth rate of active cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1")
+ addtext(City FE, "YES", Day-of-Week FE, "NO") title(China, "Dependent variable: Growth rate of active cases (\u0916?log cases per day\'29") ///
+ ctitle("Coefficient"; "Std Error") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1")
 cap erase "results/tables/reg_results/CHN_estimates_table.txt"
 
-// export coef
+// saving coef
 tempfile results_file
 postfile results str18 adm0 str50 policy beta se using `results_file', replace
-foreach var in "home_isolation_L0_to_L7" "travel_ban_local_L0_to_L7" "home_isolation_L8_to_L14" ///
-"travel_ban_local_L8_to_L14" "home_isolation_L15_to_L21" "travel_ban_local_L15_to_L21" ///
-"home_isolation_L22_to_L28" "travel_ban_local_L22_to_L28" "home_isolation_L29_to_L70" ///
-"travel_ban_local_L29_to_L70" {
+foreach var of varlist emergency_declaration_L* travel_ban_local_L* home_isolation_L* {
 	post results ("CHN") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
-
-
-// effect of package of policies (FOR FIG2)
-lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 + home_isolation_L8_to_L14 ///
-+ travel_ban_local_L8_to_L14 + home_isolation_L15_to_L21 + travel_ban_local_L15_to_L21 ///
-+ home_isolation_L22_to_L28 + travel_ban_local_L22_to_L28 + home_isolation_L29_to_L70 ///
-+ travel_ban_local_L29_to_L70
-post results ("CHN") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-
-lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 		// first week
-post results ("CHN") ("first week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-lincom home_isolation_L8_to_L14 + travel_ban_local_L8_to_L14 	// second week
-post results ("CHN") ("second week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-lincom home_isolation_L15_to_L21 + travel_ban_local_L15_to_L21 	// third week
-post results ("CHN") ("third week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-lincom home_isolation_L22_to_L28 + travel_ban_local_L22_to_L28 	// fourth week
-post results ("CHN") ("fourth week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-lincom home_isolation_L29_to_L70 + travel_ban_local_L29_to_L70 	// fifth week and after
-post results ("CHN") ("fifth week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-
-
-// looking at different policies (similar to Fig2)
-coefplot, keep(home_isolation_* travel_ban_local_*)
-
 
 //------------- checking error structure (make fig for appendix)
 
@@ -298,16 +238,21 @@ lab var y_actual "predicted growth with actual policy"
 
 // estimating magnitude of treatment effects for each obs
 gen treatment = ///
-home_isolation_L0_to_L7 *_b[home_isolation_L0_to_L7] + ///
-travel_ban_local_L0_to_L7 * _b[travel_ban_local_L0_to_L7] + ///
-home_isolation_L8_to_L14 * _b[home_isolation_L8_to_L14] +  ///
-travel_ban_local_L8_to_L14 * _b[travel_ban_local_L8_to_L14] + ///
-home_isolation_L15_to_L21 * _b[home_isolation_L15_to_L21] + ///
-travel_ban_local_L15_to_L21 * _b[travel_ban_local_L15_to_L21] + /// 
-home_isolation_L22_to_L28 * _b[home_isolation_L22_to_L28] + /// 
-travel_ban_local_L22_to_L28 * _b[travel_ban_local_L22_to_L28] + ///
-home_isolation_L29_to_L70 * _b[home_isolation_L29_to_L70] + ///
-travel_ban_local_L29_to_L70 * _b[travel_ban_local_L29_to_L70] ///
+home_isolation_L0_to_L7          * _b[home_isolation_L0_to_L7] + ///
+travel_ban_local_L0_to_L7        * _b[travel_ban_local_L0_to_L7] + ///
+emergency_declaration_L0_to_L7   * _b[emergency_declaration_L0_to_L7] + ///
+home_isolation_L8_to_L14         * _b[home_isolation_L8_to_L14] +  ///
+travel_ban_local_L8_to_L14       * _b[travel_ban_local_L8_to_L14] + ///
+emergency_declaration_L8_to_L14  * _b[emergency_declaration_L8_to_L14] + ///
+home_isolation_L15_to_L21        * _b[home_isolation_L15_to_L21] + ///
+travel_ban_local_L15_to_L21      * _b[travel_ban_local_L15_to_L21] + /// 
+emergency_declaration_L15_to_L21 * _b[emergency_declaration_L15_to_L21] + /// 
+home_isolation_L22_to_L28        * _b[home_isolation_L22_to_L28] + /// 
+travel_ban_local_L22_to_L28 	 * _b[travel_ban_local_L22_to_L28] + ///
+emergency_declaration_L22_to_L28 * _b[emergency_declaration_L22_to_L28] + ///
+home_isolation_L29_to_L70 		 * _b[home_isolation_L29_to_L70] + ///
+travel_ban_local_L29_to_L70 	 * _b[travel_ban_local_L29_to_L70] + ///
+emergency_declaration_L29_to_L70 * _b[emergency_declaration_L29_to_L70] ///
 if e(sample)
 
 // predicting counterfactual growth for each obs
@@ -321,6 +266,54 @@ testing_regime_change_20feb2020 * _b[testing_regime_change_20feb2020] + ///
 testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
 _b[_cons] + __hdfe1__ if e(sample), ci(lb_counter ub_counter)
     
+// effect of package of policies (FOR FIG2)
+lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 + emergency_declaration_L0_to_L7 + ///
+	home_isolation_L8_to_L14 + travel_ban_local_L8_to_L14 + emergency_declaration_L8_to_L14 + ///
+	home_isolation_L15_to_L21 + travel_ban_local_L15_to_L21 + emergency_declaration_L15_to_L21 + ///
+	home_isolation_L22_to_L28 + travel_ban_local_L22_to_L28 + emergency_declaration_L22_to_L28 + ///
+	home_isolation_L29_to_L70 + travel_ban_local_L29_to_L70 + emergency_declaration_L29_to_L70
+post results ("CHN") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+local comb_policy = round(r(estimate), 0.001)
+local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
+
+lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 + emergency_declaration_L0_to_L7		    // first week
+post results ("CHN") ("first week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L8_to_L14 + travel_ban_local_L8_to_L14 + emergency_declaration_L8_to_L14	    // second week
+post results ("CHN") ("second week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L15_to_L21 + travel_ban_local_L15_to_L21 + emergency_declaration_L15_to_L21	// third week
+post results ("CHN") ("third week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L22_to_L28 + travel_ban_local_L22_to_L28 + emergency_declaration_L22_to_L28	// fourth week
+post results ("CHN") ("fourth week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L29_to_L70 + travel_ban_local_L29_to_L70 + emergency_declaration_L29_to_L70	// fifth week and after
+post results ("CHN") ("fifth week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+// quality control: don't want to be forecasting negative growth (not modeling recoveries)
+// fix so there are no negative growth rates in error bars
+foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_counter{
+	replace `var' = 0 if `var'<0 & `var'!=.
+}
+
+// the mean here is the avg "biological" rate of initial spread (FOR Fig2)
+sum y_counter
+post results ("CHN") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
+
+local no_policy = round(r(mean), 0.001)
+local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
+
+// looking at different policies (similar to Fig2)
+coefplot, keep(emergency_declaration_L* travel_ban_local_L* home_isolation_L*) ///
+tit("CHN: policy packages") subtitle(`subtitle2') ///
+xline(0) name(CHN_policy, replace)
+
+
+// export predicted counterfactual growth rate
+preserve
+	keep if e(sample) == 1
+	keep y_counter
+	g adm0 = "CHN"
+	outsheet * using "models/CHN_preds.csv", comma replace 
+restore
 
 // compute ATE
 preserve
@@ -342,28 +335,8 @@ preserve
 	save `ATE'
 restore
 
-
-// quality control: don't want to be forecasting negative growth (not modeling recoveries)
-// fix so there are no negative growth rates in error bars
-foreach var of varlist y_actual y_counter lb_y_actual ub_y_actual lb_counter ub_counter{
-	replace `var' = 0 if `var'<0 & `var'!=.
-}
-
-// the mean here is the avg "biological" rate of initial spread (FOR Fig2)
-sum y_counter
-post results ("CHN") ("no_policy rate") (round(r(mean), 0.001)) (round(r(sd), 0.001)) 
-
-// export predicted counterfactual growth rate
-preserve
-	keep if e(sample) == 1
-	keep y_counter
-	g adm0 = "CHN"
-	outsheet * using "models/CHN_preds.csv", comma replace 
-restore
-
 // the mean average growth rate suppression delivered by existing policy (FOR TEXT)
 sum treatment
-
 
 // computing daily avgs in sample, store with a single panel unit (longest time series)
 reg y_actual i.t
