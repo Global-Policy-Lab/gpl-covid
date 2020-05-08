@@ -162,8 +162,6 @@ def pintensity(policies, weights):
             continue
 
         if p not in weights.keys():
-            if p == "food/drink reduced cap":
-                continue
             raise ValueError(f"Missing intensity group: {p}")
         else:
             total += weights[p]
