@@ -4,7 +4,7 @@
       "level 1": 0.2,
       "level 2": 0.2,
       "level 3": 0.2,
-      "level 4 ": 0.2,
+      "level 4": 0.2,
       "no outbound non-essential travel": 1
     },
 
@@ -42,38 +42,38 @@
     "weights": {
       "requires social distancing standards anywhere outside home - optional": 0.07,
       "requires social distancing standards anywhere outside home": 0.14,
-      "Isolate/quarantine certain populations": 0.14,
-      "Mandates mask wearing": 0.14,
-      "Closes public facilities": 0.14,
-      "Closes outdoor facilities": 0.14,
-      "Restricts or requires social distance for visitation to certain facilities": 0.14,
-      "Restricts or requires social distance for visitation to certain facilities - optional": 0.07,
-      "Suspends/restricts non-critical state operations/govt services": 0.14,
-      "Suspends/restricts non-critical state operations/govt services - optional": 0.07
+      "isolate/quarantine certain populations": 0.14,
+      "mandates mask wearing": 0.14,
+      "closes public facilities": 0.14,
+      "closes outdoor facilities": 0.14,
+      "restricts or requires social distance for visitation to certain facilities": 0.14,
+      "restricts or requires social distance for visitation to certain facilities - optional": 0.07,
+      "suspends/restricts non-critical state operations/govt services": 0.14,
+      "suspends/restricts non-critical state operations/govt services - optional": 0.07
     },
 
     "replaces": {
       "requires social distancing standards anywhere outside home": ["requires social distancing standards anywhere outside home - optional"],
-      "Restricts or requires social distance for visitation to certain facilities": ["Restricts or requires social distance for visitation to certain facilities - optional"],
-      "Suspends/restricts non-critical state operations/govt services": ["Suspends/restricts non-critical state operations/govt services - optional"]
+      "restricts or requires social distance for visitation to certain facilities": ["restricts or requires social distance for visitation to certain facilities - optional"],
+      "suspends/restricts non-critical state operations/govt services": ["suspends/restricts non-critical state operations/govt services - optional"]
     }
   },
 
   "travel_ban_intl_in": {
     "weights": {
-      "China": 0.05,
-      "South Korea": 0.05,
-      "Iran": 0.05,
-      "Europe": 0.05,
-      "UK": 0.05,
-      "Ireland": 0.05,
+      "china": 0.05,
+      "south korea": 0.05,
+      "iran": 0.05,
+      "europe": 0.05,
+      "uk": 0.05,
+      "ireland": 0.05,
+      "italy": 0.05,
       "advisory": 0.1,
       "any inbound travelers quarantine": 0.2,
       "no inbound travel": 1
     },
     "replaces": {
-      "no inbound international travel": ["China", "South Korea", "Iran", "Europe", "UK", "Ireland", "advisory", "any inbound travelers quarantine"],
-      "no inbound travel": ["China", "South Korea", "Iran", "Europe", "UK", "Ireland", "advisory", "any inbound travelers quarantine", "no inbound international travel"]
+      "no inbound travel": ["china", "south korea", "iran", "europe", "uk", "ireland", "italy", "advisory", "any inbound travelers quarantine", "no inbound international travel"]
     }
   },
 

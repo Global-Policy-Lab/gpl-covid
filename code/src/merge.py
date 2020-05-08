@@ -16,14 +16,6 @@ exclude_from_popweights = [
     "travel_ban_intl_out",
 ]
 
-intensity_cols = [
-    "intensity_group",
-    "intensity_group2",
-    "intensity_group3",
-    "intensity_group4",
-    "intensity_group5",
-]
-
 path_intensity_coding_rules = cutil.DATA_RAW / "usa" / "intensity_coding_rules.json"
 with open(path_intensity_coding_rules) as js:
     us_intensity_rules = json.load(js)
@@ -156,7 +148,7 @@ def get_intensities(policies, adm_level):
 def preduce(policies, replaces):
     """Reduce a set of policies by removing all policies that are subsumed by another policy"""
     for p in set(replaces) & policies:
-        policies = policies - set(replaces[p])
+        policies -= set(replaces[p])
 
     return policies
 
@@ -164,8 +156,17 @@ def preduce(policies, replaces):
 def pintensity(policies, weights):
     """Get the total intensity of a given bin of policies"""
     total = 0
-    for p in set(weights) & policies:
-        total += weights[p]
+
+    for p in policies:
+        if p.startswith("na") or p.startswith("n/a") or p.startswith("nan"):
+            continue
+
+        if p not in weights.keys():
+            if p == "food/drink reduced cap":
+                continue
+            raise ValueError(f"Missing intensity group: {p}")
+        else:
+            total += weights[p]
 
     return total
 
@@ -179,19 +180,18 @@ def calculate_intensities_usa(policies_to_date, adm_level, policy):
     weights = us_intensity_rules[policy]["weights"]
     replaces = us_intensity_rules[policy]["replaces"]
 
+    intensity_cols = [
+        c for c in policies_to_date.columns if c.startswith("intensity_group")
+    ]
+
     pcols = [
         "adm2_name",
         "adm3_name",
         "policy_level",
-        "intensity_group",
-        "intensity_group2",
-        "intensity_group3",
-        "intensity_group4",
-        "intensity_group5",
         "adm2_pop",
         "adm3_pop",
         "adm1_pop",
-    ]
+    ] + intensity_cols
 
     # Get all policies at adm-levels 0 or 1
     level1 = policies_to_date[policies_to_date["policy_level"].isin([0, 1])][pcols]
@@ -513,8 +513,11 @@ def assign_policies_to_panel(
     policies["policy_level"] = policies.apply(get_policy_level, axis=1)
 
     if method == "USA":
+        intensity_cols = [
+            c for c in policies.columns if c.startswith("intensity_group")
+        ]
         for c in intensity_cols:
-            policies[c] = policies[c].astype(str).str.strip()
+            policies[c] = policies[c].astype(str).str.strip().str.lower()
 
     # Treat policies in `aggregate_vars` as independent policies (just like mandatory policies)
     # Set optional to 0 to avoid applying normal optional logic in `get_policy_vals()`

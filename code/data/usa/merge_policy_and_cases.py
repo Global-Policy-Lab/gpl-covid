@@ -35,9 +35,7 @@ def main():
     policy_data.loc[:, "date_start"] = pd.to_datetime(policy_data["date_start"])
     policy_data["date_end"] = pd.to_datetime("2099-12-31")
 
-    df_merged = merge.assign_policies_to_panel(
-        cases_data, policy_data, 1, errors="warn", method="USA"
-    )
+    df_merged = merge.assign_policies_to_panel(cases_data, policy_data, 1, method="USA")
 
     if add_testing_regime:
         testimg_regime_csv = os.path.join(
