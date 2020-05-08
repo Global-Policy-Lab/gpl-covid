@@ -204,8 +204,9 @@ outsheet using "models/reg_data/CHN_reg_data.csv", comma replace
 reghdfe D_l_active_cases emergency_declaration_L* travel_ban_local_L* home_isolation_L* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
 local r2 = e(r2)
 outreg2 using "results/tables/reg_results/CHN_estimates_table", sideway noparen nodepvar word replace label ///
- addtext(City FE, "YES", Day-of-Week FE, "NO") title(China, "Dependent variable: Growth rate of active cases (\u0916?log cases per day\'29") ///
- ctitle("Coefficient"; "Std Error") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1")
+ title(China, "Dependent variable: growth rate of active cases (\u0916?log cases per day\'29") ///
+ ctitle("Coefficient"; "Std Error") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ "This regression includes city fixed effects and clustered standard errors at the day level.")
 cap erase "results/tables/reg_results/CHN_estimates_table.txt"
 
 // saving coef

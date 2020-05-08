@@ -69,28 +69,11 @@ replace cum_confirmed_cases = . if t == 21976 | t == 21977
 
 //------------------testing regime changes
 
-// grab each date of any testing regime change
-preserve
-	collapse (min) t, by(testing_regime)
-	sort t //should already be sorted but just in case
-	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
-	levelsof t, local(testing_change_dates)
-restore
-
-// create a dummy for each testing regime change date
-foreach t_chg of local testing_change_dates{
-	local t_str = string(`t_chg', "%td")
-	gen testing_regime_change_`t_str' = t==`t_chg'
-		
-	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
-	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
-}
-
-// high_screening_regime in Qom, which transitioned on Mar 6
-// assume rollout completed on Mar 13
-drop testing_regime_change_06mar2020
+// high_screening_regime in Qom/Gilan/Isfahan, which transitioned on Mar 6
+// assume rollout completed on Mar 13 w rest of nation
 gen testing_regime_13mar2020 = t==mdy(3,13,2020)
 lab var testing_regime_13mar2020 "Testing regime change on Mar 13, 2020"
+
 
 //------------------diagnostic
 
@@ -135,8 +118,9 @@ outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
 outreg2 using "results/tables/reg_results/IRN_estimates_table", sideway noparen nodepvar word replace label ///
- addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Iran, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ title(Iran, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ ctitle("Coefficient"; "Std Error") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ "This regression includes province fixed effects, day-of-week fixed effects, and clustered standard errors at the day level." "" ///
  "\'22Travel ban (opt), work from home, school closure\'22 policies were enacted March 1-5, 2020 which overlaps with missing provincial case data in Iran on March 2-3, 2020.")
 cap erase "results/tables/reg_results/IRN_estimates_table.txt"
 
@@ -176,7 +160,11 @@ if e(sample)
 
 // predicting counterfactual growth for each obs
 *gen y_counter = y_actual - treatment if e(sample)
-predictnl y_counter = testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+// predictnl y_counter = testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
+// _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
+
+predictnl y_counter = testing_regime_06mar2020 * _b[testing_regime_06mar2020] + ///
+testing_regime_13mar2020 * _b[testing_regime_13mar2020] + ///
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of package of policies (FOR FIG2)

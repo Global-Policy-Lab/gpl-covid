@@ -130,8 +130,9 @@ outsheet using "models/reg_data/ITA_reg_data.csv", comma replace
 reghdfe D_l_cum_confirmed_cases p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
 
 outreg2 using "results/tables/reg_results/ITA_estimates_table", sideway noparen nodepvar word replace label ///
- addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Italy, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ title(Italy, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ ctitle("Coefficient"; "Std Error") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ "This regression includes province fixed effects, day-of-week fixed effects, and clustered standard errors at the day level." "" ///
  "\'22Social distance\'22 includes policies for working from home, maintaining 1 meter distance from others in public, and prohibiting public and private events.")
 cap erase "results/tables/reg_results/ITA_estimates_table.txt"
 

@@ -114,8 +114,9 @@ reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure national_lock
  testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
  
 outreg2 using "results/tables/reg_results/FRA_estimates_table", sideway noparen nodepvar word replace label ///
- addtext(Region FE, "YES", Day-of-Week FE, "YES") title(France, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ title(France, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ ctitle("Coefficient"; "Std Error") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ "This regression includes region fixed effects, day-of-week fixed effects, and clustered standard errors at the day level." "" ///
  "\'22National lockdown\'22 policies include business closures and home isolation.")
 cap erase "results/tables/reg_results/FRA_estimates_table.txt"
 
