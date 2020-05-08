@@ -1,11 +1,13 @@
 import copy
 import datetime
 import pickle
+import json
 
 import numpy as np
 import pandas as pd
 
 import src.pop as cpop
+import src.utils as cutil
 
 popweighted_suffix = "popwt"
 exclude_from_popweights = [
@@ -13,6 +15,13 @@ exclude_from_popweights = [
     "travel_ban_intl_in",
     "travel_ban_intl_out",
 ]
+
+intensity_cols = ['intensity_group', 'intensity_group2', 'intensity_group3',
+                  'intensity_group4', 'intensity_group5']
+
+path_intensity_coding_rules = cutil.DATA_RAW / 'usa' / 'intensity_coding_rules.json'
+with open(path_intensity_coding_rules) as js:
+    us_intensity_rules = json.load(js)
 
 def count_policies_enacted(df, policy_list):
     """Count number of (non-pop-weighted) policy variables enacted on each row of `df`
@@ -137,126 +146,198 @@ def get_intensities(policies, adm_level):
 
     return total_intensity, max_intensity
 
-def calculate_intensities_usa(policies_to_date, adm_level):
+def preduce(policies, replaces):
+    """Reduce a set of policies by removing all policies that are subsumed by another policy"""
+    for p in set(replaces) & policies:
+        policies = policies - set(replaces[p])
 
-    weights = {
-        "opt food/drink closure": .16,
-        "opt all non-essentials": .16,
-        "food/drink closure": .33,
-        "recreation": .33,
-        "all non-essentials": 1
-    }
-    
-    replaces = {
-        "food/drink closure": ["opt food/drink closure"],
-        "all non-essentials": ["opt all non-essentials", "opt food/drink closure", "food/drink closure", "recreation"],
-    }
+    return policies
 
+def pintensity(policies, weights):
+    """Get the total intensity of a given bin of policies"""
+    total = 0
+    for p in set(weights) & policies:
+        total += weights[p]
 
+    return total
 
-    return (0, 0, 0, 0)
+def calculate_intensities_usa(policies_to_date, adm_level, policy):
+    """
+    Calculate policy intensities for each adm-unit in the US, based on weights
+    and rules defined in `us_intensity_rules`
+    """
 
-def calculate_intensities_adm_day_policy(policies_to_date, adm_level, method='ITA'):
-    if method == 'USA':
-        return calculate_intensities_usa(policies_to_date, adm_level)
-    else:
-        adm_name = f"adm{adm_level}_name"
-        adm_intensity = f"adm{adm_level}_policy_intensity"
-        adm_levels = sorted(
-            [
-                int(col[3])
-                for col in policies_to_date.columns
-                if col.startswith("adm") and col.endswith("name")
-            ]
+    weights = us_intensity_rules[policy]['weights']
+    replaces = us_intensity_rules[policy]['replaces']
+
+    pcols = ['adm2_name', 'adm3_name', 'policy_level', 'intensity_group', 'intensity_group2',
+             'intensity_group3', 'intensity_group4', 'intensity_group5', 'adm2_pop', 'adm3_pop', 'adm1_pop']
+
+    # Get all policies at adm-levels 0 or 1
+    level1 = policies_to_date[policies_to_date['policy_level'].isin([0, 1])][pcols]
+
+    level1_policies = set()
+    for c in intensity_cols:
+        level1_policies = level1_policies | set(level1[c].unique())
+    level1_policies = level1_policies - set([np.nan])
+
+    level1_policies = preduce(level1_policies, replaces)
+    intensity = pintensity(level1_policies, weights)
+    policies_to_date['policy_intensity'] = intensity
+
+    # Get all policies at adm-level 2 (or 0 or 1)
+    level2_policies = dict()
+    for adm2 in policies_to_date[policies_to_date['policy_level'] == 2]['adm2_name'].unique():
+        l2_mask = (
+            (policies_to_date['policy_level'] == 2)
+            & (policies_to_date['adm2_name'] == adm2)
         )
-        adm_lower_levels = [l for l in adm_levels if l <= adm_level]
-        adm_higher_levels = [l for l in adm_levels if l > adm_level]
 
-        def in_other(row, other):
-            """Find any rows in `other` that cover the area covered by the policy `row`, returning the maximum
-            intensity in `other` so that the full optional intensity (but no more) will be accounted for in the
-            overlap DataFrame
-            """
-            other_contains_row = np.ones_like(other["adm0_name"], dtype=bool)
-            for level in adm_levels:
-                other_contains_row = (other_contains_row) & (
-                    other[f"adm{level}_name"].isin([row[f"adm{level}_name"], "all", "All"])
-                )
+        level2_adm = policies_to_date[l2_mask][pcols]
 
-            if other_contains_row.sum() == 0:
-                return 0
+        l2_adm_policies = set()
+        for c in intensity_cols:
+            l2_adm_policies = l2_adm_policies | set(level2_adm[c].unique())
 
-            return other.loc[other_contains_row, "policy_intensity"].max()
+        l2_adm_policies = l2_adm_policies | level1_policies
+        l2_adm_policies = l2_adm_policies - set([np.nan])
 
-        is_opt = policies_to_date["optional"] == 1
-        policies_opt = policies_to_date[is_opt].copy()
-        policies_mand = policies_to_date[~is_opt].copy()
+        l2_adm_policies = preduce(l2_adm_policies, replaces)
+        level2_policies[adm2] = l2_adm_policies
+        intensity = pintensity(l2_adm_policies, weights)
+        policies_to_date.loc[l2_mask, 'policy_intensity'] = intensity
 
-        if len(policies_opt) > 0 and len(policies_mand) > 0:
-            # Apply logic of calculating mandatory policies fully,
-            # calculating optional policies by taking the full value
-            # and subtracting the value of those policies that have
-            # overlap with mandatory policies
+    # Get all policies at adm-level 3 (or 0 or 1 or 2)
+    level3_policies = dict()
+    for adm2, adm3 in policies_to_date[policies_to_date['policy_level'] == 3][['adm2_name', 'adm3_name']].drop_duplicates().to_numpy():
+        l3_mask = (
+            (policies_to_date['policy_level'] == 3)
+            & (policies_to_date['adm3_name'] == adm3)
+            & (policies_to_date['adm2_name'] == adm2)
+        )
+        level3_adm = policies_to_date[l3_mask][pcols]
 
-            policies_opt["intensity_in_mand"] = policies_opt.apply(
-                lambda row: in_other(row, policies_mand), axis=1
+        l3_adm_policies = set()
+        for c in intensity_cols:
+            l3_adm_policies = l3_adm_policies | set(level3_adm[c].unique())
+        l3_adm_policies = l3_adm_policies - set([np.nan])
+
+        l3_adm_policies = l3_adm_policies | set(level1_policies)
+
+        if adm2 in level2_policies:
+            l3_adm_policies = l3_adm_policies | level2_policies[adm2]
+
+        l3_adm_policies = preduce(l3_adm_policies, replaces)
+        intensity = pintensity(l3_adm_policies, weights)
+        policies_to_date.loc[l3_mask, 'policy_intensity'] = intensity
+
+    policies_to_date['optional'] = 0
+    return policies_to_date
+
+def calculate_intensities_adm_day_policy(policies_to_date, adm_level, policy, method='ITA'):
+    if method == 'USA':
+        if policy in us_intensity_rules:
+            policies_to_date = calculate_intensities_usa(policies_to_date, adm_level, policy)
+        else:
+            policies_to_date['policy_intensity'] = 1
+
+    adm_name = f"adm{adm_level}_name"
+    adm_intensity = f"adm{adm_level}_policy_intensity"
+    adm_levels = sorted(
+        [
+            int(col[3])
+            for col in policies_to_date.columns
+            if col.startswith("adm") and col.endswith("name")
+        ]
+    )
+    adm_lower_levels = [l for l in adm_levels if l <= adm_level]
+    adm_higher_levels = [l for l in adm_levels if l > adm_level]
+
+    def in_other(row, other):
+        """Find any rows in `other` that cover the area covered by the policy `row`, returning the maximum
+        intensity in `other` so that the full optional intensity (but no more) will be accounted for in the
+        overlap DataFrame
+        """
+        other_contains_row = np.ones_like(other["adm0_name"], dtype=bool)
+        for level in adm_levels:
+            other_contains_row = (other_contains_row) & (
+                other[f"adm{level}_name"].isin([row[f"adm{level}_name"], "all", "All"])
             )
-            policies_opt = policies_opt[policies_opt["intensity_in_mand"] == 0]
-            policies_mand["intensity_in_opt"] = policies_mand.apply(
-                lambda row: in_other(row, policies_opt), axis=1
+
+        if other_contains_row.sum() == 0:
+            return 0
+
+        return other.loc[other_contains_row, "policy_intensity"].max()
+
+    is_opt = policies_to_date["optional"] == 1
+    policies_opt = policies_to_date[is_opt].copy()
+    policies_mand = policies_to_date[~is_opt].copy()
+
+    if len(policies_opt) > 0 and len(policies_mand) > 0:
+        # Apply logic of calculating mandatory policies fully,
+        # calculating optional policies by taking the full value
+        # and subtracting the value of those policies that have
+        # overlap with mandatory policies
+
+        policies_opt["intensity_in_mand"] = policies_opt.apply(
+            lambda row: in_other(row, policies_mand), axis=1
+        )
+        policies_opt = policies_opt[policies_opt["intensity_in_mand"] == 0]
+        policies_mand["intensity_in_opt"] = policies_mand.apply(
+            lambda row: in_other(row, policies_opt), axis=1
+        )
+
+        # Set `policies_overlap` to the mandatory policies that are found in `policies_opt`, with `policy_intensity`
+        # replaced by the intensity found in the corresponding row of `policies_opt`
+        policies_overlap = policies_mand[policies_mand["intensity_in_opt"] > 0].copy()
+        policies_overlap = policies_overlap.drop(columns=["policy_intensity"])
+        policies_overlap = policies_overlap.rename(
+            columns={"intensity_in_opt": "policy_intensity"}
+        )
+
+        total_mandatory_intensity, mandatory_intensity_indicator = get_intensities(
+            policies_mand, adm_level
+        )
+        subtotal_optional_intensity, optional_intensity_indicator = get_intensities(
+            policies_opt, adm_level
+        )
+        total_overlap_intensity, overlap_intensity_indicator = get_intensities(
+            policies_overlap, adm_level
+        )
+
+        total_optional_intensity = subtotal_optional_intensity - total_overlap_intensity
+        assert total_optional_intensity >= 0
+    else:
+        # If there are not both mandatory and optional policies, just get the intensities of those DataFrames
+        # individually, without worrying about overlap
+        if len(policies_opt) == 0:
+            total_optional_intensity, optional_intensity_indicator = (0, 0)
+        else:
+            total_optional_intensity, optional_intensity_indicator = get_intensities(
+                policies_opt, adm_level
             )
 
-            # Set `policies_overlap` to the mandatory policies that are found in `policies_opt`, with `policy_intensity`
-            # replaced by the intensity found in the corresponding row of `policies_opt`
-            policies_overlap = policies_mand[policies_mand["intensity_in_opt"] > 0].copy()
-            policies_overlap = policies_overlap.drop(columns=["policy_intensity"])
-            policies_overlap = policies_overlap.rename(
-                columns={"intensity_in_opt": "policy_intensity"}
-            )
-
+        if len(policies_mand) == 0:
+            total_mandatory_intensity, mandatory_intensity_indicator = (0, 0)
+        else:
             total_mandatory_intensity, mandatory_intensity_indicator = get_intensities(
                 policies_mand, adm_level
             )
-            subtotal_optional_intensity, optional_intensity_indicator = get_intensities(
-                policies_opt, adm_level
-            )
-            total_overlap_intensity, overlap_intensity_indicator = get_intensities(
-                policies_overlap, adm_level
-            )
 
-            total_optional_intensity = subtotal_optional_intensity - total_overlap_intensity
-            assert total_optional_intensity >= 0
-        else:
-            # If there are not both mandatory and optional policies, just get the intensities of those DataFrames
-            # individually, without worrying about overlap
-            if len(policies_opt) == 0:
-                total_optional_intensity, optional_intensity_indicator = (0, 0)
-            else:
-                total_optional_intensity, optional_intensity_indicator = get_intensities(
-                    policies_opt, adm_level
-                )
+    # For the policy indicator, ensure that not both are counted
+    if optional_intensity_indicator > 0 and mandatory_intensity_indicator > 0:
+        optional_intensity_indicator = 0
 
-            if len(policies_mand) == 0:
-                total_mandatory_intensity, mandatory_intensity_indicator = (0, 0)
-            else:
-                total_mandatory_intensity, mandatory_intensity_indicator = get_intensities(
-                    policies_mand, adm_level
-                )
-
-        # For the policy indicator, ensure that not both are counted
-        if optional_intensity_indicator > 0 and mandatory_intensity_indicator > 0:
-            optional_intensity_indicator = 0
-
-        result = (
-            total_mandatory_intensity,
-            mandatory_intensity_indicator,
-            total_optional_intensity,
-            optional_intensity_indicator,
-        )
-        return result
+    result = (
+        total_mandatory_intensity,
+        mandatory_intensity_indicator,
+        total_optional_intensity,
+        optional_intensity_indicator,
+    )
+    return result
 
 
-def get_policy_vals(policies, policy, date, adm, adm1, adm_level, policy_pickle_dict):
+def get_policy_vals(policies, policy, date, adm, adm1, adm_level, policy_pickle_dict, method="ITA"):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
         policies (pandas.DataFrame): table of policies, listed by date and regions affected
@@ -304,7 +385,7 @@ def get_policy_vals(policies, policy, date, adm, adm1, adm_level, policy_pickle_
     if psave in policy_pickle_dict[adm]:
         return policy_pickle_dict[adm][psave]
     else:
-        result = calculate_intensities_adm_day_policy(policies_to_date, adm_level)
+        result = calculate_intensities_adm_day_policy(policies_to_date, adm_level, policy, method)
         policy_pickle_dict[adm][psave] = result
 
     return result
@@ -343,7 +424,7 @@ def initialize_panel(cases_df, cases_level, policy_list, policy_popwts):
 
 
 def assign_policies_to_panel(
-    cases_df, policies, cases_level, aggregate_vars=[], get_latlons=True, errors="raise"
+    cases_df, policies, cases_level, aggregate_vars=[], get_latlons=True, errors="raise", method="ITA"
 ):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
@@ -389,6 +470,10 @@ def assign_policies_to_panel(
     # Assign policy_level to distinguish policies specified at different admin-unit levels
     policies["policy_level"] = policies.apply(get_policy_level, axis=1)
 
+    if method == 'USA':
+        for c in intensity_cols:
+            policies[c] = policies[c].astype(str).str.strip()
+
     # Treat policies in `aggregate_vars` as independent policies (just like mandatory policies)
     # Set optional to 0 to avoid applying normal optional logic in `get_policy_vals()`
     for policy in aggregate_vars:
@@ -419,6 +504,7 @@ def assign_policies_to_panel(
                 row[f"adm1_name"],
                 cases_level,
                 policy_pickle_dict,
+                method,
             ),
             axis=1,
         )

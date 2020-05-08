@@ -181,7 +181,7 @@ def check_pops_in_policies(policies, max_level, errors="raise"):
             warnings.warn("adm3 pop is null for some adm3 level")
         if len(policies[policies["adm2_pop"].isnull()]["adm2_name"].unique()) != 1:
             warnings.warn("adm2 pop is null for some adm2 level")
-        if len(policies[policies["adm1_pop"].isnull()]["adm1_name"].unique()) != 1:
+        if len(policies[policies["adm1_pop"].isnull()]["adm1_name"].unique()) > 1:
             warnings.warn("adm1 pop is null for some adm1 level")
 
 

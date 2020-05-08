@@ -1,0 +1,199 @@
+{
+  "travel_ban_intl_out": {
+    "weights": {
+      "level 1": 0.2,
+      "level 2": 0.2,
+      "level 3": 0.2,
+      "level 4 ": 0.2,
+      "no outbound non-essential travel": 1
+    },
+
+    "replaces": {
+        "no outbound non-essential travel": ["level 1", "level 2", "level 3", "level 4"]
+    }
+  },
+
+  "religious_closure": {
+    "weights": {
+      "religious closure - optional": 0.5
+    },
+    "replaces": {}
+  },
+
+  "emergency_declaration": {
+    "weights": {
+      "emergency declaration": 1
+    },
+    "replaces": {}
+  },
+
+  "event_cancel": {
+    "weights": {
+      "cancel one event": 0.5,
+      "cancel more than one event": 1
+    },
+
+    "replaces": {
+    	"cancel more than one event": ["cancel one event"]
+    }
+  },
+
+  "social_distance": {
+    "weights": {
+      "requires social distancing standards anywhere outside home - optional": 0.07,
+      "requires social distancing standards anywhere outside home": 0.14,
+      "Isolate/quarantine certain populations": 0.14,
+      "Mandates mask wearing": 0.14,
+      "Closes public facilities": 0.14,
+      "Closes outdoor facilities": 0.14,
+      "Restricts or requires social distance for visitation to certain facilities": 0.14,
+      "Restricts or requires social distance for visitation to certain facilities - optional": 0.07,
+      "Suspends/restricts non-critical state operations/govt services": 0.14,
+      "Suspends/restricts non-critical state operations/govt services - optional": 0.07
+    },
+
+    "replaces": {
+      "requires social distancing standards anywhere outside home": ["requires social distancing standards anywhere outside home - optional"],
+      "Restricts or requires social distance for visitation to certain facilities": ["Restricts or requires social distance for visitation to certain facilities - optional"],
+      "Suspends/restricts non-critical state operations/govt services": ["Suspends/restricts non-critical state operations/govt services - optional"]
+    }
+  },
+
+  "travel_ban_intl_in": {
+    "weights": {
+      "China": 0.05,
+      "South Korea": 0.05,
+      "Iran": 0.05,
+      "Europe": 0.05,
+      "UK": 0.05,
+      "Ireland": 0.05,
+      "advisory": 0.1,
+      "any inbound travelers quarantine": 0.2,
+      "no inbound travel": 1
+    },
+    "replaces": {
+      "no inbound international travel": ["China", "South Korea", "Iran", "Europe", "UK", "Ireland", "advisory", "any inbound travelers quarantine"],
+      "no inbound travel": ["China", "South Korea", "Iran", "Europe", "UK", "Ireland", "advisory", "any inbound travelers quarantine", "no inbound international travel"]
+    }
+  },
+
+  "pos_cases_quarantine": {
+    "weights": {
+      "opt quarantine": 0.5,
+      "quarantine": 1
+    },
+    "replaces": {
+      "quarantine": ["opt quarantine"]
+    }
+  },
+
+  "no_gathering": {
+    "weights": {
+    	"advisory": 0.125,
+    	"no_gathering_1000": 0.25,
+    	"no_gathering_500_999": 0.375,
+    	"no_gathering_250_499": 0.5,
+    	"no_gathering_100_249": 0.625,
+    	"no_gathering_50_99": 0.75,
+    	"no_gathering_5_49": 0.875,
+    	"no_gathering" : 1
+    },
+
+    "replaces": {
+    	"no_gathering_1000": ["advisory"],
+    	"no_gathering_500_999": ["advisory", "no_gathering_1000"],
+    	"no_gathering_250_499": ["advisory", "no_gathering_1000", "no_gathering_500_999"],
+    	"no_gathering_100_249": ["advisory", "no_gathering_1000", "no_gathering_500_999", "no_gathering_250_499"],
+    	"no_gathering_50_99": ["advisory", "no_gathering_1000", "no_gathering_500_999", "no_gathering_250_499",
+    						"no_gathering_100_249"],
+    	"no_gathering_5_49": ["advisory", "no_gathering_1000", "no_gathering_500_999", "no_gathering_250_499",
+    						"no_gathering_100_249", "no_gathering_50_99"],
+    	"no_gathering": ["advisory", "no_gathering_1000", "no_gathering_500_999", "no_gathering_250_499",
+    						"no_gathering_100_249", "no_gathering_50_99", "no_gathering_5_49"]
+    }
+  },
+
+  "school_closure": {
+    "weights": {
+      "school closure": 1
+    },
+    "replaces": {}
+  },
+
+  "home_isolation": {
+    "weights": {
+      "opt shelter in place": 0.5,
+      "mandatory shelter in place": 1
+    },
+    "replaces": {
+      "mandatory shelter in place": ["opt shelter in place"]
+    }
+  },
+
+  "work_from_home": {
+    "weights": {
+      "opt work from home": 0.33,
+      "govt employees work from home": 0.33,
+      "work from home": 1
+    },
+
+    "replaces": {
+      "work from home": ["opt work from home", "govt employees work from home"]
+    }
+  },
+
+  "transit_suspension": {
+    "weights": {
+        "opt limit transit use": 0.5,
+        "transit operations limited": 1,
+        "mandatory limit transit use": 1
+    },
+
+    "replaces": {
+        "mandatory limit transit use": ["opt limit transit use", "transit operations limited"],
+        "transit operations limited":["opt limit transit use", "mandatory limit transit use"]
+    }
+  },
+
+  "paid_sick_leave": {
+    "weights": {
+        "opt paid sick leave": 0.33,
+        "subset of workers receive paid sick leave": 0.33,
+        "paid sick leave": 1
+    },
+    "replaces": {
+        "paid sick leave": ["opt paid sick leave", "subset of workers receive paid sick leave"]
+    }
+  },
+
+  "travel_ban_local": {
+    "weights": {
+        "travel ban for govt. employees": 0.2,
+        "cancel school trips": 0.2,
+        "opt cancel school trips": 0.1,
+        "inbound quarantine": 0.2,
+        "limit all non essential out of state travel": 0.75,
+        "limit all non essential within state travel": 1
+    },
+    "replaces": {
+        "limit all non essential within state travel": ["travel ban for govt. employees", "cancel school trips", "opt cancel school trips", "inbound quarantine", "limit all non essential out of state travel"],
+        "limit all non essential out of state travel": ["travel ban for govt. employees", "cancel school trips", "opt cancel school trips", "inbound quarantine"],
+        "cancel school trips": ["opt cancel school trips"]
+    }
+  },
+
+  "business_closure": {
+    "weights": {
+        "opt food/drink closure": 0.16,
+        "opt all non-essentials": 0.16,
+        "food/drink closure": 0.33,
+        "recreation": 0.33,
+        "all non-essentials": 1
+    },
+    "replaces": {
+        "food/drink closure": ["opt food/drink closure"],
+        "all non-essentials": ["opt all non-essentials", "opt food/drink closure", "food/drink closure", "recreation"]
+    }
+  }
+
+}
