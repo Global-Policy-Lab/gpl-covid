@@ -119,25 +119,19 @@ lab var day_avg "Observed avg. change in log cases"
 
 //------------------grouping treatments (based on timing and similarity)
 
-// popwt vars = policy intensity * population weight of respective admin 2 unit or sub admin 2 unit
+// popwt vars = policy intensity * population weight of respective admin 1 unit or sub admin 1 unit
 
 // emergency_declaration on for entire sample
 
-// combine optional policies with respective mandatory policies
-// weighing optional policies by 1/2
-foreach var of varlist school_closure travel_ban_local business_closure social_distance home_isolation work_from_home pos_cases_quarantine no_gathering paid_sick_leave transit_suspension religious_closure{
-	gen `var'_comb_popwt = `var'_popwt + `var'_opt_popwt * 0.5
-}
-
-gen p_1 = (event_cancel_popwt + no_gathering_comb_popwt) / 2
-gen p_2 = (social_distance_comb_popwt + religious_closure_comb_popwt) / 2 //the 2 religious_closure policies happen on same day as social_distance policies in respective state
-gen p_3 = pos_cases_quarantine_comb_popwt 
-gen p_4 = paid_sick_leave_comb_popwt
-gen p_5 = work_from_home_comb_popwt
-gen p_6 = school_closure_comb_popwt
-gen p_7 = (travel_ban_local_comb_popwt + transit_suspension_comb_popwt) / 2 
-gen p_8 = business_closure_comb_popwt
-gen p_9 = home_isolation_comb_popwt
+gen p_1 = (event_cancel_popwt + no_gathering_popwt) / 2
+gen p_2 = (social_distance_popwt + religious_closure_popwt) / 2 //the 2 religious_closure policies happen on same day as social_distance policies in respective state
+gen p_3 = pos_cases_quarantine_popwt 
+gen p_4 = paid_sick_leave_popwt
+gen p_5 = work_from_home_popwt
+gen p_6 = school_closure_popwt
+gen p_7 = (travel_ban_local_popwt + transit_suspension_popwt) / 2 
+gen p_8 = business_closure_popwt
+gen p_9 = home_isolation_popwt
 
 lab var p_1 "No gathering, event cancel"
 lab var p_2 "Social distance"
