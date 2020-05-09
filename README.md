@@ -257,6 +257,9 @@ Run the following scripts to merge epi, policy, testing, and population data for
 ##### United States
 1. `python code/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
 
+##### Multi-Country
+1. `python code/data/multi_country/convert-preprocessed-to-processed.py`: This converts "preprocessed" datasets to "processed" datasets by applying rules where one policy implies another policy. For example, a given country might have a home isolation policy that would indicate that schools are closed. In this case, this script would encode a school closure policy wherever a home isolation policy is in place on the same day.
+
 #### Under-reporting data
 `Rscript code/data/multi_country/download_russell_underreporting_estimates.R`: Download estimates of case under-reporting by country.
 

@@ -109,6 +109,10 @@ Rscript code/data/korea/generate_KOR_processed.R
 printf "***Merging USA data***\n"
 python code/data/usa/merge_policy_and_cases.py
 
+# apply policy-implication rules to preprocessed datasets
+printf "***Applying policy implication rules***\n"
+python code/data/multi_country/convert-preprocessed-to-processed.py
+
 # quality-check processed datasets
 printf "***Checking processed data***\n"
 python code/data/multi_country/quality-check-processed-datasets.py
