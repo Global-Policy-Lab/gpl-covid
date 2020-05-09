@@ -101,6 +101,7 @@ def process_file(f, country_code, adm):
         implies = implies_dict[country_code]
         df = apply_implies(df, implies)
 
+    df = df.round(9)
     df.to_csv(out_path, index=False)
 
 
