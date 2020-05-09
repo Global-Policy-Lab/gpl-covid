@@ -14,7 +14,7 @@ The easiest way to interact with our code and data is via our [CodeOcean capsule
 You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.3" is the tag that is associated with the current version of the manuscript (as of 04/28/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
 
 ```bash
-conda env create -f environment.yml
+conda env create -f environment/environment.yml
 conda activate gpl-covid
 ```
 

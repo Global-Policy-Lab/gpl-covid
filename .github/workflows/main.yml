@@ -18,7 +18,7 @@ jobs:
           auto-update-conda: true
           python-version: 3.7
           activate-environment: gpl-covid
-          environment-file: ./environment.yml
+          environment-file: environment/environment.yml
       - shell: bash -l {0}
         name: Run all tests
         run: bash tests/run_tests.sh
