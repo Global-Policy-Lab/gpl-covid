@@ -25,9 +25,8 @@ path_pop_adm1 = dir_adm_pop / "adm1" / "adm1.csv"
 path_template = cutil.DATA_PROCESSED / "[country]_processed.csv"
 
 # Outputs
-path_iran_processed_adm0 = cutil.DATA_PROCESSED / "adm0" / "IRN_processed.csv"
-path_iran_processed_adm1 = cutil.DATA_PROCESSED / "adm1" / "IRN_processed.csv"
-
+path_iran_processed_adm0 = cutil.DATA_PREPROCESSED / "adm0" / "IRN_processed.csv"
+path_iran_processed_adm1 = cutil.DATA_PREPROCESSED / "adm1" / "IRN_processed.csv"
 
 # Read interim datasets
 adm0_df = pd.read_csv(path_iran_interim_adm0, parse_dates=["date"])

@@ -61,7 +61,7 @@ health_dxy_file = join(DATA_CHINA, "DXYArea.csv")
 health_jan_file = join(DATA_CHINA, "china_city_health_jan.xlsx")
 policy_file = join(DATA_CHINA, "CHN_policy_data_sources.csv")
 pop_file = join(DATA_CHINA, "china_city_pop.csv")
-output_file = cutil.DATA_PROCESSED / "adm2" / "CHN_processed.csv"
+output_file = cutil.DATA_PREPROCESSED / "adm2" / "CHN_processed.csv"
 match_file = join(DATA_CHINA, "match_china_city_name_w_adm2.csv")
 shp_file = cutil.DATA_INTERIM / "adm" / "adm2" / "adm2.shp"
 

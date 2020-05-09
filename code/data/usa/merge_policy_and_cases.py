@@ -7,7 +7,7 @@ import src.utils as cutil
 
 raw_data_dir = str(cutil.DATA_RAW / "usa")
 int_data_dir = str(cutil.DATA_INTERIM / "usa")
-proc_data_dir = str(cutil.DATA_PROCESSED / "adm1")
+proc_data_dir = str(cutil.DATA_PREPROCESSED / "adm1")
 
 
 def main():

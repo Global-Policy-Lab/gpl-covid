@@ -55,8 +55,8 @@ path_italy_interim_province = dir_italy_interim / "italy-cases-by-province.csv"
 path_italy_interim_region = dir_italy_interim / "italy-cases-by-region.csv"
 
 ## Final outputs
-path_processed_region = cutil.DATA_PROCESSED / "adm1" / "ITA_processed.csv"
-path_processed_province = cutil.DATA_PROCESSED / "adm2" / "ITA_processed.csv"
+path_processed_region = cutil.DATA_PREPROCESSED / "adm1" / "ITA_processed.csv"
+path_processed_province = cutil.DATA_PREPROCESSED / "adm2" / "ITA_processed.csv"
 
 # ###### Settings
 # Affixes defined in `data_dictionary.gsheet`
