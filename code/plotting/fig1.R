@@ -2,7 +2,7 @@
 ##  Figure 1: Data Display  ##
 ##############################
 
-# Updated 4/18/2020
+# Updated 5/9/2020
 # by hdruckenmiller
 
 rm(list=ls())
@@ -13,7 +13,6 @@ suppressPackageStartupMessages(library(rgeos))
 suppressPackageStartupMessages(library(scales))
 suppressPackageStartupMessages(library(magrittr))
 suppressPackageStartupMessages(library(ggplot2))
-suppressPackageStartupMessages(library(tigris))
 
 ##########################
 
@@ -55,7 +54,7 @@ policylist[2,] <- c("IRN", "school_closure", "travel_ban_local_opt", "home_isola
 policylist[3,] <- c("FRA", "no_gathering", "home_isolation", "social_distance", "school_closure", "event_cancel")
 policylist[4,] <- c("KOR", "emergency_declaration", "no_demonstration","social_distance_opt", "religious_closure","business_closure_opt")
 policylist[5,] <- c("ITA", "school_closure", "social_distance", "travel_ban_local", "home_isolation", "pos_cases_quarantine")
-policylist[6,] <- c("CHN", "travel_ban_local", "home_isolation", NA, NA, NA)
+policylist[6,] <- c("CHN", "travel_ban_local", "home_isolation", "emergency_declaration", NA, NA)
 
 
 legendlist <- as.data.frame(matrix(NA, 6, 6))
@@ -65,7 +64,7 @@ legendlist[2,] <- c("IRN", "darkblue","steelblue3", "mediumpurple4", "palegreen4
 legendlist[3,] <- c("FRA", "darkgreen", "mediumpurple4", "mediumpurple2", "darkblue", "deeppink4")
 legendlist[4,] <- c("KOR", "darkred", "seagreen4", "mediumpurple2", "orange3", "tomato3")
 legendlist[5,] <- c("ITA", "darkblue", "steelblue3", "mediumpurple2", "mediumpurple4","slategray")
-legendlist[6,] <- c("CHN", "steelblue3", "mediumpurple4", NA, NA, NA)
+legendlist[6,] <- c("CHN", "steelblue3", "mediumpurple4", "darkred", NA, NA)
 
 ###########################################
 
@@ -176,11 +175,11 @@ if (country == "ITA" | country=="CHN"){
 
 # Calculate number of adm regions that enacted each policy by each day 
 if (country=="CHN"){
-  policies <- aggregate(adm[,c(policylist[c,2], policylist[c,3])],
+  policies <- aggregate(adm[,c(policylist[c,2], policylist[c,3], policylist[c,4])],
                         by=list(adm$date), FUN="sum")
-  names(policies) <- c('date', 'p.1', 'p.2')
+  names(policies) <- c('date', 'p.1', 'p.2', 'p.3')
   # Now take differences between days to see first day policy was enacted by adm districts 
-  for (p in 1:2){ 
+  for (p in 1:3){ 
     d.var <- paste0('diff.', p)  
     p.var <- paste0('p.', p)
     policies[,d.var] <- policies[,p.var] - lag(policies[,p.var])
@@ -215,8 +214,7 @@ if (c %in% c(2:5)){
   policy_source <- rbind(policy_source, add_policy)
 }
 if (c==6){
-  add_policy <- policies[,c("date", "diff.1", "diff.2")]
-  add_policy$diff.3 <- NA
+  add_policy <- policies[,c("date", "diff.1", "diff.2", "diff.3")]
   add_policy$diff.4 <- NA
   add_policy$diff.5 <- NA
   colnames(add_policy)[2:6] <- c("p1", "p2", "p3", "p4", "p5")
@@ -256,6 +254,9 @@ if (country=="CHN"){
   segments(as.Date(policies$date)-0.1, 0, 
            as.Date(policies$date)-0.1, policies$diff.2, 
            col=legendlist[c,3], lwd=1.5)
+  segments(as.Date(policies$date), 0, 
+           as.Date(policies$date), policies$diff.3, 
+           col=legendlist[c,4], lwd=1.5)
 } else {
 segments(as.Date(policies$date)-0.2, 0, 
          as.Date(policies$date)-0.2, policies$diff.1, 
@@ -285,9 +286,9 @@ dev.off()
 
 ### Cases Map ###
 if (country=="USA"){
-  options(tigris_use_cache = FALSE)
-  map <- tigris::states(cb=TRUE)
-  map <- subset(map, !(STATEFP %in% c("15","02","60","72","66", "69", "78")))
+  suppressWarnings(map <- readOGR(paste0(data_dir, "interim/adm/adm1/adm1.shp")))
+  map <- subset(map, adm0_name == "USA")
+  map <- subset(map, !(adm1_name %in% c("Hawaii", "Alaska")))
 }
 
 if (country=="IRN"){
