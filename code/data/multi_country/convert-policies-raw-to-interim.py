@@ -97,7 +97,7 @@ def process_country(country_code, implies):
     df = pd.read_csv(path_raw, encoding="latin1")
     if country_code not in implies:
         print(f"missing country: {country_code}")
-    elif country_code == 'IRN':
+    elif country_code == "IRN":
         print("Skipping IRN for now...")
     else:
         print(country_code)
