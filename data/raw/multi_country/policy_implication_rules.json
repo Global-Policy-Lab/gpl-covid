@@ -52,5 +52,13 @@
         ["travel_ban_local", 1]
       ]
     ]
+  ],
+  "IRN": [
+    [
+      "home_isolation", "=", 1,
+      [
+        ["travel_ban_local", 1]
+      ]
+    ]
   ]
 }

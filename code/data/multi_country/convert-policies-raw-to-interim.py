@@ -27,6 +27,8 @@ def get_country_list(country_input):
 
 country_list = get_country_list(args.c)
 
+countries_wo_intensity = ['CHN', 'IRN']
+
 op_dict = {
     ">": operator.gt,
     "<": operator.lt,
@@ -46,20 +48,19 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
         print(f"{country_code}: where {src_policy} {op_str} {src_val}, set {dst_policy} = {dst_val}")
 
     mask = df['policy'] == src_policy
-    if country_code != 'CHN':
+    if country_code not in countries_wo_intensity:
         mask = (mask) & (op(df['policy_intensity'], src_val))
 
     pcopy = df[mask].copy()
 
     pcopy['policy'] = dst_policy
 
-    if country_code != 'CHN':
+    if country_code not in countries_wo_intensity:
         pcopy['policy_intensity'] = dst_val
 
     df = pd.concat([df, pcopy], ignore_index=True).sort_values('date_start', ascending=True)
 
     return df
-
 
 def apply_implies(df, implies, country_code):
     for rule in implies:
