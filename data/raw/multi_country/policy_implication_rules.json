@@ -1,0 +1,48 @@
+{
+  "ITA": [
+    [
+      "home_isolation",  ">", 0,
+      [
+        ["no_gathering", 1],
+        ["pos_cases_quarantine", 1],
+        ["school_closure", 1],
+        ["social_distance", 1]
+      ]
+    ],
+    [
+      "home_isolation", "=", 0.33,
+      [
+        ["travel_ban_local", 0.5]
+      ]
+    ],
+      [
+        "home_isolation", ">=", 0.67,
+        [
+          ["work_from_home", 1]
+        ]
+      ],
+      [
+        "home_isolation", "=", 0.67,
+        [
+          ["business_closure", 0.67]
+        ]
+      ],
+      [
+        "home_isolation", "=", 1,
+        [
+          ["business_closure", 1]
+        ]
+      ]
+  ],
+  "KOR": [],
+  "FRA": [
+    [
+      "home_isolation", ">", 0,
+      [
+        ["event_cancel", 1],
+        ["social_distance", 1],
+        ["no_gathering_inside", 1]
+      ]
+    ]
+  ]
+}
