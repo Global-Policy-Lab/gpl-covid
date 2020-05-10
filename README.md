@@ -18,7 +18,7 @@ conda env create -f environment/environment.yml
 conda activate gpl-covid
 ```
 
-Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. 
+Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo.
 
 ```bash
 pip install -e code
@@ -194,9 +194,9 @@ For detailed information on the manual collection of policy, epidemiological, an
     h. Open this file, remove the top two rows and the second column. Then change the header (the top row to `adm1_name, population`). Save to [data/interim/korea/KOR_population.csv](data/interim/korea/KOR_population.csv).
 
 #### Policy and testing data
-Most policy and testing data was manually collected from a variety of sources. A mapping was developed from each policy to one of the variables we encode for our regression. These sources and mappings are listed in a csv for each country following the pattern `data/raw/[country_name]/[country_name]_policy_data_sources.csv`.
+Most policy and testing data was manually collected from a variety of sources. A mapping was developed from each policy to one of the variables we encode for our regression. These sources and mappings are listed in a csv for each country following the pattern `data/raw/[country_name]/[country_code]_policy_data_sources.csv`.
 
-Any policy/testing data that was scraped programmatically is formatted similar to the manual data sheet and saved to `data/interim/[country_name]/[country_name]_policy_data_sources_other.csv`. These programmatic steps are listed below:
+Any policy/testing data that was scraped programmatically is formatted similar to the manual data sheet and saved to `data/interim/[country_name]/[country_code]_policy_data_sources_other.csv`. These programmatic steps are listed below:
 
 ##### United States
 1. `python code/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
