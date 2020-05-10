@@ -165,7 +165,7 @@ The entire pipeline can be run by calling `bash code/run.sh`. If you would rathe
 
 - `-s|--no-stata`: Don't run the Stata scripts (must include this flag if you do not have Stata). In this case, the regression steps will be skipped and you will rely on previously computed regression results.
 - `p|--num-proj`: Integer that controls both (a) the number of bootstrap samples when calculating projection uncertainty bounds in Fig. 4 and (b) the number of Monte Carlo samples used to create synthetic outbreaks (Extended Data Figures 8 and 9). Default 1000.
-- `d|--download`: Download new raw data, rather than using that which has already been downloaded. This may affect results slightly if, e.g. a country retroactivly adjusts their reported cases.
+- `d|--download`: Download new raw data, rather than using that which has already been downloaded. This may affect results slightly if, e.g. a country retroactively adjusts their reported cases.
 
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was performed through manual downloading and/or processing of datasets and is described in as much detail as possible. The sections should be run in the order listed, as some files from later sections will depend on those from earlier sections (e.g. the geographical and population data).
@@ -223,7 +223,7 @@ Any policy/testing data that was scraped programmatically is formatted similar t
 
     b. `cases_cleaned--to_csv` :  A cleaned column format for the intermediate cases data. Simply extend the formulas (by copy/paste) in each row so that each row of the raw data is included. Do not change the column headings. Once all raw data has been included, save this tab to a csv file and save in [data/interim/iran/covid_iran_cases.csv](data/interim/iran/covid_iran_cases.csv).
 
-    c. `200314_policies--to_csv` :  A list of the key policies Iran implemented to combat the coronavirus, and sources. A copy of the information in this tab is saved as [data/interim/iran/covid_iran_policies.csv](data/interim/iran/covid_iran_policies.csv). To update data with future policy changes, update this tab with the relevant information and replace the csv with a new copy of this tab.
+    c. `200314_policies--to_csv` :  A list of the key policies Iran implemented to combat the coronavirus, and sources. A copy of the information in this tab is saved as [data/raw/iran/IRN_policy_data_sources.csv](data/raw/iran/IRN_policy_data_sources.csv). To update data with future policy changes, update this tab with the relevant information and replace the csv with a new copy of this tab.
 
 ##### Italy
 Epi data is downloaded and merged with policy data in one step, described in [the following section](####Merge-policy-and-epidemiological-data)
