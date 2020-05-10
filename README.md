@@ -238,6 +238,9 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 #### Merge all data for each country
 Run the following scripts to merge epi, policy, testing, and population data for each country. After completion, you may run [code/data/multi_country/quality-check-processed-datasets.py](code/data/multi_country/quality-check-processed-datasets.py), to make sure all of the fully processed datasets are correctly and consistently formatted.
 
+### Include policies implied by other policies
+1. `python code/data/multi_country/convert-policies-raw-to-interim.py`
+
 ##### China
 1. `python code/data/china/collate_data.py`
 
