@@ -92,6 +92,10 @@ then
     code/statab.sh code/data/france/format_policy.do
 fi
 
+### Fill in policies implied by other policies
+printf "***Filling in policies implied by other policies***\n"
+python code/data/multi_country/convert-policies-raw-to-interim.py
+
 # IRN
 printf "***Processing  and merging IRN data***\n"
 Rscript code/data/iran/iran_cleaning.R
