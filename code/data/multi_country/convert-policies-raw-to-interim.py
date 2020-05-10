@@ -20,14 +20,16 @@ parser.add_argument("--l", default=False, action="store_true", help="Print logs"
 args = parser.parse_args()
 print_logs = args.l
 
+
 def get_country_list(country_input):
     if country_input != None:
         return [country_input]
     return cutil.ISOS
 
+
 country_list = get_country_list(args.c)
 
-countries_wo_intensity = ['CHN', 'IRN']
+countries_wo_intensity = ["CHN", "IRN"]
 
 op_dict = {
     ">": operator.gt,
@@ -37,6 +39,7 @@ op_dict = {
     "=": operator.eq,
 }
 
+
 def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
 
     dst_policy, dst_val = dst_rule
@@ -45,22 +48,27 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
     op = op_dict[op_str]
 
     if print_logs:
-        print(f"{country_code}: where {src_policy} {op_str} {src_val}, set {dst_policy} = {dst_val}")
+        print(
+            f"{country_code}: where {src_policy} {op_str} {src_val}, set {dst_policy} = {dst_val}"
+        )
 
-    mask = df['policy'] == src_policy
+    mask = df["policy"] == src_policy
     if country_code not in countries_wo_intensity:
-        mask = (mask) & (op(df['policy_intensity'], src_val))
+        mask = (mask) & (op(df["policy_intensity"], src_val))
 
     pcopy = df[mask].copy()
 
-    pcopy['policy'] = dst_policy
+    pcopy["policy"] = dst_policy
 
     if country_code not in countries_wo_intensity:
-        pcopy['policy_intensity'] = dst_val
+        pcopy["policy_intensity"] = dst_val
 
-    df = pd.concat([df, pcopy], ignore_index=True).sort_values('date_start', ascending=True)
+    df = pd.concat([df, pcopy], ignore_index=True).sort_values(
+        "date_start", ascending=True
+    )
 
     return df
+
 
 def apply_implies(df, implies, country_code):
     for rule in implies:
@@ -73,16 +81,20 @@ def apply_implies(df, implies, country_code):
 
     return df
 
-def read_implies(path = cutil.DATA_RAW / 'multi_country' / 'policy_implication_rules.json'):
-    with open(path, 'r') as js:
+
+def read_implies(
+    path=cutil.DATA_RAW / "multi_country" / "policy_implication_rules.json",
+):
+    with open(path, "r") as js:
         implies = json.load(js)
     return implies
 
+
 def process_country(country_code, implies):
-    filename = f'{country_code}_policy_data_sources.csv'
+    filename = f"{country_code}_policy_data_sources.csv"
     path_raw = cutil.DATA_RAW / cutil.iso_to_dirname(country_code) / filename
     path_interim = cutil.DATA_INTERIM / cutil.iso_to_dirname(country_code) / filename
-    df = pd.read_csv(path_raw, encoding='latin1')
+    df = pd.read_csv(path_raw, encoding="latin1")
     if country_code not in implies:
         print(f"missing country: {country_code}")
     else:
@@ -96,6 +108,7 @@ def main():
     implies = read_implies()
     for country_code in country_list:
         process_country(country_code, implies)
+
 
 if __name__ == "__main__":
     main()
