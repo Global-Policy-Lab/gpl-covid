@@ -53,6 +53,7 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
         )
 
     mask = df["policy"] == src_policy
+    mask = (mask) & (df["optional"] != "Y")
     if country_code not in countries_wo_intensity:
         mask = (mask) & (op(df["policy_intensity"], src_val))
 

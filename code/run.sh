@@ -97,16 +97,16 @@ printf "***Filling in policies implied by other policies***\n"
 python code/data/multi_country/convert-policies-raw-to-interim.py
 
 # IRN
-printf "***Processing  and merging IRN data***\n"
+printf "***Processing and merging IRN data***\n"
 Rscript code/data/iran/iran_cleaning.R
 python code/data/iran/iran-split-interim-into-processed.py
 
 # ITA
-printf "***Processing  and merging ITA data***\n"
+printf "***Processing and merging ITA data***\n"
 python code/data/italy/italy-download-cases-merge-policies.py $NDFLAG
 
 # KOR
-printf "***Processing  and merging KOR data***\n"
+printf "***Processing and merging KOR data***\n"
 Rscript code/data/korea/generate_KOR_processed.R
 
 # USA
