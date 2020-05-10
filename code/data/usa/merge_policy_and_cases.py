@@ -23,7 +23,7 @@ def main():
     cases_data = cases_data.dropna(how="all", axis=1)
 
     policy_data = pd.read_csv(
-        os.path.join(raw_data_dir, "usa_policy_data_sources.csv"), encoding="latin"
+        os.path.join(int_data_dir, "usa_policy_data_sources.csv"), encoding="latin"
     )
 
     # drop any rows which are all nan
