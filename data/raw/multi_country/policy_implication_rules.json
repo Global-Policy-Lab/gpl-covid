@@ -44,5 +44,13 @@
         ["no_gathering_inside", 1]
       ]
     ]
+  ],
+  "CHN": [
+    [
+      "home_isolation", "=", 1,
+      [
+        ["travel_ban_local", 1]
+      ]
+    ]
   ]
 }

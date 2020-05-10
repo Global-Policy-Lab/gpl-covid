@@ -45,13 +45,16 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
     if print_logs:
         print(f"{country_code}: where {src_policy} {op_str} {src_val}, set {dst_policy} = {dst_val}")
 
-    pcopy = df[
-        (df['policy'] == src_policy)
-        & (op(df['policy_intensity'], src_val))
-    ].copy()
+    mask = df['policy'] == src_policy
+    if country_code != 'CHN':
+        mask = (mask) & (op(df['policy_intensity'], src_val))
+
+    pcopy = df[mask].copy()
 
     pcopy['policy'] = dst_policy
-    pcopy['policy_intensity'] = dst_val
+
+    if country_code != 'CHN':
+        pcopy['policy_intensity'] = dst_val
 
     df = pd.concat([df, pcopy], ignore_index=True).sort_values('date_start', ascending=True)
 
@@ -82,6 +85,7 @@ def process_country(country_code, implies):
     if country_code not in implies:
         print(f"missing country: {country_code}")
     else:
+        print(country_code)
         df = apply_implies(df, implies[country_code], country_code)
         df = df.reset_index(drop=True)
     df.to_csv(path_interim, index=False)
