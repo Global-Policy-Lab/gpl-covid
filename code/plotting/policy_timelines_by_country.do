@@ -76,14 +76,10 @@ cap set scheme covid19_fig3 // optional scheme for graphs
 
 forvalues s = 1/51{
 	levelsof adm1_name if adm1_id==`s', local(state_name)
-	
-	levelsof first_policy_date if adm1_id==`s', local(first_policy_num)
-	local first_policy_str = string(`first_policy_num', "%td")
-		
+
 	tw line p_* t if adm1_id==`s', xline(21977, lpattern(shortdash) lcolor(black)) ///
-	title(`state_name') subtitle("1st policy on `first_policy_str'") ///
-	ytitle(Policy Intensity) xtitle("") xscale(range(21946(10)22011)) xlabel(21946(10)22011, format(%tdMon_DD)) ///
-	name(state`s', replace)
+	title(`state_name') ytitle(Policy Intensity) xtitle("") ///
+	xscale(range(21946(10)22011)) xlabel(21946(10)22011, format(%tdMon_DD)) name(state`s', replace)
 }
 
 forvalues s = 1(6)48{
