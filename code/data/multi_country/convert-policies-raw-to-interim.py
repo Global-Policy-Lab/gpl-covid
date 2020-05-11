@@ -97,7 +97,9 @@ def apply_usa_rule(df, src_policy, dst_policies):
         pcopy = psrc.copy()
         pcopy["policy"] = dst_category
         pcopy[intensity_cols[0]] = dst_group
-        df = pd.concat([df, pcopy], ignore_index=True)
+        df = pd.concat([df, pcopy], ignore_index=True).sort_values(
+            "date", ascending=True
+        )
 
     return df
 
