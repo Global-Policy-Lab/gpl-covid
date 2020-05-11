@@ -53,12 +53,15 @@
       ]
     ]
   ],
-  "IRN": [
+  "IRN": [],
+  "USA": [
     [
-      "home_isolation", "=", 1,
-      [
-        ["travel_ban_local", 1]
-      ]
+      "home_isolation.mandatory shelter in place", "=", 1,
+      ["no_gathering.no_gathering_5_49"]
+    ],
+    [
+      "business_closure.all", "=", 1,
+      [""]
     ]
   ]
 }
