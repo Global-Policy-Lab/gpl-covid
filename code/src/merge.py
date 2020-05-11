@@ -158,7 +158,7 @@ def pintensity(policies, weights):
     total = 0
 
     for p in policies:
-        if p.startswith("n/a") or p == "nan":
+        if p == "nan":
             continue
 
         if p not in weights.keys():

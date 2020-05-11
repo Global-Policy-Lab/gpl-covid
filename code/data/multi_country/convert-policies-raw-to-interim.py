@@ -131,14 +131,14 @@ def read_implies(
 
 def clean_intensities_usa(df):
 
-    df.loc[
-        df["intensity_group"].astype(str).str.lower().str.startswith("n/a"),
-        "intensity_group",
-    ] = np.nan
+    df = df.drop(
+        df[df["intensity_group"].astype(str).str.lower().str.startswith("n/a")].index
+    )
 
     intensity_cols = [c for c in df.columns if c.startswith("intensity_group")]
     for c in intensity_cols:
         df[c] = df[c].str.strip()
+
     return df
 
 
