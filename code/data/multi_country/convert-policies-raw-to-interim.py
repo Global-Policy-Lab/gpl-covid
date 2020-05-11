@@ -97,6 +97,9 @@ def apply_usa_rule(df, src_policy, dst_policies):
         pcopy = psrc.copy()
         pcopy["policy"] = dst_category
         pcopy[intensity_cols[0]] = dst_group
+        for c in intensity_cols[1:]:
+            pcopy[c] = np.nan
+
         df = pd.concat([df, pcopy], ignore_index=True).sort_values(
             "date", ascending=True
         )
@@ -126,6 +129,18 @@ def read_implies(
     return implies
 
 
+def clean_intensities_usa(df):
+    nulls = (df["intensity_group"].str.lower().startswith("na")) | (
+        df["intensity_group"].str.lower().startswith("n/a")
+    )
+    nulls = nulls & (df["intensity_group"].str.len() < 5)
+    df.loc[nulls, "intensity_group"] = np.nan
+    intensity_cols = [c for c in df.columns if c.startswith("intensity_group")]
+    for c in intensity_cols:
+        df[c] = df[c].str.strip()
+    return df
+
+
 def process_country(country_code, implies):
     filename = f"{country_code}_policy_data_sources.csv"
     path_raw = cutil.DATA_RAW / cutil.iso_to_dirname(country_code) / filename
@@ -135,6 +150,8 @@ def process_country(country_code, implies):
         print(f"missing country: {country_code}")
     else:
         print(country_code)
+        if country_code == "USA":
+            df = clean_intensities_usa(df)
         df = apply_implies(df, implies[country_code], country_code)
         df = df.reset_index(drop=True)
     df.to_csv(path_interim, index=False)
