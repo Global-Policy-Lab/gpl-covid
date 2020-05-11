@@ -140,11 +140,7 @@ def get_intensities(policies, adm_level):
 
         total_intensity += additional_policy_intensities.sum()
 
-    if total_intensity > 1:
-        print(total_intensity)
-        print(policies)
-        print(adm_level)
-        assert total_intensity <= 1
+    assert total_intensity <=1, f"{total_intensity}, {policies}, {adm_level}"
 
     return total_intensity, max_intensity
 
