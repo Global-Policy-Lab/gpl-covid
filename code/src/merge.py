@@ -140,7 +140,11 @@ def get_intensities(policies, adm_level):
 
         total_intensity += additional_policy_intensities.sum()
 
-    assert total_intensity <= 1
+    if total_intensity > 1:
+        print(total_intensity)
+        print(policies)
+        print(adm_level)
+        assert total_intensity <= 1
 
     return total_intensity, max_intensity
 
@@ -257,6 +261,7 @@ def calculate_intensities_usa(policies_to_date, adm_level, policy):
         policies_to_date.loc[l3_mask, "policy_intensity"] = intensity
 
     policies_to_date["optional"] = 0
+    policies_to_date = policies_to_date.drop_duplicates(pcols)
     return policies_to_date
 
 
