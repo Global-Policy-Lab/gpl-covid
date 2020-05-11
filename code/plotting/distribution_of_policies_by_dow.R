@@ -308,3 +308,26 @@ chisq_results <- map(unique(tot_policy_ct$country), function(c){
   bind_rows()
 
 
+# % Sat + Sun, M + F, Tu-Thu
+binned_ct <- combined %>% 
+  mutate(dow_bin = case_when(
+    dow %in% c(6,0) ~ "Sat + Sun",
+    dow %in% c(1,2) ~ "Mon + Fri",
+    dow %in% c(3,4,5) ~ "Tue + Wed + Thu"
+  )) %>% 
+  group_by(dow_bin) %>% 
+  summarise(n = sum(n, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  mutate(pct = n / sum(n))
+
+binned_ct_by_country <- combined %>% 
+  mutate(dow_bin = case_when(
+    dow %in% c(6,0) ~ "Sat + Sun",
+    dow %in% c(1,2) ~ "Mon + Fri",
+    dow %in% c(3,4,5) ~ "Tue + Wed + Thu"
+  )) %>% 
+  group_by(country, dow_bin) %>% 
+  summarise(n = sum(n, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  group_by(country) %>% 
+  mutate(pct = n / sum(n))
