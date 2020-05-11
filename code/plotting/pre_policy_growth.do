@@ -59,26 +59,36 @@ local n = e(N)
 gen beta_t = _b[t] // basically the avg of D_D_l_active_cases but w/ controls
 replace beta_t = . if longest_series==0 & e(sample) == 1
 
-// look at residuals
+// look at growth rate residuals
 reg D_l_active_cases testing_regime_change_* i.adm12_id, cluster(t)
-predict e if e(sample), resid
+predict e_g if e(sample), resid
 
-tw (sc e t)
-hist e //looks skewed, right tail
+tw (sc e_g t)
+hist e_g //looks skewed, right tail
 
-gen D_e = D.e // first diff in resid
-hist D_e //looks better, more normal, basically centered at zero, mean is slightly negative, but some outliers
+gen D_e_g = D.e_g // first diff in resid
+hist D_e_g //looks better, more normal, basically centered at zero, mean is slightly negative, but some outliers
 // outlier = Beijing on 2/1
 
 // plot 
-tw (sc D_e t)(line beta_t t), title(CHN) ///
+tw (sc D_e_g t)(line beta_t t), title(CHN) ///
 ytitle(Changes in growth rate residuals) xtitle("")
+
+// look at date residuals, use for x-axis
+// plotting by date doesn't exactly visually show what we're testing, 
+// because the adm fixed effects also removes the mean from the date variable by adm unit
+// date residuals represent the number of days before (for negative) or after (positive) the average date for that adm unit
+// with an extra wee adjustment for testing regime changes
+// It's like lining up all the adm units' dots from the other graph at their respective means
+reg t testing_regime_change_* i.adm12_id if D_l_active_cases!=.
+predict e_t if e(sample), resid
 
 // plot growth rate residuals, take out effect of controls
 // plot dots and plot best fit line
-tw (sc e t, mlabel(adm2_name)) (lfit e t), title(CHN) ///
+tw (sc e_g e_t, mlabel(adm2_name)) (lfit e_g e_t), title(CHN) ///
 subtitle("pre-trend = `b_t', se = `b_t_se', p = `b_t_p', n = `n'") ///
-ytitle(Growth rate residuals) xtitle("") name(CHN_pre, replace)
+ytitle(Growth rate residuals) xtitle("Date residuals") ///
+xscale(r(-3(1)3)) xlabel(-3(1)3) name(CHN_pre, replace)
 
 // checking for time trend in data w/ no policy in all of China
 // first policy is Wuhan lockdown on 1/23
@@ -167,29 +177,39 @@ local n = e(N)
 gen beta_t = _b[t] // basically the avg of D_D_l_active_cases but w/ controls
 replace beta_t = . if longest_series==0 & e(sample) == 1
 
-// look at residuals
+// look at growth rate residuals
 // reghdfe D_l_active_cases testing_regime_change_*, noconstant absorb(i.adm1_id, savefe) cluster(t) resid
 reg D_l_active_cases testing_regime_change_* i.adm1_id, cluster(t)
 // residuals are the unobservables, and in this case it's time
-predict e if e(sample), resid
+predict e_g if e(sample), resid
 
 // so plotting the residuals give us the time trend
 // but controlling for testing regime change and adm1 FE
-tw (sc e t)
-hist e, freq width(.1)
+tw (sc e_g t)
+hist e_g, freq width(.1)
 
-gen D_e = D.e // first diff in resid
-hist D_e, freq width(.01) title("First diff in residuals")
+gen D_e_g = D.e_g // first diff in resid
+hist D_e_g, freq width(.01) title("First diff in residuals")
 
 // plot --> can't see that it's diff from 0...
-tw (sc D_e t)(line beta_t t), title(KOR) ///
+tw (sc D_e_g t)(line beta_t t), title(KOR) ///
 ytitle(Changes in growth rate residuals) xtitle("")
+
+// look at date residuals, use for x-axis
+// plotting by date doesn't exactly visually show what we're testing, 
+// because the adm fixed effects also removes the mean from the date variable by adm unit
+// date residuals represent the number of days before (for negative) or after (positive) the average date for that adm unit
+// with an extra wee adjustment for testing regime changes
+// It's like lining up all the adm units' dots from the other graph at their respective means
+reg t testing_regime_change_* i.adm1_id if D_l_active_cases!=.
+predict e_t if e(sample), resid
 
 // plot growth rate residuals, take out effect of controls
 // plot dots and plot best fit line
-tw (sc e t, mlabel(adm1_name)) (lfit e t), title(KOR) ///
-subtitle("pre-trend = `b_t', se = `b_t_se', p = `b_t_p', n = `n'") yscale(titlegap(*-37)) ///
-ytitle(Growth rate residuals) xtitle("") name(KOR_pre, replace) 
+tw (sc e_g e_t, mlabel(adm1_name)) (lfit e_g e_t), title(KOR) ///
+subtitle("pre-trend = `b_t', se = `b_t_se', p = `b_t_p', n = `n'") ///
+ytitle(Growth rate residuals) xtitle("Date residuals") ///
+xscale(r(-3(1)3)) xlabel(-3(1)3) yscale(titlegap(*-37)) name(KOR_pre, replace) 
 
 // 1st diff in log cases over time
 tw (sc D_D_l_active_cases t), title(KOR) yscale(titlegap(*-37)) ///
@@ -260,25 +280,30 @@ local n = e(N)
 gen beta_t = _b[t] // avg of D_D_l_cum_confirmed_cases
 replace beta_t = . if longest_series==0 & e(sample) == 1
 
-// look at residuals
+// look at growth rate residuals
 reg D_l_cum_confirmed_cases i.adm2_id, cluster(t)
-predict e if e(sample), resid
+predict e_g if e(sample), resid
 
-tw (sc e t)
-hist e, freq width(.1)
+tw (sc e_g t)
+hist e_g, freq width(.1)
 
-gen D_e = D.e // first diff in resid
-hist D_e, freq width(.01) title("First diff in residuals")
+gen D_e_g = D.e_g // first diff in resid
+hist D_e_g, freq width(.01) title("First diff in residuals")
 
 // plot
-tw (sc D_e t, m(Oh))(line beta_t t), title(ITA) ///
+tw (sc D_e_g t, m(Oh))(line beta_t t), title(ITA) ///
 ytitle(Changes in growth rate residuals) xtitle("")
+
+// look at date residuals, use for x-axis
+reg t i.adm2_id if D_l_cum_confirmed_cases!=.
+predict e_t if e(sample), resid
 
 // plot growth rate residuals, take out effect of controls
 // plot dots and plot best fit line
-tw (sc e t, m(Oh) mlabel(adm2_name)) (lfit e t), title(ITA) ///
+tw (sc e_g e_t, m(Oh) mlabel(adm2_name)) (lfit e_g e_t), title(ITA) ///
 subtitle("pre-trend = `b_t', se = `b_t_se', p = `b_t_p', n = `n'")  ///
-ytitle(Growth rate residuals) xtitle("") name(ITA_pre, replace)
+ytitle(Growth rate residuals) xtitle("Date residuals") ///
+xscale(r(-1.5(.5)1.5)) xlabel(-1.5(.5)1.5) name(ITA_pre, replace)
 
 // 1st diff in log cases over time
 tw (sc D_D_l_cum_confirmed_cases t, m(Oh)), title(ITA) ///
@@ -340,25 +365,29 @@ local n = e(N)
 gen beta_t = _b[t] // avg of D_D_l_cum_confirmed_cases
 replace beta_t = . if longest_series==0 & e(sample) == 1
 
-// look at residuals
+// look at growth rate residuals
 reg D_l_cum_confirmed_cases i.adm1_id, cluster(t)
-predict e if e(sample), resid
+predict e_g if e(sample), resid
 
-tw (sc e t)
-hist e, freq width(.1)
+tw (sc e_g t)
+hist e_g, freq width(.1)
 
-gen D_e = D.e // first diff in resid
-hist D_e, freq width(.01) title("First diff in residuals")
+gen D_e_g = D.e_g // first diff in resid
+hist D_e_g, freq width(.01) title("First diff in residuals")
 
 // plot
-tw (sc D_e t)(line beta_t t), title(IRN) ///
+tw (sc D_e_g t)(line beta_t t), title(IRN) ///
 ytitle(Changes in growth rate residuals) xtitle("")
+
+// look at date residuals, use for x-axis
+reg t i.adm1_id if D_l_cum_confirmed_cases!=.
+predict e_t if e(sample), resid
 
 // plot growth rate residuals, take out effect of controls
 // plot dots and plot best fit line
-tw (sc e t, mlabel(adm1_name)) (lfit e t), title(IRN) ///
-subtitle("pre-trend = `b_t', n = `n'") ///
-ytitle(Growth rate residuals) xtitle("") name(IRN_pre, replace)
+tw (sc e_g e_t, mlabel(adm1_name)) (lfit e_g e_t), title(IRN) ///
+subtitle("pre-trend = `b_t', n = `n'") ytitle(Growth rate residuals) xtitle("Growth rate residuals") ///
+xscale(r(-1(0.5)1)) xlabel(-1(0.5)1) name(IRN_pre, replace)
 
 // 1st diff in log cases over time
 tw (sc D_D_l_cum_confirmed_cases t), title(IRN) ///
@@ -420,25 +449,30 @@ local n = e(N)
 gen beta_t = _b[t] // avg of D_D_l_cum_confirmed_cases
 replace beta_t = . if longest_series==0 & e(sample) == 1
 
-// look at residuals
+// look at growth rate residuals
 reg D_l_cum_confirmed_cases i.adm1_id, cluster(t)
-predict e if e(sample), resid
+predict e_g if e(sample), resid
 
-tw (sc e t)
-hist e, freq width(.1)
+tw (sc e_g t)
+hist e_g, freq width(.1)
 
-gen D_e = D.e // first diff in resid
-hist D_e, freq width(.01) title("First diff in residuals")
+gen D_e_g = D.e_g // first diff in resid
+hist D_e_g, freq width(.01) title("First diff in residuals")
 
 // plot
-tw (sc D_e t)(line beta_t t), title(FRA) ///
+tw (sc D_e_g t)(line beta_t t), title(FRA) ///
 ytitle(Changes in growth rate residuals) xtitle("")
+
+// look at date residuals, use for x-axis
+reg t i.adm1_id if D_l_cum_confirmed_cases!=.
+predict e_t if e(sample), resid
 
 // plot growth rate residuals, take out effect of controls
 // plot dots and plot best fit line
-tw (sc e t, mlabel(adm1_name) mlabposition(9)) (lfit e t), title(FRA) ///
-subtitle("pre-trend = `b_t', se = `b_t_se', p = `b_t_p', n = `n'")  yscale(titlegap(*-37)) ///
-ytitle(Growth rate residuals) xtitle("") name(FRA_pre, replace)
+tw (sc e_g e_t, mlabel(adm1_name)) (lfit e_g e_t), title(FRA) ///
+subtitle("pre-trend = `b_t', se = `b_t_se', p = `b_t_p', n = `n'") ///
+ytitle(Growth rate residuals) xtitle("Date residuals") ///
+yscale(titlegap(*-37)) name(FRA_pre, replace)
 
 // 1st diff in log cases over time
 tw (sc D_D_l_cum_confirmed_cases t), title(FRA) ///
@@ -502,26 +536,29 @@ local n = e(N)
 gen beta_t = _b[t] // avg of D_D_l_cum_confirmed_cases
 replace beta_t = . if longest_series==0 & e(sample) == 1
 
-// look at residuals
+// look at growth rate residuals
 reg D_l_cum_confirmed_cases i.adm1_id, cluster(t)
-predict e if e(sample), resid
+predict e_g if e(sample), resid
 
-tw (sc e t)
-hist e, freq width(.1)
+tw (sc e_g t)
+hist e_g, freq width(.1)
 
-gen D_e = D.e // first diff in resid
-hist D_e, freq width(.01) title("First diff in residuals")
+gen D_e_g = D.e_g // first diff in resid
+hist D_e_g, freq width(.01) title("First diff in residuals")
 
 // plot
-tw (sc D_e t)(line beta_t t), title(USA) ///
+tw (sc D_e_g t)(line beta_t t), title(USA) ///
 ytitle(Changes in growth rate residuals) xtitle("")
+
+// look at date residuals, use for x-axis
+reg t i.adm1_id if D_l_cum_confirmed_cases!=.
+predict e_t if e(sample), resid
 
 // plot growth rate residuals, take out effect of controls
 // plot dots and plot best fit line
-tw (sc e t, mlabel(adm1_name) mlabposition(9)) (lfit e t), title(USA) ///
+tw (sc e_g e_t, mlabel(adm1_name)) (lfit e_g e_t), title(USA) ///
 subtitle("pre-trend = `b_t', se = `b_t_se', p = `b_t_p', n = `n'")  ///
-ytitle(Growth rate residuals) xtitle("") name(USA_pre, replace)
-
+ytitle(Growth rate residuals) xtitle("Date residuals") name(USA_pre, replace)
 
 
 
