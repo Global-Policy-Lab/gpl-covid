@@ -130,11 +130,11 @@ def read_implies(
 
 
 def clean_intensities_usa(df):
-    nulls = (df["intensity_group"].str.lower().str.startswith("na")) | (
-        df["intensity_group"].str.lower().str.startswith("n/a")
-    )
-    nulls = nulls & (df["intensity_group"].str.len() < 5)
-    df.loc[nulls, "intensity_group"] = np.nan
+
+    df.loc[
+        df["intensity_group"].str.lower().str.startswith("n/a"), "intensity_group"
+    ] = np.nan
+
     intensity_cols = [c for c in df.columns if c.startswith("intensity_group")]
     for c in intensity_cols:
         df[c] = df[c].str.strip()
