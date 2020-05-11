@@ -80,6 +80,10 @@ then
     Rscript code/data/usa/download_and_clean_usafacts.R
 fi
 
+### Fill in policies implied by other policies
+printf "***Filling in policies implied by other policies***\n"
+python code/data/multi_country/convert-policies-raw-to-interim.py
+
 ### Dataset merging
 #### CHN
 printf "***Processing and merging CHN data***\n"
@@ -91,10 +95,6 @@ then
     printf "***Merging FRA data***\n"
     code/statab.sh code/data/france/format_policy.do
 fi
-
-### Fill in policies implied by other policies
-printf "***Filling in policies implied by other policies***\n"
-python code/data/multi_country/convert-policies-raw-to-interim.py
 
 # IRN
 printf "***Processing and merging IRN data***\n"
