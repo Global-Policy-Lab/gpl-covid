@@ -115,7 +115,7 @@ reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure national_lock
  
 outreg2 using "results/tables/reg_results/FRA_estimates_table", sideway noparen nodepvar word replace label ///
  title(France, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Std Error") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ stats(coef se pval) dec(3) ctitle("Coefficient"; "Std Error"; "P-value") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
  "This regression includes region fixed effects, day-of-week fixed effects, and clustered standard errors at the day level." "" ///
  "\'22National lockdown\'22 policies include business closures and home isolation.")
 cap erase "results/tables/reg_results/FRA_estimates_table.txt"

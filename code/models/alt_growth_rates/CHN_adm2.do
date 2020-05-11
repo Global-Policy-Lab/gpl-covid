@@ -175,9 +175,11 @@ foreach var of varlist home_isolation travel_ban_local emergency_declaration{
 	forvalues i = 29/70 {
 		replace `var'_L29_to_L70 = 1 if L`i'.D.`var' == 1
 	}
+	display "`var'"
+	local var_prop = strupper(substr("`var'", 1, 1)) + substr("`var'", 2, .) //capitalize first letter only
+	local lbl0 = subinstr("`var_prop'", "_", " ", .)
+	local lbl = regexr("`lbl0'", " local", "")
 	
-	local lbl0 = strproper(subinstr("`var'", "_", " ", .))
-	local lbl = regexr("`lbl0'", " Local", "")
 	lab var `var'_L0_to_L7 "`lbl', Week 1"
 	lab var `var'_L8_to_L14 "`lbl', Week 2"
 	lab var `var'_L15_to_L21 "`lbl', Week 3"
@@ -205,7 +207,7 @@ reghdfe D_l_active_cases emergency_declaration_L* travel_ban_local_L* home_isola
 local r2 = e(r2)
 outreg2 using "results/tables/reg_results/CHN_estimates_table", sideway noparen nodepvar word replace label ///
  title(China, "Dependent variable: growth rate of active cases (\u0916?log cases per day\'29") ///
- ctitle("Coefficient"; "Std Error") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ stats(coef se pval) dec(3) ctitle("Coefficient"; "Std Error"; "P-value") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
  "This regression includes city fixed effects and clustered standard errors at the day level.")
 cap erase "results/tables/reg_results/CHN_estimates_table.txt"
 

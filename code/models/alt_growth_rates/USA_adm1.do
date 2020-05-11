@@ -154,7 +154,7 @@ reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, sa
 
 outreg2 using "results/tables/reg_results/USA_estimates_table", sideway noparen nodepvar word replace label ///
  title(United States, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Std Error") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ stats(coef se pval) dec(3) ctitle("Coefficient"; "Std Error"; "P-value") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
  "This regression includes state fixed effects, day-of-week fixed effects, and clustered standard errors at the day level." "" ///
  "\'22Social distance\'22 includes policies such as closing libraries, maintaining 6 feet distance from others in public, and limiting visits to long term care facilities.")
 cap erase "results/tables/reg_results/USA_estimates_table.txt"
