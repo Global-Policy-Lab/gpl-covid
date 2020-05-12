@@ -34,7 +34,6 @@ restore
 // remove national pol, to be merged further down
 drop if adm1 == .
 // drop if school_closure_size not clear
-drop if policy == "no_gathering" & size == .
 drop size
 g school_closure_regional = 1 if policy == "school_closure_all"
 preserve
@@ -75,12 +74,27 @@ rename population* *_popw
 merge m:1 adm1 using "data/interim/france/region_ID.dta", nogen keep(1 3)
 *ad hoc for region CORSE because of coding issue with the departement (2A and 2B)
 replace adm1_pop = 327283 if adm1 == 94
-foreach var in "no_gathering_inside" "event_cancel" "school_closure" "social_distance" "home_isolation" {
+foreach var in "no_gathering_inside" "event_cancel" "school_closure" "social_distance" "home_isolation" "no_gathering"{
 	replace `var'_popw = `var'_popw / adm1_pop
 }
 
 rename *_size *
 replace school_closure = 1 if school_closure > 1
+
+//save places with more stringent no_gathering policy than nationwide 
+preserve
+	keep if no_gathering == 1
+	keep no_gathering no_gathering_popw adm1 date
+	g no_gathering_size = 0
+	tempfile no_gather
+	save `no_gather'
+restore
+drop if no_gathering == 1
+drop no_gathering
+
+
+
+
 tempfile Local
 save `Local'
 
@@ -91,18 +105,21 @@ drop date
 rename Date date
 format date %td
 
-
 merge 1:1 date adm1 using `Local', nogen update
 merge m:1 date adm1 using `regional',nogen update
 merge m:1 date using `national', nogen update
+
 // adjust _popw variable for place with both national and local intensity
-foreach var in "event_cancel" "home_isolation" "no_gathering_inside" "social_distance" {
+
+foreach var in  "home_isolation" {
 	replace `var'_popw = `var' + `var'_popw
 	replace `var'_popw = `var' if `var'_popw == . & `var' != .
 	replace `var'_popw = 1 if `var'_popw > 1 // limit intensity to 1
 }
 
 rename no_gathering_national no_gathering
+merge 1:1 date adm1 using `no_gather', nogen update replace
+
 drop adm1_name //reload region name, corrupted accent due to import csv above
 merge m:1 adm1 using "data/interim/france/region_ID.dta", keep(1 3) keepusing(adm1_name adm1_pop) nogen update
 replace adm1_name = "Corse" if adm1 == 94
@@ -117,8 +134,8 @@ xtset adm1 date
 foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolation_popw" ///
 "no_gathering_inside" "no_gathering_inside_popw" "school_closure" "school_closure_popw" ///
 "social_distance" "social_distance_popw" "school_closure_regional" "business_closure" ///
-"no_gathering"  "school_closure_national" "social_distance_national" ///
-"social_distance_opt" "testing_regime" {
+"no_gathering"  "no_gathering_popw" "school_closure_national" "social_distance_national" ///
+"social_distance_opt" "testing_regime"  {
 	egen seq = seq(), by(adm1)
 	replace `var' = 0 if `var' == . & seq == 1
 	drop seq

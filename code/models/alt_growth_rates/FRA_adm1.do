@@ -92,9 +92,12 @@ lab var testing_regime_15mar2020 "Testing regime change on Mar 15, 2020"
 gen national_lockdown = (business_closure + home_isolation_popw) / 2 // big national lockdown policy
 lab var national_lockdown "National lockdown"
 
-gen no_gathering_5000 = no_gathering_size <= 5000
-gen no_gathering_1000 = no_gathering_size <= 1000
+gen no_gathering_5000 = no_gathering_size <= 5000 
+gen no_gathering_1000 = no_gathering_size <= 1000 
 gen no_gathering_100 = no_gathering_size <= 100
+
+replace no_gathering_inside = 1 if no_gathering_size == 0 // both inside and outside gathering were prohibited when no_gathering_size equals 0
+replace no_gathering_inside_popw = no_gathering_popw if no_gathering_size == 0 // both inside and outside gathering were prohibited when no_gathering_size equals 0
 
 gen pck_social_distance = (no_gathering_1000 + no_gathering_100 + event_cancel_popw + no_gathering_inside_popw + social_distance_popw) / 5
 lab var pck_social_distance "Social distance"
@@ -107,11 +110,11 @@ lab var school_closure "School closure"
 //------------------main estimates
 
 // output data used for reg
-outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
+*outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
 // main regression model
 reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure national_lockdown ///
- testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+ testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid  
  
 outreg2 using "results/tables/reg_results/FRA_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(Region FE, "YES", Day-of-Week FE, "YES") title(France, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
