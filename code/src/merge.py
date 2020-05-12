@@ -140,7 +140,7 @@ def get_intensities(policies, adm_level):
 
         total_intensity += additional_policy_intensities.sum()
 
-    assert total_intensity <= 1
+    assert total_intensity <= 1, f"{total_intensity}, {policies}, {adm_level}"
 
     return total_intensity, max_intensity
 
@@ -158,7 +158,7 @@ def pintensity(policies, weights):
     total = 0
 
     for p in policies:
-        if p.startswith("na") or p.startswith("n/a"):
+        if p == "nan":
             continue
 
         if p not in weights.keys():
@@ -257,6 +257,7 @@ def calculate_intensities_usa(policies_to_date, adm_level, policy):
         policies_to_date.loc[l3_mask, "policy_intensity"] = intensity
 
     policies_to_date["optional"] = 0
+    policies_to_date = policies_to_date.drop_duplicates(pcols)
     return policies_to_date
 
 

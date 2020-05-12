@@ -54,7 +54,7 @@ myThemeStuff <- theme(panel.background = element_rect(fill = NA),
 
 # Set paths
 cases_in <- 'data/interim/iran/covid_iran_cases.csv'
-policies_in <- 'data/raw/iran/IRN_policy_data_sources.csv'
+policies_in <- 'data/interim/iran/IRN_policy_data_sources.csv'
 file_out <- 'data/interim/iran/IRN_interim.csv'
 file_out_adm0 <- 'data/interim/iran/adm0/IRN_interim.csv'
 dir.create('data/interim/iran/adm0', showWarnings=FALSE)
