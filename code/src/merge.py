@@ -471,7 +471,7 @@ def cached_state_group(policies, adm1, policy_group, empty_df, adm_level, adm2, 
     policies_in_group["next_day"] = np.roll(policies_in_group["date_start"], -1)
 
     for i, row in policies_in_group.iterrows():
-        cache = policies_in_group[: i + 1]
+        cache = policies_in_group[: i + 1].copy()
         cached_policies[row["date_str"]] = cache
         if row["date_start"] != row["next_day"]:
             # Return a new version to set the current one in stone
@@ -489,7 +489,11 @@ def cached_state_group(policies, adm1, policy_group, empty_df, adm_level, adm2, 
 
 def get_policies_to_date_cache(policies, policy_panel, adm_level):
     policies = policies.sort_values("date_start", ascending=True)
-    dates = policy_panel["date"].astype(str).unique()
+    dates = [
+        str(d)[:10]
+        for d in pd.date_range(start="2020-01-01", end="2020-05-01").to_list()
+    ]
+
     if adm_level == 2:
         adm2_to_adm1 = policy_panel.set_index("adm2_name")["adm1_name"].to_dict()
 
