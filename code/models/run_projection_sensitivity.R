@@ -240,12 +240,3 @@ out <- ifr_df %>%
   tab_style(style = cell_text(weight = "bold", size = px(11/0.75), color = "black",
                               align = "left"), 
             locations = cells_title("title"))
-
-dir.create("results/tables/table_a6/", showWarnings = FALSE)
-
-# There's a bug in gt that makes you hard code the wd
-gt::gtsave(out, filename = "sensitivity_to_ifr.html")
-invisible(file.copy(from = "sensitivity_to_ifr.html",
-          to = "results/tables/table_a6/sensitivity_to_ifr.html",
-          overwrite = TRUE))
-invisible(file.remove("sensitivity_to_ifr.html"))
