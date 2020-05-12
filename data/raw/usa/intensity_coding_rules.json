@@ -43,6 +43,7 @@
       "requires social distancing standards anywhere outside home - optional": 0.07,
       "requires social distancing standards anywhere outside home": 0.14,
       "isolate/quarantine certain populations": 0.14,
+      "isolate/quarantine certain populations - optional": 0.07,
       "mandates mask wearing": 0.14,
       "closes public facilities": 0.14,
       "closes outdoor facilities": 0.14,
@@ -115,9 +116,12 @@
 
   "school_closure": {
     "weights": {
+      "school closure - optional": 0.5,
       "school closure": 1
     },
-    "replaces": {}
+    "replaces": {
+      "school closure": ["school closure - optional"]
+    }
   },
 
   "home_isolation": {
