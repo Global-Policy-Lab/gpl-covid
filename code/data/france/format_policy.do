@@ -56,13 +56,14 @@ drop policy
 
 rename (policy1 policy2) (policy running_var)
 destring running_var, replace force
+replace adm2 = 100 if adm2 == 2 & adm1 == 94  // adm2 originally a string var for CORSE ("2A")
 merge m:1 adm2 using "data/interim/france/departement_info.dta", keep(3) nogen
-
-*ad hoc population for corse
-replace pop = 327283 if adm1 == 94 & adm2 == 2
-
 drop departement_name  region_id
 sort adm1 date
+
+egen seq = seq(), by(adm2 policy)
+drop if seq > 1 & policy == "school_closure" // don't increase intensity when more school close within adm2
+
 collapse policy_intensity (sum) running_var pop, by(date adm1 adm1_name policy)
 rename policy pol //shortern variable name before reshape
 replace running_var = policy_int if pol != "school_closure"
@@ -72,14 +73,15 @@ reshape wide running_var pop, i(adm1 date) j(pol) string
 rename running_var* *_size
 rename population* *_popw
 merge m:1 adm1 using "data/interim/france/region_ID.dta", nogen keep(1 3)
-*ad hoc for region CORSE because of coding issue with the departement (2A and 2B)
-replace adm1_pop = 327283 if adm1 == 94
-foreach var in "no_gathering_inside" "event_cancel" "school_closure" "social_distance" "home_isolation" "no_gathering"{
+
+br school* adm1_pop adm1_name date
+
+foreach var in "no_gathering_inside" "event_cancel" "school_closure" "social_distance" "home_isolation" "no_gathering" {
 	replace `var'_popw = `var'_popw / adm1_pop
 }
 
 rename *_size *
-replace school_closure = 1 if school_closure > 1
+replace school_closure = 1 if school_closure > 1 & school_closure != .
 
 //save places with more stringent no_gathering policy than nationwide 
 preserve
@@ -111,10 +113,10 @@ merge m:1 date using `national', nogen update
 
 // adjust _popw variable for place with both national and local intensity
 
-foreach var in  "home_isolation" {
+foreach var in  "home_isolation"  {
 	replace `var'_popw = `var' + `var'_popw
 	replace `var'_popw = `var' if `var'_popw == . & `var' != .
-	replace `var'_popw = 1 if `var'_popw > 1 // limit intensity to 1
+	replace `var'_popw = 1 if `var'_popw > 1 & `var'_popw != . // limit intensity to 1
 }
 
 rename no_gathering_national no_gathering
@@ -122,17 +124,12 @@ merge 1:1 date adm1 using `no_gather', nogen update replace
 
 drop adm1_name //reload region name, corrupted accent due to import csv above
 merge m:1 adm1 using "data/interim/france/region_ID.dta", keep(1 3) keepusing(adm1_name adm1_pop) nogen update
-replace adm1_name = "Corse" if adm1 == 94
-replace adm1_pop = 327283 if adm1 == 94
-
-
-
 order adm1 adm1_name date cum_c*
 sort adm1 date
 xtset adm1 date
 
 foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolation_popw" ///
-"no_gathering_inside" "no_gathering_inside_popw" "school_closure" "school_closure_popw" ///
+"no_gathering_inside" "no_gathering_inside_popw" "school_closure"  ///
 "social_distance" "social_distance_popw" "school_closure_regional" "business_closure" ///
 "no_gathering"  "no_gathering_popw" "school_closure_national" "social_distance_national" ///
 "social_distance_opt" "testing_regime"  {
@@ -141,6 +138,10 @@ foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolati
 	drop seq
 	bysort adm1: carryforward `var', replace
 }
+
+replace school_closure_popw = 0 if school_closure_popw == .
+bysort adm1: replace school_closure_popw = sum(school_closure_popw)
+replace school_closure_popw = 1 if school_closure_popw > 1
 
 replace no_gathering_size = 0 if no_gathering_size == .
 sort adm1 date
@@ -153,7 +154,6 @@ egen school_closure_local = rowmax(school_closure school_closure_regional school
 egen school_closure_local_popw = rowmax(school_closure_popw school_closure_regional school_closure_national) // same policy, aggregate taking max
 drop school_closure school_closure_regional school_closure_national school_closure_popw
 rename (school_closure_local school_closure_local_popw) (school_closure school_closure_popw)
-
 
 replace social_distance = (social_distance + social_distance_national)/2 // The national policy is different than regional, so treatment intensity is changing
 replace social_distance_popw = (social_distance_popw + social_distance_national)/2
