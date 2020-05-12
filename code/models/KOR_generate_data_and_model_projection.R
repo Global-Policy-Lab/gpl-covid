@@ -31,16 +31,12 @@ if(!(exists("gamma") & class(gamma) != "function")){
       mean()
 }
 if(!exists("underreporting")){
-    underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
-                               col_types = cols(
-                                 country = col_character(),
-                                 total_cases = col_double(),
-                                 total_deaths = col_double(),
-                                 underreporting_estimate = col_double(),
-                                 lower = col_double(),
-                                 upper = col_double(),
-                                 underreporting_estimate_clean = col_character()
-                               ))
+  underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
+                             col_types = cols(
+                               country = col_character(),
+                               underreporting_estimate = col_double()
+                             )) %>% 
+    filter(ifr == 0.0075)
 }
 
 changed = TRUE

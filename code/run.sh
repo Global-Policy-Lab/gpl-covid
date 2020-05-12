@@ -117,11 +117,6 @@ python code/data/usa/merge_policy_and_cases.py
 printf "***Checking processed data***\n"
 python code/data/multi_country/quality-check-processed-datasets.py
 
-# Under-reporting data
-if $DOWNLOAD; then
-    Rscript code/data/multi_country/download_russell_underreporting_estimates.R
-fi
-
 ## regression model estimation
 if $STATA
 then
@@ -190,7 +185,7 @@ fi
 
 # ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
 printf "***Creating ED Fig 7***\n"
-Rscript code/models/run_projection_with_multiple_gammas.R
+Rscript code/models/run_projection_sensitivity.R
 
 # ED Figure 8/9
 printf "***Creating ED Fig 8/9***\n"
