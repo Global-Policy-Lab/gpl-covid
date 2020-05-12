@@ -88,7 +88,6 @@ lab var testing_regime_15mar2020 "Testing regime change on Mar 15, 2020"
 
 
 //------------------generate policy packages
-
 gen national_lockdown = (business_closure + home_isolation_popw) / 2 // big national lockdown policy
 lab var national_lockdown "National lockdown"
 
@@ -110,11 +109,13 @@ lab var school_closure "School closure"
 //------------------main estimates
 
 // output data used for reg
-*outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
+outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
+
+
 
 // main regression model
-reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure national_lockdown ///
- testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid  
+reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popw national_lockdown ///
+ testing_regime_*, absorb(i.adm1_id, savefe) cluster(t) resid  
  
 outreg2 using "results/tables/reg_results/FRA_estimates_table", sideway noparen nodepvar word replace label ///
  addtext(Region FE, "YES", Day-of-Week FE, "YES") title(France, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
@@ -161,7 +162,7 @@ predictnl y_counter = testing_regime_15mar2020 * _b[testing_regime_15mar2020] + 
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of all policies combined (FOR FIG2)
-lincom national_lockdown + school_closure + pck_social_distance 
+lincom national_lockdown + school_closure_popwt + pck_social_distance 
 post results ("FRA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 local comb_policy = round(r(estimate), 0.001)
@@ -264,7 +265,7 @@ save `base_data0'
 	gen mask_opt = t>=mdy(4,3,2020)
 
 	// hospitalization model
-	reghdfe D_l_cum_hospitalized pck_social_distance school_closure national_lockdown mask_opt ///
+	reghdfe D_l_cum_hospitalized pck_social_distance school_closure_popwt national_lockdown mask_opt ///
 	 testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 	 
 	// predicted "actual" outcomes with real policies
