@@ -241,9 +241,11 @@ out <- ifr_df %>%
                               align = "left"), 
             locations = cells_title("title"))
 
-owd <- getwd()
 dir.create("results/tables/table_a6/", showWarnings = FALSE)
-setwd("results/tables/table_a6")
+
 # There's a bug in gt that makes you hard code the wd
 gt::gtsave(out, filename = "sensitivity_to_ifr.html")
-setwd(owd)
+invisible(file.copy(from = "sensitivity_to_ifr.html",
+          to = "results/tables/table_a6/sensitivity_to_ifr.html",
+          overwrite = TRUE))
+invisible(file.remove("sensitivity_to_ifr.html"))
