@@ -418,7 +418,7 @@ def get_policy_vals(
         return policy_pickle_dict[adm][psave]
     else:
         result = calculate_intensities_adm_day_policy(
-            policies_to_date, adm_level, policy, method
+            policies_to_date.copy(), adm_level, policy, method
         )
         policy_pickle_dict[adm][psave] = result
 
