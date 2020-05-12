@@ -329,7 +329,7 @@ Note that the outputs of [code/plotting/fig1.R](code/plotting/fig1.R) are requir
 
 #### Extended Data Figure 7
 
-`Rscript code/models/run_projection_with_multiple_gammas.R`
+`Rscript code/models/run_projection_sensitivity.R`
 
 #### Extended Data Figures 8 and 9
 

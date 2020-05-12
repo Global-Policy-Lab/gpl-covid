@@ -174,7 +174,7 @@ suppressWarnings({
                      scale = 2, base_asp = 1.2, dpi = 600)
   write_csv(gamma_df %>% dplyr::select(-time_steps_per_day), path = "results/source_data/ExtendedDataFigure7.csv")
   if(file.exists("Rplots.pdf")){
-    file.remove("Rplots.pdf")
+    invisible(file.remove("Rplots.pdf"))
   }
 })
 
@@ -239,7 +239,7 @@ out <- ifr_df %>%
                              cells_title("title"))) %>% 
   tab_style(style = cell_text(weight = "bold", size = px(11/0.75), color = "black",
                               align = "left"), 
-            locations = cells_title("title")); out
+            locations = cells_title("title"))
 
 owd <- getwd()
 dir.create("results/tables/table_a6/", showWarnings = FALSE)
