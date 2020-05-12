@@ -282,8 +282,8 @@ g t_random2 = t + rnormal(0,1)/10
 
 // Graph of predicted growth rates (FOR FIG3)
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vvthin) color(blue*.5)) ///
+(rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
 || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
 (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
