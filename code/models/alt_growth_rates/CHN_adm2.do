@@ -62,12 +62,6 @@ bysort adm12_id : egen ever_policy3 = max(emergency_declaration)
 gen ever_policy = ever_policy1 + ever_policy2 // only keeping 116 cities where we find at least one of travel ban or home iso b/c unlikely that the rest of cities did not implement
 keep if ever_policy > 0
 
-// count cities with only home_iso but no travel ban
-preserve
-	contract adm1_name adm2_name adm12_id if ever_policy==1 & ever_policy2==0 & cum_confirmed_cases!=.
-	count //80 cities out of 116 cities
-restore
-
 // flag which admin unit has longest series
 gen adm1_adm2_name = adm2_name + ", " + adm1_name
 tab adm1_adm2_name if active_cases!=., sort 
@@ -356,15 +350,15 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vvthin) color(blue*.5)) ///
+(rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
 || (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
 (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
-title(China, ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
+title(China, ring(0) position(11)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph, replace)
@@ -402,7 +396,7 @@ graph export results/figures/fig3/raw/legend_fig3.pdf, replace
 // collapse (max) cases_to_pop active_cases, by(adm2_name)
 // sort active_cases
 
-reghdfe D_l_active_cases testing_regime_change_* home_isolation_* travel_ban_local_* if adm2_name == "Wuhan", noabsorb
+reghdfe D_l_active_cases testing_regime_change_* emergency_declaration_* home_isolation_* travel_ban_local_* if adm2_name=="Wuhan", noabsorb
 
 // export coefficients (FOR FIG2)
 post results ("CHN_Wuhan") ("no_policy rate") (round(_b[_cons], 0.001)) (round(_se[_cons], 0.001)) 

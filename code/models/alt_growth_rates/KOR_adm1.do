@@ -250,15 +250,15 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vvthin) color(blue*.5)) ///
+(rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
 || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
 (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
-title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
+title("South Korea", ring(0) position(11)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
