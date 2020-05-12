@@ -89,14 +89,14 @@ lab var testing_regime_15mar2020 "Testing regime change on Mar 15, 2020"
 
 //------------------generate policy packages
 
-gen national_lockdown = (business_closure + home_isolation) / 2 // big national lockdown policy
+gen national_lockdown = (business_closure + home_isolation_popw) / 2 // big national lockdown policy
 lab var national_lockdown "National lockdown"
 
 gen no_gathering_5000 = no_gathering_size <= 5000
 gen no_gathering_1000 = no_gathering_size <= 1000
 gen no_gathering_100 = no_gathering_size <= 100
 
-gen pck_social_distance = (no_gathering_1000 + no_gathering_100 + event_cancel + no_gathering_inside + social_distance) / 5
+gen pck_social_distance = (no_gathering_1000 + no_gathering_100 + event_cancel_popw + no_gathering_inside_popw + social_distance_popw) / 5
 lab var pck_social_distance "Social distance"
 
 lab var school_closure "School closure"
