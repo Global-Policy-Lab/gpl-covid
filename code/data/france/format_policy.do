@@ -1,7 +1,7 @@
 // Author: Sébastien AP
-// Purpose: clean, reshape, and merge the policy data 
+// Purpose: clean, reshape, and merge the policy data
 
-import delim "data/raw/france/FRA_policy_data_sources.csv", clear 
+import delim "data/interim/france/FRA_policy_data_sources.csv", clear 
 replace policy = policy + "_opt" if optional == "Y"
 keep *_name policy no_gathering_size date_start policy_intensity
 g Date = date(date_start,"MDY",2000)
@@ -22,27 +22,24 @@ preserve
 	reshape wide size, i(date) j(policy) string
 	rename size* *
 	foreach var in "no_gathering" "school_closure" "social_distance"{
-		replace `var' = 0 if `var' == .
 		rename `var' `var'_national
 	}
-	
-	replace business_closure = 0 if business_closure == .
-	replace home_isolation = 0 if home_isolation == .
+
 	g no_gathering_size = no_gathering_national
-	replace no_gathering_national = 1 if no_gathering_national > 0
+	replace no_gathering_national = 1 if no_gathering_national != .
+	
 tempfile national
 save `national'
 restore
-*remove national pol, to be merged further down
+// remove national pol, to be merged further down
 drop if adm1 == .
-*drop if school_closure_size not clear
+// drop if school_closure_size not clear
 drop if policy == "no_gathering" & size == .
 drop size
-
-g school_closure_regional = policy == "school_closure_all"
+g school_closure_regional = 1 if policy == "school_closure_all"
 preserve
 	keep if school_closure_regional == 1 | adm2 == .
-	g social_distance_opt = policy == "social_distance_opt"
+	g social_distance_opt = 1 if policy == "social_distance_opt"
 	drop adm2 policy
 	tempfile regional
 	drop policy_intensity
@@ -55,7 +52,7 @@ drop school_closure_regional
 
 
 replace policy = subinstr(policy, "school_closure_", "school_closure-",1)
-split policy, p("-") 
+split policy, p("-")
 drop policy
 
 rename (policy1 policy2) (policy running_var)
@@ -78,10 +75,7 @@ rename population* *_popw
 merge m:1 adm1 using "data/interim/france/region_ID.dta", nogen keep(1 3)
 *ad hoc for region CORSE because of coding issue with the departement (2A and 2B)
 replace adm1_pop = 327283 if adm1 == 94
-
 foreach var in "no_gathering_inside" "event_cancel" "school_closure" "social_distance" "home_isolation" {
-	replace `var'_size = 0 if `var'_size == .
-	replace `var'_popw = 0 if `var'_popw == .
 	replace `var'_popw = `var'_popw / adm1_pop
 }
 
@@ -101,6 +95,13 @@ format date %td
 merge 1:1 date adm1 using `Local', nogen update
 merge m:1 date adm1 using `regional',nogen update
 merge m:1 date using `national', nogen update
+// adjust _popw variable for place with both national and local intensity
+foreach var in "event_cancel" "home_isolation" "no_gathering_inside" "social_distance" {
+	replace `var'_popw = `var' + `var'_popw
+	replace `var'_popw = `var' if `var'_popw == . & `var' != .
+	replace `var'_popw = 1 if `var'_popw > 1 // limit intensity to 1
+}
+
 rename no_gathering_national no_gathering
 drop adm1_name //reload region name, corrupted accent due to import csv above
 merge m:1 adm1 using "data/interim/france/region_ID.dta", keep(1 3) keepusing(adm1_name adm1_pop) nogen update
@@ -109,28 +110,28 @@ replace adm1_pop = 327283 if adm1 == 94
 
 
 
-order adm1 adm1_name date cum_c* 
+order adm1 adm1_name date cum_c*
 sort adm1 date
+xtset adm1 date
 
 foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolation_popw" ///
 "no_gathering_inside" "no_gathering_inside_popw" "school_closure" "school_closure_popw" ///
 "social_distance" "social_distance_popw" "school_closure_regional" "business_closure" ///
 "no_gathering"  "school_closure_national" "social_distance_national" ///
 "social_distance_opt" "testing_regime" {
-	replace `var' = 0 if `var' == .
-	sort adm1 date	
-	by adm1: replace `var' = sum(`var')
-	replace `var' = 1 if `var' > 1
+	egen seq = seq(), by(adm1)
+	replace `var' = 0 if `var' == . & seq == 1
+	drop seq
+	bysort adm1: carryforward `var', replace
 }
 
 replace no_gathering_size = 0 if no_gathering_size == .
 sort adm1 date
 by adm1: replace no_gathering_size = sum(no_gathering_size)
-replace home_isolation_popw = home_isolation if (home_isolation > home_isolation_popw & home_isolation_popw) == 0
 replace no_gathering_size = 1000 if no_gathering_size == 6000 // decrease cutoff instead of adding the intensity
 replace no_gathering_size = 100 if no_gathering_size == 6100 // decrease cutoff instead of adding the intensity
 
-// ----------------------- merge national and regional measure, adjust for intensity 
+// ----------------------- merge national and regional measure, adjust for intensity
 egen school_closure_local = rowmax(school_closure school_closure_regional school_closure_national) // same policy, aggregate taking max
 egen school_closure_local_popw = rowmax(school_closure_popw school_closure_regional school_closure_national) // same policy, aggregate taking max
 drop school_closure school_closure_regional school_closure_national school_closure_popw
@@ -148,7 +149,7 @@ drop if adm1 < 10
 
 *save
 format date %tdCCYY-NN-DD
-rename (adm1_pop adm1) (population adm1_id)	
+rename (adm1_pop adm1) (population adm1_id)
 rename *_popw *_popwt
 rename hospitalization cum_hospitalized
 g adm0_name = "FRA"

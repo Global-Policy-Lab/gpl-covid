@@ -14,11 +14,11 @@ The easiest way to interact with our code and data is via our [CodeOcean capsule
 You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.3" is the tag that is associated with the current version of the manuscript (as of 04/28/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
 
 ```bash
-conda env create -f environment.yml
+conda env create -f environment/environment.yml
 conda activate gpl-covid
 ```
 
-Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo. 
+Once you have activated this environment, to run some of the Python scripts, you’ll need to install the small package (1 module) that is included in this repo.
 
 ```bash
 pip install -e code
@@ -165,7 +165,7 @@ The entire pipeline can be run by calling `bash code/run.sh`. If you would rathe
 
 - `-s|--no-stata`: Don't run the Stata scripts (must include this flag if you do not have Stata). In this case, the regression steps will be skipped and you will rely on previously computed regression results.
 - `p|--num-proj`: Integer that controls both (a) the number of bootstrap samples when calculating projection uncertainty bounds in Fig. 4 and (b) the number of Monte Carlo samples used to create synthetic outbreaks (Extended Data Figures 8 and 9). Default 1000.
-- `d|--download`: Download new raw data, rather than using that which has already been downloaded. This may affect results slightly if, e.g. a country retroactivly adjusts their reported cases.
+- `d|--download`: Download new raw data, rather than using that which has already been downloaded. This may affect results slightly if, e.g. a country retroactively adjusts their reported cases.
 
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was performed through manual downloading and/or processing of datasets and is described in as much detail as possible. The sections should be run in the order listed, as some files from later sections will depend on those from earlier sections (e.g. the geographical and population data).
@@ -194,9 +194,9 @@ For detailed information on the manual collection of policy, epidemiological, an
     h. Open this file, remove the top two rows and the second column. Then change the header (the top row to `adm1_name, population`). Save to [data/interim/korea/KOR_population.csv](data/interim/korea/KOR_population.csv).
 
 #### Policy and testing data
-Most policy and testing data was manually collected from a variety of sources. A mapping was developed from each policy to one of the variables we encode for our regression. These sources and mappings are listed in a csv for each country following the pattern `data/raw/[country_name]/[country_name]_policy_data_sources.csv`.
+Most policy and testing data was manually collected from a variety of sources. A mapping was developed from each policy to one of the variables we encode for our regression. These sources and mappings are listed in a csv for each country following the pattern `data/raw/[country_name]/[country_code]_policy_data_sources.csv`.
 
-Any policy/testing data that was scraped programmatically is formatted similar to the manual data sheet and saved to `data/interim/[country_name]/[country_name]_policy_data_sources_other.csv`. These programmatic steps are listed below:
+Any policy/testing data that was scraped programmatically is formatted similar to the manual data sheet and saved to `data/interim/[country_name]/[country_code]_policy_data_sources_other.csv`. These programmatic steps are listed below:
 
 ##### United States
 1. `python code/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
@@ -223,7 +223,7 @@ Any policy/testing data that was scraped programmatically is formatted similar t
 
     b. `cases_cleaned--to_csv` :  A cleaned column format for the intermediate cases data. Simply extend the formulas (by copy/paste) in each row so that each row of the raw data is included. Do not change the column headings. Once all raw data has been included, save this tab to a csv file and save in [data/interim/iran/covid_iran_cases.csv](data/interim/iran/covid_iran_cases.csv).
 
-    c. `200314_policies--to_csv` :  A list of the key policies Iran implemented to combat the coronavirus, and sources. A copy of the information in this tab is saved as [data/interim/iran/covid_iran_policies.csv](data/interim/iran/covid_iran_policies.csv). To update data with future policy changes, update this tab with the relevant information and replace the csv with a new copy of this tab.
+    c. `200314_policies--to_csv` :  A list of the key policies Iran implemented to combat the coronavirus, and sources. A copy of the information in this tab is saved as [data/raw/iran/IRN_policy_data_sources.csv](data/raw/iran/IRN_policy_data_sources.csv). To update data with future policy changes, update this tab with the relevant information and replace the csv with a new copy of this tab.
 
 ##### Italy
 Epi data is downloaded and merged with policy data in one step, described in [the following section](####Merge-policy-and-epidemiological-data)
@@ -237,6 +237,9 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 
 #### Merge all data for each country
 Run the following scripts to merge epi, policy, testing, and population data for each country. After completion, you may run [code/data/multi_country/quality-check-processed-datasets.py](code/data/multi_country/quality-check-processed-datasets.py), to make sure all of the fully processed datasets are correctly and consistently formatted.
+
+### Include policies implied by other policies
+1. `python code/data/multi_country/convert-policies-raw-to-interim.py`
 
 ##### China
 1. `python code/data/china/collate_data.py`

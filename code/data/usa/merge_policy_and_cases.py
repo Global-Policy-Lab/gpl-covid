@@ -23,7 +23,7 @@ def main():
     cases_data = cases_data.dropna(how="all", axis=1)
 
     policy_data = pd.read_csv(
-        os.path.join(raw_data_dir, "usa_policy_data_sources.csv"), encoding="latin"
+        os.path.join(int_data_dir, "USA_policy_data_sources.csv"), encoding="latin"
     )
 
     # drop any rows which are all nan
@@ -35,9 +35,7 @@ def main():
     policy_data.loc[:, "date_start"] = pd.to_datetime(policy_data["date_start"])
     policy_data["date_end"] = pd.to_datetime("2099-12-31")
 
-    df_merged = merge.assign_policies_to_panel(
-        cases_data, policy_data, 1, errors="warn"
-    )
+    df_merged = merge.assign_policies_to_panel(cases_data, policy_data, 1, method="USA")
 
     if add_testing_regime:
         testimg_regime_csv = os.path.join(
