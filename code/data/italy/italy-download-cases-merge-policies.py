@@ -39,7 +39,7 @@ dir_italy_interim = cutil.DATA_INTERIM / "italy"
 
 # Inputs
 # CSV form of policies Google sheet
-path_italy_policies = dir_italy_raw / "ITA_policy_data_sources.csv"
+path_italy_policies = dir_italy_interim / "ITA_policy_data_sources.csv"
 url_adm2_cases = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province.csv"
 url_adm1_cases = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
 
