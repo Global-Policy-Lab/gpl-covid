@@ -1,0 +1,89 @@
+metadata_version: 1
+name: The Effect of Large-Scale Anti-Contagion Policies on the Coronavirus (COVID-19)
+  Pandemic
+description: Governments around the world are responding to the novel coronavirus
+  (COVID-19) pandemic with unprecedented policies designed to slow the growth rate
+  of infections. Many actions, such as closing schools and restricting populations
+  to their homes, impose large and visible costs on society. In contrast, the benefits
+  of these policies, in the form of infections that did not occur, cannot be directly
+  observed and are currently understood through process-based simulations. Here, we
+  compile new data on local, regional, and national anti-contagion policies recently
+  deployed in the ongoing pandemic across localities in China, South Korea, Iran,
+  Italy, France, and the United States (US). We then apply reduced-form econometric
+  methods, commonly used to measure the effect of policies on economic growth, to
+  empirically evaluate the effect that these anti-contagion policies have had on the
+  growth rate of infections. In the absence of any policy actions, we estimate that
+  early infections of COVID-19 exhibit exponential growth rates of roughly 42% per
+  day. We find that anti-contagion policies collectively have had significant effects
+  slowing this growth. Our results suggest that similar policies may have different
+  impacts on different populations, but we obtain consistent evidence that the policy
+  packages now deployed are achieving large, beneficial, and measurable health outcomes.
+  We estimate that, to date, current policies have already prevented or delayed on
+  the order of 62 million infections across these six countries. These findings may
+  help inform whether or when these ongoing policies should be lifted or intensified,
+  and they can support decision-making in the other 180+ countries where COVID-19
+  has been reported.
+tags:
+- COVID-19
+- infectious disease
+- econometrics
+- policy-instruments
+authors:
+- name: Solomon Hsiang
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      National Bureau of Economic Research & Centre for Economic Policy Research
+- name: Daniel Allen
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley
+- name: Sébastien Annan-Phan
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      Agricultural & Resource Economics, UC Berkeley
+- name: Kendon Bell
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      Manaaki Whenua – Landcare Research, New Zealand
+- name: Ian Bolliger
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      Energy & Resources Group, UC Berkeley
+- name: Trinetta Chong
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley
+- name: Hannah Druckenmiller
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      Agricultural & Resource Economics, UC Berkeley
+- name: Luna Yue Huang
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      Agricultural & Resource Economics, UC Berkeley
+- name: Andrew Hultgren
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      Agricultural & Resource Economics, UC Berkeley
+- name: Emma Krasovich
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley
+- name: Peiley Lau
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      Agricultural & Resource Economics, UC Berkeley
+- name: Jaecheol Lee
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      Agricultural & Resource Economics, UC Berkeley
+- name: Esther Rolf
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley;
+      Electrical Engineering & Computer Science, UC Berkeley
+- name: Jeanette Tseng
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley
+- name: Tiffany Wu
+  affiliations:
+  - name: Global Policy Laboratory, Goldman School of Public Policy, UC Berkeley
+corresponding_contributor:
+  name: Ian Bolliger
+  email: bolliger@berkeley.edu

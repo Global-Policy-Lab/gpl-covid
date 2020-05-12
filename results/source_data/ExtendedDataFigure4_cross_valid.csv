@@ -1,1503 +1,1059 @@
-adm0,sample,policy,beta
-"CHN","full_sample","first week (home+t",-.136
-"CHN","full_sample","second week (home+",-.299
-"CHN","full_sample","third week (home+t",-.341
-"CHN","full_sample","fourth week (home+",-.336
-"CHN","full_sample","fifth week (home+t",-.339
-"CHN","full_sample","no_policy rate",.214
-"CHN","full_sample","home_isolation_L0_",-.094
-"CHN","full_sample","home_isolation_L8_",-.135
-"CHN","full_sample","home_isolation_L15",-.153
-"CHN","full_sample","home_isolation_L22",-.159
-"CHN","full_sample","home_isolation_L29",-.161
-"CHN","full_sample","travel_ban_local_L",-.041
-"CHN","full_sample","travel_ban_local_L",-.164
-"CHN","full_sample","travel_ban_local_L",-.189
-"CHN","full_sample","travel_ban_local_L",-.177
-"CHN","full_sample","travel_ban_local_L",-.178
-"CHN","Anhui","home_isolation_L0_",-.102
-"CHN","Anhui","home_isolation_L8_",-.141
-"CHN","Anhui","home_isolation_L15",-.159
-"CHN","Anhui","home_isolation_L22",-.165
-"CHN","Anhui","home_isolation_L29",-.165
-"CHN","Anhui","travel_ban_local_L",-.026
-"CHN","Anhui","travel_ban_local_L",-.171
-"CHN","Anhui","travel_ban_local_L",-.199
-"CHN","Anhui","travel_ban_local_L",-.182
-"CHN","Anhui","travel_ban_local_L",-.188
-"CHN","Anhui","first week (home+t",-.129
-"CHN","Anhui","second week (home+",-.313
-"CHN","Anhui","third week (home+t",-.357
-"CHN","Anhui","fourth week (home+",-.347
-"CHN","Anhui","fifth week (home+t",-.353
-"CHN","Anhui","no_policy rate",.205
-"CHN","Beijing","home_isolation_L0_",-.092
-"CHN","Beijing","home_isolation_L8_",-.133
-"CHN","Beijing","home_isolation_L15",-.151
-"CHN","Beijing","home_isolation_L22",-.157
-"CHN","Beijing","home_isolation_L29",-.159
-"CHN","Beijing","travel_ban_local_L",-.042
-"CHN","Beijing","travel_ban_local_L",-.165
-"CHN","Beijing","travel_ban_local_L",-.191
-"CHN","Beijing","travel_ban_local_L",-.179
-"CHN","Beijing","travel_ban_local_L",-.18
-"CHN","Beijing","first week (home+t",-.134
-"CHN","Beijing","second week (home+",-.298
-"CHN","Beijing","third week (home+t",-.342
-"CHN","Beijing","fourth week (home+",-.337
-"CHN","Beijing","fifth week (home+t",-.339
-"CHN","Beijing","no_policy rate",.213
-"CHN","Chongqing","home_isolation_L0_",-.093
-"CHN","Chongqing","home_isolation_L8_",-.134
-"CHN","Chongqing","home_isolation_L15",-.152
-"CHN","Chongqing","home_isolation_L22",-.159
-"CHN","Chongqing","home_isolation_L29",-.16
-"CHN","Chongqing","travel_ban_local_L",-.042
-"CHN","Chongqing","travel_ban_local_L",-.164
-"CHN","Chongqing","travel_ban_local_L",-.189
-"CHN","Chongqing","travel_ban_local_L",-.177
-"CHN","Chongqing","travel_ban_local_L",-.179
-"CHN","Chongqing","first week (home+t",-.135
-"CHN","Chongqing","second week (home+",-.298
-"CHN","Chongqing","third week (home+t",-.341
-"CHN","Chongqing","fourth week (home+",-.336
-"CHN","Chongqing","fifth week (home+t",-.338
-"CHN","Chongqing","no_policy rate",.213
-"CHN","Fujian","home_isolation_L0_",-.094
-"CHN","Fujian","home_isolation_L8_",-.135
-"CHN","Fujian","home_isolation_L15",-.153
-"CHN","Fujian","home_isolation_L22",-.16
-"CHN","Fujian","home_isolation_L29",-.161
-"CHN","Fujian","travel_ban_local_L",-.041
-"CHN","Fujian","travel_ban_local_L",-.164
-"CHN","Fujian","travel_ban_local_L",-.189
-"CHN","Fujian","travel_ban_local_L",-.176
-"CHN","Fujian","travel_ban_local_L",-.177
-"CHN","Fujian","first week (home+t",-.135
-"CHN","Fujian","second week (home+",-.299
-"CHN","Fujian","third week (home+t",-.341
-"CHN","Fujian","fourth week (home+",-.336
-"CHN","Fujian","fifth week (home+t",-.339
-"CHN","Fujian","no_policy rate",.214
-"CHN","Gansu","home_isolation_L0_",-.095
-"CHN","Gansu","home_isolation_L8_",-.135
-"CHN","Gansu","home_isolation_L15",-.153
-"CHN","Gansu","home_isolation_L22",-.16
-"CHN","Gansu","home_isolation_L29",-.161
-"CHN","Gansu","travel_ban_local_L",-.041
-"CHN","Gansu","travel_ban_local_L",-.163
-"CHN","Gansu","travel_ban_local_L",-.188
-"CHN","Gansu","travel_ban_local_L",-.176
-"CHN","Gansu","travel_ban_local_L",-.177
-"CHN","Gansu","first week (home+t",-.136
-"CHN","Gansu","second week (home+",-.299
-"CHN","Gansu","third week (home+t",-.342
-"CHN","Gansu","fourth week (home+",-.336
-"CHN","Gansu","fifth week (home+t",-.338
-"CHN","Gansu","no_policy rate",.214
-"CHN","Guangdong","home_isolation_L0_",-.089
-"CHN","Guangdong","home_isolation_L8_",-.129
-"CHN","Guangdong","home_isolation_L15",-.148
-"CHN","Guangdong","home_isolation_L22",-.154
-"CHN","Guangdong","home_isolation_L29",-.155
-"CHN","Guangdong","travel_ban_local_L",-.043
-"CHN","Guangdong","travel_ban_local_L",-.168
-"CHN","Guangdong","travel_ban_local_L",-.195
-"CHN","Guangdong","travel_ban_local_L",-.183
-"CHN","Guangdong","travel_ban_local_L",-.184
-"CHN","Guangdong","first week (home+t",-.132
-"CHN","Guangdong","second week (home+",-.297
-"CHN","Guangdong","third week (home+t",-.342
-"CHN","Guangdong","fourth week (home+",-.337
-"CHN","Guangdong","fifth week (home+t",-.34
-"CHN","Guangdong","no_policy rate",.214
-"CHN","Guangxi","home_isolation_L0_",-.097
-"CHN","Guangxi","home_isolation_L8_",-.137
-"CHN","Guangxi","home_isolation_L15",-.156
-"CHN","Guangxi","home_isolation_L22",-.162
-"CHN","Guangxi","home_isolation_L29",-.164
-"CHN","Guangxi","travel_ban_local_L",-.04
-"CHN","Guangxi","travel_ban_local_L",-.161
-"CHN","Guangxi","travel_ban_local_L",-.185
-"CHN","Guangxi","travel_ban_local_L",-.173
-"CHN","Guangxi","travel_ban_local_L",-.173
-"CHN","Guangxi","first week (home+t",-.137
-"CHN","Guangxi","second week (home+",-.298
-"CHN","Guangxi","third week (home+t",-.341
-"CHN","Guangxi","fourth week (home+",-.335
-"CHN","Guangxi","fifth week (home+t",-.337
-"CHN","Guangxi","no_policy rate",.218
-"CHN","Guizhou","home_isolation_L0_",-.095
-"CHN","Guizhou","home_isolation_L8_",-.135
-"CHN","Guizhou","home_isolation_L15",-.153
-"CHN","Guizhou","home_isolation_L22",-.159
-"CHN","Guizhou","home_isolation_L29",-.161
-"CHN","Guizhou","travel_ban_local_L",-.041
-"CHN","Guizhou","travel_ban_local_L",-.164
-"CHN","Guizhou","travel_ban_local_L",-.189
-"CHN","Guizhou","travel_ban_local_L",-.177
-"CHN","Guizhou","travel_ban_local_L",-.178
-"CHN","Guizhou","first week (home+t",-.136
-"CHN","Guizhou","second week (home+",-.298
-"CHN","Guizhou","third week (home+t",-.341
-"CHN","Guizhou","fourth week (home+",-.336
-"CHN","Guizhou","fifth week (home+t",-.339
-"CHN","Guizhou","no_policy rate",.214
-"CHN","Hainan","home_isolation_L0_",-.097
-"CHN","Hainan","home_isolation_L8_",-.137
-"CHN","Hainan","home_isolation_L15",-.154
-"CHN","Hainan","home_isolation_L22",-.161
-"CHN","Hainan","home_isolation_L29",-.163
-"CHN","Hainan","travel_ban_local_L",-.041
-"CHN","Hainan","travel_ban_local_L",-.162
-"CHN","Hainan","travel_ban_local_L",-.187
-"CHN","Hainan","travel_ban_local_L",-.175
-"CHN","Hainan","travel_ban_local_L",-.176
-"CHN","Hainan","first week (home+t",-.137
-"CHN","Hainan","second week (home+",-.299
-"CHN","Hainan","third week (home+t",-.341
-"CHN","Hainan","fourth week (home+",-.336
-"CHN","Hainan","fifth week (home+t",-.338
-"CHN","Hainan","no_policy rate",.215
-"CHN","Hebei","home_isolation_L0_",-.095
-"CHN","Hebei","home_isolation_L8_",-.136
-"CHN","Hebei","home_isolation_L15",-.154
-"CHN","Hebei","home_isolation_L22",-.16
-"CHN","Hebei","home_isolation_L29",-.162
-"CHN","Hebei","travel_ban_local_L",-.041
-"CHN","Hebei","travel_ban_local_L",-.163
-"CHN","Hebei","travel_ban_local_L",-.188
-"CHN","Hebei","travel_ban_local_L",-.176
-"CHN","Hebei","travel_ban_local_L",-.177
-"CHN","Hebei","first week (home+t",-.136
-"CHN","Hebei","second week (home+",-.299
-"CHN","Hebei","third week (home+t",-.341
-"CHN","Hebei","fourth week (home+",-.336
-"CHN","Hebei","fifth week (home+t",-.339
-"CHN","Hebei","no_policy rate",.215
-"CHN","Heilongjiang","home_isolation_L0_",-.094
-"CHN","Heilongjiang","home_isolation_L8_",-.134
-"CHN","Heilongjiang","home_isolation_L15",-.152
-"CHN","Heilongjiang","home_isolation_L22",-.159
-"CHN","Heilongjiang","home_isolation_L29",-.162
-"CHN","Heilongjiang","travel_ban_local_L",-.05
-"CHN","Heilongjiang","travel_ban_local_L",-.177
-"CHN","Heilongjiang","travel_ban_local_L",-.2
-"CHN","Heilongjiang","travel_ban_local_L",-.188
-"CHN","Heilongjiang","travel_ban_local_L",-.19
-"CHN","Heilongjiang","first week (home+t",-.144
-"CHN","Heilongjiang","second week (home+",-.311
-"CHN","Heilongjiang","third week (home+t",-.352
-"CHN","Heilongjiang","fourth week (home+",-.347
-"CHN","Heilongjiang","fifth week (home+t",-.352
-"CHN","Heilongjiang","no_policy rate",.216
-"CHN","Henan","home_isolation_L0_",-.093
-"CHN","Henan","home_isolation_L8_",-.132
-"CHN","Henan","home_isolation_L15",-.149
-"CHN","Henan","home_isolation_L22",-.155
-"CHN","Henan","home_isolation_L29",-.151
-"CHN","Henan","travel_ban_local_L",-.043
-"CHN","Henan","travel_ban_local_L",-.165
-"CHN","Henan","travel_ban_local_L",-.192
-"CHN","Henan","travel_ban_local_L",-.181
-"CHN","Henan","travel_ban_local_L",-.184
-"CHN","Henan","first week (home+t",-.137
-"CHN","Henan","second week (home+",-.297
-"CHN","Henan","third week (home+t",-.34
-"CHN","Henan","fourth week (home+",-.336
-"CHN","Henan","fifth week (home+t",-.334
-"CHN","Henan","no_policy rate",.214
-"CHN","Hubei","home_isolation_L0_",-.1
-"CHN","Hubei","home_isolation_L8_",-.142
-"CHN","Hubei","home_isolation_L15",-.161
-"CHN","Hubei","home_isolation_L22",-.168
-"CHN","Hubei","home_isolation_L29",-.17
-"CHN","Hubei","travel_ban_local_L",-.085
-"CHN","Hubei","travel_ban_local_L",-.126
-"CHN","Hubei","travel_ban_local_L",-.137
-"CHN","Hubei","travel_ban_local_L",-.129
-"CHN","Hubei","travel_ban_local_L",-.125
-"CHN","Hubei","first week (home+t",-.185
-"CHN","Hubei","second week (home+",-.268
-"CHN","Hubei","third week (home+t",-.298
-"CHN","Hubei","fourth week (home+",-.297
-"CHN","Hubei","fifth week (home+t",-.295
-"CHN","Hubei","no_policy rate",.189
-"CHN","Hunan","home_isolation_L0_",-.096
-"CHN","Hunan","home_isolation_L8_",-.135
-"CHN","Hunan","home_isolation_L15",-.152
-"CHN","Hunan","home_isolation_L22",-.158
-"CHN","Hunan","home_isolation_L29",-.156
-"CHN","Hunan","travel_ban_local_L",-.042
-"CHN","Hunan","travel_ban_local_L",-.163
-"CHN","Hunan","travel_ban_local_L",-.188
-"CHN","Hunan","travel_ban_local_L",-.177
-"CHN","Hunan","travel_ban_local_L",-.178
-"CHN","Hunan","first week (home+t",-.137
-"CHN","Hunan","second week (home+",-.298
-"CHN","Hunan","third week (home+t",-.34
-"CHN","Hunan","fourth week (home+",-.335
-"CHN","Hunan","fifth week (home+t",-.334
-"CHN","Hunan","no_policy rate",.214
-"CHN","Jiangsu","home_isolation_L0_",-.096
-"CHN","Jiangsu","home_isolation_L8_",-.136
-"CHN","Jiangsu","home_isolation_L15",-.152
-"CHN","Jiangsu","home_isolation_L22",-.159
-"CHN","Jiangsu","home_isolation_L29",-.159
-"CHN","Jiangsu","travel_ban_local_L",-.041
-"CHN","Jiangsu","travel_ban_local_L",-.163
-"CHN","Jiangsu","travel_ban_local_L",-.188
-"CHN","Jiangsu","travel_ban_local_L",-.177
-"CHN","Jiangsu","travel_ban_local_L",-.179
-"CHN","Jiangsu","first week (home+t",-.137
-"CHN","Jiangsu","second week (home+",-.299
-"CHN","Jiangsu","third week (home+t",-.34
-"CHN","Jiangsu","fourth week (home+",-.336
-"CHN","Jiangsu","fifth week (home+t",-.338
-"CHN","Jiangsu","no_policy rate",.22
-"CHN","Jiangxi","home_isolation_L0_",-.088
-"CHN","Jiangxi","home_isolation_L8_",-.127
-"CHN","Jiangxi","home_isolation_L15",-.145
-"CHN","Jiangxi","home_isolation_L22",-.152
-"CHN","Jiangxi","home_isolation_L29",-.153
-"CHN","Jiangxi","travel_ban_local_L",-.044
-"CHN","Jiangxi","travel_ban_local_L",-.168
-"CHN","Jiangxi","travel_ban_local_L",-.197
-"CHN","Jiangxi","travel_ban_local_L",-.186
-"CHN","Jiangxi","travel_ban_local_L",-.188
-"CHN","Jiangxi","first week (home+t",-.132
-"CHN","Jiangxi","second week (home+",-.295
-"CHN","Jiangxi","third week (home+t",-.342
-"CHN","Jiangxi","fourth week (home+",-.338
-"CHN","Jiangxi","fifth week (home+t",-.341
-"CHN","Jiangxi","no_policy rate",.215
-"CHN","Jilin","home_isolation_L0_",-.094
-"CHN","Jilin","home_isolation_L8_",-.134
-"CHN","Jilin","home_isolation_L15",-.152
-"CHN","Jilin","home_isolation_L22",-.159
-"CHN","Jilin","home_isolation_L29",-.16
-"CHN","Jilin","travel_ban_local_L",-.042
-"CHN","Jilin","travel_ban_local_L",-.164
-"CHN","Jilin","travel_ban_local_L",-.19
-"CHN","Jilin","travel_ban_local_L",-.178
-"CHN","Jilin","travel_ban_local_L",-.179
-"CHN","Jilin","first week (home+t",-.135
-"CHN","Jilin","second week (home+",-.298
-"CHN","Jilin","third week (home+t",-.342
-"CHN","Jilin","fourth week (home+",-.336
-"CHN","Jilin","fifth week (home+t",-.339
-"CHN","Jilin","no_policy rate",.214
-"CHN","Liaoning","home_isolation_L0_",-.094
-"CHN","Liaoning","home_isolation_L8_",-.135
-"CHN","Liaoning","home_isolation_L15",-.154
-"CHN","Liaoning","home_isolation_L22",-.16
-"CHN","Liaoning","home_isolation_L29",-.162
-"CHN","Liaoning","travel_ban_local_L",-.041
-"CHN","Liaoning","travel_ban_local_L",-.163
-"CHN","Liaoning","travel_ban_local_L",-.188
-"CHN","Liaoning","travel_ban_local_L",-.176
-"CHN","Liaoning","travel_ban_local_L",-.177
-"CHN","Liaoning","first week (home+t",-.135
-"CHN","Liaoning","second week (home+",-.299
-"CHN","Liaoning","third week (home+t",-.342
-"CHN","Liaoning","fourth week (home+",-.336
-"CHN","Liaoning","fifth week (home+t",-.338
-"CHN","Liaoning","no_policy rate",.216
-"CHN","Neimenggu","home_isolation_L0_",-.096
-"CHN","Neimenggu","home_isolation_L8_",-.138
-"CHN","Neimenggu","home_isolation_L15",-.156
-"CHN","Neimenggu","home_isolation_L22",-.162
-"CHN","Neimenggu","home_isolation_L29",-.163
-"CHN","Neimenggu","travel_ban_local_L",-.04
-"CHN","Neimenggu","travel_ban_local_L",-.162
-"CHN","Neimenggu","travel_ban_local_L",-.186
-"CHN","Neimenggu","travel_ban_local_L",-.173
-"CHN","Neimenggu","travel_ban_local_L",-.174
-"CHN","Neimenggu","first week (home+t",-.136
-"CHN","Neimenggu","second week (home+",-.3
-"CHN","Neimenggu","third week (home+t",-.342
-"CHN","Neimenggu","fourth week (home+",-.335
-"CHN","Neimenggu","fifth week (home+t",-.337
-"CHN","Neimenggu","no_policy rate",.216
-"CHN","Ningxia","home_isolation_L0_",-.095
-"CHN","Ningxia","home_isolation_L8_",-.136
-"CHN","Ningxia","home_isolation_L15",-.152
-"CHN","Ningxia","home_isolation_L22",-.159
-"CHN","Ningxia","home_isolation_L29",-.172
-"CHN","Ningxia","travel_ban_local_L",-.041
-"CHN","Ningxia","travel_ban_local_L",-.163
-"CHN","Ningxia","travel_ban_local_L",-.188
-"CHN","Ningxia","travel_ban_local_L",-.176
-"CHN","Ningxia","travel_ban_local_L",-.178
-"CHN","Ningxia","first week (home+t",-.135
-"CHN","Ningxia","second week (home+",-.299
-"CHN","Ningxia","third week (home+t",-.34
-"CHN","Ningxia","fourth week (home+",-.335
-"CHN","Ningxia","fifth week (home+t",-.35
-"CHN","Ningxia","no_policy rate",.214
-"CHN","Shaanxi","home_isolation_L0_",-.094
-"CHN","Shaanxi","home_isolation_L8_",-.135
-"CHN","Shaanxi","home_isolation_L15",-.153
-"CHN","Shaanxi","home_isolation_L22",-.16
-"CHN","Shaanxi","home_isolation_L29",-.16
-"CHN","Shaanxi","travel_ban_local_L",-.041
-"CHN","Shaanxi","travel_ban_local_L",-.163
-"CHN","Shaanxi","travel_ban_local_L",-.188
-"CHN","Shaanxi","travel_ban_local_L",-.176
-"CHN","Shaanxi","travel_ban_local_L",-.177
-"CHN","Shaanxi","first week (home+t",-.136
-"CHN","Shaanxi","second week (home+",-.298
-"CHN","Shaanxi","third week (home+t",-.341
-"CHN","Shaanxi","fourth week (home+",-.336
-"CHN","Shaanxi","fifth week (home+t",-.337
-"CHN","Shaanxi","no_policy rate",.215
-"CHN","Shandong","home_isolation_L0_",-.097
-"CHN","Shandong","home_isolation_L8_",-.138
-"CHN","Shandong","home_isolation_L15",-.156
-"CHN","Shandong","home_isolation_L22",-.162
-"CHN","Shandong","home_isolation_L29",-.164
-"CHN","Shandong","travel_ban_local_L",-.04
-"CHN","Shandong","travel_ban_local_L",-.162
-"CHN","Shandong","travel_ban_local_L",-.186
-"CHN","Shandong","travel_ban_local_L",-.173
-"CHN","Shandong","travel_ban_local_L",-.174
-"CHN","Shandong","first week (home+t",-.137
-"CHN","Shandong","second week (home+",-.299
-"CHN","Shandong","third week (home+t",-.342
-"CHN","Shandong","fourth week (home+",-.336
-"CHN","Shandong","fifth week (home+t",-.338
-"CHN","Shandong","no_policy rate",.218
-"CHN","Shanghai","home_isolation_L0_",-.094
-"CHN","Shanghai","home_isolation_L8_",-.135
-"CHN","Shanghai","home_isolation_L15",-.153
-"CHN","Shanghai","home_isolation_L22",-.159
-"CHN","Shanghai","home_isolation_L29",-.161
-"CHN","Shanghai","travel_ban_local_L",-.041
-"CHN","Shanghai","travel_ban_local_L",-.164
-"CHN","Shanghai","travel_ban_local_L",-.189
-"CHN","Shanghai","travel_ban_local_L",-.177
-"CHN","Shanghai","travel_ban_local_L",-.178
-"CHN","Shanghai","first week (home+t",-.135
-"CHN","Shanghai","second week (home+",-.299
-"CHN","Shanghai","third week (home+t",-.342
-"CHN","Shanghai","fourth week (home+",-.336
-"CHN","Shanghai","fifth week (home+t",-.339
-"CHN","Shanghai","no_policy rate",.214
-"CHN","Sichuan","home_isolation_L0_",-.097
-"CHN","Sichuan","home_isolation_L8_",-.139
-"CHN","Sichuan","home_isolation_L15",-.156
-"CHN","Sichuan","home_isolation_L22",-.163
-"CHN","Sichuan","home_isolation_L29",-.163
-"CHN","Sichuan","travel_ban_local_L",-.04
-"CHN","Sichuan","travel_ban_local_L",-.161
-"CHN","Sichuan","travel_ban_local_L",-.185
-"CHN","Sichuan","travel_ban_local_L",-.172
-"CHN","Sichuan","travel_ban_local_L",-.173
-"CHN","Sichuan","first week (home+t",-.137
-"CHN","Sichuan","second week (home+",-.301
-"CHN","Sichuan","third week (home+t",-.341
-"CHN","Sichuan","fourth week (home+",-.335
-"CHN","Sichuan","fifth week (home+t",-.336
-"CHN","Sichuan","no_policy rate",.218
-"CHN","Tianjin","home_isolation_L0_",-.094
-"CHN","Tianjin","home_isolation_L8_",-.135
-"CHN","Tianjin","home_isolation_L15",-.153
-"CHN","Tianjin","home_isolation_L22",-.159
-"CHN","Tianjin","home_isolation_L29",-.161
-"CHN","Tianjin","travel_ban_local_L",-.041
-"CHN","Tianjin","travel_ban_local_L",-.163
-"CHN","Tianjin","travel_ban_local_L",-.188
-"CHN","Tianjin","travel_ban_local_L",-.176
-"CHN","Tianjin","travel_ban_local_L",-.177
-"CHN","Tianjin","first week (home+t",-.136
-"CHN","Tianjin","second week (home+",-.298
-"CHN","Tianjin","third week (home+t",-.341
-"CHN","Tianjin","fourth week (home+",-.335
-"CHN","Tianjin","fifth week (home+t",-.338
-"CHN","Tianjin","no_policy rate",.214
-"CHN","Yunnan","home_isolation_L0_",-.094
-"CHN","Yunnan","home_isolation_L8_",-.135
-"CHN","Yunnan","home_isolation_L15",-.153
-"CHN","Yunnan","home_isolation_L22",-.16
-"CHN","Yunnan","home_isolation_L29",-.161
-"CHN","Yunnan","travel_ban_local_L",-.041
-"CHN","Yunnan","travel_ban_local_L",-.163
-"CHN","Yunnan","travel_ban_local_L",-.188
-"CHN","Yunnan","travel_ban_local_L",-.176
-"CHN","Yunnan","travel_ban_local_L",-.177
-"CHN","Yunnan","first week (home+t",-.135
-"CHN","Yunnan","second week (home+",-.299
-"CHN","Yunnan","third week (home+t",-.342
-"CHN","Yunnan","fourth week (home+",-.336
-"CHN","Yunnan","fifth week (home+t",-.339
-"CHN","Yunnan","no_policy rate",.214
-"CHN","Zhejiang","home_isolation_L0_",-.085
-"CHN","Zhejiang","home_isolation_L8_",-.129
-"CHN","Zhejiang","home_isolation_L15",-.149
-"CHN","Zhejiang","home_isolation_L22",-.157
-"CHN","Zhejiang","home_isolation_L29",-.16
-"CHN","Zhejiang","travel_ban_local_L",-.011
-"CHN","Zhejiang","travel_ban_local_L",-.158
-"CHN","Zhejiang","travel_ban_local_L",-.189
-"CHN","Zhejiang","travel_ban_local_L",-.177
-"CHN","Zhejiang","travel_ban_local_L",-.171
-"CHN","Zhejiang","first week (home+t",-.096
-"CHN","Zhejiang","second week (home+",-.288
-"CHN","Zhejiang","third week (home+t",-.338
-"CHN","Zhejiang","fourth week (home+",-.334
-"CHN","Zhejiang","fifth week (home+t",-.332
-"CHN","Zhejiang","no_policy rate",.205
-"FRA","full_sample","national_lockdown",-.048
-"FRA","full_sample","school_closure",-.005
-"FRA","full_sample","pck_social_distanc",-.227
-"FRA","full_sample","comb. policy",-.279
-"FRA","full_sample","no_policy rate",.345
-"FRA","AuvergneRhÃ´neAlpe","national_lockdown",-.049
-"FRA","AuvergneRhÃ´neAlpe","school_closure",.002
-"FRA","AuvergneRhÃ´neAlpe","pck_social_distanc",-.242
-"FRA","AuvergneRhÃ´neAlpe","comb. policy",-.289
-"FRA","AuvergneRhÃ´neAlpe","no_policy rate",.354
-"FRA","BourgogneFrancheCo","national_lockdown",-.056
-"FRA","BourgogneFrancheCo","school_closure",.013
-"FRA","BourgogneFrancheCo","pck_social_distanc",-.199
-"FRA","BourgogneFrancheCo","comb. policy",-.242
-"FRA","BourgogneFrancheCo","no_policy rate",.319
-"FRA","Bretagne","national_lockdown",-.044
-"FRA","Bretagne","school_closure",-.003
-"FRA","Bretagne","pck_social_distanc",-.24
-"FRA","Bretagne","comb. policy",-.287
-"FRA","Bretagne","no_policy rate",.356
-"FRA","Centre","national_lockdown",-.06
-"FRA","Centre","school_closure",.006
-"FRA","Centre","pck_social_distanc",-.233
-"FRA","Centre","comb. policy",-.287
-"FRA","Centre","no_policy rate",.346
-"FRA","Corse","national_lockdown",-.035
-"FRA","Corse","school_closure",-.011
-"FRA","Corse","pck_social_distanc",-.235
-"FRA","Corse","comb. policy",-.281
-"FRA","Corse","no_policy rate",.348
-"FRA","GrandEst","national_lockdown",-.067
-"FRA","GrandEst","school_closure",-.047
-"FRA","GrandEst","pck_social_distanc",-.1
-"FRA","GrandEst","comb. policy",-.214
-"FRA","GrandEst","no_policy rate",.319
-"FRA","HautsdeFrance","national_lockdown",-.051
-"FRA","HautsdeFrance","school_closure",.007
-"FRA","HautsdeFrance","pck_social_distanc",-.252
-"FRA","HautsdeFrance","comb. policy",-.297
-"FRA","HautsdeFrance","no_policy rate",.35
-"FRA","IledeFrance","national_lockdown",-.035
-"FRA","IledeFrance","school_closure",-.013
-"FRA","IledeFrance","pck_social_distanc",-.263
-"FRA","IledeFrance","comb. policy",-.311
-"FRA","IledeFrance","no_policy rate",.359
-"FRA","Normandie","national_lockdown",-.032
-"FRA","Normandie","school_closure",-.011
-"FRA","Normandie","pck_social_distanc",-.258
-"FRA","Normandie","comb. policy",-.3
-"FRA","Normandie","no_policy rate",.354
-"FRA","NouvelleAquitaine","national_lockdown",-.052
-"FRA","NouvelleAquitaine","school_closure",.011
-"FRA","NouvelleAquitaine","pck_social_distanc",-.223
-"FRA","NouvelleAquitaine","comb. policy",-.263
-"FRA","NouvelleAquitaine","no_policy rate",.33
-"FRA","Occitanie","national_lockdown",-.051
-"FRA","Occitanie","school_closure",-.001
-"FRA","Occitanie","pck_social_distanc",-.21
-"FRA","Occitanie","comb. policy",-.262
-"FRA","Occitanie","no_policy rate",.334
-"FRA","Paca","national_lockdown",-.045
-"FRA","Paca","school_closure",-.004
-"FRA","Paca","pck_social_distanc",-.235
-"FRA","Paca","comb. policy",-.284
-"FRA","Paca","no_policy rate",.347
-"FRA","PaysdelaLoire","national_lockdown",-.045
-"FRA","PaysdelaLoire","school_closure",-.008
-"FRA","PaysdelaLoire","pck_social_distanc",-.244
-"FRA","PaysdelaLoire","comb. policy",-.298
-"FRA","PaysdelaLoire","no_policy rate",.361
-"IRN","full_sample","p_1",-.285
-"IRN","full_sample","p_2",-.151
-"IRN","full_sample","comb. policy",-.436
-"IRN","full_sample","no_policy rate",.527
-"IRN","Alborz","p_1",-.248
-"IRN","Alborz","p_2",-.152
-"IRN","Alborz","comb. policy",-.4
-"IRN","Alborz","no_policy rate",.49
-"IRN","Ardebil","p_1",-.283
-"IRN","Ardebil","p_2",-.153
-"IRN","Ardebil","comb. policy",-.436
-"IRN","Ardebil","no_policy rate",.526
-"IRN","Bushehr","p_1",-.284
-"IRN","Bushehr","p_2",-.152
-"IRN","Bushehr","comb. policy",-.436
-"IRN","Bushehr","no_policy rate",.527
-"IRN","Chahar Mahall and ","p_1",-.285
-"IRN","Chahar Mahall and ","p_2",-.15
-"IRN","Chahar Mahall and ","comb. policy",-.435
-"IRN","Chahar Mahall and ","no_policy rate",.528
-"IRN","East Azarbaijan","p_1",-.308
-"IRN","East Azarbaijan","p_2",-.153
-"IRN","East Azarbaijan","comb. policy",-.461
-"IRN","East Azarbaijan","no_policy rate",.549
-"IRN","Esfahan","p_1",-.301
-"IRN","Esfahan","p_2",-.148
-"IRN","Esfahan","comb. policy",-.449
-"IRN","Esfahan","no_policy rate",.539
-"IRN","Fars","p_1",-.274
-"IRN","Fars","p_2",-.152
-"IRN","Fars","comb. policy",-.426
-"IRN","Fars","no_policy rate",.517
-"IRN","Gilan","p_1",-.306
-"IRN","Gilan","p_2",-.153
-"IRN","Gilan","comb. policy",-.459
-"IRN","Gilan","no_policy rate",.551
-"IRN","Golestan","p_1",-.311
-"IRN","Golestan","p_2",-.15
-"IRN","Golestan","comb. policy",-.461
-"IRN","Golestan","no_policy rate",.553
-"IRN","Hamadan","p_1",-.292
-"IRN","Hamadan","p_2",-.146
-"IRN","Hamadan","comb. policy",-.438
-"IRN","Hamadan","no_policy rate",.53
-"IRN","Hormozgan","p_1",-.288
-"IRN","Hormozgan","p_2",-.147
-"IRN","Hormozgan","comb. policy",-.435
-"IRN","Hormozgan","no_policy rate",.527
-"IRN","Ilam","p_1",-.285
-"IRN","Ilam","p_2",-.149
-"IRN","Ilam","comb. policy",-.434
-"IRN","Ilam","no_policy rate",.524
-"IRN","Kerman","p_1",-.284
-"IRN","Kerman","p_2",-.152
-"IRN","Kerman","comb. policy",-.436
-"IRN","Kerman","no_policy rate",.526
-"IRN","Kermanshah","p_1",-.282
-"IRN","Kermanshah","p_2",-.154
-"IRN","Kermanshah","comb. policy",-.436
-"IRN","Kermanshah","no_policy rate",.526
-"IRN","Khuzestan","p_1",-.265
-"IRN","Khuzestan","p_2",-.155
-"IRN","Khuzestan","comb. policy",-.42
-"IRN","Khuzestan","no_policy rate",.511
-"IRN","Kohgiluyeh and Buy","p_1",-.283
-"IRN","Kohgiluyeh and Buy","p_2",-.15
-"IRN","Kohgiluyeh and Buy","comb. policy",-.433
-"IRN","Kohgiluyeh and Buy","no_policy rate",.523
-"IRN","Kordestan","p_1",-.289
-"IRN","Kordestan","p_2",-.15
-"IRN","Kordestan","comb. policy",-.439
-"IRN","Kordestan","no_policy rate",.529
-"IRN","Lorestan","p_1",-.291
-"IRN","Lorestan","p_2",-.147
-"IRN","Lorestan","comb. policy",-.439
-"IRN","Lorestan","no_policy rate",.53
-"IRN","Markazi","p_1",-.249
-"IRN","Markazi","p_2",-.149
-"IRN","Markazi","comb. policy",-.398
-"IRN","Markazi","no_policy rate",.491
-"IRN","Mazandaran","p_1",-.314
-"IRN","Mazandaran","p_2",-.144
-"IRN","Mazandaran","comb. policy",-.458
-"IRN","Mazandaran","no_policy rate",.549
-"IRN","North Khorasan","p_1",-.282
-"IRN","North Khorasan","p_2",-.154
-"IRN","North Khorasan","comb. policy",-.436
-"IRN","North Khorasan","no_policy rate",.525
-"IRN","Qazvin","p_1",-.286
-"IRN","Qazvin","p_2",-.15
-"IRN","Qazvin","comb. policy",-.436
-"IRN","Qazvin","no_policy rate",.527
-"IRN","Qom","p_1",-.29
-"IRN","Qom","p_2",-.153
-"IRN","Qom","comb. policy",-.442
-"IRN","Qom","no_policy rate",.535
-"IRN","Razavi Khorasan","p_1",-.283
-"IRN","Razavi Khorasan","p_2",-.15
-"IRN","Razavi Khorasan","comb. policy",-.433
-"IRN","Razavi Khorasan","no_policy rate",.523
-"IRN","Semnan","p_1",-.299
-"IRN","Semnan","p_2",-.147
-"IRN","Semnan","comb. policy",-.446
-"IRN","Semnan","no_policy rate",.537
-"IRN","Sistan and Baluche","p_1",-.281
-"IRN","Sistan and Baluche","p_2",-.154
-"IRN","Sistan and Baluche","comb. policy",-.436
-"IRN","Sistan and Baluche","no_policy rate",.526
-"IRN","South Khorasan","p_1",-.283
-"IRN","South Khorasan","p_2",-.153
-"IRN","South Khorasan","comb. policy",-.436
-"IRN","South Khorasan","no_policy rate",.526
-"IRN","Tehran","p_1",-.268
-"IRN","Tehran","p_2",-.153
-"IRN","Tehran","comb. policy",-.421
-"IRN","Tehran","no_policy rate",.512
-"IRN","West Azarbaijan","p_1",-.284
-"IRN","West Azarbaijan","p_2",-.15
-"IRN","West Azarbaijan","comb. policy",-.434
-"IRN","West Azarbaijan","no_policy rate",.525
-"IRN","Yazd","p_1",-.283
-"IRN","Yazd","p_2",-.153
-"IRN","Yazd","comb. policy",-.436
-"IRN","Yazd","no_policy rate",.526
-"IRN","Zanjan","p_1",-.289
-"IRN","Zanjan","p_2",-.149
-"IRN","Zanjan","comb. policy",-.438
-"IRN","Zanjan","no_policy rate",.528
-"KOR","full_sample","p_1",-.083
-"KOR","full_sample","p_2",-.304
-"KOR","full_sample","p_3",-.127
-"KOR","full_sample","p_4",.02
-"KOR","full_sample","comb. policy",-.494
-"KOR","full_sample","no_policy rate",.314
-"KOR","Busan","p_1",-.096
-"KOR","Busan","p_2",-.257
-"KOR","Busan","p_3",-.126
-"KOR","Busan","p_4",.024
-"KOR","Busan","comb. policy",-.455
-"KOR","Busan","no_policy rate",.292
-"KOR","Chungcheongbuk-do","p_1",-.083
-"KOR","Chungcheongbuk-do","p_2",-.304
-"KOR","Chungcheongbuk-do","p_3",-.128
-"KOR","Chungcheongbuk-do","p_4",.023
-"KOR","Chungcheongbuk-do","comb. policy",-.493
-"KOR","Chungcheongbuk-do","no_policy rate",.315
-"KOR","Chungcheongnam-do","p_1",-.064
-"KOR","Chungcheongnam-do","p_2",-.319
-"KOR","Chungcheongnam-do","p_3",-.135
-"KOR","Chungcheongnam-do","p_4",.015
-"KOR","Chungcheongnam-do","comb. policy",-.503
-"KOR","Chungcheongnam-do","no_policy rate",.316
-"KOR","Daegu","p_1",-.087
-"KOR","Daegu","p_2",-.288
-"KOR","Daegu","p_3",-.076
-"KOR","Daegu","p_4",.02
-"KOR","Daegu","comb. policy",-.431
-"KOR","Daegu","no_policy rate",.294
-"KOR","Daejeon","p_1",-.084
-"KOR","Daejeon","p_2",-.304
-"KOR","Daejeon","p_3",-.126
-"KOR","Daejeon","p_4",.019
-"KOR","Daejeon","comb. policy",-.495
-"KOR","Daejeon","no_policy rate",.317
-"KOR","Gangwon-do","p_1",-.083
-"KOR","Gangwon-do","p_2",-.302
-"KOR","Gangwon-do","p_3",-.125
-"KOR","Gangwon-do","p_4",.014
-"KOR","Gangwon-do","comb. policy",-.497
-"KOR","Gangwon-do","no_policy rate",.323
-"KOR","Gwangju","p_1",-.088
-"KOR","Gwangju","p_2",-.3
-"KOR","Gwangju","p_3",-.125
-"KOR","Gwangju","p_4",.018
-"KOR","Gwangju","comb. policy",-.495
-"KOR","Gwangju","no_policy rate",.316
-"KOR","Gyeonggi-do","p_1",-.1
-"KOR","Gyeonggi-do","p_2",-.306
-"KOR","Gyeonggi-do","p_3",-.117
-"KOR","Gyeonggi-do","p_4",.028
-"KOR","Gyeonggi-do","comb. policy",-.496
-"KOR","Gyeonggi-do","no_policy rate",.323
-"KOR","Gyeongsangbuk-do","p_1",-.086
-"KOR","Gyeongsangbuk-do","p_2",-.256
-"KOR","Gyeongsangbuk-do","p_3",-.183
-"KOR","Gyeongsangbuk-do","p_4",.019
-"KOR","Gyeongsangbuk-do","comb. policy",-.507
-"KOR","Gyeongsangbuk-do","no_policy rate",.283
-"KOR","Gyeongsangnam-do","p_1",-.082
-"KOR","Gyeongsangnam-do","p_2",-.295
-"KOR","Gyeongsangnam-do","p_3",-.127
-"KOR","Gyeongsangnam-do","p_4",.016
-"KOR","Gyeongsangnam-do","comb. policy",-.487
-"KOR","Gyeongsangnam-do","no_policy rate",.311
-"KOR","Incheon","p_1",-.082
-"KOR","Incheon","p_2",-.306
-"KOR","Incheon","p_3",-.128
-"KOR","Incheon","p_4",.022
-"KOR","Incheon","comb. policy",-.494
-"KOR","Incheon","no_policy rate",.308
-"KOR","Jeju","p_1",-.083
-"KOR","Jeju","p_2",-.304
-"KOR","Jeju","p_3",-.127
-"KOR","Jeju","p_4",.02
-"KOR","Jeju","comb. policy",-.494
-"KOR","Jeju","no_policy rate",.314
-"KOR","Jeollabuk-do","p_1",-.083
-"KOR","Jeollabuk-do","p_2",-.304
-"KOR","Jeollabuk-do","p_3",-.127
-"KOR","Jeollabuk-do","p_4",.019
-"KOR","Jeollabuk-do","comb. policy",-.496
-"KOR","Jeollabuk-do","no_policy rate",.314
-"KOR","Jeollanam-do","p_1",-.084
-"KOR","Jeollanam-do","p_2",-.304
-"KOR","Jeollanam-do","p_3",-.127
-"KOR","Jeollanam-do","p_4",.022
-"KOR","Jeollanam-do","comb. policy",-.494
-"KOR","Jeollanam-do","no_policy rate",.314
-"KOR","Sejong","p_1",-.08
-"KOR","Sejong","p_2",-.309
-"KOR","Sejong","p_3",-.13
-"KOR","Sejong","p_4",.026
-"KOR","Sejong","comb. policy",-.494
-"KOR","Sejong","no_policy rate",.32
-"KOR","Seoul","p_1",-.065
-"KOR","Seoul","p_2",-.463
-"KOR","Seoul","p_3",-.115
-"KOR","Seoul","p_4",.017
-"KOR","Seoul","comb. policy",-.626
-"KOR","Seoul","no_policy rate",.394
-"KOR","Ulsan","p_1",-.081
-"KOR","Ulsan","p_2",-.309
-"KOR","Ulsan","p_3",-.129
-"KOR","Ulsan","p_4",.022
-"KOR","Ulsan","comb. policy",-.495
-"KOR","Ulsan","no_policy rate",.317
-"ITA","full_sample","p_1",.144
-"ITA","full_sample","p_2",-.104
-"ITA","full_sample","p_3",-.295
-"ITA","full_sample","p_4",-.073
-"ITA","full_sample","p_5",-.137
-"ITA","full_sample","p_6",.059
-"ITA","full_sample","comb. policy",-.407
-"ITA","full_sample","no_policy rate",.371
-"ITA","Abruzzo","p_1",.142
-"ITA","Abruzzo","p_2",-.104
-"ITA","Abruzzo","p_3",-.296
-"ITA","Abruzzo","p_4",-.071
-"ITA","Abruzzo","p_5",-.135
-"ITA","Abruzzo","p_6",.056
-"ITA","Abruzzo","comb. policy",-.407
-"ITA","Abruzzo","no_policy rate",.37
-"ITA","Basilicata","p_1",.143
-"ITA","Basilicata","p_2",-.104
-"ITA","Basilicata","p_3",-.293
-"ITA","Basilicata","p_4",-.072
-"ITA","Basilicata","p_5",-.136
-"ITA","Basilicata","p_6",.057
-"ITA","Basilicata","comb. policy",-.406
-"ITA","Basilicata","no_policy rate",.371
-"ITA","Calabria","p_1",.145
-"ITA","Calabria","p_2",-.105
-"ITA","Calabria","p_3",-.29
-"ITA","Calabria","p_4",-.073
-"ITA","Calabria","p_5",-.14
-"ITA","Calabria","p_6",.058
-"ITA","Calabria","comb. policy",-.405
-"ITA","Calabria","no_policy rate",.371
-"ITA","Campania","p_1",.093
-"ITA","Campania","p_2",-.063
-"ITA","Campania","p_3",-.264
-"ITA","Campania","p_4",-.071
-"ITA","Campania","p_5",-.159
-"ITA","Campania","p_6",.066
-"ITA","Campania","comb. policy",-.398
-"ITA","Campania","no_policy rate",.371
-"ITA","Emilia Romagna","p_1",.166
-"ITA","Emilia Romagna","p_2",-.073
-"ITA","Emilia Romagna","p_3",-.286
-"ITA","Emilia Romagna","p_4",-.085
-"ITA","Emilia Romagna","p_5",-.149
-"ITA","Emilia Romagna","p_6",.059
-"ITA","Emilia Romagna","comb. policy",-.367
-"ITA","Emilia Romagna","no_policy rate",.341
-"ITA","Friuli Venezia Giu","p_1",.139
-"ITA","Friuli Venezia Giu","p_2",-.111
-"ITA","Friuli Venezia Giu","p_3",-.329
-"ITA","Friuli Venezia Giu","p_4",-.065
-"ITA","Friuli Venezia Giu","p_5",-.109
-"ITA","Friuli Venezia Giu","p_6",.047
-"ITA","Friuli Venezia Giu","comb. policy",-.427
-"ITA","Friuli Venezia Giu","no_policy rate",.371
-"ITA","Lazio","p_1",.14
-"ITA","Lazio","p_2",-.093
-"ITA","Lazio","p_3",-.299
-"ITA","Lazio","p_4",-.069
-"ITA","Lazio","p_5",-.132
-"ITA","Lazio","p_6",.054
-"ITA","Lazio","comb. policy",-.399
-"ITA","Lazio","no_policy rate",.359
-"ITA","Liguria","p_1",.156
-"ITA","Liguria","p_2",-.105
-"ITA","Liguria","p_3",-.271
-"ITA","Liguria","p_4",-.079
-"ITA","Liguria","p_5",-.158
-"ITA","Liguria","p_6",.066
-"ITA","Liguria","comb. policy",-.392
-"ITA","Liguria","no_policy rate",.371
-"ITA","Lombardia","p_1",.15
-"ITA","Lombardia","p_2",-.099
-"ITA","Lombardia","p_3",-.187
-"ITA","Lombardia","p_4",-.145
-"ITA","Lombardia","p_5",-.238
-"ITA","Lombardia","p_6",.225
-"ITA","Lombardia","comb. policy",-.292
-"ITA","Lombardia","no_policy rate",.371
-"ITA","Marche","p_1",.135
-"ITA","Marche","p_2",-.109
-"ITA","Marche","p_3",-.31
-"ITA","Marche","p_4",-.059
-"ITA","Marche","p_5",-.12
-"ITA","Marche","p_6",.047
-"ITA","Marche","comb. policy",-.416
-"ITA","Marche","no_policy rate",.369
-"ITA","Molise","p_1",.137
-"ITA","Molise","p_2",-.102
-"ITA","Molise","p_3",-.308
-"ITA","Molise","p_4",-.066
-"ITA","Molise","p_5",-.132
-"ITA","Molise","p_6",.054
-"ITA","Molise","comb. policy",-.417
-"ITA","Molise","no_policy rate",.371
-"ITA","P.A. Bolzano","p_1",.143
-"ITA","P.A. Bolzano","p_2",-.104
-"ITA","P.A. Bolzano","p_3",-.294
-"ITA","P.A. Bolzano","p_4",-.072
-"ITA","P.A. Bolzano","p_5",-.135
-"ITA","P.A. Bolzano","p_6",.056
-"ITA","P.A. Bolzano","comb. policy",-.407
-"ITA","P.A. Bolzano","no_policy rate",.371
-"ITA","P.A. Trento","p_1",.142
-"ITA","P.A. Trento","p_2",-.105
-"ITA","P.A. Trento","p_3",-.297
-"ITA","P.A. Trento","p_4",-.073
-"ITA","P.A. Trento","p_5",-.131
-"ITA","P.A. Trento","p_6",.056
-"ITA","P.A. Trento","comb. policy",-.408
-"ITA","P.A. Trento","no_policy rate",.37
-"ITA","Piemonte","p_1",.186
-"ITA","Piemonte","p_2",-.139
-"ITA","Piemonte","p_3",-.251
-"ITA","Piemonte","p_4",-.082
-"ITA","Piemonte","p_5",-.164
-"ITA","Piemonte","p_6",.057
-"ITA","Piemonte","comb. policy",-.395
-"ITA","Piemonte","no_policy rate",.387
-"ITA","Puglia","p_1",.149
-"ITA","Puglia","p_2",-.104
-"ITA","Puglia","p_3",-.281
-"ITA","Puglia","p_4",-.071
-"ITA","Puglia","p_5",-.149
-"ITA","Puglia","p_6",.056
-"ITA","Puglia","comb. policy",-.4
-"ITA","Puglia","no_policy rate",.37
-"ITA","Sardegna","p_1",.144
-"ITA","Sardegna","p_2",-.105
-"ITA","Sardegna","p_3",-.299
-"ITA","Sardegna","p_4",-.074
-"ITA","Sardegna","p_5",-.138
-"ITA","Sardegna","p_6",.063
-"ITA","Sardegna","comb. policy",-.409
-"ITA","Sardegna","no_policy rate",.372
-"ITA","Sicilia","p_1",.147
-"ITA","Sicilia","p_2",-.111
-"ITA","Sicilia","p_3",-.324
-"ITA","Sicilia","p_4",-.066
-"ITA","Sicilia","p_5",-.121
-"ITA","Sicilia","p_6",.053
-"ITA","Sicilia","comb. policy",-.422
-"ITA","Sicilia","no_policy rate",.369
-"ITA","Toscana","p_1",.144
-"ITA","Toscana","p_2",-.11
-"ITA","Toscana","p_3",-.317
-"ITA","Toscana","p_4",-.069
-"ITA","Toscana","p_5",-.122
-"ITA","Toscana","p_6",.054
-"ITA","Toscana","comb. policy",-.42
-"ITA","Toscana","no_policy rate",.372
-"ITA","Umbria","p_1",.147
-"ITA","Umbria","p_2",-.104
-"ITA","Umbria","p_3",-.281
-"ITA","Umbria","p_4",-.073
-"ITA","Umbria","p_5",-.142
-"ITA","Umbria","p_6",.055
-"ITA","Umbria","comb. policy",-.399
-"ITA","Umbria","no_policy rate",.37
-"ITA","Valle d'Aosta","p_1",.144
-"ITA","Valle d'Aosta","p_2",-.104
-"ITA","Valle d'Aosta","p_3",-.288
-"ITA","Valle d'Aosta","p_4",-.071
-"ITA","Valle d'Aosta","p_5",-.139
-"ITA","Valle d'Aosta","p_6",.054
-"ITA","Valle d'Aosta","comb. policy",-.404
-"ITA","Valle d'Aosta","no_policy rate",.371
-"ITA","Veneto","p_1",.174
-"ITA","Veneto","p_2",-.135
-"ITA","Veneto","p_3",-.299
-"ITA","Veneto","p_4",-.096
-"ITA","Veneto","p_5",-.146
-"ITA","Veneto","p_6",.068
-"ITA","Veneto","comb. policy",-.435
-"ITA","Veneto","no_policy rate",.406
-"USA","full_sample","p_1",-.105
-"USA","full_sample","p_2",-.117
-"USA","full_sample","p_3",-.11
-"USA","full_sample","p_4",.075
-"USA","full_sample","p_5",.015
-"USA","full_sample","p_6",.038
-"USA","full_sample","p_7",-.016
-"USA","full_sample","p_8",-.057
-"USA","full_sample","p_9",-.07
-"USA","full_sample","comb. policy",-.347
-"USA","full_sample","no_policy rate",.3
-"USA","Alabama","p_1",-.109
-"USA","Alabama","p_2",-.126
-"USA","Alabama","p_3",-.094
-"USA","Alabama","p_4",.073
-"USA","Alabama","p_5",.017
-"USA","Alabama","p_6",.042
-"USA","Alabama","p_7",-.013
-"USA","Alabama","p_8",-.053
-"USA","Alabama","p_9",-.072
-"USA","Alabama","comb. policy",-.336
-"USA","Alabama","no_policy rate",.298
-"USA","Alaska","p_1",-.104
-"USA","Alaska","p_2",-.118
-"USA","Alaska","p_3",-.111
-"USA","Alaska","p_4",.074
-"USA","Alaska","p_5",.019
-"USA","Alaska","p_6",.035
-"USA","Alaska","p_7",-.013
-"USA","Alaska","p_8",-.056
-"USA","Alaska","p_9",-.069
-"USA","Alaska","comb. policy",-.343
-"USA","Alaska","no_policy rate",.3
-"USA","Arizona","p_1",-.086
-"USA","Arizona","p_2",-.113
-"USA","Arizona","p_3",-.135
-"USA","Arizona","p_4",.063
-"USA","Arizona","p_5",.015
-"USA","Arizona","p_6",.027
-"USA","Arizona","p_7",-.013
-"USA","Arizona","p_8",-.06
-"USA","Arizona","p_9",-.066
-"USA","Arizona","comb. policy",-.368
-"USA","Arizona","no_policy rate",.305
-"USA","Arkansas","p_1",-.114
-"USA","Arkansas","p_2",-.118
-"USA","Arkansas","p_3",-.114
-"USA","Arkansas","p_4",.073
-"USA","Arkansas","p_5",.019
-"USA","Arkansas","p_6",.04
-"USA","Arkansas","p_7",-.019
-"USA","Arkansas","p_8",-.047
-"USA","Arkansas","p_9",-.074
-"USA","Arkansas","comb. policy",-.354
-"USA","Arkansas","no_policy rate",.302
-"USA","California","p_1",-.106
-"USA","California","p_2",-.129
-"USA","California","p_3",-.105
-"USA","California","p_4",.071
-"USA","California","p_5",.018
-"USA","California","p_6",.041
-"USA","California","p_7",-.021
-"USA","California","p_8",-.059
-"USA","California","p_9",-.07
-"USA","California","comb. policy",-.36
-"USA","California","no_policy rate",.306
-"USA","Colorado","p_1",-.114
-"USA","Colorado","p_2",-.112
-"USA","Colorado","p_3",-.11
-"USA","Colorado","p_4",.09
-"USA","Colorado","p_5",.02
-"USA","Colorado","p_6",.033
-"USA","Colorado","p_7",-.018
-"USA","Colorado","p_8",-.056
-"USA","Colorado","p_9",-.07
-"USA","Colorado","comb. policy",-.337
-"USA","Colorado","no_policy rate",.294
-"USA","Connecticut","p_1",-.104
-"USA","Connecticut","p_2",-.109
-"USA","Connecticut","p_3",-.122
-"USA","Connecticut","p_4",.073
-"USA","Connecticut","p_5",.015
-"USA","Connecticut","p_6",.04
-"USA","Connecticut","p_7",-.018
-"USA","Connecticut","p_8",-.06
-"USA","Connecticut","p_9",-.069
-"USA","Connecticut","comb. policy",-.354
-"USA","Connecticut","no_policy rate",.298
-"USA","Delaware","p_1",-.106
-"USA","Delaware","p_2",-.118
-"USA","Delaware","p_3",-.109
-"USA","Delaware","p_4",.076
-"USA","Delaware","p_5",.015
-"USA","Delaware","p_6",.037
-"USA","Delaware","p_7",-.016
-"USA","Delaware","p_8",-.056
-"USA","Delaware","p_9",-.069
-"USA","Delaware","comb. policy",-.346
-"USA","Delaware","no_policy rate",.3
-"USA","District of Columb","p_1",-.098
-"USA","District of Columb","p_2",-.118
-"USA","District of Columb","p_3",-.111
-"USA","District of Columb","p_4",.064
-"USA","District of Columb","p_5",.014
-"USA","District of Columb","p_6",.04
-"USA","District of Columb","p_7",-.018
-"USA","District of Columb","p_8",-.057
-"USA","District of Columb","p_9",-.068
-"USA","District of Columb","comb. policy",-.352
-"USA","District of Columb","no_policy rate",.305
-"USA","Florida","p_1",-.094
-"USA","Florida","p_2",-.11
-"USA","Florida","p_3",-.113
-"USA","Florida","p_4",.077
-"USA","Florida","p_5",.011
-"USA","Florida","p_6",.038
-"USA","Florida","p_7",-.012
-"USA","Florida","p_8",-.06
-"USA","Florida","p_9",-.071
-"USA","Florida","comb. policy",-.334
-"USA","Florida","no_policy rate",.289
-"USA","Georgia","p_1",-.104
-"USA","Georgia","p_2",-.117
-"USA","Georgia","p_3",-.11
-"USA","Georgia","p_4",.076
-"USA","Georgia","p_5",.014
-"USA","Georgia","p_6",.037
-"USA","Georgia","p_7",-.018
-"USA","Georgia","p_8",-.055
-"USA","Georgia","p_9",-.069
-"USA","Georgia","comb. policy",-.346
-"USA","Georgia","no_policy rate",.299
-"USA","Hawaii","p_1",-.106
-"USA","Hawaii","p_2",-.112
-"USA","Hawaii","p_3",-.111
-"USA","Hawaii","p_4",.073
-"USA","Hawaii","p_5",.018
-"USA","Hawaii","p_6",.04
-"USA","Hawaii","p_7",-.015
-"USA","Hawaii","p_8",-.06
-"USA","Hawaii","p_9",-.069
-"USA","Hawaii","comb. policy",-.342
-"USA","Hawaii","no_policy rate",.299
-"USA","Idaho","p_1",-.106
-"USA","Idaho","p_2",-.117
-"USA","Idaho","p_3",-.109
-"USA","Idaho","p_4",.073
-"USA","Idaho","p_5",.016
-"USA","Idaho","p_6",.042
-"USA","Idaho","p_7",-.025
-"USA","Idaho","p_8",-.059
-"USA","Idaho","p_9",-.069
-"USA","Idaho","comb. policy",-.354
-"USA","Idaho","no_policy rate",.3
-"USA","Illinois","p_1",-.107
-"USA","Illinois","p_2",-.113
-"USA","Illinois","p_3",-.11
-"USA","Illinois","p_4",.077
-"USA","Illinois","p_5",.015
-"USA","Illinois","p_6",.034
-"USA","Illinois","p_7",-.012
-"USA","Illinois","p_8",-.056
-"USA","Illinois","p_9",-.07
-"USA","Illinois","comb. policy",-.342
-"USA","Illinois","no_policy rate",.299
-"USA","Indiana","p_1",-.091
-"USA","Indiana","p_2",-.111
-"USA","Indiana","p_3",-.108
-"USA","Indiana","p_4",.059
-"USA","Indiana","p_5",.008
-"USA","Indiana","p_6",.036
-"USA","Indiana","p_7",-.022
-"USA","Indiana","p_8",-.057
-"USA","Indiana","p_9",-.07
-"USA","Indiana","comb. policy",-.358
-"USA","Indiana","no_policy rate",.308
-"USA","Iowa","p_1",-.104
-"USA","Iowa","p_2",-.127
-"USA","Iowa","p_3",-.106
-"USA","Iowa","p_4",.072
-"USA","Iowa","p_5",.019
-"USA","Iowa","p_6",.034
-"USA","Iowa","p_7",-.012
-"USA","Iowa","p_8",-.059
-"USA","Iowa","p_9",-.067
-"USA","Iowa","comb. policy",-.349
-"USA","Iowa","no_policy rate",.307
-"USA","Kansas","p_1",-.105
-"USA","Kansas","p_2",-.116
-"USA","Kansas","p_3",-.109
-"USA","Kansas","p_4",.075
-"USA","Kansas","p_5",.015
-"USA","Kansas","p_6",.038
-"USA","Kansas","p_7",-.017
-"USA","Kansas","p_8",-.058
-"USA","Kansas","p_9",-.068
-"USA","Kansas","comb. policy",-.346
-"USA","Kansas","no_policy rate",.301
-"USA","Kentucky","p_1",-.106
-"USA","Kentucky","p_2",-.12
-"USA","Kentucky","p_3",-.108
-"USA","Kentucky","p_4",.077
-"USA","Kentucky","p_5",.017
-"USA","Kentucky","p_6",.037
-"USA","Kentucky","p_7",-.014
-"USA","Kentucky","p_8",-.059
-"USA","Kentucky","p_9",-.069
-"USA","Kentucky","comb. policy",-.345
-"USA","Kentucky","no_policy rate",.299
-"USA","Louisiana","p_1",-.113
-"USA","Louisiana","p_2",-.108
-"USA","Louisiana","p_3",-.113
-"USA","Louisiana","p_4",.078
-"USA","Louisiana","p_5",.01
-"USA","Louisiana","p_6",.044
-"USA","Louisiana","p_7",-.023
-"USA","Louisiana","p_8",-.054
-"USA","Louisiana","p_9",-.069
-"USA","Louisiana","comb. policy",-.348
-"USA","Louisiana","no_policy rate",.297
-"USA","Maine","p_1",-.103
-"USA","Maine","p_2",-.116
-"USA","Maine","p_3",-.112
-"USA","Maine","p_4",.074
-"USA","Maine","p_5",.013
-"USA","Maine","p_6",.035
-"USA","Maine","p_7",-.015
-"USA","Maine","p_8",-.05
-"USA","Maine","p_9",-.072
-"USA","Maine","comb. policy",-.348
-"USA","Maine","no_policy rate",.3
-"USA","Maryland","p_1",-.097
-"USA","Maryland","p_2",-.119
-"USA","Maryland","p_3",-.11
-"USA","Maryland","p_4",.067
-"USA","Maryland","p_5",.015
-"USA","Maryland","p_6",.037
-"USA","Maryland","p_7",-.016
-"USA","Maryland","p_8",-.057
-"USA","Maryland","p_9",-.07
-"USA","Maryland","comb. policy",-.349
-"USA","Maryland","no_policy rate",.301
-"USA","Massachusetts","p_1",-.094
-"USA","Massachusetts","p_2",-.103
-"USA","Massachusetts","p_3",-.113
-"USA","Massachusetts","p_4",.079
-"USA","Massachusetts","p_5",.013
-"USA","Massachusetts","p_6",.034
-"USA","Massachusetts","p_7",-.007
-"USA","Massachusetts","p_8",-.061
-"USA","Massachusetts","p_9",-.074
-"USA","Massachusetts","comb. policy",-.326
-"USA","Massachusetts","no_policy rate",.289
-"USA","Michigan","p_1",-.112
-"USA","Michigan","p_2",-.112
-"USA","Michigan","p_3",-.112
-"USA","Michigan","p_4",.081
-"USA","Michigan","p_5",.011
-"USA","Michigan","p_6",.036
-"USA","Michigan","p_7",-.013
-"USA","Michigan","p_8",-.052
-"USA","Michigan","p_9",-.069
-"USA","Michigan","comb. policy",-.343
-"USA","Michigan","no_policy rate",.296
-"USA","Minnesota","p_1",-.115
-"USA","Minnesota","p_2",-.104
-"USA","Minnesota","p_3",-.111
-"USA","Minnesota","p_4",.079
-"USA","Minnesota","p_5",.013
-"USA","Minnesota","p_6",.044
-"USA","Minnesota","p_7",-.019
-"USA","Minnesota","p_8",-.061
-"USA","Minnesota","p_9",-.067
-"USA","Minnesota","comb. policy",-.342
-"USA","Minnesota","no_policy rate",.3
-"USA","Mississippi","p_1",-.099
-"USA","Mississippi","p_2",-.117
-"USA","Mississippi","p_3",-.098
-"USA","Mississippi","p_4",.074
-"USA","Mississippi","p_5",.01
-"USA","Mississippi","p_6",.034
-"USA","Mississippi","p_7",-.015
-"USA","Mississippi","p_8",-.056
-"USA","Mississippi","p_9",-.071
-"USA","Mississippi","comb. policy",-.337
-"USA","Mississippi","no_policy rate",.297
-"USA","Missouri","p_1",-.109
-"USA","Missouri","p_2",-.122
-"USA","Missouri","p_3",-.111
-"USA","Missouri","p_4",.07
-"USA","Missouri","p_5",.014
-"USA","Missouri","p_6",.046
-"USA","Missouri","p_7",-.019
-"USA","Missouri","p_8",-.055
-"USA","Missouri","p_9",-.069
-"USA","Missouri","comb. policy",-.355
-"USA","Missouri","no_policy rate",.302
-"USA","Montana","p_1",-.105
-"USA","Montana","p_2",-.115
-"USA","Montana","p_3",-.11
-"USA","Montana","p_4",.075
-"USA","Montana","p_5",.016
-"USA","Montana","p_6",.038
-"USA","Montana","p_7",-.009
-"USA","Montana","p_8",-.059
-"USA","Montana","p_9",-.071
-"USA","Montana","comb. policy",-.34
-"USA","Montana","no_policy rate",.299
-"USA","Nebraska","p_1",-.104
-"USA","Nebraska","p_2",-.134
-"USA","Nebraska","p_3",-.114
-"USA","Nebraska","p_4",.075
-"USA","Nebraska","p_5",.017
-"USA","Nebraska","p_6",.037
-"USA","Nebraska","p_7",-.014
-"USA","Nebraska","p_8",-.055
-"USA","Nebraska","p_9",-.068
-"USA","Nebraska","comb. policy",-.358
-"USA","Nebraska","no_policy rate",.303
-"USA","Nevada","p_1",-.108
-"USA","Nevada","p_2",-.115
-"USA","Nevada","p_3",-.111
-"USA","Nevada","p_4",.083
-"USA","Nevada","p_5",.015
-"USA","Nevada","p_6",.034
-"USA","Nevada","p_7",-.018
-"USA","Nevada","p_8",-.058
-"USA","Nevada","p_9",-.067
-"USA","Nevada","comb. policy",-.345
-"USA","Nevada","no_policy rate",.297
-"USA","New Hampshire","p_1",-.102
-"USA","New Hampshire","p_2",-.112
-"USA","New Hampshire","p_3",-.111
-"USA","New Hampshire","p_4",.073
-"USA","New Hampshire","p_5",.014
-"USA","New Hampshire","p_6",.036
-"USA","New Hampshire","p_7",-.018
-"USA","New Hampshire","p_8",-.054
-"USA","New Hampshire","p_9",-.071
-"USA","New Hampshire","comb. policy",-.346
-"USA","New Hampshire","no_policy rate",.3
-"USA","New Jersey","p_1",-.121
-"USA","New Jersey","p_2",-.107
-"USA","New Jersey","p_3",-.11
-"USA","New Jersey","p_4",.078
-"USA","New Jersey","p_5",.018
-"USA","New Jersey","p_6",.04
-"USA","New Jersey","p_7",-.016
-"USA","New Jersey","p_8",-.058
-"USA","New Jersey","p_9",-.069
-"USA","New Jersey","comb. policy",-.345
-"USA","New Jersey","no_policy rate",.303
-"USA","New Mexico","p_1",-.107
-"USA","New Mexico","p_2",-.117
-"USA","New Mexico","p_3",-.108
-"USA","New Mexico","p_4",.077
-"USA","New Mexico","p_5",.011
-"USA","New Mexico","p_6",.036
-"USA","New Mexico","p_7",-.016
-"USA","New Mexico","p_8",-.054
-"USA","New Mexico","p_9",-.072
-"USA","New Mexico","comb. policy",-.349
-"USA","New Mexico","no_policy rate",.302
-"USA","New York","p_1",-.114
-"USA","New York","p_2",-.104
-"USA","New York","p_3",-.088
-"USA","New York","p_4",.084
-"USA","New York","p_5",.02
-"USA","New York","p_6",.033
-"USA","New York","p_7",-.014
-"USA","New York","p_8",-.06
-"USA","New York","p_9",-.068
-"USA","New York","comb. policy",-.312
-"USA","New York","no_policy rate",.292
-"USA","North Carolina","p_1",-.101
-"USA","North Carolina","p_2",-.115
-"USA","North Carolina","p_3",-.11
-"USA","North Carolina","p_4",.07
-"USA","North Carolina","p_5",.015
-"USA","North Carolina","p_6",.04
-"USA","North Carolina","p_7",-.016
-"USA","North Carolina","p_8",-.058
-"USA","North Carolina","p_9",-.07
-"USA","North Carolina","comb. policy",-.347
-"USA","North Carolina","no_policy rate",.301
-"USA","North Dakota","p_1",-.104
-"USA","North Dakota","p_2",-.122
-"USA","North Dakota","p_3",-.116
-"USA","North Dakota","p_4",.074
-"USA","North Dakota","p_5",.016
-"USA","North Dakota","p_6",.039
-"USA","North Dakota","p_7",-.016
-"USA","North Dakota","p_8",-.056
-"USA","North Dakota","p_9",-.069
-"USA","North Dakota","comb. policy",-.355
-"USA","North Dakota","no_policy rate",.302
-"USA","Ohio","p_1",-.101
-"USA","Ohio","p_2",-.114
-"USA","Ohio","p_3",-.113
-"USA","Ohio","p_4",.07
-"USA","Ohio","p_5",.02
-"USA","Ohio","p_6",.041
-"USA","Ohio","p_7",-.015
-"USA","Ohio","p_8",-.061
-"USA","Ohio","p_9",-.068
-"USA","Ohio","comb. policy",-.34
-"USA","Ohio","no_policy rate",.297
-"USA","Oklahoma","p_1",-.11
-"USA","Oklahoma","p_2",-.124
-"USA","Oklahoma","p_3",-.109
-"USA","Oklahoma","p_4",.076
-"USA","Oklahoma","p_5",.014
-"USA","Oklahoma","p_6",.039
-"USA","Oklahoma","p_7",-.013
-"USA","Oklahoma","p_8",-.055
-"USA","Oklahoma","p_9",-.07
-"USA","Oklahoma","comb. policy",-.35
-"USA","Oklahoma","no_policy rate",.299
-"USA","Oregon","p_1",-.114
-"USA","Oregon","p_2",-.115
-"USA","Oregon","p_3",-.104
-"USA","Oregon","p_4",.075
-"USA","Oregon","p_5",.005
-"USA","Oregon","p_6",.041
-"USA","Oregon","p_7",-.023
-"USA","Oregon","p_8",-.056
-"USA","Oregon","p_9",-.07
-"USA","Oregon","comb. policy",-.363
-"USA","Oregon","no_policy rate",.31
-"USA","Pennsylvania","p_1",-.11
-"USA","Pennsylvania","p_2",-.116
-"USA","Pennsylvania","p_3",-.107
-"USA","Pennsylvania","p_4",.078
-"USA","Pennsylvania","p_5",.016
-"USA","Pennsylvania","p_6",.036
-"USA","Pennsylvania","p_7",-.019
-"USA","Pennsylvania","p_8",-.059
-"USA","Pennsylvania","p_9",-.066
-"USA","Pennsylvania","comb. policy",-.347
-"USA","Pennsylvania","no_policy rate",.301
-"USA","Rhode Island","p_1",-.112
-"USA","Rhode Island","p_2",-.113
-"USA","Rhode Island","p_3",-.107
-"USA","Rhode Island","p_4",.083
-"USA","Rhode Island","p_5",.019
-"USA","Rhode Island","p_6",.033
-"USA","Rhode Island","p_7",-.022
-"USA","Rhode Island","p_8",-.055
-"USA","Rhode Island","p_9",-.073
-"USA","Rhode Island","comb. policy",-.347
-"USA","Rhode Island","no_policy rate",.301
-"USA","South Carolina","p_1",-.106
-"USA","South Carolina","p_2",-.113
-"USA","South Carolina","p_3",-.112
-"USA","South Carolina","p_4",.066
-"USA","South Carolina","p_5",.013
-"USA","South Carolina","p_6",.038
-"USA","South Carolina","p_7",-.018
-"USA","South Carolina","p_8",-.051
-"USA","South Carolina","p_9",-.071
-"USA","South Carolina","comb. policy",-.354
-"USA","South Carolina","no_policy rate",.307
-"USA","South Dakota","p_1",-.101
-"USA","South Dakota","p_2",-.136
-"USA","South Dakota","p_3",-.107
-"USA","South Dakota","p_4",.074
-"USA","South Dakota","p_5",.01
-"USA","South Dakota","p_6",.039
-"USA","South Dakota","p_7",-.023
-"USA","South Dakota","p_8",-.05
-"USA","South Dakota","p_9",-.067
-"USA","South Dakota","comb. policy",-.362
-"USA","South Dakota","no_policy rate",.303
-"USA","Tennessee","p_1",-.099
-"USA","Tennessee","p_2",-.114
-"USA","Tennessee","p_3",-.113
-"USA","Tennessee","p_4",.067
-"USA","Tennessee","p_5",.022
-"USA","Tennessee","p_6",.038
-"USA","Tennessee","p_7",-.017
-"USA","Tennessee","p_8",-.057
-"USA","Tennessee","p_9",-.072
-"USA","Tennessee","comb. policy",-.345
-"USA","Tennessee","no_policy rate",.3
-"USA","Texas","p_1",-.11
-"USA","Texas","p_2",-.118
-"USA","Texas","p_3",-.109
-"USA","Texas","p_4",.078
-"USA","Texas","p_5",.016
-"USA","Texas","p_6",.036
-"USA","Texas","p_7",-.006
-"USA","Texas","p_8",-.059
-"USA","Texas","p_9",-.068
-"USA","Texas","comb. policy",-.34
-"USA","Texas","no_policy rate",.301
-"USA","Utah","p_1",-.106
-"USA","Utah","p_2",-.119
-"USA","Utah","p_3",-.107
-"USA","Utah","p_4",.076
-"USA","Utah","p_5",.015
-"USA","Utah","p_6",.033
-"USA","Utah","p_7",-.015
-"USA","Utah","p_8",-.05
-"USA","Utah","p_9",-.072
-"USA","Utah","comb. policy",-.345
-"USA","Utah","no_policy rate",.301
-"USA","Vermont","p_1",-.107
-"USA","Vermont","p_2",-.12
-"USA","Vermont","p_3",-.109
-"USA","Vermont","p_4",.076
-"USA","Vermont","p_5",.015
-"USA","Vermont","p_6",.037
-"USA","Vermont","p_7",-.012
-"USA","Vermont","p_8",-.058
-"USA","Vermont","p_9",-.067
-"USA","Vermont","comb. policy",-.345
-"USA","Vermont","no_policy rate",.301
-"USA","Virginia","p_1",-.107
-"USA","Virginia","p_2",-.135
-"USA","Virginia","p_3",-.106
-"USA","Virginia","p_4",.078
-"USA","Virginia","p_5",.018
-"USA","Virginia","p_6",.037
-"USA","Virginia","p_7",-.017
-"USA","Virginia","p_8",-.055
-"USA","Virginia","p_9",-.068
-"USA","Virginia","comb. policy",-.355
-"USA","Virginia","no_policy rate",.301
-"USA","Washington","p_1",-.084
-"USA","Washington","p_2",-.132
-"USA","Washington","p_3",-.107
-"USA","Washington","p_4",.08
-"USA","Washington","p_5",.009
-"USA","Washington","p_6",.038
-"USA","Washington","p_7",-.024
-"USA","Washington","p_8",-.052
-"USA","Washington","p_9",-.069
-"USA","Washington","comb. policy",-.342
-"USA","Washington","no_policy rate",.283
-"USA","West Virginia","p_1",-.104
-"USA","West Virginia","p_2",-.109
-"USA","West Virginia","p_3",-.111
-"USA","West Virginia","p_4",.074
-"USA","West Virginia","p_5",.016
-"USA","West Virginia","p_6",.036
-"USA","West Virginia","p_7",-.012
-"USA","West Virginia","p_8",-.058
-"USA","West Virginia","p_9",-.071
-"USA","West Virginia","comb. policy",-.34
-"USA","West Virginia","no_policy rate",.298
-"USA","Wisconsin","p_1",-.105
-"USA","Wisconsin","p_2",-.113
-"USA","Wisconsin","p_3",-.111
-"USA","Wisconsin","p_4",.072
-"USA","Wisconsin","p_5",.014
-"USA","Wisconsin","p_6",.042
-"USA","Wisconsin","p_7",-.017
-"USA","Wisconsin","p_8",-.058
-"USA","Wisconsin","p_9",-.07
-"USA","Wisconsin","comb. policy",-.347
-"USA","Wisconsin","no_policy rate",.299
-"USA","Wyoming","p_1",-.107
-"USA","Wyoming","p_2",-.112
-"USA","Wyoming","p_3",-.109
-"USA","Wyoming","p_4",.075
-"USA","Wyoming","p_5",.016
-"USA","Wyoming","p_6",.039
-"USA","Wyoming","p_7",-.021
-"USA","Wyoming","p_8",-.059
-"USA","Wyoming","p_9",-.069
-"USA","Wyoming","comb. policy",-.347
-"USA","Wyoming","no_policy rate",.299
+adm0	sample	policy	beta	i	grp
+"CHN"	"full_sample"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"full_sample"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"full_sample"	"home_isolation_L15"	-.153	31	2
+"CHN"	"full_sample"	"home_isolation_L22"	-.159	30	2
+"CHN"	"full_sample"	"home_isolation_L29"	-.161	29	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"full_sample"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Anhui"	"home_isolation_L0_"	-.102	33	2
+"CHN"	"Anhui"	"home_isolation_L8_"	-.141	32	2
+"CHN"	"Anhui"	"home_isolation_L15"	-.159	31	2
+"CHN"	"Anhui"	"home_isolation_L22"	-.165	30	2
+"CHN"	"Anhui"	"home_isolation_L29"	-.165	29	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.026	27	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.171	26	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.199	25	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.182	24	2
+"CHN"	"Anhui"	"travel_ban_local_L"	-.188	23	2
+"CHN"	"Beijing"	"home_isolation_L0_"	-.092	33	2
+"CHN"	"Beijing"	"home_isolation_L8_"	-.133	32	2
+"CHN"	"Beijing"	"home_isolation_L15"	-.151	31	2
+"CHN"	"Beijing"	"home_isolation_L22"	-.157	30	2
+"CHN"	"Beijing"	"home_isolation_L29"	-.159	29	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.042	27	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.165	26	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.191	25	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.179	24	2
+"CHN"	"Beijing"	"travel_ban_local_L"	-.18	23	2
+"CHN"	"Chongqing"	"home_isolation_L0_"	-.093	33	2
+"CHN"	"Chongqing"	"home_isolation_L8_"	-.134	32	2
+"CHN"	"Chongqing"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Chongqing"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Chongqing"	"home_isolation_L29"	-.16	29	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.042	27	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Chongqing"	"travel_ban_local_L"	-.179	23	2
+"CHN"	"Fujian"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Fujian"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Fujian"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Fujian"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Fujian"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Fujian"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Gansu"	"home_isolation_L0_"	-.095	33	2
+"CHN"	"Gansu"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Gansu"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Gansu"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Gansu"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Gansu"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Guangdong"	"home_isolation_L0_"	-.089	33	2
+"CHN"	"Guangdong"	"home_isolation_L8_"	-.129	32	2
+"CHN"	"Guangdong"	"home_isolation_L15"	-.148	31	2
+"CHN"	"Guangdong"	"home_isolation_L22"	-.154	30	2
+"CHN"	"Guangdong"	"home_isolation_L29"	-.155	29	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.043	27	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.168	26	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.195	25	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.183	24	2
+"CHN"	"Guangdong"	"travel_ban_local_L"	-.184	23	2
+"CHN"	"Guangxi"	"home_isolation_L0_"	-.097	33	2
+"CHN"	"Guangxi"	"home_isolation_L8_"	-.137	32	2
+"CHN"	"Guangxi"	"home_isolation_L15"	-.156	31	2
+"CHN"	"Guangxi"	"home_isolation_L22"	-.162	30	2
+"CHN"	"Guangxi"	"home_isolation_L29"	-.164	29	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.04	27	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.161	26	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.185	25	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.173	24	2
+"CHN"	"Guangxi"	"travel_ban_local_L"	-.173	23	2
+"CHN"	"Guizhou"	"home_isolation_L0_"	-.095	33	2
+"CHN"	"Guizhou"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Guizhou"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Guizhou"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Guizhou"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Guizhou"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Hainan"	"home_isolation_L0_"	-.097	33	2
+"CHN"	"Hainan"	"home_isolation_L8_"	-.137	32	2
+"CHN"	"Hainan"	"home_isolation_L15"	-.154	31	2
+"CHN"	"Hainan"	"home_isolation_L22"	-.161	30	2
+"CHN"	"Hainan"	"home_isolation_L29"	-.163	29	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.162	26	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.187	25	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.175	24	2
+"CHN"	"Hainan"	"travel_ban_local_L"	-.176	23	2
+"CHN"	"Hebei"	"home_isolation_L0_"	-.095	33	2
+"CHN"	"Hebei"	"home_isolation_L8_"	-.136	32	2
+"CHN"	"Hebei"	"home_isolation_L15"	-.154	31	2
+"CHN"	"Hebei"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Hebei"	"home_isolation_L29"	-.162	29	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Hebei"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Heilongjiang"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Heilongjiang"	"home_isolation_L8_"	-.134	32	2
+"CHN"	"Heilongjiang"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Heilongjiang"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Heilongjiang"	"home_isolation_L29"	-.162	29	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.05	27	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.177	26	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.2	25	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.188	24	2
+"CHN"	"Heilongjiang"	"travel_ban_local_L"	-.19	23	2
+"CHN"	"Henan"	"home_isolation_L0_"	-.093	33	2
+"CHN"	"Henan"	"home_isolation_L8_"	-.132	32	2
+"CHN"	"Henan"	"home_isolation_L15"	-.149	31	2
+"CHN"	"Henan"	"home_isolation_L22"	-.155	30	2
+"CHN"	"Henan"	"home_isolation_L29"	-.151	29	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.043	27	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.165	26	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.192	25	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.181	24	2
+"CHN"	"Henan"	"travel_ban_local_L"	-.184	23	2
+"CHN"	"Hubei"	"home_isolation_L0_"	-.1	33	2
+"CHN"	"Hubei"	"home_isolation_L8_"	-.142	32	2
+"CHN"	"Hubei"	"home_isolation_L15"	-.161	31	2
+"CHN"	"Hubei"	"home_isolation_L22"	-.168	30	2
+"CHN"	"Hubei"	"home_isolation_L29"	-.17	29	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.085	27	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.126	26	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.137	25	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.129	24	2
+"CHN"	"Hubei"	"travel_ban_local_L"	-.125	23	2
+"CHN"	"Hunan"	"home_isolation_L0_"	-.096	33	2
+"CHN"	"Hunan"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Hunan"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Hunan"	"home_isolation_L22"	-.158	30	2
+"CHN"	"Hunan"	"home_isolation_L29"	-.156	29	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.042	27	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Hunan"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Jiangsu"	"home_isolation_L0_"	-.096	33	2
+"CHN"	"Jiangsu"	"home_isolation_L8_"	-.136	32	2
+"CHN"	"Jiangsu"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Jiangsu"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Jiangsu"	"home_isolation_L29"	-.159	29	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Jiangsu"	"travel_ban_local_L"	-.179	23	2
+"CHN"	"Jiangxi"	"home_isolation_L0_"	-.088	33	2
+"CHN"	"Jiangxi"	"home_isolation_L8_"	-.127	32	2
+"CHN"	"Jiangxi"	"home_isolation_L15"	-.145	31	2
+"CHN"	"Jiangxi"	"home_isolation_L22"	-.152	30	2
+"CHN"	"Jiangxi"	"home_isolation_L29"	-.153	29	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.044	27	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.168	26	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.197	25	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.186	24	2
+"CHN"	"Jiangxi"	"travel_ban_local_L"	-.188	23	2
+"CHN"	"Jilin"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Jilin"	"home_isolation_L8_"	-.134	32	2
+"CHN"	"Jilin"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Jilin"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Jilin"	"home_isolation_L29"	-.16	29	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.042	27	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.19	25	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.178	24	2
+"CHN"	"Jilin"	"travel_ban_local_L"	-.179	23	2
+"CHN"	"Liaoning"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Liaoning"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Liaoning"	"home_isolation_L15"	-.154	31	2
+"CHN"	"Liaoning"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Liaoning"	"home_isolation_L29"	-.162	29	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Liaoning"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Neimenggu"	"home_isolation_L0_"	-.096	33	2
+"CHN"	"Neimenggu"	"home_isolation_L8_"	-.138	32	2
+"CHN"	"Neimenggu"	"home_isolation_L15"	-.156	31	2
+"CHN"	"Neimenggu"	"home_isolation_L22"	-.162	30	2
+"CHN"	"Neimenggu"	"home_isolation_L29"	-.163	29	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.04	27	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.162	26	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.186	25	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.173	24	2
+"CHN"	"Neimenggu"	"travel_ban_local_L"	-.174	23	2
+"CHN"	"Ningxia"	"home_isolation_L0_"	-.095	33	2
+"CHN"	"Ningxia"	"home_isolation_L8_"	-.136	32	2
+"CHN"	"Ningxia"	"home_isolation_L15"	-.152	31	2
+"CHN"	"Ningxia"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Ningxia"	"home_isolation_L29"	-.172	29	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Ningxia"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Shaanxi"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Shaanxi"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Shaanxi"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Shaanxi"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Shaanxi"	"home_isolation_L29"	-.16	29	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Shaanxi"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Shandong"	"home_isolation_L0_"	-.097	33	2
+"CHN"	"Shandong"	"home_isolation_L8_"	-.138	32	2
+"CHN"	"Shandong"	"home_isolation_L15"	-.156	31	2
+"CHN"	"Shandong"	"home_isolation_L22"	-.162	30	2
+"CHN"	"Shandong"	"home_isolation_L29"	-.164	29	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.04	27	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.162	26	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.186	25	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.173	24	2
+"CHN"	"Shandong"	"travel_ban_local_L"	-.174	23	2
+"CHN"	"Shanghai"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Shanghai"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Shanghai"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Shanghai"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Shanghai"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.164	26	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Shanghai"	"travel_ban_local_L"	-.178	23	2
+"CHN"	"Sichuan"	"home_isolation_L0_"	-.097	33	2
+"CHN"	"Sichuan"	"home_isolation_L8_"	-.139	32	2
+"CHN"	"Sichuan"	"home_isolation_L15"	-.156	31	2
+"CHN"	"Sichuan"	"home_isolation_L22"	-.163	30	2
+"CHN"	"Sichuan"	"home_isolation_L29"	-.163	29	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.04	27	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.161	26	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.185	25	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.172	24	2
+"CHN"	"Sichuan"	"travel_ban_local_L"	-.173	23	2
+"CHN"	"Tianjin"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Tianjin"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Tianjin"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Tianjin"	"home_isolation_L22"	-.159	30	2
+"CHN"	"Tianjin"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Tianjin"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Yunnan"	"home_isolation_L0_"	-.094	33	2
+"CHN"	"Yunnan"	"home_isolation_L8_"	-.135	32	2
+"CHN"	"Yunnan"	"home_isolation_L15"	-.153	31	2
+"CHN"	"Yunnan"	"home_isolation_L22"	-.16	30	2
+"CHN"	"Yunnan"	"home_isolation_L29"	-.161	29	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.041	27	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.163	26	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.188	25	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.176	24	2
+"CHN"	"Yunnan"	"travel_ban_local_L"	-.177	23	2
+"CHN"	"Zhejiang"	"home_isolation_L0_"	-.085	33	2
+"CHN"	"Zhejiang"	"home_isolation_L8_"	-.129	32	2
+"CHN"	"Zhejiang"	"home_isolation_L15"	-.149	31	2
+"CHN"	"Zhejiang"	"home_isolation_L22"	-.157	30	2
+"CHN"	"Zhejiang"	"home_isolation_L29"	-.16	29	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.011	27	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.158	26	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.189	25	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.177	24	2
+"CHN"	"Zhejiang"	"travel_ban_local_L"	-.171	23	2
+"FRA"	"full_sample"	"national_lockdown"	-.048	13	1
+"FRA"	"full_sample"	"school_closure"	-.005	16	1
+"FRA"	"full_sample"	"pck_social_distanc"	-.227	15	1
+"FRA"	"AuvergneRhÃ´neAlpe"	"national_lockdown"	-.049	13	1
+"FRA"	"AuvergneRhÃ´neAlpe"	"school_closure"	.002	16	1
+"FRA"	"AuvergneRhÃ´neAlpe"	"pck_social_distanc"	-.242	15	1
+"FRA"	"BourgogneFrancheCo"	"national_lockdown"	-.056	13	1
+"FRA"	"BourgogneFrancheCo"	"school_closure"	.013	16	1
+"FRA"	"BourgogneFrancheCo"	"pck_social_distanc"	-.199	15	1
+"FRA"	"Bretagne"	"national_lockdown"	-.044	13	1
+"FRA"	"Bretagne"	"school_closure"	-.003	16	1
+"FRA"	"Bretagne"	"pck_social_distanc"	-.24	15	1
+"FRA"	"Centre"	"national_lockdown"	-.06	13	1
+"FRA"	"Centre"	"school_closure"	.006	16	1
+"FRA"	"Centre"	"pck_social_distanc"	-.233	15	1
+"FRA"	"Corse"	"national_lockdown"	-.035	13	1
+"FRA"	"Corse"	"school_closure"	-.011	16	1
+"FRA"	"Corse"	"pck_social_distanc"	-.235	15	1
+"FRA"	"GrandEst"	"national_lockdown"	-.067	13	1
+"FRA"	"GrandEst"	"school_closure"	-.047	16	1
+"FRA"	"GrandEst"	"pck_social_distanc"	-.1	15	1
+"FRA"	"HautsdeFrance"	"national_lockdown"	-.051	13	1
+"FRA"	"HautsdeFrance"	"school_closure"	.007	16	1
+"FRA"	"HautsdeFrance"	"pck_social_distanc"	-.252	15	1
+"FRA"	"IledeFrance"	"national_lockdown"	-.035	13	1
+"FRA"	"IledeFrance"	"school_closure"	-.013	16	1
+"FRA"	"IledeFrance"	"pck_social_distanc"	-.263	15	1
+"FRA"	"Normandie"	"national_lockdown"	-.032	13	1
+"FRA"	"Normandie"	"school_closure"	-.011	16	1
+"FRA"	"Normandie"	"pck_social_distanc"	-.258	15	1
+"FRA"	"NouvelleAquitaine"	"national_lockdown"	-.052	13	1
+"FRA"	"NouvelleAquitaine"	"school_closure"	.011	16	1
+"FRA"	"NouvelleAquitaine"	"pck_social_distanc"	-.223	15	1
+"FRA"	"Occitanie"	"national_lockdown"	-.051	13	1
+"FRA"	"Occitanie"	"school_closure"	-.001	16	1
+"FRA"	"Occitanie"	"pck_social_distanc"	-.21	15	1
+"FRA"	"Paca"	"national_lockdown"	-.045	13	1
+"FRA"	"Paca"	"school_closure"	-.004	16	1
+"FRA"	"Paca"	"pck_social_distanc"	-.235	15	1
+"FRA"	"PaysdelaLoire"	"national_lockdown"	-.045	13	1
+"FRA"	"PaysdelaLoire"	"school_closure"	-.008	16	1
+"FRA"	"PaysdelaLoire"	"pck_social_distanc"	-.244	15	1
+"IRN"	"full_sample"	"p_1"	-.285	3	0
+"IRN"	"full_sample"	"p_2"	-.151	4	0
+"IRN"	"Alborz"	"p_1"	-.248	3	0
+"IRN"	"Alborz"	"p_2"	-.152	4	0
+"IRN"	"Ardebil"	"p_1"	-.283	3	0
+"IRN"	"Ardebil"	"p_2"	-.153	4	0
+"IRN"	"Bushehr"	"p_1"	-.284	3	0
+"IRN"	"Bushehr"	"p_2"	-.152	4	0
+"IRN"	"Chahar Mahall and "	"p_1"	-.285	3	0
+"IRN"	"Chahar Mahall and "	"p_2"	-.15	4	0
+"IRN"	"East Azarbaijan"	"p_1"	-.308	3	0
+"IRN"	"East Azarbaijan"	"p_2"	-.153	4	0
+"IRN"	"Esfahan"	"p_1"	-.301	3	0
+"IRN"	"Esfahan"	"p_2"	-.148	4	0
+"IRN"	"Fars"	"p_1"	-.274	3	0
+"IRN"	"Fars"	"p_2"	-.152	4	0
+"IRN"	"Gilan"	"p_1"	-.306	3	0
+"IRN"	"Gilan"	"p_2"	-.153	4	0
+"IRN"	"Golestan"	"p_1"	-.311	3	0
+"IRN"	"Golestan"	"p_2"	-.15	4	0
+"IRN"	"Hamadan"	"p_1"	-.292	3	0
+"IRN"	"Hamadan"	"p_2"	-.146	4	0
+"IRN"	"Hormozgan"	"p_1"	-.288	3	0
+"IRN"	"Hormozgan"	"p_2"	-.147	4	0
+"IRN"	"Ilam"	"p_1"	-.285	3	0
+"IRN"	"Ilam"	"p_2"	-.149	4	0
+"IRN"	"Kerman"	"p_1"	-.284	3	0
+"IRN"	"Kerman"	"p_2"	-.152	4	0
+"IRN"	"Kermanshah"	"p_1"	-.282	3	0
+"IRN"	"Kermanshah"	"p_2"	-.154	4	0
+"IRN"	"Khuzestan"	"p_1"	-.265	3	0
+"IRN"	"Khuzestan"	"p_2"	-.155	4	0
+"IRN"	"Kohgiluyeh and Buy"	"p_1"	-.283	3	0
+"IRN"	"Kohgiluyeh and Buy"	"p_2"	-.15	4	0
+"IRN"	"Kordestan"	"p_1"	-.289	3	0
+"IRN"	"Kordestan"	"p_2"	-.15	4	0
+"IRN"	"Lorestan"	"p_1"	-.291	3	0
+"IRN"	"Lorestan"	"p_2"	-.147	4	0
+"IRN"	"Markazi"	"p_1"	-.249	3	0
+"IRN"	"Markazi"	"p_2"	-.149	4	0
+"IRN"	"Mazandaran"	"p_1"	-.314	3	0
+"IRN"	"Mazandaran"	"p_2"	-.144	4	0
+"IRN"	"North Khorasan"	"p_1"	-.282	3	0
+"IRN"	"North Khorasan"	"p_2"	-.154	4	0
+"IRN"	"Qazvin"	"p_1"	-.286	3	0
+"IRN"	"Qazvin"	"p_2"	-.15	4	0
+"IRN"	"Qom"	"p_1"	-.29	3	0
+"IRN"	"Qom"	"p_2"	-.153	4	0
+"IRN"	"Razavi Khorasan"	"p_1"	-.283	3	0
+"IRN"	"Razavi Khorasan"	"p_2"	-.15	4	0
+"IRN"	"Semnan"	"p_1"	-.299	3	0
+"IRN"	"Semnan"	"p_2"	-.147	4	0
+"IRN"	"Sistan and Baluche"	"p_1"	-.281	3	0
+"IRN"	"Sistan and Baluche"	"p_2"	-.154	4	0
+"IRN"	"South Khorasan"	"p_1"	-.283	3	0
+"IRN"	"South Khorasan"	"p_2"	-.153	4	0
+"IRN"	"Tehran"	"p_1"	-.268	3	0
+"IRN"	"Tehran"	"p_2"	-.153	4	0
+"IRN"	"West Azarbaijan"	"p_1"	-.284	3	0
+"IRN"	"West Azarbaijan"	"p_2"	-.15	4	0
+"IRN"	"Yazd"	"p_1"	-.283	3	0
+"IRN"	"Yazd"	"p_2"	-.153	4	0
+"IRN"	"Zanjan"	"p_1"	-.289	3	0
+"IRN"	"Zanjan"	"p_2"	-.149	4	0
+"KOR"	"full_sample"	"p_1"	-.083	47	4
+"KOR"	"full_sample"	"p_2"	-.304	48	4
+"KOR"	"full_sample"	"p_3"	-.127	49	4
+"KOR"	"full_sample"	"p_4"	.02	50	4
+"KOR"	"Busan"	"p_1"	-.096	47	4
+"KOR"	"Busan"	"p_2"	-.257	48	4
+"KOR"	"Busan"	"p_3"	-.126	49	4
+"KOR"	"Busan"	"p_4"	.024	50	4
+"KOR"	"Chungcheongbuk-do"	"p_1"	-.083	47	4
+"KOR"	"Chungcheongbuk-do"	"p_2"	-.304	48	4
+"KOR"	"Chungcheongbuk-do"	"p_3"	-.128	49	4
+"KOR"	"Chungcheongbuk-do"	"p_4"	.023	50	4
+"KOR"	"Chungcheongnam-do"	"p_1"	-.064	47	4
+"KOR"	"Chungcheongnam-do"	"p_2"	-.319	48	4
+"KOR"	"Chungcheongnam-do"	"p_3"	-.135	49	4
+"KOR"	"Chungcheongnam-do"	"p_4"	.015	50	4
+"KOR"	"Daegu"	"p_1"	-.087	47	4
+"KOR"	"Daegu"	"p_2"	-.288	48	4
+"KOR"	"Daegu"	"p_3"	-.076	49	4
+"KOR"	"Daegu"	"p_4"	.02	50	4
+"KOR"	"Daejeon"	"p_1"	-.084	47	4
+"KOR"	"Daejeon"	"p_2"	-.304	48	4
+"KOR"	"Daejeon"	"p_3"	-.126	49	4
+"KOR"	"Daejeon"	"p_4"	.019	50	4
+"KOR"	"Gangwon-do"	"p_1"	-.083	47	4
+"KOR"	"Gangwon-do"	"p_2"	-.302	48	4
+"KOR"	"Gangwon-do"	"p_3"	-.125	49	4
+"KOR"	"Gangwon-do"	"p_4"	.014	50	4
+"KOR"	"Gwangju"	"p_1"	-.088	47	4
+"KOR"	"Gwangju"	"p_2"	-.3	48	4
+"KOR"	"Gwangju"	"p_3"	-.125	49	4
+"KOR"	"Gwangju"	"p_4"	.018	50	4
+"KOR"	"Gyeonggi-do"	"p_1"	-.1	47	4
+"KOR"	"Gyeonggi-do"	"p_2"	-.306	48	4
+"KOR"	"Gyeonggi-do"	"p_3"	-.117	49	4
+"KOR"	"Gyeonggi-do"	"p_4"	.028	50	4
+"KOR"	"Gyeongsangbuk-do"	"p_1"	-.086	47	4
+"KOR"	"Gyeongsangbuk-do"	"p_2"	-.256	48	4
+"KOR"	"Gyeongsangbuk-do"	"p_3"	-.183	49	4
+"KOR"	"Gyeongsangbuk-do"	"p_4"	.019	50	4
+"KOR"	"Gyeongsangnam-do"	"p_1"	-.082	47	4
+"KOR"	"Gyeongsangnam-do"	"p_2"	-.295	48	4
+"KOR"	"Gyeongsangnam-do"	"p_3"	-.127	49	4
+"KOR"	"Gyeongsangnam-do"	"p_4"	.016	50	4
+"KOR"	"Incheon"	"p_1"	-.082	47	4
+"KOR"	"Incheon"	"p_2"	-.306	48	4
+"KOR"	"Incheon"	"p_3"	-.128	49	4
+"KOR"	"Incheon"	"p_4"	.022	50	4
+"KOR"	"Jeju"	"p_1"	-.083	47	4
+"KOR"	"Jeju"	"p_2"	-.304	48	4
+"KOR"	"Jeju"	"p_3"	-.127	49	4
+"KOR"	"Jeju"	"p_4"	.02	50	4
+"KOR"	"Jeollabuk-do"	"p_1"	-.083	47	4
+"KOR"	"Jeollabuk-do"	"p_2"	-.304	48	4
+"KOR"	"Jeollabuk-do"	"p_3"	-.127	49	4
+"KOR"	"Jeollabuk-do"	"p_4"	.019	50	4
+"KOR"	"Jeollanam-do"	"p_1"	-.084	47	4
+"KOR"	"Jeollanam-do"	"p_2"	-.304	48	4
+"KOR"	"Jeollanam-do"	"p_3"	-.127	49	4
+"KOR"	"Jeollanam-do"	"p_4"	.022	50	4
+"KOR"	"Sejong"	"p_1"	-.08	47	4
+"KOR"	"Sejong"	"p_2"	-.309	48	4
+"KOR"	"Sejong"	"p_3"	-.13	49	4
+"KOR"	"Sejong"	"p_4"	.026	50	4
+"KOR"	"Seoul"	"p_1"	-.065	47	4
+"KOR"	"Seoul"	"p_2"	-.463	48	4
+"KOR"	"Seoul"	"p_3"	-.115	49	4
+"KOR"	"Seoul"	"p_4"	.017	50	4
+"KOR"	"Ulsan"	"p_1"	-.081	47	4
+"KOR"	"Ulsan"	"p_2"	-.309	48	4
+"KOR"	"Ulsan"	"p_3"	-.129	49	4
+"KOR"	"Ulsan"	"p_4"	.022	50	4
+"ITA"	"full_sample"	"p_1"	.148	36	3
+"ITA"	"full_sample"	"p_2"	-.106	37	3
+"ITA"	"full_sample"	"p_3"	-.303	38	3
+"ITA"	"full_sample"	"p_4"	-.076	39	3
+"ITA"	"full_sample"	"p_5"	-.142	40	3
+"ITA"	"full_sample"	"p_6"	.069	41	3
+"ITA"	"Abruzzo"	"p_1"	.147	36	3
+"ITA"	"Abruzzo"	"p_2"	-.106	37	3
+"ITA"	"Abruzzo"	"p_3"	-.303	38	3
+"ITA"	"Abruzzo"	"p_4"	-.075	39	3
+"ITA"	"Abruzzo"	"p_5"	-.14	40	3
+"ITA"	"Abruzzo"	"p_6"	.068	41	3
+"ITA"	"Basilicata"	"p_1"	.148	36	3
+"ITA"	"Basilicata"	"p_2"	-.106	37	3
+"ITA"	"Basilicata"	"p_3"	-.3	38	3
+"ITA"	"Basilicata"	"p_4"	-.076	39	3
+"ITA"	"Basilicata"	"p_5"	-.142	40	3
+"ITA"	"Basilicata"	"p_6"	.068	41	3
+"ITA"	"Calabria"	"p_1"	.149	36	3
+"ITA"	"Calabria"	"p_2"	-.106	37	3
+"ITA"	"Calabria"	"p_3"	-.298	38	3
+"ITA"	"Calabria"	"p_4"	-.077	39	3
+"ITA"	"Calabria"	"p_5"	-.145	40	3
+"ITA"	"Calabria"	"p_6"	.07	41	3
+"ITA"	"Campania"	"p_1"	.098	36	3
+"ITA"	"Campania"	"p_2"	-.065	37	3
+"ITA"	"Campania"	"p_3"	-.272	38	3
+"ITA"	"Campania"	"p_4"	-.075	39	3
+"ITA"	"Campania"	"p_5"	-.165	40	3
+"ITA"	"Campania"	"p_6"	.079	41	3
+"ITA"	"Emilia Romagna"	"p_1"	.171	36	3
+"ITA"	"Emilia Romagna"	"p_2"	-.075	37	3
+"ITA"	"Emilia Romagna"	"p_3"	-.294	38	3
+"ITA"	"Emilia Romagna"	"p_4"	-.088	39	3
+"ITA"	"Emilia Romagna"	"p_5"	-.154	40	3
+"ITA"	"Emilia Romagna"	"p_6"	.07	41	3
+"ITA"	"Friuli Venezia Giu"	"p_1"	.145	36	3
+"ITA"	"Friuli Venezia Giu"	"p_2"	-.113	37	3
+"ITA"	"Friuli Venezia Giu"	"p_3"	-.331	38	3
+"ITA"	"Friuli Venezia Giu"	"p_4"	-.07	39	3
+"ITA"	"Friuli Venezia Giu"	"p_5"	-.117	40	3
+"ITA"	"Friuli Venezia Giu"	"p_6"	.061	41	3
+"ITA"	"Lazio"	"p_1"	.145	36	3
+"ITA"	"Lazio"	"p_2"	-.095	37	3
+"ITA"	"Lazio"	"p_3"	-.306	38	3
+"ITA"	"Lazio"	"p_4"	-.074	39	3
+"ITA"	"Lazio"	"p_5"	-.139	40	3
+"ITA"	"Lazio"	"p_6"	.067	41	3
+"ITA"	"Liguria"	"p_1"	.161	36	3
+"ITA"	"Liguria"	"p_2"	-.107	37	3
+"ITA"	"Liguria"	"p_3"	-.279	38	3
+"ITA"	"Liguria"	"p_4"	-.083	39	3
+"ITA"	"Liguria"	"p_5"	-.164	40	3
+"ITA"	"Liguria"	"p_6"	.079	41	3
+"ITA"	"Lombardia"	"p_1"	.095	36	3
+"ITA"	"Lombardia"	"p_2"	-.099	37	3
+"ITA"	"Lombardia"	"p_3"	-.335	38	3
+"ITA"	"Lombardia"	"p_4"	-.061	39	3
+"ITA"	"Lombardia"	"p_5"	-.126	40	3
+"ITA"	"Lombardia"	"p_6"	.113	41	3
+"ITA"	"Marche"	"p_1"	.142	36	3
+"ITA"	"Marche"	"p_2"	-.111	37	3
+"ITA"	"Marche"	"p_3"	-.312	38	3
+"ITA"	"Marche"	"p_4"	-.066	39	3
+"ITA"	"Marche"	"p_5"	-.13	40	3
+"ITA"	"Marche"	"p_6"	.063	41	3
+"ITA"	"Molise"	"p_1"	.14	36	3
+"ITA"	"Molise"	"p_2"	-.103	37	3
+"ITA"	"Molise"	"p_3"	-.315	38	3
+"ITA"	"Molise"	"p_4"	-.068	39	3
+"ITA"	"Molise"	"p_5"	-.136	40	3
+"ITA"	"Molise"	"p_6"	.063	41	3
+"ITA"	"P.A. Bolzano"	"p_1"	.147	36	3
+"ITA"	"P.A. Bolzano"	"p_2"	-.106	37	3
+"ITA"	"P.A. Bolzano"	"p_3"	-.301	38	3
+"ITA"	"P.A. Bolzano"	"p_4"	-.076	39	3
+"ITA"	"P.A. Bolzano"	"p_5"	-.141	40	3
+"ITA"	"P.A. Bolzano"	"p_6"	.068	41	3
+"ITA"	"P.A. Trento"	"p_1"	.148	36	3
+"ITA"	"P.A. Trento"	"p_2"	-.107	37	3
+"ITA"	"P.A. Trento"	"p_3"	-.302	38	3
+"ITA"	"P.A. Trento"	"p_4"	-.078	39	3
+"ITA"	"P.A. Trento"	"p_5"	-.138	40	3
+"ITA"	"P.A. Trento"	"p_6"	.07	41	3
+"ITA"	"Piemonte"	"p_1"	.189	36	3
+"ITA"	"Piemonte"	"p_2"	-.142	37	3
+"ITA"	"Piemonte"	"p_3"	-.261	38	3
+"ITA"	"Piemonte"	"p_4"	-.084	39	3
+"ITA"	"Piemonte"	"p_5"	-.168	40	3
+"ITA"	"Piemonte"	"p_6"	.066	41	3
+"ITA"	"Puglia"	"p_1"	.153	36	3
+"ITA"	"Puglia"	"p_2"	-.106	37	3
+"ITA"	"Puglia"	"p_3"	-.289	38	3
+"ITA"	"Puglia"	"p_4"	-.074	39	3
+"ITA"	"Puglia"	"p_5"	-.154	40	3
+"ITA"	"Puglia"	"p_6"	.066	41	3
+"ITA"	"Sardegna"	"p_1"	.148	36	3
+"ITA"	"Sardegna"	"p_2"	-.107	37	3
+"ITA"	"Sardegna"	"p_3"	-.309	38	3
+"ITA"	"Sardegna"	"p_4"	-.076	39	3
+"ITA"	"Sardegna"	"p_5"	-.142	40	3
+"ITA"	"Sardegna"	"p_6"	.074	41	3
+"ITA"	"Sicilia"	"p_1"	.15	36	3
+"ITA"	"Sicilia"	"p_2"	-.112	37	3
+"ITA"	"Sicilia"	"p_3"	-.332	38	3
+"ITA"	"Sicilia"	"p_4"	-.068	39	3
+"ITA"	"Sicilia"	"p_5"	-.125	40	3
+"ITA"	"Sicilia"	"p_6"	.062	41	3
+"ITA"	"Toscana"	"p_1"	.151	36	3
+"ITA"	"Toscana"	"p_2"	-.112	37	3
+"ITA"	"Toscana"	"p_3"	-.318	38	3
+"ITA"	"Toscana"	"p_4"	-.077	39	3
+"ITA"	"Toscana"	"p_5"	-.133	40	3
+"ITA"	"Toscana"	"p_6"	.071	41	3
+"ITA"	"Umbria"	"p_1"	.152	36	3
+"ITA"	"Umbria"	"p_2"	-.106	37	3
+"ITA"	"Umbria"	"p_3"	-.287	38	3
+"ITA"	"Umbria"	"p_4"	-.078	39	3
+"ITA"	"Umbria"	"p_5"	-.149	40	3
+"ITA"	"Umbria"	"p_6"	.068	41	3
+"ITA"	"Valle d'Aosta"	"p_1"	.149	36	3
+"ITA"	"Valle d'Aosta"	"p_2"	-.106	37	3
+"ITA"	"Valle d'Aosta"	"p_3"	-.295	38	3
+"ITA"	"Valle d'Aosta"	"p_4"	-.075	39	3
+"ITA"	"Valle d'Aosta"	"p_5"	-.144	40	3
+"ITA"	"Valle d'Aosta"	"p_6"	.066	41	3
+"ITA"	"Veneto"	"p_1"	.174	36	3
+"ITA"	"Veneto"	"p_2"	-.137	37	3
+"ITA"	"Veneto"	"p_3"	-.312	38	3
+"ITA"	"Veneto"	"p_4"	-.095	39	3
+"ITA"	"Veneto"	"p_5"	-.144	40	3
+"ITA"	"Veneto"	"p_6"	.072	41	3
+"USA"	"full_sample"	"p_1"	-.094	58	5
+"USA"	"full_sample"	"p_2"	-.119	59	5
+"USA"	"full_sample"	"p_3"	-.108	60	5
+"USA"	"full_sample"	"p_4"	.068	61	5
+"USA"	"full_sample"	"p_5"	.014	62	5
+"USA"	"full_sample"	"p_6"	.042	63	5
+"USA"	"full_sample"	"p_7"	-.02	64	5
+"USA"	"full_sample"	"p_8"	-.064	65	5
+"USA"	"full_sample"	"p_9"	-.066	66	5
+"USA"	"Alabama"	"p_1"	-.098	58	5
+"USA"	"Alabama"	"p_2"	-.128	59	5
+"USA"	"Alabama"	"p_3"	-.092	60	5
+"USA"	"Alabama"	"p_4"	.066	61	5
+"USA"	"Alabama"	"p_5"	.016	62	5
+"USA"	"Alabama"	"p_6"	.047	63	5
+"USA"	"Alabama"	"p_7"	-.017	64	5
+"USA"	"Alabama"	"p_8"	-.061	65	5
+"USA"	"Alabama"	"p_9"	-.069	66	5
+"USA"	"Alaska"	"p_1"	-.092	58	5
+"USA"	"Alaska"	"p_2"	-.121	59	5
+"USA"	"Alaska"	"p_3"	-.109	60	5
+"USA"	"Alaska"	"p_4"	.067	61	5
+"USA"	"Alaska"	"p_5"	.018	62	5
+"USA"	"Alaska"	"p_6"	.04	63	5
+"USA"	"Alaska"	"p_7"	-.017	64	5
+"USA"	"Alaska"	"p_8"	-.063	65	5
+"USA"	"Alaska"	"p_9"	-.066	66	5
+"USA"	"Arizona"	"p_1"	-.074	58	5
+"USA"	"Arizona"	"p_2"	-.116	59	5
+"USA"	"Arizona"	"p_3"	-.134	60	5
+"USA"	"Arizona"	"p_4"	.056	61	5
+"USA"	"Arizona"	"p_5"	.013	62	5
+"USA"	"Arizona"	"p_6"	.032	63	5
+"USA"	"Arizona"	"p_7"	-.017	64	5
+"USA"	"Arizona"	"p_8"	-.067	65	5
+"USA"	"Arizona"	"p_9"	-.063	66	5
+"USA"	"Arkansas"	"p_1"	-.102	58	5
+"USA"	"Arkansas"	"p_2"	-.121	59	5
+"USA"	"Arkansas"	"p_3"	-.112	60	5
+"USA"	"Arkansas"	"p_4"	.066	61	5
+"USA"	"Arkansas"	"p_5"	.018	62	5
+"USA"	"Arkansas"	"p_6"	.045	63	5
+"USA"	"Arkansas"	"p_7"	-.023	64	5
+"USA"	"Arkansas"	"p_8"	-.054	65	5
+"USA"	"Arkansas"	"p_9"	-.071	66	5
+"USA"	"California"	"p_1"	-.097	58	5
+"USA"	"California"	"p_2"	-.13	59	5
+"USA"	"California"	"p_3"	-.104	60	5
+"USA"	"California"	"p_4"	.065	61	5
+"USA"	"California"	"p_5"	.017	62	5
+"USA"	"California"	"p_6"	.046	63	5
+"USA"	"California"	"p_7"	-.025	64	5
+"USA"	"California"	"p_8"	-.065	65	5
+"USA"	"California"	"p_9"	-.066	66	5
+"USA"	"Colorado"	"p_1"	-.103	58	5
+"USA"	"Colorado"	"p_2"	-.114	59	5
+"USA"	"Colorado"	"p_3"	-.109	60	5
+"USA"	"Colorado"	"p_4"	.082	61	5
+"USA"	"Colorado"	"p_5"	.019	62	5
+"USA"	"Colorado"	"p_6"	.038	63	5
+"USA"	"Colorado"	"p_7"	-.022	64	5
+"USA"	"Colorado"	"p_8"	-.063	65	5
+"USA"	"Colorado"	"p_9"	-.066	66	5
+"USA"	"Connecticut"	"p_1"	-.092	58	5
+"USA"	"Connecticut"	"p_2"	-.112	59	5
+"USA"	"Connecticut"	"p_3"	-.122	60	5
+"USA"	"Connecticut"	"p_4"	.066	61	5
+"USA"	"Connecticut"	"p_5"	.015	62	5
+"USA"	"Connecticut"	"p_6"	.045	63	5
+"USA"	"Connecticut"	"p_7"	-.022	64	5
+"USA"	"Connecticut"	"p_8"	-.067	65	5
+"USA"	"Connecticut"	"p_9"	-.066	66	5
+"USA"	"Delaware"	"p_1"	-.095	58	5
+"USA"	"Delaware"	"p_2"	-.12	59	5
+"USA"	"Delaware"	"p_3"	-.108	60	5
+"USA"	"Delaware"	"p_4"	.069	61	5
+"USA"	"Delaware"	"p_5"	.015	62	5
+"USA"	"Delaware"	"p_6"	.042	63	5
+"USA"	"Delaware"	"p_7"	-.02	64	5
+"USA"	"Delaware"	"p_8"	-.063	65	5
+"USA"	"Delaware"	"p_9"	-.066	66	5
+"USA"	"District of Columb"	"p_1"	-.086	58	5
+"USA"	"District of Columb"	"p_2"	-.12	59	5
+"USA"	"District of Columb"	"p_3"	-.109	60	5
+"USA"	"District of Columb"	"p_4"	.057	61	5
+"USA"	"District of Columb"	"p_5"	.014	62	5
+"USA"	"District of Columb"	"p_6"	.045	63	5
+"USA"	"District of Columb"	"p_7"	-.022	64	5
+"USA"	"District of Columb"	"p_8"	-.064	65	5
+"USA"	"District of Columb"	"p_9"	-.065	66	5
+"USA"	"Florida"	"p_1"	-.082	58	5
+"USA"	"Florida"	"p_2"	-.113	59	5
+"USA"	"Florida"	"p_3"	-.111	60	5
+"USA"	"Florida"	"p_4"	.069	61	5
+"USA"	"Florida"	"p_5"	.011	62	5
+"USA"	"Florida"	"p_6"	.043	63	5
+"USA"	"Florida"	"p_7"	-.016	64	5
+"USA"	"Florida"	"p_8"	-.068	65	5
+"USA"	"Florida"	"p_9"	-.068	66	5
+"USA"	"Georgia"	"p_1"	-.092	58	5
+"USA"	"Georgia"	"p_2"	-.119	59	5
+"USA"	"Georgia"	"p_3"	-.109	60	5
+"USA"	"Georgia"	"p_4"	.069	61	5
+"USA"	"Georgia"	"p_5"	.013	62	5
+"USA"	"Georgia"	"p_6"	.042	63	5
+"USA"	"Georgia"	"p_7"	-.022	64	5
+"USA"	"Georgia"	"p_8"	-.063	65	5
+"USA"	"Georgia"	"p_9"	-.066	66	5
+"USA"	"Hawaii"	"p_1"	-.094	58	5
+"USA"	"Hawaii"	"p_2"	-.115	59	5
+"USA"	"Hawaii"	"p_3"	-.11	60	5
+"USA"	"Hawaii"	"p_4"	.066	61	5
+"USA"	"Hawaii"	"p_5"	.017	62	5
+"USA"	"Hawaii"	"p_6"	.045	63	5
+"USA"	"Hawaii"	"p_7"	-.019	64	5
+"USA"	"Hawaii"	"p_8"	-.067	65	5
+"USA"	"Hawaii"	"p_9"	-.065	66	5
+"USA"	"Idaho"	"p_1"	-.094	58	5
+"USA"	"Idaho"	"p_2"	-.12	59	5
+"USA"	"Idaho"	"p_3"	-.107	60	5
+"USA"	"Idaho"	"p_4"	.066	61	5
+"USA"	"Idaho"	"p_5"	.016	62	5
+"USA"	"Idaho"	"p_6"	.047	63	5
+"USA"	"Idaho"	"p_7"	-.029	64	5
+"USA"	"Idaho"	"p_8"	-.066	65	5
+"USA"	"Idaho"	"p_9"	-.066	66	5
+"USA"	"Illinois"	"p_1"	-.095	58	5
+"USA"	"Illinois"	"p_2"	-.115	59	5
+"USA"	"Illinois"	"p_3"	-.109	60	5
+"USA"	"Illinois"	"p_4"	.069	61	5
+"USA"	"Illinois"	"p_5"	.014	62	5
+"USA"	"Illinois"	"p_6"	.038	63	5
+"USA"	"Illinois"	"p_7"	-.016	64	5
+"USA"	"Illinois"	"p_8"	-.063	65	5
+"USA"	"Illinois"	"p_9"	-.067	66	5
+"USA"	"Indiana"	"p_1"	-.08	58	5
+"USA"	"Indiana"	"p_2"	-.114	59	5
+"USA"	"Indiana"	"p_3"	-.106	60	5
+"USA"	"Indiana"	"p_4"	.051	61	5
+"USA"	"Indiana"	"p_5"	.008	62	5
+"USA"	"Indiana"	"p_6"	.04	63	5
+"USA"	"Indiana"	"p_7"	-.026	64	5
+"USA"	"Indiana"	"p_8"	-.065	65	5
+"USA"	"Indiana"	"p_9"	-.067	66	5
+"USA"	"Iowa"	"p_1"	-.092	58	5
+"USA"	"Iowa"	"p_2"	-.13	59	5
+"USA"	"Iowa"	"p_3"	-.104	60	5
+"USA"	"Iowa"	"p_4"	.065	61	5
+"USA"	"Iowa"	"p_5"	.019	62	5
+"USA"	"Iowa"	"p_6"	.039	63	5
+"USA"	"Iowa"	"p_7"	-.016	64	5
+"USA"	"Iowa"	"p_8"	-.067	65	5
+"USA"	"Iowa"	"p_9"	-.063	66	5
+"USA"	"Kansas"	"p_1"	-.094	58	5
+"USA"	"Kansas"	"p_2"	-.118	59	5
+"USA"	"Kansas"	"p_3"	-.107	60	5
+"USA"	"Kansas"	"p_4"	.068	61	5
+"USA"	"Kansas"	"p_5"	.014	62	5
+"USA"	"Kansas"	"p_6"	.043	63	5
+"USA"	"Kansas"	"p_7"	-.021	64	5
+"USA"	"Kansas"	"p_8"	-.066	65	5
+"USA"	"Kansas"	"p_9"	-.064	66	5
+"USA"	"Kentucky"	"p_1"	-.095	58	5
+"USA"	"Kentucky"	"p_2"	-.122	59	5
+"USA"	"Kentucky"	"p_3"	-.107	60	5
+"USA"	"Kentucky"	"p_4"	.07	61	5
+"USA"	"Kentucky"	"p_5"	.016	62	5
+"USA"	"Kentucky"	"p_6"	.042	63	5
+"USA"	"Kentucky"	"p_7"	-.018	64	5
+"USA"	"Kentucky"	"p_8"	-.066	65	5
+"USA"	"Kentucky"	"p_9"	-.065	66	5
+"USA"	"Louisiana"	"p_1"	-.102	58	5
+"USA"	"Louisiana"	"p_2"	-.111	59	5
+"USA"	"Louisiana"	"p_3"	-.111	60	5
+"USA"	"Louisiana"	"p_4"	.071	61	5
+"USA"	"Louisiana"	"p_5"	.01	62	5
+"USA"	"Louisiana"	"p_6"	.049	63	5
+"USA"	"Louisiana"	"p_7"	-.027	64	5
+"USA"	"Louisiana"	"p_8"	-.061	65	5
+"USA"	"Louisiana"	"p_9"	-.065	66	5
+"USA"	"Maine"	"p_1"	-.092	58	5
+"USA"	"Maine"	"p_2"	-.119	59	5
+"USA"	"Maine"	"p_3"	-.11	60	5
+"USA"	"Maine"	"p_4"	.067	61	5
+"USA"	"Maine"	"p_5"	.012	62	5
+"USA"	"Maine"	"p_6"	.039	63	5
+"USA"	"Maine"	"p_7"	-.019	64	5
+"USA"	"Maine"	"p_8"	-.057	65	5
+"USA"	"Maine"	"p_9"	-.069	66	5
+"USA"	"Maryland"	"p_1"	-.085	58	5
+"USA"	"Maryland"	"p_2"	-.121	59	5
+"USA"	"Maryland"	"p_3"	-.109	60	5
+"USA"	"Maryland"	"p_4"	.06	61	5
+"USA"	"Maryland"	"p_5"	.014	62	5
+"USA"	"Maryland"	"p_6"	.042	63	5
+"USA"	"Maryland"	"p_7"	-.02	64	5
+"USA"	"Maryland"	"p_8"	-.064	65	5
+"USA"	"Maryland"	"p_9"	-.066	66	5
+"USA"	"Massachusetts"	"p_1"	-.083	58	5
+"USA"	"Massachusetts"	"p_2"	-.106	59	5
+"USA"	"Massachusetts"	"p_3"	-.111	60	5
+"USA"	"Massachusetts"	"p_4"	.072	61	5
+"USA"	"Massachusetts"	"p_5"	.013	62	5
+"USA"	"Massachusetts"	"p_6"	.039	63	5
+"USA"	"Massachusetts"	"p_7"	-.011	64	5
+"USA"	"Massachusetts"	"p_8"	-.068	65	5
+"USA"	"Massachusetts"	"p_9"	-.071	66	5
+"USA"	"Michigan"	"p_1"	-.101	58	5
+"USA"	"Michigan"	"p_2"	-.115	59	5
+"USA"	"Michigan"	"p_3"	-.11	60	5
+"USA"	"Michigan"	"p_4"	.074	61	5
+"USA"	"Michigan"	"p_5"	.011	62	5
+"USA"	"Michigan"	"p_6"	.041	63	5
+"USA"	"Michigan"	"p_7"	-.017	64	5
+"USA"	"Michigan"	"p_8"	-.059	65	5
+"USA"	"Michigan"	"p_9"	-.066	66	5
+"USA"	"Minnesota"	"p_1"	-.104	58	5
+"USA"	"Minnesota"	"p_2"	-.107	59	5
+"USA"	"Minnesota"	"p_3"	-.11	60	5
+"USA"	"Minnesota"	"p_4"	.072	61	5
+"USA"	"Minnesota"	"p_5"	.012	62	5
+"USA"	"Minnesota"	"p_6"	.049	63	5
+"USA"	"Minnesota"	"p_7"	-.023	64	5
+"USA"	"Minnesota"	"p_8"	-.068	65	5
+"USA"	"Minnesota"	"p_9"	-.064	66	5
+"USA"	"Mississippi"	"p_1"	-.088	58	5
+"USA"	"Mississippi"	"p_2"	-.12	59	5
+"USA"	"Mississippi"	"p_3"	-.096	60	5
+"USA"	"Mississippi"	"p_4"	.067	61	5
+"USA"	"Mississippi"	"p_5"	.01	62	5
+"USA"	"Mississippi"	"p_6"	.039	63	5
+"USA"	"Mississippi"	"p_7"	-.019	64	5
+"USA"	"Mississippi"	"p_8"	-.063	65	5
+"USA"	"Mississippi"	"p_9"	-.068	66	5
+"USA"	"Missouri"	"p_1"	-.097	58	5
+"USA"	"Missouri"	"p_2"	-.125	59	5
+"USA"	"Missouri"	"p_3"	-.109	60	5
+"USA"	"Missouri"	"p_4"	.063	61	5
+"USA"	"Missouri"	"p_5"	.013	62	5
+"USA"	"Missouri"	"p_6"	.051	63	5
+"USA"	"Missouri"	"p_7"	-.023	64	5
+"USA"	"Missouri"	"p_8"	-.062	65	5
+"USA"	"Missouri"	"p_9"	-.065	66	5
+"USA"	"Montana"	"p_1"	-.093	58	5
+"USA"	"Montana"	"p_2"	-.117	59	5
+"USA"	"Montana"	"p_3"	-.108	60	5
+"USA"	"Montana"	"p_4"	.068	61	5
+"USA"	"Montana"	"p_5"	.015	62	5
+"USA"	"Montana"	"p_6"	.042	63	5
+"USA"	"Montana"	"p_7"	-.013	64	5
+"USA"	"Montana"	"p_8"	-.067	65	5
+"USA"	"Montana"	"p_9"	-.068	66	5
+"USA"	"Nebraska"	"p_1"	-.092	58	5
+"USA"	"Nebraska"	"p_2"	-.136	59	5
+"USA"	"Nebraska"	"p_3"	-.112	60	5
+"USA"	"Nebraska"	"p_4"	.068	61	5
+"USA"	"Nebraska"	"p_5"	.017	62	5
+"USA"	"Nebraska"	"p_6"	.042	63	5
+"USA"	"Nebraska"	"p_7"	-.018	64	5
+"USA"	"Nebraska"	"p_8"	-.062	65	5
+"USA"	"Nebraska"	"p_9"	-.065	66	5
+"USA"	"Nevada"	"p_1"	-.099	58	5
+"USA"	"Nevada"	"p_2"	-.116	59	5
+"USA"	"Nevada"	"p_3"	-.107	60	5
+"USA"	"Nevada"	"p_4"	.077	61	5
+"USA"	"Nevada"	"p_5"	.014	62	5
+"USA"	"Nevada"	"p_6"	.038	63	5
+"USA"	"Nevada"	"p_7"	-.021	64	5
+"USA"	"Nevada"	"p_8"	-.063	65	5
+"USA"	"Nevada"	"p_9"	-.064	66	5
+"USA"	"New Hampshire"	"p_1"	-.091	58	5
+"USA"	"New Hampshire"	"p_2"	-.115	59	5
+"USA"	"New Hampshire"	"p_3"	-.11	60	5
+"USA"	"New Hampshire"	"p_4"	.066	61	5
+"USA"	"New Hampshire"	"p_5"	.013	62	5
+"USA"	"New Hampshire"	"p_6"	.041	63	5
+"USA"	"New Hampshire"	"p_7"	-.021	64	5
+"USA"	"New Hampshire"	"p_8"	-.062	65	5
+"USA"	"New Hampshire"	"p_9"	-.068	66	5
+"USA"	"New Jersey"	"p_1"	-.109	58	5
+"USA"	"New Jersey"	"p_2"	-.11	59	5
+"USA"	"New Jersey"	"p_3"	-.109	60	5
+"USA"	"New Jersey"	"p_4"	.071	61	5
+"USA"	"New Jersey"	"p_5"	.018	62	5
+"USA"	"New Jersey"	"p_6"	.045	63	5
+"USA"	"New Jersey"	"p_7"	-.021	64	5
+"USA"	"New Jersey"	"p_8"	-.065	65	5
+"USA"	"New Jersey"	"p_9"	-.065	66	5
+"USA"	"New Mexico"	"p_1"	-.095	58	5
+"USA"	"New Mexico"	"p_2"	-.119	59	5
+"USA"	"New Mexico"	"p_3"	-.107	60	5
+"USA"	"New Mexico"	"p_4"	.07	61	5
+"USA"	"New Mexico"	"p_5"	.011	62	5
+"USA"	"New Mexico"	"p_6"	.041	63	5
+"USA"	"New Mexico"	"p_7"	-.02	64	5
+"USA"	"New Mexico"	"p_8"	-.061	65	5
+"USA"	"New Mexico"	"p_9"	-.068	66	5
+"USA"	"New York"	"p_1"	-.102	58	5
+"USA"	"New York"	"p_2"	-.107	59	5
+"USA"	"New York"	"p_3"	-.086	60	5
+"USA"	"New York"	"p_4"	.077	61	5
+"USA"	"New York"	"p_5"	.02	62	5
+"USA"	"New York"	"p_6"	.038	63	5
+"USA"	"New York"	"p_7"	-.018	64	5
+"USA"	"New York"	"p_8"	-.067	65	5
+"USA"	"New York"	"p_9"	-.065	66	5
+"USA"	"North Carolina"	"p_1"	-.09	58	5
+"USA"	"North Carolina"	"p_2"	-.118	59	5
+"USA"	"North Carolina"	"p_3"	-.109	60	5
+"USA"	"North Carolina"	"p_4"	.063	61	5
+"USA"	"North Carolina"	"p_5"	.015	62	5
+"USA"	"North Carolina"	"p_6"	.044	63	5
+"USA"	"North Carolina"	"p_7"	-.019	64	5
+"USA"	"North Carolina"	"p_8"	-.065	65	5
+"USA"	"North Carolina"	"p_9"	-.067	66	5
+"USA"	"North Dakota"	"p_1"	-.092	58	5
+"USA"	"North Dakota"	"p_2"	-.125	59	5
+"USA"	"North Dakota"	"p_3"	-.114	60	5
+"USA"	"North Dakota"	"p_4"	.067	61	5
+"USA"	"North Dakota"	"p_5"	.015	62	5
+"USA"	"North Dakota"	"p_6"	.044	63	5
+"USA"	"North Dakota"	"p_7"	-.019	64	5
+"USA"	"North Dakota"	"p_8"	-.064	65	5
+"USA"	"North Dakota"	"p_9"	-.066	66	5
+"USA"	"Ohio"	"p_1"	-.09	58	5
+"USA"	"Ohio"	"p_2"	-.117	59	5
+"USA"	"Ohio"	"p_3"	-.111	60	5
+"USA"	"Ohio"	"p_4"	.063	61	5
+"USA"	"Ohio"	"p_5"	.019	62	5
+"USA"	"Ohio"	"p_6"	.046	63	5
+"USA"	"Ohio"	"p_7"	-.018	64	5
+"USA"	"Ohio"	"p_8"	-.068	65	5
+"USA"	"Ohio"	"p_9"	-.065	66	5
+"USA"	"Oklahoma"	"p_1"	-.098	58	5
+"USA"	"Oklahoma"	"p_2"	-.126	59	5
+"USA"	"Oklahoma"	"p_3"	-.107	60	5
+"USA"	"Oklahoma"	"p_4"	.069	61	5
+"USA"	"Oklahoma"	"p_5"	.013	62	5
+"USA"	"Oklahoma"	"p_6"	.044	63	5
+"USA"	"Oklahoma"	"p_7"	-.018	64	5
+"USA"	"Oklahoma"	"p_8"	-.062	65	5
+"USA"	"Oklahoma"	"p_9"	-.066	66	5
+"USA"	"Oregon"	"p_1"	-.102	58	5
+"USA"	"Oregon"	"p_2"	-.118	59	5
+"USA"	"Oregon"	"p_3"	-.102	60	5
+"USA"	"Oregon"	"p_4"	.067	61	5
+"USA"	"Oregon"	"p_5"	.004	62	5
+"USA"	"Oregon"	"p_6"	.046	63	5
+"USA"	"Oregon"	"p_7"	-.027	64	5
+"USA"	"Oregon"	"p_8"	-.063	65	5
+"USA"	"Oregon"	"p_9"	-.066	66	5
+"USA"	"Pennsylvania"	"p_1"	-.099	58	5
+"USA"	"Pennsylvania"	"p_2"	-.119	59	5
+"USA"	"Pennsylvania"	"p_3"	-.105	60	5
+"USA"	"Pennsylvania"	"p_4"	.071	61	5
+"USA"	"Pennsylvania"	"p_5"	.015	62	5
+"USA"	"Pennsylvania"	"p_6"	.041	63	5
+"USA"	"Pennsylvania"	"p_7"	-.023	64	5
+"USA"	"Pennsylvania"	"p_8"	-.067	65	5
+"USA"	"Pennsylvania"	"p_9"	-.062	66	5
+"USA"	"Rhode Island"	"p_1"	-.1	58	5
+"USA"	"Rhode Island"	"p_2"	-.116	59	5
+"USA"	"Rhode Island"	"p_3"	-.106	60	5
+"USA"	"Rhode Island"	"p_4"	.076	61	5
+"USA"	"Rhode Island"	"p_5"	.019	62	5
+"USA"	"Rhode Island"	"p_6"	.038	63	5
+"USA"	"Rhode Island"	"p_7"	-.026	64	5
+"USA"	"Rhode Island"	"p_8"	-.062	65	5
+"USA"	"Rhode Island"	"p_9"	-.07	66	5
+"USA"	"South Carolina"	"p_1"	-.094	58	5
+"USA"	"South Carolina"	"p_2"	-.116	59	5
+"USA"	"South Carolina"	"p_3"	-.11	60	5
+"USA"	"South Carolina"	"p_4"	.059	61	5
+"USA"	"South Carolina"	"p_5"	.012	62	5
+"USA"	"South Carolina"	"p_6"	.043	63	5
+"USA"	"South Carolina"	"p_7"	-.021	64	5
+"USA"	"South Carolina"	"p_8"	-.059	65	5
+"USA"	"South Carolina"	"p_9"	-.068	66	5
+"USA"	"South Dakota"	"p_1"	-.09	58	5
+"USA"	"South Dakota"	"p_2"	-.139	59	5
+"USA"	"South Dakota"	"p_3"	-.105	60	5
+"USA"	"South Dakota"	"p_4"	.067	61	5
+"USA"	"South Dakota"	"p_5"	.009	62	5
+"USA"	"South Dakota"	"p_6"	.044	63	5
+"USA"	"South Dakota"	"p_7"	-.027	64	5
+"USA"	"South Dakota"	"p_8"	-.057	65	5
+"USA"	"South Dakota"	"p_9"	-.063	66	5
+"USA"	"Tennessee"	"p_1"	-.088	58	5
+"USA"	"Tennessee"	"p_2"	-.116	59	5
+"USA"	"Tennessee"	"p_3"	-.111	60	5
+"USA"	"Tennessee"	"p_4"	.06	61	5
+"USA"	"Tennessee"	"p_5"	.021	62	5
+"USA"	"Tennessee"	"p_6"	.043	63	5
+"USA"	"Tennessee"	"p_7"	-.021	64	5
+"USA"	"Tennessee"	"p_8"	-.064	65	5
+"USA"	"Tennessee"	"p_9"	-.068	66	5
+"USA"	"Texas"	"p_1"	-.098	58	5
+"USA"	"Texas"	"p_2"	-.121	59	5
+"USA"	"Texas"	"p_3"	-.107	60	5
+"USA"	"Texas"	"p_4"	.07	61	5
+"USA"	"Texas"	"p_5"	.015	62	5
+"USA"	"Texas"	"p_6"	.042	63	5
+"USA"	"Texas"	"p_7"	-.009	64	5
+"USA"	"Texas"	"p_8"	-.067	65	5
+"USA"	"Texas"	"p_9"	-.065	66	5
+"USA"	"Utah"	"p_1"	-.096	58	5
+"USA"	"Utah"	"p_2"	-.12	59	5
+"USA"	"Utah"	"p_3"	-.11	60	5
+"USA"	"Utah"	"p_4"	.069	61	5
+"USA"	"Utah"	"p_5"	.014	62	5
+"USA"	"Utah"	"p_6"	.038	63	5
+"USA"	"Utah"	"p_7"	-.018	64	5
+"USA"	"Utah"	"p_8"	-.055	65	5
+"USA"	"Utah"	"p_9"	-.069	66	5
+"USA"	"Vermont"	"p_1"	-.096	58	5
+"USA"	"Vermont"	"p_2"	-.123	59	5
+"USA"	"Vermont"	"p_3"	-.107	60	5
+"USA"	"Vermont"	"p_4"	.069	61	5
+"USA"	"Vermont"	"p_5"	.014	62	5
+"USA"	"Vermont"	"p_6"	.042	63	5
+"USA"	"Vermont"	"p_7"	-.016	64	5
+"USA"	"Vermont"	"p_8"	-.065	65	5
+"USA"	"Vermont"	"p_9"	-.063	66	5
+"USA"	"Virginia"	"p_1"	-.101	58	5
+"USA"	"Virginia"	"p_2"	-.139	59	5
+"USA"	"Virginia"	"p_3"	-.103	60	5
+"USA"	"Virginia"	"p_4"	.075	61	5
+"USA"	"Virginia"	"p_5"	.019	62	5
+"USA"	"Virginia"	"p_6"	.038	63	5
+"USA"	"Virginia"	"p_7"	-.02	64	5
+"USA"	"Virginia"	"p_8"	-.058	65	5
+"USA"	"Virginia"	"p_9"	-.066	66	5
+"USA"	"Washington"	"p_1"	-.071	58	5
+"USA"	"Washington"	"p_2"	-.135	59	5
+"USA"	"Washington"	"p_3"	-.106	60	5
+"USA"	"Washington"	"p_4"	.073	61	5
+"USA"	"Washington"	"p_5"	.008	62	5
+"USA"	"Washington"	"p_6"	.043	63	5
+"USA"	"Washington"	"p_7"	-.028	64	5
+"USA"	"Washington"	"p_8"	-.059	65	5
+"USA"	"Washington"	"p_9"	-.066	66	5
+"USA"	"West Virginia"	"p_1"	-.092	58	5
+"USA"	"West Virginia"	"p_2"	-.112	59	5
+"USA"	"West Virginia"	"p_3"	-.11	60	5
+"USA"	"West Virginia"	"p_4"	.067	61	5
+"USA"	"West Virginia"	"p_5"	.015	62	5
+"USA"	"West Virginia"	"p_6"	.041	63	5
+"USA"	"West Virginia"	"p_7"	-.016	64	5
+"USA"	"West Virginia"	"p_8"	-.065	65	5
+"USA"	"West Virginia"	"p_9"	-.068	66	5
+"USA"	"Wisconsin"	"p_1"	-.094	58	5
+"USA"	"Wisconsin"	"p_2"	-.115	59	5
+"USA"	"Wisconsin"	"p_3"	-.11	60	5
+"USA"	"Wisconsin"	"p_4"	.065	61	5
+"USA"	"Wisconsin"	"p_5"	.013	62	5
+"USA"	"Wisconsin"	"p_6"	.047	63	5
+"USA"	"Wisconsin"	"p_7"	-.021	64	5
+"USA"	"Wisconsin"	"p_8"	-.065	65	5
+"USA"	"Wisconsin"	"p_9"	-.066	66	5
+"USA"	"Wyoming"	"p_1"	-.096	58	5
+"USA"	"Wyoming"	"p_2"	-.114	59	5
+"USA"	"Wyoming"	"p_3"	-.108	60	5
+"USA"	"Wyoming"	"p_4"	.069	61	5
+"USA"	"Wyoming"	"p_5"	.015	62	5
+"USA"	"Wyoming"	"p_6"	.044	63	5
+"USA"	"Wyoming"	"p_7"	-.025	64	5
+"USA"	"Wyoming"	"p_8"	-.066	65	5
+"USA"	"Wyoming"	"p_9"	-.066	66	5

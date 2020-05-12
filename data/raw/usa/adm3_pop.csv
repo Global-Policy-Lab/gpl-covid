@@ -6,18 +6,18 @@ New York City,New York,New York,USA,8560072.0,36,51000
 San Francisco,San Francisco,California,USA,864263.0,06,67000
 Seattle,King,Washington,USA,688245.0,53,63000
 Toledo,Lucas,Ohio,USA,279455.0,39,77000
-Durham city,Durham,North Carolina,USA,257232.0,37,19000
-Atlanta city,Fulton,Georgia,USA,465230.0,13,04000
-Brookhaven city,DeKalb,Georgia,USA,52382.0,13,10944
-Claremore city,Rogers,Oklahoma,USA,18777.0,40,14700
-Des Moines city,Polk,Iowa,USA,214778.0,19,21000
-Edmond city,Oklahoma,Oklahoma,USA,89769.0,40,23200
-Indian Wells city,Riverside,California,USA,5267.0,06,36434
-Jackson town,Teton,Wyoming,USA,10413.0,56,40120
-Kirksville city,Adair,Missouri,USA,17519.0,29,39026
-Moore city,Cleveland,Oklahoma,USA,59992.0,40,49200
-Norman city,Cleveland,Oklahoma,USA,119820.0,40,52500
-Oklahoma City city,Oklahoma,Oklahoma,USA,629191.0,40,55000
-Sallisaw city,Sequoyah,Oklahoma,USA,8574.0,40,65000
-Stillwater city,Payne,Oklahoma,USA,48685.0,40,70300
-Tulsa city,Tulsa,Oklahoma,USA,401352.0,40,75000
+Durham,Durham,North Carolina,USA,257232.0,37,19000
+Atlanta,Fulton,Georgia,USA,465230.0,13,04000
+Brookhaven,DeKalb,Georgia,USA,52382.0,13,10944
+Claremore,Rogers,Oklahoma,USA,18777.0,40,14700
+Des Moines,Polk,Iowa,USA,214778.0,19,21000
+Edmond,Oklahoma,Oklahoma,USA,89769.0,40,23200
+Indian Wells,Riverside,California,USA,5267.0,06,36434
+Jackson,Teton,Wyoming,USA,10413.0,56,40120
+Kirksville,Adair,Missouri,USA,17519.0,29,39026
+Moore,Cleveland,Oklahoma,USA,59992.0,40,49200
+Norman,Cleveland,Oklahoma,USA,119820.0,40,52500
+Oklahoma City,Oklahoma,Oklahoma,USA,629191.0,40,55000
+Sallisaw,Sequoyah,Oklahoma,USA,8574.0,40,65000
+Stillwater,Payne,Oklahoma,USA,48685.0,40,70300
+Tulsa,Tulsa,Oklahoma,USA,401352.0,40,75000

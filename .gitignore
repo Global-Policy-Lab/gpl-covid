@@ -141,9 +141,8 @@ Icon[^M]
 gpl-covid.Rproj
 
 # other
-notebooks/iwb-sandbox.ipynb
 .vscode
-api_keys.json
+code/api_keys.json
 
 # Results
 results/*
@@ -151,7 +150,8 @@ results/*
 !results/source_data/
 results/source_data/indiv
 
-**/archive/
-
 # isort
 default.profraw
+
+# papermill
+*-log.ipynb
