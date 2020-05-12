@@ -1,7 +1,7 @@
 // Author: Sébastien AP
-// Purpose: clean, reshape, and merge the policy data 
+// Purpose: clean, reshape, and merge the policy data
 
-import delim "data/raw/france/FRA_policy_data_sources.csv", clear 
+import delim "data/interim/france/FRA_policy_data_sources.csv", clear 
 replace policy = policy + "_opt" if optional == "Y"
 keep *_name policy no_gathering_size date_start policy_intensity
 g Date = date(date_start,"MDY",2000)
@@ -24,7 +24,7 @@ preserve
 	foreach var in "no_gathering" "school_closure" "social_distance"{
 		rename `var' `var'_national
 	}
-	
+
 	g no_gathering_size = no_gathering_national
 	replace no_gathering_national = 1 if no_gathering_national != .
 	
@@ -51,7 +51,7 @@ drop school_closure_regional
 
 
 replace policy = subinstr(policy, "school_closure_", "school_closure-",1)
-split policy, p("-") 
+split policy, p("-")
 drop policy
 
 rename (policy1 policy2) (policy running_var)
@@ -127,7 +127,7 @@ replace adm1_pop = 327283 if adm1 == 94
 
 
 
-order adm1 adm1_name date cum_c* 
+order adm1 adm1_name date cum_c*
 sort adm1 date
 xtset adm1 date
 
@@ -148,7 +148,7 @@ by adm1: replace no_gathering_size = sum(no_gathering_size)
 replace no_gathering_size = 1000 if no_gathering_size == 6000 // decrease cutoff instead of adding the intensity
 replace no_gathering_size = 100 if no_gathering_size == 6100 // decrease cutoff instead of adding the intensity
 
-// ----------------------- merge national and regional measure, adjust for intensity 
+// ----------------------- merge national and regional measure, adjust for intensity
 egen school_closure_local = rowmax(school_closure school_closure_regional school_closure_national) // same policy, aggregate taking max
 egen school_closure_local_popw = rowmax(school_closure_popw school_closure_regional school_closure_national) // same policy, aggregate taking max
 drop school_closure school_closure_regional school_closure_national school_closure_popw
@@ -166,7 +166,7 @@ drop if adm1 < 10
 
 *save
 format date %tdCCYY-NN-DD
-rename (adm1_pop adm1) (population adm1_id)	
+rename (adm1_pop adm1) (population adm1_id)
 rename *_popw *_popwt
 rename hospitalization cum_hospitalized
 g adm0_name = "FRA"
