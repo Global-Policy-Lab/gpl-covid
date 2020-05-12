@@ -488,6 +488,7 @@ def cached_state_group(policies, adm1, policy_group, empty_df, adm_level, adm2, 
 
 
 def get_policies_to_date_cache(policies, policy_panel, adm_level):
+    policies = policies.sort_values("date_start", ascending=True)
     dates = policy_panel["date"].astype(str).unique()
     if adm_level == 2:
         adm2_to_adm1 = policy_panel.set_index("adm2_name")["adm1_name"].to_dict()
