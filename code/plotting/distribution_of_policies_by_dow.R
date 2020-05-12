@@ -287,8 +287,11 @@ ggplot(aes(dow_factor, n, fill = Policy)) +
 
 # total policy count by dow and country
 tot_policy_ct <- combined %>% 
-  group_by(country, dow) %>% 
-  summarise(n = sum(n, na.rm = TRUE))
+  group_by(country, dow, dow_factor) %>% 
+  summarise(n = sum(n, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  group_by(country) %>% 
+  mutate(pct = n / sum(n))
 
 # conduct chi-sq test to see if each dow is equally common
 # http://www.sthda.com/english/wiki/chi-square-goodness-of-fit-test-in-r
@@ -312,8 +315,8 @@ chisq_results <- map(unique(tot_policy_ct$country), function(c){
 binned_ct <- combined %>% 
   mutate(dow_bin = case_when(
     dow %in% c(6,0) ~ "Sat + Sun",
-    dow %in% c(1,2) ~ "Mon + Fri",
-    dow %in% c(3,4,5) ~ "Tue + Wed + Thu"
+    dow %in% c(1,5) ~ "Mon + Fri",
+    dow %in% c(2,3,4) ~ "Tue + Wed + Thu"
   )) %>% 
   group_by(dow_bin) %>% 
   summarise(n = sum(n, na.rm = TRUE)) %>% 
@@ -323,8 +326,8 @@ binned_ct <- combined %>%
 binned_ct_by_country <- combined %>% 
   mutate(dow_bin = case_when(
     dow %in% c(6,0) ~ "Sat + Sun",
-    dow %in% c(1,2) ~ "Mon + Fri",
-    dow %in% c(3,4,5) ~ "Tue + Wed + Thu"
+    dow %in% c(1,5) ~ "Mon + Fri",
+    dow %in% c(2,3,4) ~ "Tue + Wed + Thu"
   )) %>% 
   group_by(country, dow_bin) %>% 
   summarise(n = sum(n, na.rm = TRUE)) %>% 
