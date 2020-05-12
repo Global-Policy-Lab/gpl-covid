@@ -290,7 +290,7 @@ tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
-title("United States", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
+title("United States", ring(0) position(11)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/USA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
