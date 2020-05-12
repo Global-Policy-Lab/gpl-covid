@@ -2,7 +2,7 @@
 ##  Figure 1: Data Display  ##
 ##############################
 
-# Updated 5/9/2020
+# Updated 5/12/2020
 # by hdruckenmiller
 
 rm(list=ls())
@@ -76,7 +76,9 @@ notify(country)
 
 start <- start_dates[c]
 end <- cut_dates[cut_dates$tag=="default",]$end_date
-if (country=="China"){end <- cut_dates[cut_dates$tag=="default",]$end_date}
+if (country=="CHN"){end <- cut_dates[cut_dates$tag=="CHN_analysis",]$end_date}
+if (country=="FRA"){end <- cut_dates[cut_dates$tag=="FRA_analysis",]$end_date}
+if (country=="IRA"){end <- cut_dates[cut_dates$tag=="IRN_analysis",]$end_date}
 
 # Load epi and policy data 
 if (country == "CHN"){
@@ -223,65 +225,71 @@ if (c==6){
 }
 
 ## Make timeseries panel 
-pdf(paste0(output_dir, country, "_timeseries.pdf"), width = 8, height = 5)
+pdf(paste0(output_dir, country, "_timeseries.pdf"), width = 6, height = 3.5)
 par(mar=c(4, 8, 4, 8) + 0.1)
-cases_max <- max(national$cases, na.rm = TRUE) + round(max(national$cases, na.rm=TRUE)/25)
+cases_max <- max(national$cases/1000, na.rm = TRUE) + round(max(national$cases/1000, na.rm=TRUE)/10)
 
+# find out max number of adm regions among all policies
 policies_max <- max(policies$diff.1, 
                     policies$diff.2, 
                     policies$diff.3, 
                     policies$diff.4, 
-                    policies$diff.5, na.rm = T) + 3 # find out max number of adm regions among all policies
+                    policies$diff.5, na.rm = T) + 
+  max(policies$diff.1, 
+      policies$diff.2, 
+      policies$diff.3, 
+      policies$diff.4, 
+      policies$diff.5, na.rm = T)/5
+  
 
 ## Plot epidemiological timeseries on left axis 
-plot(national$date, national$cases, type="l", ylim=c(0,cases_max), 
-     axes=FALSE, xlab="", ylab="", lwd=2, main=country) #cases
-points(national$date, national$cases, pch=19)
-axis(2, ylim=c(0,cases_max),las=1)  ## las=1 makes horizontal labels
-mtext("Cumulative cases (solid) and deaths (dashed)",side=2,line=4)
-lines(national$date, national$deaths,  lty=2, lwd=2) #deaths
+plot(national$date, national$cases/1000, type="l", ylim=c(0,cases_max), 
+     axes=FALSE, xlab="", ylab="", lwd=1, main=country) #cases
+points(national$date, national$cases/1000, pch=19, cex=0.5)
+axis(2, ylim=c(0,cases_max),las=1, lwd=0.5)  ## las=1 makes horizontal labels
+mtext("Cases and deaths (1,000)",side=2,line=4)
+if(country != "IRN"){lines(national$date, national$deaths/1000,  lty=2, lwd=1)} #deaths
 
 ## Plot policies on right axis (height = # admin units enacting policy that day)
 par(new=TRUE)
 
-plot(national$date, national$cases, col = "white", xlab="", ylab="", #hidden plot
+plot(national$date, national$cases/1000, col = NA, xlab="", ylab="", #hidden plot
      ylim=c(0, policies_max), axes=FALSE,  lty=2, lwd=0.1)
 
 if (country=="CHN"){
   segments(as.Date(policies$date)-0.2, 0, 
            as.Date(policies$date)-0.2, policies$diff.1, 
-           col=legendlist[c,2], lwd=1.5)
+           col=legendlist[c,2], lwd=0.75)
   segments(as.Date(policies$date)-0.1, 0, 
            as.Date(policies$date)-0.1, policies$diff.2, 
-           col=legendlist[c,3], lwd=1.5)
+           col=legendlist[c,3], lwd=0.75)
   segments(as.Date(policies$date), 0, 
            as.Date(policies$date), policies$diff.3, 
-           col=legendlist[c,4], lwd=1.5)
+           col=legendlist[c,4], lwd=0.75)
 } else {
 segments(as.Date(policies$date)-0.2, 0, 
          as.Date(policies$date)-0.2, policies$diff.1, 
-         col=legendlist[c,2], lwd=1.5)
+         col=legendlist[c,2], lwd=0.75)
 segments(as.Date(policies$date)-0.1, 0, 
          as.Date(policies$date)-0.1, policies$diff.2, 
-         col=legendlist[c,3], lwd=1.5)
+         col=legendlist[c,3], lwd=0.75)
 segments(as.Date(policies$date), 0, 
          as.Date(policies$date), policies$diff.3, 
-         col=legendlist[c,4], lwd=1.5)
+         col=legendlist[c,4], lwd=0.75)
 segments(as.Date(policies$date)+0.1, 0, 
          as.Date(policies$date)+0.1, policies$diff.4, 
-         col=legendlist[c,5], lwd=1.5)
+         col=legendlist[c,5], lwd=0.75)
 segments(as.Date(policies$date)+0.2, 0, 
          as.Date(policies$date)+0.2, policies$diff.5, 
-         col=legendlist[c,6], lwd=1.5)
+         col=legendlist[c,6], lwd=0.75)
 }
 
-mtext("Containment policies (# of admin districts)",side=4,col="black",line=4) 
-axis(4, ylim=c(0, policies_max), col="black",col.axis="black",las=1)
+mtext("Policies (# admin units)",side=4,col="black",line=4) 
+axis(4, ylim=c(0, policies_max), col="black",col.axis="black",las=1, lwd=0.5)
 
 ## Draw the time axis
 axis.Date(1, national$date, 
-          at=seq(min(national$date), max(national$date), "days"))
-mtext("Date",side=1,col="black",line=2.5)  
+          at=seq(min(national$date), max(national$date), "days"), lwd=0.5)
 dev.off()
 
 ### Cases Map ###
@@ -369,8 +377,8 @@ adm <- subset(adm, date <= cut_dates[cut_dates$tag=="default",]$end_date)
 adm <- adm[adm$date==max(adm$date),]
 map_date <- unique(adm$date)
 
-pdf(paste0(output_dir, country, "_map.pdf"), width = 5, height = 5)
-plot(map)
+pdf(paste0(output_dir, country, "_map.pdf"), width = 5, height =5)
+plot(map, lwd=0.35)
 points(adm$lon, adm$lat, col=alpha("darkred", 0.3), 
        pch=19, cex=0.1*sqrt(adm$cum_confirmed_cases_imputed))
 # Add legend, size = 1000 cases
