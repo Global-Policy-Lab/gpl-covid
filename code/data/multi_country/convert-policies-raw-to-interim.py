@@ -132,7 +132,7 @@ def read_implies(
 def clean_intensities_usa(df):
 
     drop_mask = df["intensity_group"].astype(str).str.lower().str.startswith("n/a")
-    drop_mask = (drop_mask) & (~df["policy"] == "testing_regime")
+    drop_mask = (drop_mask) & (~(df["policy"] == "testing_regime"))
     df = df.drop(df[drop_mask].index)
 
     intensity_cols = [c for c in df.columns if c.startswith("intensity_group")]
