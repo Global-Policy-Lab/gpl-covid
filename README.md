@@ -260,9 +260,6 @@ Run the following scripts to merge epi, policy, testing, and population data for
 ##### United States
 1. `python code/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
 
-#### Under-reporting data
-`Rscript code/data/multi_country/download_russell_underreporting_estimates.R`: Download estimates of case under-reporting by country.
-
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
 
