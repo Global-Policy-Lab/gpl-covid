@@ -100,9 +100,6 @@ lab var pck_social_distance "Social distance"
 
 lab var school_closure_popwt "School closure"
 
-// gen policy_ct = pck_social_distance + school_closure + national_lockdown
-// sum policy_ct
-
 //------------------main estimates
 
 // output data used for reg
