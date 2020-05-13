@@ -21,14 +21,8 @@ def test_readme():
 
 
 def test_r_stata_match():
-    cmd = f"Rscript code/models/test_that_r_coefs_match_stata.R"
-    try:
-        subprocess.run(shlex.split(cmd), check=True)
-    except:
-        raise AssertionError(
-            f"""Coefficients in stata do not match replications in projection code.
-            """
-        )
+    cmd = "Rscript code/models/test_that_r_coefs_match_stata.R"
+    subprocess.run(shlex.split(cmd), check=True)
 
 
 def exclude_files(fileset, run_stata):
