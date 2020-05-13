@@ -73,12 +73,12 @@ def process_raw_and_interim_health():
     # #### Read inputs
 
     # Italy-specific data
-    adm2_cases = pd.read_csv(url_adm2_cases, float_precision="%.5f")
-    adm1_cases = pd.read_csv(url_adm1_cases, float_precision="%.5f")
+    adm2_cases = pd.read_csv(url_adm2_cases)
+    adm1_cases = pd.read_csv(url_adm1_cases)
 
     # ##### Save raw case data from URL to project folder
-    adm2_cases.to_csv(path_italy_raw_province, index=False)
-    adm1_cases.to_csv(path_italy_raw_region, index=False)
+    adm2_cases.to_csv(path_italy_raw_province, index=False, float_format="%.7f")
+    adm1_cases.to_csv(path_italy_raw_region, index=False, float_format="%.7f")
 
     # ## Translate and clean health data
 
@@ -263,14 +263,14 @@ def process_raw_and_interim_health():
 
     # #### Save processed health data to `interim` folder
     path_italy_interim_province.parent.mkdir(parents=True, exist_ok=True)
-    adm1_cases.to_csv(path_italy_interim_region, index=False)
-    adm2_cases.to_csv(path_italy_interim_province, index=False)
+    adm1_cases.to_csv(path_italy_interim_region, index=False, float_format="%.7f")
+    adm2_cases.to_csv(path_italy_interim_province, index=False, float_format="%.7f")
 
     return adm1_cases, adm2_cases
 
 
 def read_policies():
-    policies = pd.read_csv(path_italy_policies, float_precision="%.5f")
+    policies = pd.read_csv(path_italy_policies)
 
     # Map some regions/provinces in policy dataset to corresponding names in health data
     replace_dict = {
@@ -377,12 +377,12 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 
 def save_processed(adm1_cases, adm2_cases):
     # Save to `ITA_processed.csv`'s
-    adm1_cases.to_csv(path_processed_region, index=False)
-    adm2_cases.to_csv(path_processed_province, index=False)
+    adm1_cases.to_csv(path_processed_region, index=False, float_format="%.7f")
+    adm2_cases.to_csv(path_processed_province, index=False, float_format="%.7f")
 
 
 def load_interim_cases(path_interim):
-    adm_cases = pd.read_csv(path_interim, parse_dates=["date"], float_precision="%.5f")
+    adm_cases = pd.read_csv(path_interim, parse_dates=["date"])
     for col in adm_cases:
         if adm_cases[col].dtype == float:
             adm_cases[col] = np.round(adm_cases[col], 10)

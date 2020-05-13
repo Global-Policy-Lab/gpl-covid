@@ -149,7 +149,7 @@ def process_country(country_code, implies):
     filename = f"{country_code}_policy_data_sources.csv"
     path_raw = cutil.DATA_RAW / cutil.iso_to_dirname(country_code) / filename
     path_interim = cutil.DATA_INTERIM / cutil.iso_to_dirname(country_code) / filename
-    df = pd.read_csv(path_raw, encoding="latin1", float_precision="%.5f")
+    df = pd.read_csv(path_raw, encoding="latin1")
     if country_code not in implies:
         print(f"missing country: {country_code}")
     else:
@@ -160,7 +160,7 @@ def process_country(country_code, implies):
         df["implied_policy"] = False
         df = apply_implies(df, implies[country_code], country_code)
         df = df.reset_index(drop=True)
-    df.to_csv(path_interim, index=False)
+    df.to_csv(path_interim, index=False, float_format="%.7f")
 
 
 def main():
