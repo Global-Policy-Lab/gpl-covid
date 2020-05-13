@@ -68,8 +68,7 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
 
     pcopy["policy"] = dst_policy
 
-    if country_code == "FRA":
-        pcopy["implied_policy"] = True
+    pcopy["implied_policy"] = True
 
     if country_code not in countries_wo_intensity:
         pcopy["policy_intensity"] = dst_val
@@ -99,6 +98,7 @@ def apply_usa_rule(df, src_policy, dst_policies):
         dst_category, dst_group = dst_policy.split(".")
         pcopy = psrc.copy()
         pcopy["policy"] = dst_category
+        pcopy["implied_policy"] = True
         pcopy[intensity_cols[0]] = dst_group
         for c in intensity_cols[1:]:
             pcopy[c] = np.nan
@@ -156,8 +156,8 @@ def process_country(country_code, implies):
         print(country_code)
         if country_code == "USA":
             df = clean_intensities_usa(df)
-        if country_code == "FRA":
-            df["implied_policy"] = False
+
+        df["implied_policy"] = False
         df = apply_implies(df, implies[country_code], country_code)
         df = df.reset_index(drop=True)
     df.to_csv(path_interim, index=False)
