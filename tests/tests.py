@@ -20,6 +20,11 @@ def test_readme():
                     assert tocomp in readme, tocomp
 
 
+def test_r_stata_match():
+    cmd = "Rscript code/models/test_that_r_coefs_match_stata.R"
+    subprocess.run(shlex.split(cmd), check=True)
+
+
 def exclude_files(fileset, run_stata):
     """List all files that we know will not get updated or don't want to check:
     1) Ignore all files ``in source_data/indiv``
