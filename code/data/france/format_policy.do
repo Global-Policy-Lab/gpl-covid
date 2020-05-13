@@ -201,6 +201,7 @@ format date %tdCCYY-NN-DD
 rename (adm1_pop adm1) (population adm1_id)
 rename *_popw *_popwt
 rename hospitalization cum_hospitalized
+replace no_gathering_size = 0 if no_gathering_size==. //to pass github checks
 g adm0_name = "FRA"
 order adm0_name
 outsheet * using "data/processed/adm1/FRA_processed.csv", replace comma
