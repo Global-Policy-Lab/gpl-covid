@@ -190,6 +190,13 @@
         "food/drink closure": ["opt food/drink closure"],
         "all non-essentials": ["opt all non-essentials", "opt food/drink closure", "food/drink closure", "recreation"]
     }
+  },
+
+  "federal guidelines": {
+    "weights": {
+      "federal guidelines": 1
+    },
+    "replaces": {}
   }
 
 }

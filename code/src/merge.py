@@ -252,6 +252,7 @@ def calculate_intensities_usa(policies_to_date, adm_level, policy):
         if adm2 in level2_policies:
             l3_adm_policies = l3_adm_policies | level2_policies[adm2]
 
+        l3_adm_policies -= set([np.nan])
         l3_adm_policies = preduce(l3_adm_policies, replaces)
         intensity = pintensity(l3_adm_policies, weights)
         policies_to_date.loc[l3_mask, "policy_intensity"] = intensity
@@ -405,25 +406,7 @@ def get_policy_vals(
         ]
     )
 
-    policies_to_date = (
-        policies_to_date_cache[adm][policy][str(date)[:10]]
-        .sort_values(["date_start", "adm1_name", "adm2_name", "adm3_name"])
-        .reset_index(drop=True)
-    )
-    policies_to_date["date_start"] = pd.to_datetime(
-        policies_to_date["date_start"]
-    ).astype(np.datetime64)
-    policies_to_date["date_end"] = pd.to_datetime(policies_to_date["date_end"]).astype(
-        np.datetime64
-    )
-    policies_to_date = policies_to_date.drop(
-        columns=["next_day", "date_str"], errors="ignore"
-    )
-    policies_to_date["optional"] = policies_to_date["optional"].astype(np.int32)
-    policies_to_date["adm1_pop"] = policies_to_date["adm1_pop"].astype(np.float64)
-    policies_to_date["adm2_pop"] = policies_to_date["adm2_pop"].astype(np.float64)
-    policies_to_date["adm3_pop"] = policies_to_date["adm3_pop"].astype(np.float64)
-    policies_to_date["policy_level"] = policies_to_date["policy_level"].astype(np.int64)
+    policies_to_date = policies_to_date_cache[adm][policy][str(date)[:10]]
 
     if len(policies_to_date) == 0:
         return (0, 0, 0, 0)
