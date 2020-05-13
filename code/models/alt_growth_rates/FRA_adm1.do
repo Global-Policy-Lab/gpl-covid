@@ -160,22 +160,11 @@ _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of package of policies (FOR FIG2)
 
-// home_iso (national_lockdown) implies event_cancel, social_distance, no_gathering_inside (3 policies of 5 in pck_social_distance)
-// FRA implies dictionary (gpl-covid/data/raw/multi_country/policy_implication_rules.json):
-//  "FRA": [
-//     [
-//       "home_isolation", ">", 0,
-//       [
-//         ["event_cancel", 1],
-//         ["social_distance", 1],
-//         ["no_gathering_inside", 1]
-//       ]
-//     ]
-//   ],
-lincom national_lockdown + pck_social_distance*(3/5)
+// home_iso (national_lockdown) implies event_cancel, social_distance, no_gathering_inside and no_gathering
+lincom national_lockdown + pck_social_distance
 post results ("FRA") ("natl_lockdown_combined") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
-nlcom (natl_lockdown_combined: _b[national_lockdown] + _b[pck_social_distance]*3/5), post
+nlcom (natl_lockdown_combined: _b[national_lockdown] + _b[pck_social_distance]), post
 est store nlcom
 
 // all policies
