@@ -73,8 +73,8 @@ def process_raw_and_interim_health():
     # #### Read inputs
 
     # Italy-specific data
-    adm2_cases = pd.read_csv(url_adm2_cases, float_format="%.5f")
-    adm1_cases = pd.read_csv(url_adm1_cases, float_format="%.5f")
+    adm2_cases = pd.read_csv(url_adm2_cases, float_precision="%.5f")
+    adm1_cases = pd.read_csv(url_adm1_cases, float_precision="%.5f")
 
     # ##### Save raw case data from URL to project folder
     adm2_cases.to_csv(path_italy_raw_province, index=False)
@@ -270,7 +270,7 @@ def process_raw_and_interim_health():
 
 
 def read_policies():
-    policies = pd.read_csv(path_italy_policies, float_format="%.5f")
+    policies = pd.read_csv(path_italy_policies, float_precision="%.5f")
 
     # Map some regions/provinces in policy dataset to corresponding names in health data
     replace_dict = {
@@ -382,7 +382,7 @@ def save_processed(adm1_cases, adm2_cases):
 
 
 def load_interim_cases(path_interim):
-    adm_cases = pd.read_csv(path_interim, parse_dates=["date"], float_format="%.5f")
+    adm_cases = pd.read_csv(path_interim, parse_dates=["date"], float_precision="%.5f")
     for col in adm_cases:
         if adm_cases[col].dtype == float:
             adm_cases[col] = np.round(adm_cases[col], 10)
