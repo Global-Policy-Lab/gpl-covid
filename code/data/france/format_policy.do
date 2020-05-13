@@ -82,7 +82,7 @@ sort adm1 date
 
 egen seq = seq(), by(adm2 policy)
 
-drop if seq > 1 & policy == "school_closure" // don't increase intensity when more school close within adm2
+drop if seq > 1 // don't increase intensity within adm2
 
 collapse policy_intensity (sum) running_var pop, by(date adm1 adm1_name policy)
 rename policy pol //shortern variable name before reshape

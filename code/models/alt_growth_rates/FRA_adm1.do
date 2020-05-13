@@ -112,7 +112,7 @@ outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popw national_lockdown ///
  testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid  
 
-/* TEST combined effect
+/*TEST combined effect
 coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) xline(0)  gen(plot)  
 lincom pck_social_distance + national_lockdown
 replace plotb = r(estimate) if plotat == 3
@@ -120,6 +120,7 @@ replace plotll1 = r(estimate) - 1.96 * r(se) if plotat == 3
 replace plotul1 = r(estimate) + 1.96 * r(se) if plotat == 3
 g y = - plotat
 tw rspike plotul1 plotll1 y, hor || scatter y plotb, xline(0) ylab(none)
+stop
 */
 
 
