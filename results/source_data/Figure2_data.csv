@@ -48,7 +48,7 @@ adm0,policy,beta,se
 "FRA","national_lockdown",.081,.053
 "FRA","school_closure_pop",-.012,.041
 "FRA","pck_social_distanc",-.239,.072
-"FRA","natl_lockdown_comb",-.062,.04
+"FRA","natl_lockdown_comb",-.158,.053
 "FRA","comb. policy",-.17,.02
 "FRA","no_policy rate",.33,.05
 "USA","p_1",.013,.035
