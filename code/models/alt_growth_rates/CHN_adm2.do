@@ -265,7 +265,17 @@ testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
 _b[_cons] + __hdfe1__ if e(sample), ci(lb_counter ub_counter)
     
 // effect of package of policies (FOR FIG2)
+
 // home_iso implies travel_ban_local
+// CHN implies dictionary (gpl-covid/data/raw/multi_country/policy_implication_rules.json):
+//  "CHN": [
+//     [
+//       "home_isolation", "=", 1,
+//       [
+//         ["travel_ban_local", 1]
+//       ]
+//     ]
+//   ],
 foreach lag in L0_to_L7 L8_to_L14 L15_to_L21 L22_to_L28 L29_to_L70{
 	lincom home_isolation_`lag' + travel_ban_local_`lag' 
 	post results ("CHN") ("home_iso_`lag' + trvl_ban_loc_`lag'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
@@ -279,6 +289,7 @@ nlcom (home_iso_trvl_ban_1: _b[home_isolation_L0_to_L7] + _b[travel_ban_local_L0
       , post
 est store nlcom
 	
+// all policies by week
 est restore base
 lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 + emergency_declaration_L0_to_L7		    // first week
 post results ("CHN") ("first week") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 

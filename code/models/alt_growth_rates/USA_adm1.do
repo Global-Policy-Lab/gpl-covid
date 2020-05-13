@@ -121,19 +121,19 @@ lab var day_avg "Observed avg. change in log cases"
 
 // popwt vars = policy intensity * population weight of respective admin 1 unit or sub admin 1 unit
 
-// emergency_declaration on for entire sample
-
-gen p_1 = (event_cancel_popwt + no_gathering_popwt) / 2
-gen p_2 = (social_distance_popwt + religious_closure_popwt) / 2 //the 2 religious_closure policies happen on same day as social_distance policies in respective state
+gen p_1 = no_gathering_popwt
+gen p_2 = social_distance_popwt 
 gen p_3 = pos_cases_quarantine_popwt 
 gen p_4 = paid_sick_leave_popwt
 gen p_5 = work_from_home_popwt
 gen p_6 = school_closure_popwt
 gen p_7 = (travel_ban_local_popwt + transit_suspension_popwt) / 2 
 gen p_8 = business_closure_popwt
-gen p_9 = home_isolation_popwt
+gen p_9 = religious_closure_popwt
+gen p_10 = home_isolation_popwt
+gen p_11 = federal_guidelines
 
-lab var p_1 "No gathering, event cancel"
+lab var p_1 "No gathering"
 lab var p_2 "Social distance"
 lab var p_3 "Quarantine positive cases" 
 lab var p_4 "Paid sick leave"
@@ -141,7 +141,9 @@ lab var p_5 "Work from home"
 lab var p_6 "School closure"
 lab var p_7 "Travel ban"
 lab var p_8 "Business closure"
-lab var p_9 "Home isolation" 
+lab var p_9 "Religious closure" 
+lab var p_10 "Home isolation" 
+lab var p_11 "Mar 16 Federal guidelines" 
 
 
 //------------------main estimates
@@ -151,6 +153,7 @@ outsheet using "models/reg_data/USA_reg_data.csv", comma replace
 
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
+est store base
 
 outreg2 using "results/tables/reg_results/USA_estimates_table", sideway noparen nodepvar word replace label ///
  title(United States, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
@@ -198,7 +201,9 @@ p_5 * _b[p_5] + ///
 p_6 * _b[p_6] + /// 
 p_7 * _b[p_7] + ///
 p_8 * _b[p_8] + ///
-p_9 * _b[p_9] /// 
+p_9 * _b[p_9] + /// 
+p_10 * _b[p_10] + /// 
+p_11 * _b[p_11] /// 
 if e(sample)
 
 // predicting counterfactual growth for each obs
@@ -224,8 +229,27 @@ testing_regime_30mar2020_DE * _b[testing_regime_30mar2020_DE] + ///
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
  
-// effect of all policies combined (FOR FIG2)
-lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 + p_7 + p_8 + p_9
+// effect of package of policies (FOR FIG2)
+
+// home_iso (p_10) implies no_gathering (p_1), work_from_home (p_5), business_closure (p_8)
+// USA implies dictionary (gpl-covid/data/raw/usa/intensity_coding_rules.json):
+//   "USA": {
+//     "home_isolation.mandatory shelter in place":
+//       [
+//         "no_gathering.no_gathering",
+//         "work_from_home.work from home",
+//         "business_closure.all non-essentials"
+//       ]
+//   }
+lincom p_10 + p_1 + p_5 + p_8
+post results ("USA") ("home_iso_combined") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+nlcom (home_iso_combined: _b[p_10] + _b[p_1] + _b[p_5] + _b[p_8]), post
+est store nlcom
+
+// all policies
+est restore base
+lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 + p_7 + p_8 + p_9 + p_10 + p_11
 post results ("USA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 local comb_policy = round(r(estimate), 0.001)
@@ -245,9 +269,12 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (similar to FIG2)
-coefplot, keep(p_*) tit("USA: policy packages") subtitle(`subtitle2') ///
-graphregion(margin(10 5 0 5)) xline(0) name(USA_policy, replace)
+// coefplot, keep(p_*) tit("USA: policy packages") subtitle(`subtitle2') ///
+// graphregion(margin(10 5 0 5)) xline(0) name(USA_policy, replace)
 
+coefplot (base, keep(p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9)) ///
+(nlcom, keep(home_iso_combined)) (base, keep(p_11)), ///
+tit("USA: policy packages") subtitle(`subtitle2') xline(0) name(USA_policy, replace)
 
 // export coefficients (FOR FIG2)
 postclose results
