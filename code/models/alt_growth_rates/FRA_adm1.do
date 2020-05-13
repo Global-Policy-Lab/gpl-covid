@@ -104,7 +104,7 @@ lab var school_closure_popwt "School closure"
 // sum policy_ct
 
 //------------------main estimates
-STOP
+
 // output data used for reg
 outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
