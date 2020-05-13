@@ -104,7 +104,7 @@ lab var school_closure_popwt "School closure"
 // sum policy_ct
 
 //------------------main estimates
-
+STOP
 // output data used for reg
 outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 
@@ -392,9 +392,13 @@ postfile results str18 adm0 str18 sample str18 policy beta se using `results_fil
 reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popwt ///
 national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 
-foreach var in "national_lockdown" "school_closure_popwt" "pck_social_distance" {
+foreach var in "school_closure_popwt" "pck_social_distance" {
 	post results ("FRA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
+
+lincom national_lockdown + pck_social_distance
+post results ("FRA") ("full_sample") ("national_lockdown*") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
 lincom national_lockdown + school_closure_popwt + pck_social_distance
 post results ("FRA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
@@ -409,9 +413,12 @@ levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
 	reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popwt national_lockdown ///
 	 testing_regime_* if adm1_name != "`adm'" , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
-	foreach var in "national_lockdown" "school_closure_popwt" "pck_social_distance" {
+	foreach var in "school_closure_popwt" "pck_social_distance" {
 		post results ("FRA") ("`adm'") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 	}
+	lincom national_lockdown + pck_social_distance
+	post results ("FRA") ("`adm'") ("national_lockdown*") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 	
+	
 	lincom national_lockdown + school_closure_popwt + pck_social_distance
 	post results ("FRA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 	predictnl `counter_CV' = testing_regime_15mar2020 * _b[testing_regime_15mar2020] + ///
@@ -426,18 +433,6 @@ preserve
 	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
-	tw scatter i beta if sample != "GrandEst", xline(0,lc(black) lp(dash)) mc(black*.5)  ///
-	|| scatter i beta if sample == "full_sample", mc(red) ///
-	|| scatter i beta if sample == "GrandEst", mc(green) m(Oh) ///
-	yscale(range(0(1)6)) ylabel(1 "combined effect" ///
-	2 "Social distance" ///
-	3 "School closure" ///
-	4 "National lockdown", angle(0)) ytitle("") xtitle("Estimated effect on daily growth rate", height(5)) ///
-	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7) ///
-	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
-	lab(3 "w/o Grand Est") region(lstyle(none)) pos(11) ring(0)) 
-	graph export results/figures/appendix/cross_valid/FRA.pdf, replace
-	capture graph export results/figures/appendix/cross_valid/FRA.png, replace	
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_FRA.csv", comma replace
 restore
 
@@ -449,6 +444,12 @@ save `base_data'
 reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popwt ///
 national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) gen(L0_) title(main model) xline(0) 
+lincom national_lockdown + pck_social_distance
+replace L0_b = r(estimate) if L0_at == 3
+replace L0_ll1 = r(estimate) - 1.959964 * r(se) if L0_at == 3
+replace L0_ul1 = r(estimate) + 1.959964 * r(se) if L0_at == 3
+
+
 // get ATE
 local r2 = e(r2)
 preserve
@@ -467,7 +468,12 @@ restore
 reghdfe D_l_cum_hospitalized pck_social_distance school_closure_popwt national_lockdown ///
 testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 	 
 coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) gen(H0_) title(main model) xline(0) 
+lincom national_lockdown + pck_social_distance
+replace H0_b = r(estimate) if H0_at == 3
+replace H0_ll1 = r(estimate) - 1.959964 * r(se) if H0_at == 3
+replace H0_ul1 = r(estimate) + 1.959964 * r(se) if H0_at == 3
 replace H0_at = H0_at - 0.04
+
 
 foreach lags of num 1 2 3 4 5{ 
 	quietly {
@@ -484,6 +490,11 @@ foreach lags of num 1 2 3 4 5{
 	national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 	coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) ///
 	gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+	lincom national_lockdown + pck_social_distance
+	replace L`lags'_b = r(estimate) if L`lags'_at == 3
+	replace L`lags'_ll1 = r(estimate) - 1.959964 * r(se) if L`lags'_at == 3
+	replace L`lags'_ul1 = r(estimate) + 1.959964 * r(se) if L`lags'_at == 3
+	
 	local r2 = e(r2)
 	preserve
 		keep if e(sample) == 1
@@ -504,6 +515,10 @@ foreach lags of num 1 2 3 4 5{
 	testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 	coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) ///
 	gen(H`lags'_) title (with fixed lag (4 days)) xline(0)
+	lincom national_lockdown + pck_social_distance
+	replace H`lags'_b = r(estimate) if H`lags'_at == 3
+	replace H`lags'_ll1 = r(estimate) - 1.959964 * r(se) if H`lags'_at == 3
+	replace H`lags'_ul1 = r(estimate) + 1.959964 * r(se) if H`lags'_at == 3	
 	replace H`lags'_at = H`lags'_at - 0.1 *`lags' - 0.04	
 	
 	foreach var in pck_social_distance school_closure_popwt national_lockdown{
