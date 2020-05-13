@@ -15,9 +15,12 @@
 
   "religious_closure": {
     "weights": {
-      "religious closure - optional": 0.5
+      "religious closure optional": 0.5,
+      "religious closure mandatory": 1
     },
-    "replaces": {}
+    "replaces": {
+      "religious closure mandatory": ["religious closure optional"]
+    }
   },
 
   "emergency_declaration": {
@@ -27,17 +30,6 @@
     "replaces": {}
   },
 
-  "event_cancel": {
-    "weights": {
-      "cancel one event": 0.5,
-      "cancel more than one event": 1
-    },
-
-    "replaces": {
-    	"cancel more than one event": ["cancel one event"]
-    }
-  },
-
   "social_distance": {
     "weights": {
       "requires social distancing standards anywhere outside home - optional": 0.07,
@@ -45,6 +37,7 @@
       "isolate/quarantine certain populations": 0.14,
       "isolate/quarantine certain populations - optional": 0.07,
       "mandates mask wearing": 0.14,
+      "recommends mask wearing": 0.07,
       "closes public facilities": 0.14,
       "closes outdoor facilities": 0.14,
       "restricts or requires social distance for visitation to certain facilities": 0.14,
@@ -56,7 +49,9 @@
     "replaces": {
       "requires social distancing standards anywhere outside home": ["requires social distancing standards anywhere outside home - optional"],
       "restricts or requires social distance for visitation to certain facilities": ["restricts or requires social distance for visitation to certain facilities - optional"],
-      "suspends/restricts non-critical state operations/govt services": ["suspends/restricts non-critical state operations/govt services - optional"]
+      "suspends/restricts non-critical state operations/govt services": ["suspends/restricts non-critical state operations/govt services - optional"],
+      "mandates mask wearing": ["recommends mask wearing"],
+      "isolate/quarantine certain populations": ["isolate/quarantine certain populations - optional"]
     }
   },
 
@@ -198,6 +193,13 @@
         "food/drink closure": ["opt food/drink closure"],
         "all non-essentials": ["opt all non-essentials", "opt food/drink closure", "food/drink closure", "recreation"]
     }
+  },
+
+  "federal guidelines": {
+    "weights": {
+      "federal guidelines": 1
+    },
+    "replaces": {}
   }
 
 }

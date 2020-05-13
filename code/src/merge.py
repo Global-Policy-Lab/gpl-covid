@@ -252,6 +252,7 @@ def calculate_intensities_usa(policies_to_date, adm_level, policy):
         if adm2 in level2_policies:
             l3_adm_policies = l3_adm_policies | level2_policies[adm2]
 
+        l3_adm_policies -= set([np.nan])
         l3_adm_policies = preduce(l3_adm_policies, replaces)
         intensity = pintensity(l3_adm_policies, weights)
         policies_to_date.loc[l3_mask, "policy_intensity"] = intensity
@@ -369,7 +370,15 @@ def calculate_intensities_adm_day_policy(
 
 
 def get_policy_vals(
-    policies, policy, date, adm, adm1, adm_level, policy_pickle_dict, method="ITA"
+    policies,
+    policy,
+    date,
+    adm,
+    adm1,
+    adm_level,
+    policy_pickle_dict,
+    policies_to_date_cache,
+    method="ITA",
 ):
     """Assign all policy variables from `policies` to `cases_df`
     Args:
@@ -397,16 +406,7 @@ def get_policy_vals(
         ]
     )
 
-    policies_to_date = policies[
-        (policies["policy"] == policy)
-        & (policies["date_start"] <= date)
-        & (policies["date_end"] >= date)
-        & ((policies[adm_name] == adm) | (policies[adm_name].str.lower() == "all"))
-        & (
-            (policies["adm1_name"] == adm1)
-            | (policies["adm1_name"].str.lower() == "all")
-        )
-    ].copy()
+    policies_to_date = policies_to_date_cache[adm][policy][str(date)[:10]]
 
     if len(policies_to_date) == 0:
         return (0, 0, 0, 0)
@@ -419,7 +419,7 @@ def get_policy_vals(
         return policy_pickle_dict[adm][psave]
     else:
         result = calculate_intensities_adm_day_policy(
-            policies_to_date, adm_level, policy, method
+            policies_to_date.copy(), adm_level, policy, method
         )
         policy_pickle_dict[adm][psave] = result
 
@@ -458,6 +458,74 @@ def initialize_panel(cases_df, cases_level, policy_list, policy_popwts):
     return policy_panel
 
 
+def cached_state_group(policies, adm1, policy_group, empty_df, adm_level, adm2, dates):
+    cached_policies = dict()
+
+    mask = (policies["policy"] == policy_group) & (
+        policies["adm1_name"].isin(["All", "all", adm1])
+    )
+    if adm_level == 2:
+        mask = (mask) & (policies[f"adm2_name"].isin(["All", "all", adm2]))
+
+    policies_in_group = policies[mask].reset_index(drop=True)
+
+    policies_in_group["next_day"] = np.roll(policies_in_group["date_start"], -1)
+
+    for i, row in policies_in_group.iterrows():
+        cache = policies_in_group[: i + 1].copy()
+        cached_policies[row["date_str"]] = cache
+        if row["date_start"] != row["next_day"]:
+            # Return a new version to set the current one in stone
+            cache = cache.copy()
+
+    cache = empty_df.copy()
+    for date in dates:
+        if date in cached_policies:
+            cache = cached_policies[date]
+        else:
+            cached_policies[date] = cache
+
+    return cached_policies
+
+
+def get_policies_to_date_cache(policies, policy_panel, adm_level):
+    policies = policies.sort_values("date_start", ascending=True)
+    dates = [
+        str(d)[:10]
+        for d in pd.date_range(start="2020-01-01", end="2020-05-01").to_list()
+    ]
+
+    if adm_level == 2:
+        adm2_to_adm1 = policy_panel.set_index("adm2_name")["adm1_name"].to_dict()
+
+    adms = policy_panel[f"adm{adm_level}_name"].unique()
+    policy_list = policies["policy"].unique()
+
+    cached_policies_on_date = dict()
+    for adm in adms:
+        cached_policies_on_date[adm] = dict()
+        for policy in policy_list:
+            cached_policies_on_date[adm][policy] = dict()
+
+    policies["date_str"] = policies["date_start"].astype(str)
+
+    empty_df = pd.DataFrame(columns=policies.columns)
+    for adm in adms:
+        if adm_level == 2:
+            adm1 = adm2_to_adm1[adm]
+            adm2 = adm
+        else:
+            adm1 = adm
+            adm2 = None
+
+        for policy_group in policy_list:
+            cached_policies_on_date[adm][policy_group] = cached_state_group(
+                policies, adm1, policy_group, empty_df, adm_level, adm2, dates
+            )
+
+    return cached_policies_on_date
+
+
 def assign_policies_to_panel(
     cases_df,
     policies,
@@ -484,22 +552,25 @@ def assign_policies_to_panel(
     # Make sure policies input doesn't change unexpectedly
     policies = policies.copy()
 
-    # Convert 'optional' to indicator variable
-    if not np.issubdtype(policies["optional"].dtype, np.number):
-        policies["optional"] = policies["optional"].replace({"Y": 1, "N": 0})
-        # fill any nans with 0
-        policies["optional"] = policies["optional"].fillna(0).astype(int)
+    if method == "USA":
+        policies["optional"] = 0
+    else:
+        # Convert 'optional' to indicator variable
+        if not np.issubdtype(policies["optional"].dtype, np.number):
+            policies["optional"] = policies["optional"].replace({"Y": 1, "N": 0})
+            # fill any nans with 0
+            policies["optional"] = policies["optional"].fillna(0).astype(int)
 
-    policies["optional"] = policies["optional"].fillna(0)
-    if errors == "raise":
-        assert len(policies["optional"].unique()) <= 2
-    elif errors == "warn":
-        if len(policies["optional"].unique()) > 2:
-            print(
-                "there were more than two values for optional: {0}".format(
-                    policies["optional"].unique()
+        policies["optional"] = policies["optional"].fillna(0)
+        if errors == "raise":
+            assert len(policies["optional"].unique()) <= 2
+        elif errors == "warn":
+            if len(policies["optional"].unique()) > 2:
+                print(
+                    "there were more than two values for optional: {0}".format(
+                        policies["optional"].unique()
+                    )
                 )
-            )
 
     policies["date_end"] = policies["date_end"].fillna(pd.to_datetime("2099-12-31"))
 
@@ -533,6 +604,10 @@ def assign_policies_to_panel(
 
     policy_panel = initialize_panel(cases_df, cases_level, policy_list, policy_popwts)
 
+    policies_to_date_cache = get_policies_to_date_cache(
+        policies, policy_panel, cases_level
+    )
+
     # Assign each policy one-by-one to the panel
     for policy in policy_list:
         policy_pickle_dict = dict()
@@ -548,6 +623,7 @@ def assign_policies_to_panel(
                 row[f"adm1_name"],
                 cases_level,
                 policy_pickle_dict,
+                policies_to_date_cache,
                 method,
             ),
             axis=1,
