@@ -405,7 +405,25 @@ def get_policy_vals(
         ]
     )
 
-    policies_to_date = policies_to_date_cache[adm][policy][str(date)[:10]]
+    policies_to_date = (
+        policies_to_date_cache[adm][policy][str(date)[:10]]
+        .sort_values(["date_start", "adm1_name", "adm2_name", "adm3_name"])
+        .reset_index(drop=True)
+    )
+    policies_to_date["date_start"] = pd.to_datetime(
+        policies_to_date["date_start"]
+    ).astype(np.datetime64)
+    policies_to_date["date_end"] = pd.to_datetime(policies_to_date["date_end"]).astype(
+        np.datetime64
+    )
+    policies_to_date = policies_to_date.drop(
+        columns=["next_day", "date_str"], errors="ignore"
+    )
+    policies_to_date["optional"] = policies_to_date["optional"].astype(np.int32)
+    policies_to_date["adm1_pop"] = policies_to_date["adm1_pop"].astype(np.float64)
+    policies_to_date["adm2_pop"] = policies_to_date["adm2_pop"].astype(np.float64)
+    policies_to_date["adm3_pop"] = policies_to_date["adm3_pop"].astype(np.float64)
+    policies_to_date["policy_level"] = policies_to_date["policy_level"].astype(np.int64)
 
     if len(policies_to_date) == 0:
         return (0, 0, 0, 0)
@@ -653,5 +671,14 @@ def assign_policies_to_panel(
         left_on=["date", f"adm{cases_level}_name"],
         right_on=["date", f"adm{cases_level}_name"],
     )
+
+    if "federal_guidelines" in merged.columns:
+        merged = merged.drop(columns=["federal_guidelines", "federal_guidelines_popwt"])
+        merged = merged.rename(
+            columns={
+                "federal_guidelines_opt": "federal_guidelines",
+                "federal_guidelines_opt_popwt": "federal_guidelines_popwt",
+            }
+        )
 
     return merged
