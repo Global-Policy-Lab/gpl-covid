@@ -15,9 +15,12 @@
 
   "religious_closure": {
     "weights": {
-      "religious closure - optional": 0.5
+      "religious closure optional": 0.5,
+      "religious closure mandatory": 1
     },
-    "replaces": {}
+    "replaces": {
+      "religious closure mandatory": ["religious closure optional"]
+    }
   },
 
   "emergency_declaration": {
