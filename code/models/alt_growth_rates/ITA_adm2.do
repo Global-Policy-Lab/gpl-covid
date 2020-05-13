@@ -128,6 +128,7 @@ outsheet using "models/reg_data/ITA_reg_data.csv", comma replace
 
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+est store base
 
 outreg2 using "results/tables/reg_results/ITA_estimates_table", sideway noparen nodepvar word replace label ///
  title(Italy, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
@@ -178,6 +179,40 @@ if e(sample)
 predictnl y_counter = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of package of policies (FOR FIG2)
+
+// home_iso (p_6) implies no_gathering work_from_home social_distance (p_1), travel_ban_local (0.5 * p_3), business_closure (p_5)
+// ITA implies dictionary (gpl-covid/data/raw/multi_country/policy_implication_rules.json):
+//   "ITA": [
+//     [
+//       "home_isolation",  ">", 0,
+//       [
+//         ["no_gathering", 1],
+//         ["travel_ban_local", 0.5],
+//         ["work_from_home", 1],
+//         ["social_distance", 1]
+//       ]
+//     ],
+//     [
+//       "home_isolation", "=", 0.33,
+//       [
+//         ["business_closure", 0.33]
+//       ]
+//     ],
+//     [
+//       "home_isolation", ">=", 0.67,
+//       [
+//         ["business_closure", 0.67]
+//       ]
+//     ]
+//   ],
+lincom p_1 + (0.25*p_3) + (0.67*p_5) + p_6
+post results ("ITA") ("home_iso_combined") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+nlcom (home_iso_combined: _b[p_1] + _b[p_3]*0.25 + _b[p_5]*0.67 + _b[p_6]), post
+est store nlcom
+
+// all policies
+est restore base
 lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
 post results ("ITA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
@@ -198,7 +233,11 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (similar to Fig2)
-coefplot, keep(p_*) tit("ITA: policy packages") subtitle(`subtitle2') xline(0) name(ITA_policy, replace)
+// coefplot, keep(p_*) tit("ITA: policy packages") subtitle(`subtitle2') xline(0) name(ITA_policy, replace)
+
+coefplot (base, keep(p_1 p_2 p_3 p_4 p_5)) ///
+(nlcom, keep(home_iso_combined)), tit("ITA: policy packages") ///
+subtitle(`subtitle2') xline(0) name(ITA_policy, replace)
 
 // export coefficients (FOR FIG2)
 postclose results
