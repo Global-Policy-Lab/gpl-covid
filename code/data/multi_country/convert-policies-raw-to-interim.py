@@ -153,7 +153,11 @@ def process_country(country_code, implies):
         print(country_code)
         if country_code == "USA":
             df = clean_intensities_usa(df)
+        if country_code == "FRA":
+            df["implied_policy"] = False
         df = apply_implies(df, implies[country_code], country_code)
+        if country_code == "FRA":
+            df.loc[df["implied_policy"].isnull(), "implied_policy"] = True
         df = df.reset_index(drop=True)
     df.to_csv(path_interim, index=False)
 
