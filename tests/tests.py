@@ -19,6 +19,16 @@ def test_readme():
                     tocomp = l.rstrip("\n").split(" $")[0]
                     assert tocomp in readme, tocomp
 
+def test_r_stata_match():
+    cmd = f"Rscript code/models/test_that_r_coefs_match_stata.R"
+    try:
+        subprocess.run(shlex.split(cmd), check=True)
+    except:
+        raise AssertionError(
+            f"""Coefficients in stata do not match replications in projection code.
+            """
+        )
+
 
 def exclude_files(fileset, run_stata):
     """List all files that we know will not get updated or don't want to check:
