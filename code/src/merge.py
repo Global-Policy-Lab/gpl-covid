@@ -252,6 +252,7 @@ def calculate_intensities_usa(policies_to_date, adm_level, policy):
         if adm2 in level2_policies:
             l3_adm_policies = l3_adm_policies | level2_policies[adm2]
 
+        l3_adm_policies -= set([np.nan])
         l3_adm_policies = preduce(l3_adm_policies, replaces)
         intensity = pintensity(l3_adm_policies, weights)
         policies_to_date.loc[l3_mask, "policy_intensity"] = intensity
@@ -551,22 +552,25 @@ def assign_policies_to_panel(
     # Make sure policies input doesn't change unexpectedly
     policies = policies.copy()
 
-    # Convert 'optional' to indicator variable
-    if not np.issubdtype(policies["optional"].dtype, np.number):
-        policies["optional"] = policies["optional"].replace({"Y": 1, "N": 0})
-        # fill any nans with 0
-        policies["optional"] = policies["optional"].fillna(0).astype(int)
+    if method == "USA":
+        policies["optional"] = 0
+    else:
+        # Convert 'optional' to indicator variable
+        if not np.issubdtype(policies["optional"].dtype, np.number):
+            policies["optional"] = policies["optional"].replace({"Y": 1, "N": 0})
+            # fill any nans with 0
+            policies["optional"] = policies["optional"].fillna(0).astype(int)
 
-    policies["optional"] = policies["optional"].fillna(0)
-    if errors == "raise":
-        assert len(policies["optional"].unique()) <= 2
-    elif errors == "warn":
-        if len(policies["optional"].unique()) > 2:
-            print(
-                "there were more than two values for optional: {0}".format(
-                    policies["optional"].unique()
+        policies["optional"] = policies["optional"].fillna(0)
+        if errors == "raise":
+            assert len(policies["optional"].unique()) <= 2
+        elif errors == "warn":
+            if len(policies["optional"].unique()) > 2:
+                print(
+                    "there were more than two values for optional: {0}".format(
+                        policies["optional"].unique()
+                    )
                 )
-            )
 
     policies["date_end"] = policies["date_end"].fillna(pd.to_datetime("2099-12-31"))
 

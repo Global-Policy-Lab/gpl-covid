@@ -4,35 +4,23 @@
       "home_isolation",  ">", 0,
       [
         ["no_gathering", 1],
-        ["pos_cases_quarantine", 1],
-        ["school_closure", 1],
+        ["travel_ban_local", 0.5],
+        ["work_from_home", 1],
         ["social_distance", 1]
       ]
     ],
     [
       "home_isolation", "=", 0.33,
       [
-        ["travel_ban_local", 0.5]
+        ["business_closure", 0.33]
       ]
     ],
+    [
+      "home_isolation", ">=", 0.67,
       [
-        "home_isolation", ">=", 0.67,
-        [
-          ["work_from_home", 1]
-        ]
-      ],
-      [
-        "home_isolation", "=", 0.67,
-        [
-          ["business_closure", 0.67]
-        ]
-      ],
-      [
-        "home_isolation", "=", 1,
-        [
-          ["business_closure", 1]
-        ]
+        ["business_closure", 0.67]
       ]
+    ]
   ],
   "KOR": [],
   "FRA": [
@@ -58,22 +46,8 @@
     "home_isolation.mandatory shelter in place":
       [
         "no_gathering.no_gathering",
-        "event_cancel.cancel more than one event",
         "work_from_home.work from home",
-        "school_closure.school closure",
-        "business_closure.all non-essentials",
-        "religious_closure.religious closure - optional"
-      ],
-    "home_isolation.opt shelter in place":
-      [
-        "no_gathering.advisory",
-        "work_from_home.opt work from home",
-        "religious_closure.religious closure - optional",
-        "business_closure.opt all non-essentials"
-      ],
-    "no_gathering.no_gathering":
-      [
-        "event_cancel.cancel more than one event"
+        "business_closure.all non-essentials"
       ]
   }
 }

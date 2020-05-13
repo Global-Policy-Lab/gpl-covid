@@ -77,8 +77,8 @@ def process_raw_and_interim_health():
     adm1_cases = pd.read_csv(url_adm1_cases)
 
     # ##### Save raw case data from URL to project folder
-    adm2_cases.to_csv(path_italy_raw_province, index=False)
-    adm1_cases.to_csv(path_italy_raw_region, index=False)
+    adm2_cases.to_csv(path_italy_raw_province, index=False, float_format="%.7f")
+    adm1_cases.to_csv(path_italy_raw_region, index=False, float_format="%.7f")
 
     # ## Translate and clean health data
 
@@ -263,8 +263,8 @@ def process_raw_and_interim_health():
 
     # #### Save processed health data to `interim` folder
     path_italy_interim_province.parent.mkdir(parents=True, exist_ok=True)
-    adm1_cases.to_csv(path_italy_interim_region, index=False)
-    adm2_cases.to_csv(path_italy_interim_province, index=False)
+    adm1_cases.to_csv(path_italy_interim_region, index=False, float_format="%.7f")
+    adm2_cases.to_csv(path_italy_interim_province, index=False, float_format="%.7f")
 
     return adm1_cases, adm2_cases
 
@@ -377,8 +377,8 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
 
 def save_processed(adm1_cases, adm2_cases):
     # Save to `ITA_processed.csv`'s
-    adm1_cases.to_csv(path_processed_region, index=False)
-    adm2_cases.to_csv(path_processed_province, index=False)
+    adm1_cases.to_csv(path_processed_region, index=False, float_format="%.7f")
+    adm2_cases.to_csv(path_processed_province, index=False, float_format="%.7f")
 
 
 def load_interim_cases(path_interim):
