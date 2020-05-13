@@ -552,22 +552,25 @@ def assign_policies_to_panel(
     # Make sure policies input doesn't change unexpectedly
     policies = policies.copy()
 
-    # Convert 'optional' to indicator variable
-    if not np.issubdtype(policies["optional"].dtype, np.number):
-        policies["optional"] = policies["optional"].replace({"Y": 1, "N": 0})
-        # fill any nans with 0
-        policies["optional"] = policies["optional"].fillna(0).astype(int)
+    if method == "USA":
+        policies["optional"] = 0
+    else:
+        # Convert 'optional' to indicator variable
+        if not np.issubdtype(policies["optional"].dtype, np.number):
+            policies["optional"] = policies["optional"].replace({"Y": 1, "N": 0})
+            # fill any nans with 0
+            policies["optional"] = policies["optional"].fillna(0).astype(int)
 
-    policies["optional"] = policies["optional"].fillna(0)
-    if errors == "raise":
-        assert len(policies["optional"].unique()) <= 2
-    elif errors == "warn":
-        if len(policies["optional"].unique()) > 2:
-            print(
-                "there were more than two values for optional: {0}".format(
-                    policies["optional"].unique()
+        policies["optional"] = policies["optional"].fillna(0)
+        if errors == "raise":
+            assert len(policies["optional"].unique()) <= 2
+        elif errors == "warn":
+            if len(policies["optional"].unique()) > 2:
+                print(
+                    "there were more than two values for optional: {0}".format(
+                        policies["optional"].unique()
+                    )
                 )
-            )
 
     policies["date_end"] = policies["date_end"].fillna(pd.to_datetime("2099-12-31"))
 
@@ -654,14 +657,5 @@ def assign_policies_to_panel(
         left_on=["date", f"adm{cases_level}_name"],
         right_on=["date", f"adm{cases_level}_name"],
     )
-
-    if "federal_guidelines" in merged.columns:
-        merged = merged.drop(columns=["federal_guidelines", "federal_guidelines_popwt"])
-        merged = merged.rename(
-            columns={
-                "federal_guidelines_opt": "federal_guidelines",
-                "federal_guidelines_opt_popwt": "federal_guidelines_popwt",
-            }
-        )
 
     return merged
