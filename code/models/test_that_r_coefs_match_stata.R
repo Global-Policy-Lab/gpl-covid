@@ -30,6 +30,6 @@ suppressWarnings({
         isTRUE(all.equal(round(check$std.error, 3), check$se))
     }))
 })
-if(TRUE){
+if(!all(check$check)){
   stop("Coefficients in stata do not match replications in projection code.")
 }
