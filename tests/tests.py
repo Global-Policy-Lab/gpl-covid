@@ -19,6 +19,7 @@ def test_readme():
                     tocomp = l.rstrip("\n").split(" $")[0]
                     assert tocomp in readme, tocomp
 
+
 def test_r_stata_match():
     cmd = f"Rscript code/models/test_that_r_coefs_match_stata.R"
     try:
