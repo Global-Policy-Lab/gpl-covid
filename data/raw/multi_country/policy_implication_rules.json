@@ -4,13 +4,12 @@
       "home_isolation",  ">", 0,
       [
         ["no_gathering", 1],
-        ["pos_cases_quarantine", 1],
         ["school_closure", 1],
         ["social_distance", 1]
       ]
     ],
     [
-      "home_isolation", "=", 0.33,
+      "home_isolation", ">=", 0.33,
       [
         ["travel_ban_local", 0.5]
       ]
@@ -58,7 +57,6 @@
     "home_isolation.mandatory shelter in place":
       [
         "no_gathering.no_gathering",
-        "event_cancel.cancel more than one event",
         "work_from_home.work from home",
         "school_closure.school closure",
         "business_closure.all non-essentials",
@@ -70,10 +68,6 @@
         "work_from_home.opt work from home",
         "religious_closure.religious closure - optional",
         "business_closure.opt all non-essentials"
-      ],
-    "no_gathering.no_gathering":
-      [
-        "event_cancel.cancel more than one event"
       ]
   }
 }

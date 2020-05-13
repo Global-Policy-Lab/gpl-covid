@@ -27,17 +27,6 @@
     "replaces": {}
   },
 
-  "event_cancel": {
-    "weights": {
-      "cancel one event": 0.5,
-      "cancel more than one event": 1
-    },
-
-    "replaces": {
-    	"cancel more than one event": ["cancel one event"]
-    }
-  },
-
   "social_distance": {
     "weights": {
       "requires social distancing standards anywhere outside home - optional": 0.07,
