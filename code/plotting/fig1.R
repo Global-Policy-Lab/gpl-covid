@@ -2,8 +2,8 @@
 ##  Figure 1: Data Display  ##
 ##############################
 
-# Updated 5/12/2020
-# by hdruckenmiller
+# Updated 5/13/2020
+# by hannah druckenmiller
 
 rm(list=ls())
 options (warn = -1)
