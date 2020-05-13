@@ -3,7 +3,7 @@
 
 import delim "data/interim/france/FRA_policy_data_sources.csv", clear 
 replace policy = policy + "_opt" if optional == "Y"
-keep *_name policy no_gathering_size date_start policy_intensity
+keep *_name policy no_gathering_size date_start policy_intensity implied
 g Date = date(date_start,"MDY",2000)
 drop date adm0_name
 rename Date date
@@ -17,9 +17,25 @@ rename no_gathering_size size //shorten name for reshape
 drop if policy == "event_cancel" & date == mdy(2,29,2020) & adm2 == 75 // drop event_cancel du to private decision
 drop if policy == "event_cancel" & date == mdy(3,3,2020)  & adm2 == 60 // drop event_cancel du to private decision
 
-
 preserve
-	keep if adm1 == .
+	keep if implied_policy == "True"
+	drop adm1 adm2
+	replace size = policy_intensity if size == .
+	drop policy_int
+	reshape wide size, i(date) j(policy) string
+	rename size* *
+	foreach var in "event_cancel" "no_gathering_inside" "social_distance"{
+		g `var'_popw = 1 // national implied adjustment from home_isolation, popw value is 1
+	}
+	drop implied
+	tempfile implied policy
+	save `implied'	
+restore
+
+keep if implied_policy == "False"
+drop implied_policy
+preserve
+	keep if adm1 == . 
 	drop adm1 adm2
 	replace size = policy_intensity if size == .
 	drop policy_int
@@ -28,13 +44,13 @@ preserve
 	foreach var in "no_gathering" "school_closure" "social_distance"{
 		rename `var' `var'_national
 	}
-
 	g no_gathering_size = no_gathering_national
 	replace no_gathering_national = 1 if no_gathering_national != .
-	
-tempfile national
-save `national'
+	tempfile national
+	save `national'
 restore
+
+
 // remove national pol, to be merged further down
 drop if adm1 == .
 // drop if school_closure_size not clear
@@ -113,6 +129,8 @@ merge 1:1 date adm1 using `Local', nogen update
 merge m:1 date adm1 using `regional',nogen update
 merge m:1 date using `national', nogen update
 
+
+
 // adjust _popw variable for place with both national and local intensity
 
 foreach var in  "home_isolation"  {
@@ -122,11 +140,22 @@ foreach var in  "home_isolation"  {
 }
 
 rename no_gathering_national no_gathering
-merge 1:1 date adm1 using `no_gather', nogen update replace
+merge 1:1 date adm1 using `no_gather', update replace
+egen stringent_no_gathering = mean(_m), by(adm1)
+g stringent_date = date if no_gathering_size == 0
+sort adm1 date
+bysort adm1: carryforward stringent_date, replace
+replace no_gathering_size = 0 if stringent_date < date & stringent_date!=. // keep gathering size to 0 when nationwide policy is enforced
+drop _m stringent_no_gathering stringent_date
+
 
 drop adm1_name //reload region name, corrupted accent due to import csv above
 merge m:1 adm1 using "data/interim/france/region_ID.dta", keep(1 3) keepusing(adm1_name adm1_pop) nogen update
 order adm1 adm1_name date cum_c*
+
+merge m:1 date using `implied', nogen update replace // replace intensity of implied variables
+
+
 sort adm1 date
 xtset adm1 date
 
@@ -140,16 +169,17 @@ foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolati
 	drop seq
 	bysort adm1: carryforward `var', replace
 }
+br adm1 date no_gathering_inside_popw
+
+sort adm1 date
+bysort adm1: carryforward no_gathering_size, replace
+// both inside and outside gathering were prohibited when no_gathering_size equals 0 
+replace no_gathering_inside = 1 if no_gathering_size == 0 
+replace no_gathering_inside_popw = no_gathering_popw if no_gathering_size == 0 & home_isolation == 0  // popw is 1 when home_isolation > 0
 
 replace school_closure_popw = 0 if school_closure_popw == .
 bysort adm1: replace school_closure_popw = sum(school_closure_popw)
 replace school_closure_popw = 1 if school_closure_popw > 1
-
-replace no_gathering_size = 0 if no_gathering_size == .
-sort adm1 date
-by adm1: replace no_gathering_size = sum(no_gathering_size)
-replace no_gathering_size = 1000 if no_gathering_size == 6000 // decrease cutoff instead of adding the intensity
-replace no_gathering_size = 100 if no_gathering_size == 6100 // decrease cutoff instead of adding the intensity
 
 // ----------------------- merge national and regional measure, adjust for intensity
 egen school_closure_local = rowmax(school_closure school_closure_national) // same policy, aggregate taking max
