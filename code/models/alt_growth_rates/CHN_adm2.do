@@ -198,6 +198,7 @@ outsheet using "models/reg_data/CHN_reg_data.csv", comma replace
 
 // main regression model
 reghdfe D_l_active_cases emergency_declaration_L* travel_ban_local_L* home_isolation_L* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
+est store base
 local r2 = e(r2)
 outreg2 using "results/tables/reg_results/CHN_estimates_table", sideway noparen nodepvar word replace label ///
  title(China, "Dependent variable: growth rate of active cases (\u0916?log cases per day\'29") ///
@@ -264,26 +265,34 @@ testing_regime_change_05mar2020 * _b[testing_regime_change_05mar2020] + ///
 _b[_cons] + __hdfe1__ if e(sample), ci(lb_counter ub_counter)
     
 // effect of package of policies (FOR FIG2)
-lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 + emergency_declaration_L0_to_L7 + ///
-	home_isolation_L8_to_L14 + travel_ban_local_L8_to_L14 + emergency_declaration_L8_to_L14 + ///
-	home_isolation_L15_to_L21 + travel_ban_local_L15_to_L21 + emergency_declaration_L15_to_L21 + ///
-	home_isolation_L22_to_L28 + travel_ban_local_L22_to_L28 + emergency_declaration_L22_to_L28 + ///
-	home_isolation_L29_to_L70 + travel_ban_local_L29_to_L70 + emergency_declaration_L29_to_L70
-post results ("CHN") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+// home_iso implies travel_ban_local
+foreach lag in L0_to_L7 L8_to_L14 L15_to_L21 L22_to_L28 L29_to_L70{
+	lincom home_isolation_`lag' + travel_ban_local_`lag' 
+	post results ("CHN") ("home_iso_`lag' + trvl_ban_loc_`lag'") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+}
+
+nlcom (home_iso_trvl_ban_1: _b[home_isolation_L0_to_L7] + _b[travel_ban_local_L0_to_L7]) ///
+      (home_iso_trvl_ban_2: _b[home_isolation_L8_to_L14] + _b[travel_ban_local_L8_to_L14]) ///
+      (home_iso_trvl_ban_3: _b[home_isolation_L15_to_L21] + _b[travel_ban_local_L15_to_L21]) ///
+	  (home_iso_trvl_ban_4: _b[home_isolation_L22_to_L28] + _b[travel_ban_local_L22_to_L28]) ///
+	  (home_iso_trvl_ban_5: _b[home_isolation_L29_to_L70] + _b[travel_ban_local_L29_to_L70]) ///
+      , post
+est store nlcom
+	
+est restore base
+lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 + emergency_declaration_L0_to_L7		    // first week
+post results ("CHN") ("first week") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L8_to_L14 + travel_ban_local_L8_to_L14 + emergency_declaration_L8_to_L14	    // second week
+post results ("CHN") ("second week") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L15_to_L21 + travel_ban_local_L15_to_L21 + emergency_declaration_L15_to_L21	// third week
+post results ("CHN") ("third week") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L22_to_L28 + travel_ban_local_L22_to_L28 + emergency_declaration_L22_to_L28	// fourth week
+post results ("CHN") ("fourth week") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+lincom home_isolation_L29_to_L70 + travel_ban_local_L29_to_L70 + emergency_declaration_L29_to_L70	// fifth week and after
+post results ("CHN") ("fifth week and after") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 local comb_policy = round(r(estimate), 0.001)
-local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
-
-lincom home_isolation_L0_to_L7 + travel_ban_local_L0_to_L7 + emergency_declaration_L0_to_L7		    // first week
-post results ("CHN") ("first week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-lincom home_isolation_L8_to_L14 + travel_ban_local_L8_to_L14 + emergency_declaration_L8_to_L14	    // second week
-post results ("CHN") ("second week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-lincom home_isolation_L15_to_L21 + travel_ban_local_L15_to_L21 + emergency_declaration_L15_to_L21	// third week
-post results ("CHN") ("third week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-lincom home_isolation_L22_to_L28 + travel_ban_local_L22_to_L28 + emergency_declaration_L22_to_L28	// fourth week
-post results ("CHN") ("fourth week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-lincom home_isolation_L29_to_L70 + travel_ban_local_L29_to_L70 + emergency_declaration_L29_to_L70	// fifth week and after
-post results ("CHN") ("fifth week (home+travel)") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+local subtitle = "Week 5+ = " + string(`comb_policy') // for coefplot
 
 // quality control: don't want to be forecasting negative growth (not modeling recoveries)
 // fix so there are no negative growth rates in error bars
@@ -299,10 +308,14 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (similar to Fig2)
-coefplot, keep(emergency_declaration_L* travel_ban_local_L* home_isolation_L*) ///
-tit("CHN: policy packages") subtitle(`subtitle2') ///
-xline(0) name(CHN_policy, replace)
+// coefplot, keep(emergency_declaration_L* travel_ban_local_L* home_isolation_L*) ///
+// tit("CHN: policy packages") subtitle(`subtitle2') ///
+// xline(0) name(CHN_policy, replace)
 
+coefplot (base, keep(emergency_declaration_L* travel_ban_local_L*)) ///
+(nlcom, keep(home_iso_trvl_ban_*)), tit("CHN: policy packages") ///
+subtitle(`subtitle2') xline(0) name(CHN_policy, replace)
+	
 
 // export predicted counterfactual growth rate
 preserve
@@ -315,17 +328,24 @@ restore
 // compute ATE
 preserve
 	keep if e(sample) == 1
-	collapse  D_l_active_cases home_isolation_*  travel_ban_local_*
-	predictnl ATE = home_isolation_L0_to_L7 *_b[home_isolation_L0_to_L7] + ///
-	travel_ban_local_L0_to_L7*_b[travel_ban_local_L0_to_L7] + ///
-	home_isolation_L8_to_L14*_b[home_isolation_L8_to_L14] +  ///
-	travel_ban_local_L8_to_L14*_b[travel_ban_local_L8_to_L14] + ///
-	home_isolation_L15_to_L21*_b[home_isolation_L15_to_L21] + ///
-	travel_ban_local_L15_to_L21*_b[travel_ban_local_L15_to_L21] + /// 
-	home_isolation_L22_to_L28*_b[home_isolation_L22_to_L28] + /// 
-	travel_ban_local_L22_to_L28*_b[travel_ban_local_L22_to_L28] + ///
-	home_isolation_L29_to_L70*_b[home_isolation_L29_to_L70] + ///
-	travel_ban_local_L29_to_L70*_b[travel_ban_local_L29_to_L70], ci(LB UB) se(sd) p(pval)
+	collapse  D_l_active_cases home_isolation_*  travel_ban_local_* emergency_declaration_*
+	predictnl ATE = ///	
+	home_isolation_L0_to_L7          * _b[home_isolation_L0_to_L7] + ///
+	travel_ban_local_L0_to_L7        * _b[travel_ban_local_L0_to_L7] + ///
+	emergency_declaration_L0_to_L7   * _b[emergency_declaration_L0_to_L7] + ///
+	home_isolation_L8_to_L14         * _b[home_isolation_L8_to_L14] +  ///
+	travel_ban_local_L8_to_L14       * _b[travel_ban_local_L8_to_L14] + ///
+	emergency_declaration_L8_to_L14  * _b[emergency_declaration_L8_to_L14] + ///
+	home_isolation_L15_to_L21        * _b[home_isolation_L15_to_L21] + ///
+	travel_ban_local_L15_to_L21      * _b[travel_ban_local_L15_to_L21] + /// 
+	emergency_declaration_L15_to_L21 * _b[emergency_declaration_L15_to_L21] + /// 
+	home_isolation_L22_to_L28        * _b[home_isolation_L22_to_L28] + /// 
+	travel_ban_local_L22_to_L28 	 * _b[travel_ban_local_L22_to_L28] + ///
+	emergency_declaration_L22_to_L28 * _b[emergency_declaration_L22_to_L28] + ///
+	home_isolation_L29_to_L70 		 * _b[home_isolation_L29_to_L70] + ///
+	travel_ban_local_L29_to_L70 	 * _b[travel_ban_local_L29_to_L70] + ///
+	emergency_declaration_L29_to_L70 * _b[emergency_declaration_L29_to_L70] ///
+	, ci(LB UB) se(sd) p(pval)
 	keep ATE LB UB sd pval 
 	g r2 = `r2'
 	tempfile ATE

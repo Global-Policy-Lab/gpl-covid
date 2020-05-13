@@ -78,7 +78,9 @@ def main():
         "writing merged policy and cases data to ",
         os.path.join(out_dir, output_csv_name),
     )
-    df_merged.to_csv(os.path.join(out_dir, output_csv_name), index=False)
+    df_merged.to_csv(
+        os.path.join(out_dir, output_csv_name), index=False, float_format="%.7f"
+    )
 
 
 if __name__ == "__main__":

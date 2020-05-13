@@ -27,6 +27,7 @@ dependencies:
     - r-downloader=0.4
     - r-ggsci=2.9
     - r-gridExtra=2.3
+    - r-gt=0.2
     - r-irkernel=1.1
     - r-lfe=2.8
     - r-lubridate=1.7
