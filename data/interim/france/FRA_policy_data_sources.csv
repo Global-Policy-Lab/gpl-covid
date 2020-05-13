@@ -27,22 +27,22 @@ FRA,All,All,testing_regime,,"With the ""stade 3"" declared by the government, te
 FRA,All,All,business_closure,,,1.0,N,3/15/2020,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,,False
 FRA,All,All,school_closure_all,,for minimum of 15 days or as long as necessary,1.0,N,3/16/2020,,https://www.gouvernement.fr/info-coronavirus,3/14/2020,,False
 FRA,All,All,home_isolation,,shelter-in-place,0.33,N,3/17/2020,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,,False
-FRA,All,All,social_distance,,shelter-in-place,1.0,N,3/17/2020,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,,False
-FRA,All,All,event_cancel,,shelter-in-place,1.0,N,3/17/2020,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,,False
-FRA,All,All,no_gathering_inside,,shelter-in-place,1.0,N,3/17/2020,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,,False
-FRA,76,82,event_cancel,,"biking lane, hikes and other public places closure",1.0,N,3/19/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,False
+FRA,All,All,social_distance,,shelter-in-place,1.0,N,3/17/2020,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,,True
+FRA,All,All,event_cancel,,shelter-in-place,1.0,N,3/17/2020,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,,True
+FRA,All,All,no_gathering_inside,,shelter-in-place,1.0,N,3/17/2020,,https://www.gouvernement.fr/info-coronavirus,3/17/2020,,True
+FRA,76,82,event_cancel,,"biking lane, hikes and other public places closure",1.0,N,3/19/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,True
 FRA,76,82,home_isolation,,"biking lane, hikes and other public places closure",0.67,N,3/19/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,False
-FRA,76,82,social_distance,,"biking lane, hikes and other public places closure",1.0,N,3/19/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,False
-FRA,76,82,no_gathering_inside,,"biking lane, hikes and other public places closure",1.0,N,3/19/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,False
+FRA,76,82,social_distance,,"biking lane, hikes and other public places closure",1.0,N,3/19/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,True
+FRA,76,82,no_gathering_inside,,"biking lane, hikes and other public places closure",1.0,N,3/19/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,True
 FRA,84,74,school_closure_1,,,1.0,N,3/2/2020,,https://www.auvergne-rhone-alpes.ars.sante.fr/communique-de-presse-covid-19-point-de-situation-au-lundi-2-mars-14h,3/14/2020,,False
-FRA,93,6,social_distance,,strict home isolation between 10pm and 5am,1.0,N,3/21/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,False
+FRA,93,6,social_distance,,strict home isolation between 10pm and 5am,1.0,N,3/21/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,True
 FRA,93,6,home_isolation,,strict home isolation between 10pm and 5am,0.67,N,3/21/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,False
-FRA,93,6,event_cancel,,strict home isolation between 10pm and 5am,1.0,N,3/21/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,False
-FRA,93,6,no_gathering_inside,,strict home isolation between 10pm and 5am,1.0,N,3/21/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,False
+FRA,93,6,event_cancel,,strict home isolation between 10pm and 5am,1.0,N,3/21/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,True
+FRA,93,6,no_gathering_inside,,strict home isolation between 10pm and 5am,1.0,N,3/21/2020,,https://fr.wikipedia.org/wiki/Confinement_de_2020_en_France,3/25/2020,,True
 FRA,All,All,home_isolation,,"Ban of outside market, very limited movement outside of home (no more than 1 km for more than one hour)",1.0,N,3/23/2020,,https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000041746694&fastPos=1&fastReqId=2083200511&categorieLien=cid&oldAction=rechTexte,3/25/2020,,False
-FRA,All,All,no_gathering_inside,,"Ban of outside market, very limited movement outside of home (no more than 1 km for more than one hour)",1.0,N,3/23/2020,,https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000041746694&fastPos=1&fastReqId=2083200511&categorieLien=cid&oldAction=rechTexte,3/25/2020,,False
-FRA,All,All,event_cancel,,"Ban of outside market, very limited movement outside of home (no more than 1 km for more than one hour)",1.0,N,3/23/2020,,https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000041746694&fastPos=1&fastReqId=2083200511&categorieLien=cid&oldAction=rechTexte,3/25/2020,,False
-FRA,All,All,social_distance,,"Ban of outside market, very limited movement outside of home (no more than 1 km for more than one hour)",1.0,N,3/23/2020,,https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000041746694&fastPos=1&fastReqId=2083200511&categorieLien=cid&oldAction=rechTexte,3/25/2020,,False
+FRA,All,All,no_gathering_inside,,"Ban of outside market, very limited movement outside of home (no more than 1 km for more than one hour)",1.0,N,3/23/2020,,https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000041746694&fastPos=1&fastReqId=2083200511&categorieLien=cid&oldAction=rechTexte,3/25/2020,,True
+FRA,All,All,event_cancel,,"Ban of outside market, very limited movement outside of home (no more than 1 km for more than one hour)",1.0,N,3/23/2020,,https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000041746694&fastPos=1&fastReqId=2083200511&categorieLien=cid&oldAction=rechTexte,3/25/2020,,True
+FRA,All,All,social_distance,,"Ban of outside market, very limited movement outside of home (no more than 1 km for more than one hour)",1.0,N,3/23/2020,,https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000041746694&fastPos=1&fastReqId=2083200511&categorieLien=cid&oldAction=rechTexte,3/25/2020,,True
 FRA,32,60,event_cancel,,canceled professional football game between FC Chambly Oise and Le Mans FC,1.0,N,3/3/2020,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,,False
 FRA,44,68,school_closure_3,,,1.0,N,3/4/2020,,https://fr.wikipedia.org/wiki/Pand%C3%A9mie_de_maladie_%C3%A0_coronavirus_de_2020_en_France,3/14/2020,,False
 FRA,93,13,school_closure_1,,one school with confirmed case closed,1.0,N,3/4/2020,,https://www.paca.ars.sante.fr/coronavirus-en-provence-alpes-cote-dazur-point-de-situation,3/15/2020,,False

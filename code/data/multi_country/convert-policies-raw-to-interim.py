@@ -68,6 +68,9 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
 
     pcopy["policy"] = dst_policy
 
+    if country_code == "FRA":
+        pcopy["implied_policy"] = True
+
     if country_code not in countries_wo_intensity:
         pcopy["policy_intensity"] = dst_val
 
@@ -156,8 +159,6 @@ def process_country(country_code, implies):
         if country_code == "FRA":
             df["implied_policy"] = False
         df = apply_implies(df, implies[country_code], country_code)
-        if country_code == "FRA":
-            df.loc[df["implied_policy"].isnull(), "implied_policy"] = True
         df = df.reset_index(drop=True)
     df.to_csv(path_interim, index=False)
 
