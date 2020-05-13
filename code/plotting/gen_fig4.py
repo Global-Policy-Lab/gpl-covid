@@ -638,7 +638,8 @@ def main():
     if save_data:
         out_fn = fig_data_dir / fig_data_fn
         print("saving fig data in {0}".format(out_fn))
-        df_all_countries.to_csv(out_fn, index=False)
+        # avoid rounding issues
+        df_all_countries.to_csv(out_fn, index=False, float_format="%.3f")
 
     if save_fig:
         out_fn = fig_dir / fig_name
