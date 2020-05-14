@@ -48,13 +48,12 @@ op_dict = {
 
 
 def is_already_in_df(adm1_name, adm2_name, dst_policy, df):
-    found = df["policy"] == dst_policy
+    # Assuming that any location with a policy end_date is specified at the adm2 level--true as of 5/13
     found = (
-        (found)
-        & (df["adm2_name"].isin(["All", adm2_name]))
-        & (df["adm1_name"].isin(["All", adm1_name]))
+        (df["policy"] == dst_policy)
+        & (df["adm1_name"] == adm1_name)
+        & (df["adm2_name"] == adm2_name)
     )
-
     return found.sum() > 0
 
 
