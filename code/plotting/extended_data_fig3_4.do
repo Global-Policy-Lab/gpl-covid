@@ -1,6 +1,6 @@
 // generate appendix figure - cross validation
 
-foreach ADM in "CHN" "FRA" "IRN" "KOR" "ITA" "USA" {
+foreach ADM in "ITA" "CHN" "FRA" "IRN" "KOR" "USA"  {
 	import delim using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_`ADM'.csv", clear
 	cap g i = ite
 	tempfile f`ADM'

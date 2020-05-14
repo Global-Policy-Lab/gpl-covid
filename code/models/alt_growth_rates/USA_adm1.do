@@ -349,16 +349,12 @@ postfile results str18 adm0 str18 sample str18 policy beta se using `results_fil
 *Resave main effect
 reghdfe D_l_cum_confirmed_cases testing_regime_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
-foreach var of varlist p_*{
-	if `var' == p_10 {
-		lincom  p_10 + p_1 + p_5 + p_8
-		post results ("USA") ("full_sample") ("p_10*") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-	}
-	else{
-		post results ("USA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
-	}
+foreach var of varlist p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 p_11{
+	post results ("USA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 
+lincom  p_10 + p_1 + p_5 + p_8
+post results ("USA") ("full_sample") ("p_10*") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
 lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 + p_7 + p_8 + p_9 + p_10 + p_11
 post results ("USA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
@@ -390,16 +386,16 @@ drop `counter_CV'
 levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
 	reghdfe D_l_cum_confirmed_cases testing_regime_* p_* if adm1_name != "`adm'", absorb(i.adm1_id i.dow, savefe) cluster(t) resid
-	foreach var of varlist p_*{
-	
-	if `var' == p_10 {
-		lincom  p_10 + p_1 + p_5 + p_8
-		post results ("USA") ("`adm'") ("p_10*") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
-	}
-	else{
+
+
+	foreach var of varlist p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 p_11{
 		post results ("USA") ("`adm'") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
-	}		
 	}
+
+	lincom  p_10 + p_1 + p_5 + p_8
+	post results ("USA") ("`adm'") ("p_10*") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+		
+	
 	lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6 + p_7 + p_8 + p_9 + p_10 + p_11
 	post results ("USA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 	predictnl `counter_CV' =  ///
