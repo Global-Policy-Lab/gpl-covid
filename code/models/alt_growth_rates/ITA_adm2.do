@@ -366,6 +366,7 @@ preserve
 restore
 
 //------------------------------------FIXED LAG 
+set seed 1234
 
 tempfile base_data
 save `base_data'

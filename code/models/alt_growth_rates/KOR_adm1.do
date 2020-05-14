@@ -352,6 +352,7 @@ tempfile base_data
 save `base_data'
 
 //------------------------------------FIXED LAG 
+set seed 1234
 
 reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 coefplot, keep(p_*) gen(L0_) title(main model) xline(0)
