@@ -80,6 +80,10 @@ then
     Rscript code/data/usa/download_and_clean_usafacts.R
 fi
 
+### Fill in policies implied by other policies
+printf "***Filling in policies implied by other policies***\n"
+python code/data/multi_country/convert-policies-raw-to-interim.py
+
 ### Dataset merging
 #### CHN
 printf "***Processing and merging CHN data***\n"
@@ -93,16 +97,16 @@ then
 fi
 
 # IRN
-printf "***Processing  and merging IRN data***\n"
+printf "***Processing and merging IRN data***\n"
 Rscript code/data/iran/iran_cleaning.R
 python code/data/iran/iran-split-interim-into-processed.py
 
 # ITA
-printf "***Processing  and merging ITA data***\n"
+printf "***Processing and merging ITA data***\n"
 python code/data/italy/italy-download-cases-merge-policies.py $NDFLAG
 
 # KOR
-printf "***Processing  and merging KOR data***\n"
+printf "***Processing and merging KOR data***\n"
 Rscript code/data/korea/generate_KOR_processed.R
 
 # USA
@@ -112,11 +116,6 @@ python code/data/usa/merge_policy_and_cases.py
 # quality-check processed datasets
 printf "***Checking processed data***\n"
 python code/data/multi_country/quality-check-processed-datasets.py
-
-# Under-reporting data
-if $DOWNLOAD; then
-    Rscript code/data/multi_country/download_russell_underreporting_estimates.R
-fi
 
 ## regression model estimation
 if $STATA
@@ -186,7 +185,7 @@ fi
 
 # ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
 printf "***Creating ED Fig 7***\n"
-Rscript code/models/run_projection_with_multiple_gammas.R
+Rscript code/models/run_projection_sensitivity.R
 
 # ED Figure 8/9
 printf "***Creating ED Fig 8/9***\n"

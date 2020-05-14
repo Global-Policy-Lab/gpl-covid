@@ -87,7 +87,7 @@ def merge_policies_with_population_on_level(
     """Assign all populations at an adm-level to DataFrame of policies
 
     Args:
-        policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```
+        policies (pandas.DataFrame): List of policies as formatted in ```data/int/{`country_code`}/{`country_code`}_policy_data_sources.csv```
         adm_level (int): Adm-level of requested populations.
         country_code (str): Three-letter country code of requested populations
     Kwargs:
@@ -120,7 +120,7 @@ def merge_policies_with_population(
     """Assign all populations at all adm-levels to DataFrame of policies
 
     Args:
-        policies (pandas.DataFrame): List of policies as formatted in ```data/raw/{`country_code`}/{`country_code`}_policy_data_sources.csv```
+        policies (pandas.DataFrame): List of policies as formatted in ```data/int/{`country_code`}/{`country_code`}_policy_data_sources.csv```
         country_code (str): Three-letter country code of requested populations
         max_adm_level (int): Adm-level at and below which populations should be assigned, down to adm1
             e.g. `max_adm_level` == 3 would assign populations at adm-levels 1, 2, and 3

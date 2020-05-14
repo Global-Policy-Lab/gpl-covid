@@ -23,7 +23,7 @@ def main():
     cases_data = cases_data.dropna(how="all", axis=1)
 
     policy_data = pd.read_csv(
-        os.path.join(raw_data_dir, "usa_policy_data_sources.csv"), encoding="latin"
+        os.path.join(int_data_dir, "USA_policy_data_sources.csv"), encoding="latin"
     )
 
     # drop any rows which are all nan
@@ -78,7 +78,9 @@ def main():
         "writing merged policy and cases data to ",
         os.path.join(out_dir, output_csv_name),
     )
-    df_merged.to_csv(os.path.join(out_dir, output_csv_name), index=False)
+    df_merged.to_csv(
+        os.path.join(out_dir, output_csv_name), index=False, float_format="%.7f"
+    )
 
 
 if __name__ == "__main__":
