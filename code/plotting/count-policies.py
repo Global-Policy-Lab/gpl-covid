@@ -50,6 +50,11 @@ def get_adm_counts(policies_df):
     for col in groupby_cols:
         assert policies_df[col].isnull().sum() == 0
 
+    groupby_cols = list(
+        set(groupby_cols)
+        | set([c for c in policies_df.columns if c.startswith("intensity_group")])
+    )
+
     # Drop duplicates over groupby_cols
     policies_df = policies_df[groupby_cols].drop_duplicates()
 
