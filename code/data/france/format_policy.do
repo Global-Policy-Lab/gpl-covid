@@ -24,10 +24,14 @@ preserve
 	drop policy_int
 	reshape wide size, i(date) j(policy) string
 	rename size* *
+	g no_gathering_size = no_gathering
+	replace no_gathering = 1 if no_gathering > 1
 	foreach var in "event_cancel" "no_gathering_inside" "social_distance"{
 		g `var'_popw = 1 // national implied adjustment from home_isolation, popw value is 1
 	}
 	drop implied
+	
+	
 	tempfile implied policy
 	save `implied'	
 restore
@@ -105,7 +109,7 @@ replace school_closure = 1 if school_closure > 1 & school_closure != .
 preserve
 	keep if no_gathering == 1
 	keep no_gathering no_gathering_popw adm1 date
-	g no_gathering_size = 0
+	g no_gathering_size = 2
 	tempfile no_gather
 	save `no_gather'
 restore
@@ -142,10 +146,10 @@ foreach var in  "home_isolation"  {
 rename no_gathering_national no_gathering
 merge 1:1 date adm1 using `no_gather', update replace
 egen stringent_no_gathering = mean(_m), by(adm1)
-g stringent_date = date if no_gathering_size == 0
+g stringent_date = date if no_gathering_size == 2
 sort adm1 date
 bysort adm1: carryforward stringent_date, replace
-replace no_gathering_size = 0 if stringent_date < date & stringent_date!=. // keep gathering size to 0 when nationwide policy is enforced
+replace no_gathering_size = 2 if stringent_date < date & stringent_date!=. // keep gathering size to 0 when nationwide policy is enforced
 drop _m stringent_no_gathering stringent_date
 
 
@@ -154,7 +158,6 @@ merge m:1 adm1 using "data/interim/france/region_ID.dta", keep(1 3) keepusing(ad
 order adm1 adm1_name date cum_c*
 
 merge m:1 date using `implied', nogen update replace // replace intensity of implied variables
-
 
 sort adm1 date
 xtset adm1 date
