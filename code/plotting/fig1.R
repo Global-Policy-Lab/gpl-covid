@@ -100,27 +100,41 @@ for (c in 1:6){
     adm[adm$cum_confirmed_cases_imputed_drop < 10,]$cum_confirmed_cases_imputed_drop <- 0 
   }
   
+  # Identify whether any date is missing case data across all adm units
+  adm$no_case_data <- 0
+  dates <- unique(adm$date)
+  for (d in 1:length(dates)){
+    sub <- subset(adm, date==dates[d])
+    if(all(is.na(sub$cum_confirmed_cases))){adm[adm$date==dates[d],]$no_case_data <- 1}
+  }
+  
   # Aggregate cases and deaths to national level timeseries
   if (country=="IRN" | country=="FRA"){
     national <- aggregate(adm[,c("cum_confirmed_cases_imputed", 
-                                 "cum_confirmed_cases_imputed_drop")], 
+                                 "cum_confirmed_cases_imputed_drop",
+                                 "no_case_data")], 
                           by=list(adm$date), FUN=sum)
-    colnames(national) <- c("date", "cases", "cases_drop")
+    colnames(national) <- c("date", "cases", "cases_drop", "no_case_data")
   }
   if (country=="USA" | country=="CHN" | country=="ITA"){
     national <- aggregate(adm[,c("cum_confirmed_cases_imputed", 
                                  "cum_confirmed_cases_imputed_drop",
-                                 "cum_deaths_imputed")], 
+                                 "cum_deaths_imputed",
+                                 "no_case_data")], 
                           by=list(adm$date), FUN=sum)
-    colnames(national) <- c("date", "cases", "cases_drop", "deaths")
+    colnames(national) <- c("date", "cases", "cases_drop", "deaths", "no_case_data")
   }
   if (country=="KOR"){
     national <- aggregate(adm[,c("cum_confirmed_cases", 
                                  "cum_confirmed_cases_imputed_drop",
-                                 "cum_deaths")], 
+                                 "cum_deaths",
+                                 "no_case_data")],
                           by=list(adm$date), FUN=sum)
-    colnames(national) <- c("date", "cases", "cases_drop", "deaths")
+    colnames(national) <- c("date", "cases", "cases_drop", "deaths", "no_case_data")
   }
+  if (any(national$no_case_data > 0)){national[national$no_case_data > 0,]$no_case_data <- 1}
+  national$case_data <- 1
+  if (any(national$no_case_data > 0)){national[national$no_case_data==1,]$case_data <- NA}
   national <- arrange(national, date)
   national <- subset(national, date >= start & date <= end)
   
@@ -245,7 +259,7 @@ for (c in 1:6){
   ## Plot epidemiological timeseries on left axis 
   plot(national$date, national$cases/1000, type="l", ylim=c(0,cases_max), 
        axes=FALSE, xlab="", ylab="", lwd=1, main=country) #cases
-  points(national$date, national$cases/1000, pch=19, cex=0.5)
+  points(national$date, national$cases/1000*national$case_data, pch=19, cex=0.5)
   axis(2, ylim=c(0,cases_max),las=1, lwd=0.5)  ## las=1 makes horizontal labels
   mtext("Cases and deaths (1,000)",side=2,line=4)
   if(country != "IRN"){lines(national$date, national$deaths/1000,  lty=2, lwd=1)} #deaths
