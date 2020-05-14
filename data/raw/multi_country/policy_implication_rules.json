@@ -29,7 +29,8 @@
       [
         ["event_cancel", 1],
         ["social_distance", 1],
-        ["no_gathering_inside", 1]
+        ["no_gathering_inside", 1],
+        ["no_gathering", 1, 2]
       ]
     ]
   ],
