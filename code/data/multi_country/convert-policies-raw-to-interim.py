@@ -49,7 +49,7 @@ op_dict = {
 
 def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
 
-    dst_policy, dst_val = dst_rule
+    dst_policy, dst_val, *dst_args = dst_rule
 
     # Get operator function from operator string
     op = op_dict[op_str]
@@ -67,8 +67,9 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
     pcopy = df[mask].copy()
 
     pcopy["policy"] = dst_policy
-
     pcopy["implied_policy"] = True
+    if dst_policy == "no_gathering" and len(dst_args) > 0:
+        pcopy["no_gathering_size"] = dst_args[0]
 
     if country_code not in countries_wo_intensity:
         pcopy["policy_intensity"] = dst_val
