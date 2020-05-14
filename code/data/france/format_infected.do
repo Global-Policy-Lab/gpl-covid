@@ -18,7 +18,8 @@ replace adm1_name = "Centre" if adm1_name == "CentreValdeLoire"
 replace adm1_name = "Réunion" if adm1_name == "LaRéunion"
 // save admin2 population & ID
 destring adm2, replace force
-drop if adm2 == .
+replace adm2 = 100 if departement_name == "Corse-du-Sud"
+replace adm2 = 101 if departement_name == "Haute-Corse"
 save "data/interim/france/departement_info.dta", replace
 keep adm2 adm1_name region_id pop
 rename region_id adm1
@@ -158,6 +159,4 @@ preserve
 restore
 merge 1:1 date adm1 using `hospi', nogen
 merge m:1 adm1 using "data/interim/france/region_ID.dta", update replace nogen
-replace adm1_name = "Corse" if adm1 == 94
-
 outsheet * using "data/interim/france/france_confirmed_cases_by_region.csv", replace comma
