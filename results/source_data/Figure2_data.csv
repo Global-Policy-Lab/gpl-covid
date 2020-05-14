@@ -1,53 +1,67 @@
 adm0,policy,beta,se
-"CHN","home_isolation_L0_to_L7",-.094,.017
-"CHN","travel_ban_local_L0_to_L7",-.041,.029
-"CHN","home_isolation_L8_to_L14",-.135,.016
-"CHN","travel_ban_local_L8_to_L14",-.164,.036
-"CHN","home_isolation_L15_to_L21",-.153,.016
-"CHN","travel_ban_local_L15_to_L21",-.189,.034
-"CHN","home_isolation_L22_to_L28",-.159,.016
-"CHN","travel_ban_local_L22_to_L28",-.177,.032
-"CHN","home_isolation_L29_to_L70",-.161,.019
-"CHN","travel_ban_local_L29_to_L70",-.178,.032
-"CHN","comb. policy",-1.451,.17
-"CHN","first week (home+travel)",-.136,.031
-"CHN","second week (home+travel)",-.299,.04
-"CHN","third week (home+travel)",-.341,.036
-"CHN","fourth week (home+travel)",-.336,.034
-"CHN","fifth week (home+travel)",-.339,.035
-"CHN","no_policy rate",.214,.083
-"CHN_Wuhan","no_policy rate",.356,.029
+"CHN","emergency_declaration_L0_to_L7",-.011,.043
+"CHN","emergency_declaration_L8_to_L14",-.173,.046
+"CHN","emergency_declaration_L15_to_L21",-.234,.047
+"CHN","emergency_declaration_L22_to_L28",-.251,.047
+"CHN","emergency_declaration_L29_to_L70",-.248,.047
+"CHN","travel_ban_local_L0_to_L7",.015,.015
+"CHN","travel_ban_local_L8_to_L14",-.009,.018
+"CHN","travel_ban_local_L15_to_L21",-.031,.023
+"CHN","travel_ban_local_L22_to_L28",-.048,.029
+"CHN","travel_ban_local_L29_to_L70",-.079,.038
+"CHN","home_isolation_L0_to_L7",-.029,.014
+"CHN","home_isolation_L8_to_L14",-.021,.017
+"CHN","home_isolation_L15_to_L21",-.014,.021
+"CHN","home_isolation_L22_to_L28",-.003,.027
+"CHN","home_isolation_L29_to_L70",.034,.037
+"CHN","home_iso_L0_to_L7 + trvl_ban_loc_L0_to_L7",-.014,.012
+"CHN","home_iso_L8_to_L14 + trvl_ban_loc_L8_to_L14",-.031,.013
+"CHN","home_iso_L15_to_L21 + trvl_ban_loc_L15_to_L21",-.045,.015
+"CHN","home_iso_L22_to_L28 + trvl_ban_loc_L22_to_L28",-.051,.016
+"CHN","home_iso_L29_to_L70 + trvl_ban_loc_L29_to_L70",-.045,.02
+"CHN","first week",-.025,.046
+"CHN","second week",-.204,.049
+"CHN","third week",-.279,.047
+"CHN","fourth week",-.302,.046
+"CHN","fifth week and after",-.293,.047
+"CHN","no_policy rate",.309,.029
+"CHN_Wuhan","no_policy rate",.356,.03
 "KOR","p_1",-.083,.038
 "KOR","p_2",-.304,.151
 "KOR","p_3",-.127,.046
 "KOR","p_4",.02,.019
 "KOR","comb. policy",-.494,.15
 "KOR","no_policy rate",.314,.07
-"ITA","p_1",.148,.067
-"ITA","p_2",-.106,.07
-"ITA","p_3",-.303,.147
-"ITA","p_4",-.076,.05
-"ITA","p_5",-.142,.107
-"ITA","p_6",.069,.06
-"ITA","comb. policy",-.409,.119
-"ITA","no_policy rate",.373,.04
-"IRN","p_1",-.285,.079
-"IRN","p_2",-.151,.033
-"IRN","comb. policy",-.436,.068
-"IRN","no_policy rate",.527,.051
-"FRA","national_lockdown",-.048,.025
-"FRA","school_closure",-.005,.039
-"FRA","pck_social_distanc",-.227,.07
-"FRA","comb. policy",-.279,.058
-"FRA","no_policy rate",.345,.061
-"USA","p_1",-.094,.061
-"USA","p_2",-.119,.041
-"USA","p_3",-.108,.029
-"USA","p_4",.068,.037
-"USA","p_5",.014,.018
-"USA","p_6",.042,.021
-"USA","p_7",-.02,.024
-"USA","p_8",-.064,.024
-"USA","p_9",-.066,.014
-"USA","comb. policy",-.347,.06
-"USA","no_policy rate",.297,.07
+"ITA","p_1",.144,.068
+"ITA","p_2",-.109,.07
+"ITA","p_3",-.331,.137
+"ITA","p_4",-.084,.055
+"ITA","p_5",-.121,.098
+"ITA","p_6",.048,.051
+"ITA","comb. policy",.028,.078
+"ITA","comb. policy",-.453,.105
+"ITA","no_policy rate",.372,.04
+"IRN","p_1",-.334,.089
+"IRN","p_2",-.154,.033
+"IRN","comb. policy",-.487,.076
+"IRN","no_policy rate",.578,.051
+"FRA","national_lockdown",.081,.053
+"FRA","school_closure_pop",-.012,.041
+"FRA","pck_social_distanc",-.239,.072
+"FRA","natl_lockdown_comb",-.158,.053
+"FRA","comb. policy",-.17,.02
+"FRA","no_policy rate",.33,.05
+"USA","p_1",.013,.035
+"USA","p_2",-.25,.047
+"USA","p_3",-.063,.031
+"USA","p_4",-.023,.099
+"USA","p_5",-.052,.019
+"USA","p_6",.024,.03
+"USA","p_7",0,.033
+"USA","p_8",-.059,.021
+"USA","p_9",.015,.02
+"USA","p_10",-.023,.02
+"USA","p_11",.053,.038
+"USA","home_iso_combined",-.121,.028
+"USA","comb. policy",-.365,.102
+"USA","no_policy rate",.286,.067

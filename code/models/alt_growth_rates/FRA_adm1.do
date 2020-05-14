@@ -100,9 +100,6 @@ lab var pck_social_distance "Social distance"
 
 lab var school_closure_popwt "School closure"
 
-// gen policy_ct = pck_social_distance + school_closure + national_lockdown
-// sum policy_ct
-
 //------------------main estimates
 
 // output data used for reg
@@ -111,22 +108,12 @@ outsheet using "models/reg_data/FRA_reg_data.csv", comma replace
 // main regression model
 reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popw national_lockdown ///
  testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid  
-
-/*TEST combined effect
-coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) xline(0)  gen(plot)  
-lincom pck_social_distance + national_lockdown
-replace plotb = r(estimate) if plotat == 3
-replace plotll1 = r(estimate) - 1.96 * r(se) if plotat == 3
-replace plotul1 = r(estimate) + 1.96 * r(se) if plotat == 3
-g y = - plotat
-tw rspike plotul1 plotll1 y, hor || scatter y plotb, xline(0) ylab(none)
-stop
-*/
-
+est store base
 
 outreg2 using "results/tables/reg_results/FRA_estimates_table", sideway noparen nodepvar word replace label ///
- addtext(Region FE, "YES", Day-of-Week FE, "YES") title(France, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ title(France, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ stats(coef se pval) dec(3) ctitle("Coefficient"; "Std Error"; "P-value") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ "This regression includes region fixed effects, day-of-week fixed effects, and clustered standard errors at the day level." "" ///
  "\'22National lockdown\'22 policies include business closures and home isolation.")
 cap erase "results/tables/reg_results/FRA_estimates_table.txt"
 
@@ -143,7 +130,7 @@ predict e if e(sample), resid
 
 hist e, bin(30) tit(France) lcolor(white) fcolor(navy) xsize(5) name(hist_fra, replace)
 
-qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_fra, replace) yscale(titlegap(*-37))
+qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_fra, replace)
 
 graph combine hist_fra qn_fra, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_fra.gph, replace)
 graph drop hist_fra qn_fra
@@ -168,7 +155,17 @@ if e(sample)
 predictnl y_counter = testing_regime_15mar2020 * _b[testing_regime_15mar2020] + ///
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
-// effect of all policies combined (FOR FIG2)
+// effect of package of policies (FOR FIG2)
+
+// home_iso (national_lockdown) implies event_cancel, social_distance, no_gathering_inside and no_gathering
+lincom national_lockdown + pck_social_distance
+post results ("FRA") ("natl_lockdown_combined") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+nlcom (natl_lockdown_combined: _b[national_lockdown] + _b[pck_social_distance]), post
+est store nlcom
+
+// all policies
+est restore base
 lincom national_lockdown + school_closure_popwt + pck_social_distance 
 post results ("FRA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
@@ -189,12 +186,15 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (similar to FIG2)
-coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) ///
-tit("FRA: policy packages") subtitle("`subtitle2'") ///
-caption("Social distance = (no_gath_1000 + no_gath_100 + event_cancel +" " no_gathering_inside + social_distance) / 5" ///
-"National lockdown = (business_closure + home_isolation) / 2", span) ///
-xline(0) name(FRA_policy, replace) 
+// coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) ///
+// tit("FRA: policy packages") subtitle("`subtitle2'") ///
+// caption("Social distance = (no_gath_1000 + no_gath_100 + event_cancel +" " no_gathering_inside + social_distance) / 5" ///
+// "National lockdown = (business_closure + home_isolation) / 2", span) ///
+// xline(0) name(FRA_policy, replace) 
 
+coefplot (base, keep(pck_social_distance school_closure_popwt)) ///
+(nlcom, keep(natl_lockdown_combined)), tit("FRA: policy packages") ///
+subtitle(`subtitle2') xline(0) name(FRA_policy, replace)
 
 // export coefficients (FOR FIG2)
 postclose results
@@ -238,7 +238,7 @@ tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
-title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
+title(France, ring(0) position(11)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/FRA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
