@@ -94,10 +94,11 @@ lab var day_avg "Observed avg. change in log cases"
 // NOTE: no_gathering has no variation
 
 // create national school_closure var for provinces that close schools on 3/5
-by adm1_id: egen school_closure_natl0 = min(school_closure)
+by adm1_id: egen school_closure_natl0 = min(school_closure) 
 gen school_closure_natl = school_closure if school_closure_natl0==0
 	replace school_closure_natl = 0 if school_closure_natl==.
-
+drop school_closure_natl0
+	
 // Merging March 1-5 policies, since they all happened at the same time during 
 // break in the health data (missing cases for 3/2-3/3)
 // so p_1 = 1/3 on 3/1 when opt travel ban enacted, then p_1 = 1 starting 3/5
@@ -260,6 +261,8 @@ drop miss_ct
 
 
 //----------------------------------------------FIXED LAG 
+set seed 1234
+
 tempfile base_data
 save `base_data'
 
