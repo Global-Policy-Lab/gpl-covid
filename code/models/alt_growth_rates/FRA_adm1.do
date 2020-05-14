@@ -390,7 +390,6 @@ postfile results str18 adm0 str18 sample str18 policy beta se using `results_fil
 reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popwt ///
 national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 
-foreach var in "national_lockdown" "school_closure_popwt" "pck_social_distance" {
 	post results ("FRA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
 lincom national_lockdown + school_closure_popwt + pck_social_distance
