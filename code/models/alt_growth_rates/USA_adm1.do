@@ -533,7 +533,7 @@ foreach lags of num 0/15{
 		restore
 	}
 	else {
-		qui reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 p_10 p_11, absorb(i.adm1_id i.dow) 	
+		qui reghdfe D_l_cum_confirmed_cases testing_regime_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 p_10 p_11, absorb(i.adm1_id i.dow) 	
 		matrix rsq[`lags'+1,1] = e(r2)
 		matrix rsq[`lags'+1,2] = .
 		matrix rsq[`lags'+1,3] = `lags'	
@@ -559,7 +559,7 @@ reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
 rename *_ *
 reshape long L, i(temp policy) j(val)
 tostring policy, replace
-replace policy = "No gathering, event cancel" if policy == "1"
+replace policy = "No gathering" if policy == "1"
 replace policy = "Social distance" if policy == "2"
 replace policy = "Quarantine positive cases"  if policy == "3"
 replace policy = "Paid sick leave" if policy == "4"
