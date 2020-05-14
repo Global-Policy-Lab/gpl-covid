@@ -6,79 +6,78 @@ CHN,Guangdong,All,emergency_declaration,Level 1 Emergency Declaration,01/23/2020
 CHN,Zhejiang,All,emergency_declaration,Level 1 Emergency Declaration,01/23/2020,,N,http://www.bjnews.com.cn/news/2020/01/23/678373.html,5/6/2020,,False
 CHN,Hubei,Xianning,travel_ban_local,,01/24/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Hubei,Xiantao,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
+CHN,Hubei,Xiaogan,travel_ban_local,,01/24/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Hubei,Yichang,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.xinhuanet.com/politics/2020-03/15/c_1125716736.htm,3/16/2020,,False
 CHN,Hunan,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.yicai.com/news/100480475.html,5/6/2020,,False
 CHN,Jiangsu,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
-CHN,Shanghai,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,http://www.xinhuanet.com/2020-01/24/c_1125500208.htm,5/6/2020,,False
 CHN,Shandong,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
 CHN,Hubei,Tianmen,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
+CHN,Shanghai,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,http://www.xinhuanet.com/2020-01/24/c_1125500208.htm,5/6/2020,,False
 CHN,Sichuan,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
 CHN,Tianjin,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,http://www.xinhuanet.com/2020-01/24/c_1125500208.htm,5/6/2020,,False
 CHN,Yunnan,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
 CHN,Jiangxi,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
 CHN,Hubei,Suizhou,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
-CHN,Hubei,Xiaogan,travel_ban_local,,01/24/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Hubei,Qianjiang,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
 CHN,Hubei,Shiyan,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
+CHN,Hubei,Qianjiang,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
+CHN,Anhui,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,http://www.xinhuanet.com/2020-01/24/c_1125500208.htm,5/6/2020,,False
 CHN,Beijing,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
 CHN,Chongqing,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,http://www.xinhuanet.com/2020-01/24/c_1125500208.htm,5/6/2020,,False
 CHN,Fujian,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
-CHN,Guangxi,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
 CHN,Guizhou,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
-CHN,Anhui,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,http://www.xinhuanet.com/2020-01/24/c_1125500208.htm,5/6/2020,,False
+CHN,Guangxi,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
 CHN,Hubei,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.yicai.com/news/100480475.html,5/6/2020,,False
 CHN,Hubei,Enshi Tujia and Miao Autonomous Prefecture,travel_ban_local,,01/24/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Hubei,Huangshi,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
 CHN,Hubei,Jingmen,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
 CHN,Hubei,Jingzhou,travel_ban_local,,01/24/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
 CHN,Hebei,All,emergency_declaration,Level 1 Emergency Declaration,01/24/2020,,N,https://www.dwnews.com/%E4%B8%AD%E5%9B%BD/60166093/%E6%AD%A6%E6%B1%89%E8%82%BA%E7%82%8E%E7%96%AB%E6%83%85%E4%B8%AD%E5%9B%BD18%E7%9C%81%E5%B8%82%E5%90%AF%E5%8A%A8%E4%B8%80%E7%BA%A7%E5%93%8D%E5%BA%94,5/6/2020,,False
-CHN,Xinjiang,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://www.chinanews.com/gn/2020/01-25/9069324.shtml,5/6/2020,,False
+CHN,Ningxia,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://www.gov.cn/xinwen/2020-02/28/content_5484677.htm,5/6/2020,,False
 CHN,Shanxi,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://www.chinanews.com/gn/2020/01-25/9069517.shtml,5/6/2020,,False
 CHN,Shaanxi,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://m.cnwest.com/sxxw/a/2020/02/27/18528277.html,5/6/2020,,False
 CHN,Qinghai,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,https://www.yicai.com/news/100480955.html,5/6/2020,,False
-CHN,Ningxia,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://www.gov.cn/xinwen/2020-02/28/content_5484677.htm,5/6/2020,,False
 CHN,Neimenggu,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,https://news.xmnn.cn/xmnn/2020/01/25/100658946.shtml,5/6/2020,,False
-CHN,Henan,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://m.news.cctv.com/2020/01/25/ARTINos3YgyLI3l21eKzMiV3200125.shtml,5/6/2020,,False
+CHN,Xinjiang,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://www.chinanews.com/gn/2020/01-25/9069324.shtml,5/6/2020,,False
 CHN,Jilin,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://jl.sina.com.cn/news/s/2020-01-25/detail-iihnzhha4598267.shtml,5/6/2020,,False
+CHN,Henan,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://m.news.cctv.com/2020/01/25/ARTINos3YgyLI3l21eKzMiV3200125.shtml,5/6/2020,,False
 CHN,Heilongjiang,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://hlj.xinhuanet.com/klj/2020-01/26/c_138735091.htm,5/6/2020,,False
 CHN,Hainan,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://www.hainan.gov.cn/hainan/szfwj/202001/6ef49dd6978c494795a170699705d7bc.shtml,5/6/2020,,False
 CHN,Gansu,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,http://www.gs.xinhuanet.com/news/2020-01/25/c_1125501575.htm,5/6/2020,,False
 CHN,Liaoning,All,emergency_declaration,Level 1 Emergency Declaration,01/25/2020,,N,https://www.thepaper.cn/newsDetail_forward_5632430,5/6/2020,,False
 CHN,Henan,Shangqiu,travel_ban_local,,01/27/2020,,N,"https://news.sina.com.cn/c/2020-01-31/doc-iimxyqvy9241769.shtml, https://www.sqnu.edu.cn/info/1013/14613.htm, http://finance.eastmoney.com/a/202002111378815530.html",3/17/2020,,True
-CHN,Hubei,Shennongjia,travel_ban_local,,01/27/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
 CHN,Anhui,All,travel_ban_local,,01/27/2020,,N,http://www.caixin.com/2020-03-09/101506971.html,3/17/2020,,False
 CHN,Henan,Shangqiu,home_isolation,,01/27/2020,,N,"https://news.sina.com.cn/c/2020-01-31/doc-iimxyqvy9241769.shtml, https://www.sqnu.edu.cn/info/1013/14613.htm, http://finance.eastmoney.com/a/202002111378815530.html",3/17/2020,,False
+CHN,Hubei,Shennongjia,travel_ban_local,,01/27/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
 CHN,Hubei,Xiangyang,travel_ban_local,,01/28/2020,3/13/2020,N,http://www.rfi.fr/cn/%E4%B8%AD%E5%9B%BD/20200314-%E6%B9%96%E5%8C%97%E5%B0%81%E9%97%AD%E5%BC%8F%E7%AE%A1%E7%90%86%E6%9D%BE%E7%BB%91-%E4%BD%8E%E9%A3%8E%E9%99%A9%E4%B9%A1%E9%95%87%E7%A4%BE%E5%8C%BA%E5%85%A8%E6%95%B0%E8%A7%A3%E7%A6%81,3/16/2020,,False
 CHN,Hunan,Changsha,home_isolation,,01/29/2020,,N,https://changsha.ihouse.ifeng.com/news/2020_02_03-52563107_0.shtml,3/17/2020,,False
 CHN,Xizang,All,emergency_declaration,Level 1 Emergency Declaration,01/29/2020,,N,http://china.caixin.com/2020-01-29/101509411.html,5/6/2020,,False
 CHN,Hunan,Changsha,travel_ban_local,,01/29/2020,,N,https://changsha.ihouse.ifeng.com/news/2020_02_03-52563107_0.shtml,3/17/2020,,True
 CHN,Ningxia,Wuzhong,travel_ban_local,,01/31/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Ningxia,Yinchuan,travel_ban_local,,01/31/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Ningxia,Yinchuan,home_isolation,,01/31/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Ningxia,Wuzhong,home_isolation,,01/31/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Ningxia,Yinchuan,home_isolation,,01/31/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Hubei,Huanggang,home_isolation,,02/01/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,4/2/2020,,False
-CHN,Shaanxi,Xi'an,travel_ban_local,"1 district first, then 2 others on Feb 4, 2 more on Feb 5",02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Anhui,Bengbu,travel_ban_local,once every two days,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Anhui,Huaibei,travel_ban_local,,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Guangxi,Fangchenggang,travel_ban_local,,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Guangxi,Guigang,travel_ban_local,in urban districts only,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Guangxi,Yulin,travel_ban_local,"1 district, Yuzhou",02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Shandong,Binzhou,travel_ban_local,"1 district, Bincheng",02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Henan,Xinyang,travel_ban_local,"closed management announced Feb 2 but lots of people still traveling from Wuhan, urban poor resume work on March 8 but seems like some workers returned as early as Feb 23 or 26",02/02/2020,03/08/2020,N,http://news.stcn.com/2020/0210/15633808.shtml; http://finance.eastmoney.com/a/202002061374896985.html; http://china.qianlong.com/2020/0315/3844379.shtml; http://finance.eastmoney.com/a/202002241394722886.html,3/17/2020,,True
-CHN,Zhejiang,Wenzhou,travel_ban_local,,02/02/2020,02/20/2020,N,https://www.reuters.com/article/us-china-health-wenzhou/chinas-wenzhou-city-to-re-open-entrances-and-exits-of-highways-after-coronavirus-lockdown-government-statement-idUSKBN20E1ZC,3/16/2020,,False
+CHN,Shaanxi,Xi'an,travel_ban_local,"1 district first, then 2 others on Feb 4, 2 more on Feb 5",02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Shandong,Binzhou,travel_ban_local,"1 district, Bincheng",02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Anhui,Bengbu,home_isolation,once every two days,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Anhui,Huaibei,home_isolation,,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Zhejiang,Wenzhou,home_isolation,"only one person from each household allowed to go outside once every two days, except for medical reasons or to work at shops or pharmacies",02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Shandong,Binzhou,home_isolation,"1 district, Bincheng",02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Shaanxi,Xi'an,home_isolation,"1 district first, then 2 others on Feb 4, 2 more on Feb 5",02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Henan,Xinyang,home_isolation,"closed management announced Feb 2 but lots of people still traveling from Wuhan, urban poor resume work on March 8 but seems like some workers returned as early as Feb 23 or 26",02/02/2020,03/08/2020,N,http://news.stcn.com/2020/0210/15633808.shtml; http://finance.eastmoney.com/a/202002061374896985.html; http://china.qianlong.com/2020/0315/3844379.shtml; http://finance.eastmoney.com/a/202002241394722886.html,3/17/2020,,False
 CHN,Guangxi,Yulin,home_isolation,"1 district, Yuzhou",02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Guangxi,Guigang,home_isolation,in urban districts only,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Guangxi,Fangchenggang,travel_ban_local,,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Zhejiang,Wenzhou,travel_ban_local,,02/02/2020,02/20/2020,N,https://www.reuters.com/article/us-china-health-wenzhou/chinas-wenzhou-city-to-re-open-entrances-and-exits-of-highways-after-coronavirus-lockdown-government-statement-idUSKBN20E1ZC,3/16/2020,,False
 CHN,Guangxi,Fangchenggang,home_isolation,,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Anhui,Huaibei,home_isolation,,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Anhui,Bengbu,home_isolation,once every two days,02/02/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Jiangsu,Huai'an,travel_ban_local,,02/03/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Jiangsu,Wuxi,home_isolation,Just Jiangyin,02/03/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Jiangsu,Wuxi,travel_ban_local,Just Jiangyin,02/03/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jiangsu,Huai'an,home_isolation,,02/03/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Jiangsu,Wuxi,home_isolation,Just Jiangyin,02/03/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Jiangsu,Huai'an,travel_ban_local,,02/03/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Jiangsu,Wuxi,travel_ban_local,Just Jiangyin,02/03/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Shandong,Linyi,travel_ban_local,,02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Heilongjiang,Harbin,travel_ban_local,,02/04/2020,,N,https://www.soundofhope.org/post/339913,3/15/2020,,True
 CHN,Henan,Nanyang,travel_ban_local,,02/04/2020,,N,http://www.asahi.com/ajw/articles/13105716,3/17/2020,,True
 CHN,Henan,Zhengzhou,travel_ban_local,,02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
@@ -86,10 +85,10 @@ CHN,Henan,Zhumadian,travel_ban_local,"only one person from each household allowe
 CHN,Jiangsu,Changzhou,travel_ban_local,,02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jiangsu,Nanjing,travel_ban_local,,02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jiangsu,Nantong,travel_ban_local,,02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Jiangsu,Taizhou,travel_ban_local,"1 district, Jiangyan",02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jiangsu,Xuzhou,travel_ban_local,,02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jiangsu,Zhenjiang,travel_ban_local,,02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jiangxi,Jingdezhen,travel_ban_local,"only one person from each household allowed to go outside once every two days, except for medical reasons or to work at shops or pharmacies",02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Shandong,Linyi,travel_ban_local,,02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Fujian,Fuzhou,travel_ban_local,"only one person from each household allowed to go outside once every two days, except for medical reasons or to work at shops or pharmacies",02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Zhejiang,Hangzhou,home_isolation,"only one person from each household allowed to go outside once every two days, except for medical reasons or to work at shops or pharmacies",02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Zhejiang,Taizhou,travel_ban_local,,02/04/2020,,N,https://www.channelnewsasia.com/news/asia/hangzhou-and-taizhou-cities-far-from-virus-epicentre-implement-12388714,3/16/2020,,False
@@ -108,83 +107,82 @@ CHN,Henan,Nanyang,home_isolation,,02/04/2020,,N,http://www.asahi.com/ajw/article
 CHN,Heilongjiang,Harbin,home_isolation,,02/04/2020,,N,https://www.soundofhope.org/post/339913,3/15/2020,,False
 CHN,Fujian,Fuzhou,home_isolation,"only one person from each household allowed to go outside once every two days, except for medical reasons or to work at shops or pharmacies",02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Jiangsu,Nantong,home_isolation,,02/04/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Jiangsu,Yangzhou,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Hebei,Shijiazhuang,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Jiangsu,Suqian,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Jiangsu,Yancheng,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jiangxi,Nanchang,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Jiangsu,Suqian,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Jiangsu,Taizhou,travel_ban_local,"1 district, Hailing",02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Jiangsu,Yancheng,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Jiangsu,Yangzhou,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Liaoning,All,travel_ban_local,,02/05/2020,,N,https://github.com/Pratitya/wuhan2020-timeline/blob/master/%E6%97%B6%E9%97%B4%E7%BA%BFTIMELINE.md,3/16/2020,,True
+CHN,Hebei,Shijiazhuang,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Shandong,Qingdao,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Shandong,Rizhao,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Shandong,Tai'an,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Sichuan,GarzÃª Tibetan Autonomous Prefecture,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Hainan,Sanya,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Jiangsu,Suqian,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Shandong,Jinan,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Hebei,Shijiazhuang,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Guangxi,Hechi,home_isolation,"1 district, Jinchengjiang",02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Hainan,Haikou,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Guangxi,Liuzhou,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Guangxi,Nanning,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Guangxi,Liuzhou,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Guangxi,Hechi,travel_ban_local,"1 district, Jinchengjiang",02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Guangxi,Guilin,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Anhui,Hefei,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Anhui,Fuyang,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Hainan,Haikou,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Guangxi,Nanning,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Guangxi,Liuzhou,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Sichuan,Ngawa Tibetan and Qiang Autonomous Prefecture,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Guangxi,Hechi,home_isolation,"1 district, Jinchengjiang",02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Guangxi,Guilin,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Anhui,Hefei,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Anhui,Fuyang,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Guangxi,Nanning,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Hainan,Sanya,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Hainan,Sanya,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Yunnan,Kunming,travel_ban_local,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Hebei,Shijiazhuang,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Hainan,Sanya,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Shandong,Tai'an,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Zhejiang,Ningbo,travel_ban_local,,02/05/2020,,N,https://www.scmp.com/news/china/society/article/3049298/coronavirus-zhejiang-adopts-draconian-quarantine-measures-fight,3/16/2020,,False
 CHN,Zhejiang,Ningbo,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Yunnan,Kunming,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Sichuan,Ngawa Tibetan and Qiang Autonomous Prefecture,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Shandong,Tai'an,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Shandong,Rizhao,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Sichuan,GarzÃª Tibetan Autonomous Prefecture,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Shandong,Jinan,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Shandong,Rizhao,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Shandong,Qingdao,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Hainan,Haikou,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Liaoning,All,home_isolation,,02/05/2020,,N,https://github.com/Pratitya/wuhan2020-timeline/blob/master/%E6%97%B6%E9%97%B4%E7%BA%BFTIMELINE.md,3/16/2020,,False
 CHN,Jiangxi,Nanchang,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Jiangsu,Yangzhou,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Jiangsu,Yancheng,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Jiangsu,Taizhou,home_isolation,"1 district, Hailing",02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Shandong,Qingdao,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Jilin,Jilin,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Jiangsu,Suqian,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Shandong,Jinan,home_isolation,,02/05/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Jilin,Changchun,home_isolation,"1 district, Kuancheng",02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Anhui,Ma'anshan,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Guangdong,Zhuhai,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Jiangsu,Suzhou,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Jiangxi,All,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Jilin,Changchun,home_isolation,"1 district, Kuancheng",02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Anhui,Ma'anshan,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Guangdong,Zhuhai,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Sichuan,Neijiang,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Jiangsu,Suzhou,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Jilin,Jilin,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Shaanxi,Xianyang,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Jiangxi,All,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jilin,Changchun,travel_ban_local,"1 district, Kuancheng",02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jilin,Jilin,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Liaoning,Jinzhou,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Shaanxi,Xianyang,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Sichuan,Neijiang,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Sichuan,Ya'an,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Shaanxi,Xianyang,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Liaoning,Jinzhou,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Guangdong,Zhuhai,travel_ban_local,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Sichuan,Ya'an,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Guizhou,Guiyang,travel_ban_local,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Gansu,Lanzhou,travel_ban_local,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Anhui,Lu'an,travel_ban_local,,02/07/2020,,N,http://www.bozhou.gov.cn/News/show/372139.html,3/17/2020,,True
+CHN,Sichuan,Neijiang,home_isolation,,02/06/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Hebei,Tangshan,travel_ban_local,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Guangdong,Guangzhou,travel_ban_local,,02/07/2020,03/13/2020,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Gansu,Lanzhou,travel_ban_local,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Jiangsu,Lianyungang,travel_ban_local,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Sichuan,Chengdu,travel_ban_local,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Sichuan,Guangyuan,travel_ban_local,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Sichuan,Suining,travel_ban_local,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Tianjin,Tianjin,travel_ban_local,"1 district, Baodi",02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Guizhou,Guiyang,travel_ban_local,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Guangdong,Shenzhen,travel_ban_local,maybe ends 3/10/2020?,02/07/2020,03/13/2020,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns; http://news.stcn.com/2020/0210/15633808.shtml,3/15/2020,,True
-CHN,Guangdong,Guangzhou,travel_ban_local,,02/07/2020,03/13/2020,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
-CHN,Tianjin,Tianjin,home_isolation,"1 district, Baodi",02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
-CHN,Guizhou,Guiyang,home_isolation,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Sichuan,Suining,home_isolation,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Guizhou,Guiyang,home_isolation,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
+CHN,Tianjin,Tianjin,home_isolation,"1 district, Baodi",02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Sichuan,Guangyuan,home_isolation,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Sichuan,Chengdu,home_isolation,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Jiangsu,Lianyungang,home_isolation,,02/07/2020,,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
@@ -219,8 +217,8 @@ CHN,Hubei,Enshi Tujia and Miao Autonomous Prefecture,home_isolation,,02/10/2020,
 CHN,Hubei,Xianning,home_isolation,,02/10/2020,,N,https://github.com/Pratitya/wuhan2020-timeline/blob/master/%E6%97%B6%E9%97%B4%E7%BA%BFTIMELINE.md,4/2/2020,,False
 CHN,Hubei,Xiangyang,home_isolation,,02/10/2020,,N,https://github.com/Pratitya/wuhan2020-timeline/blob/master/%E6%97%B6%E9%97%B4%E7%BA%BFTIMELINE.md,4/2/2020,,False
 CHN,Hubei,Wuhan,home_isolation,"residents required to stay in area, all nonessential manufacturing shut down until feb 20th, then march 10th",02/10/2020,,N,http://www.caixin.com/2020-02-11/101513995.html,4/2/2020,,False
-CHN,Hubei,Tianmen,home_isolation,,02/10/2020,,N,https://github.com/Pratitya/wuhan2020-timeline/blob/master/%E6%97%B6%E9%97%B4%E7%BA%BFTIMELINE.md,4/2/2020,,False
 CHN,Beijing,Beijing,travel_ban_local,"maybe ends 3/10/2020? entry restrictions, citywide registration system, controls on movements of residents, masks required",02/10/2020,03/13/2020,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
+CHN,Hubei,Tianmen,home_isolation,,02/10/2020,,N,https://github.com/Pratitya/wuhan2020-timeline/blob/master/%E6%97%B6%E9%97%B4%E7%BA%BFTIMELINE.md,4/2/2020,,False
 CHN,Beijing,Beijing,home_isolation,"maybe ends 3/10/2020? entry restrictions, citywide registration system, controls on movements of residents, masks required",02/10/2020,03/13/2020,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,False
 CHN,Shanghai,Shanghai,travel_ban_local,"entry restrictions, temp checks, masks required",02/10/2020,03/13/2020,N,https://en.wikipedia.org/wiki/2020_Hubei_lockdowns,3/15/2020,,True
 CHN,Hubei,Suizhou,home_isolation,,02/10/2020,,N,https://github.com/Pratitya/wuhan2020-timeline/blob/master/%E6%97%B6%E9%97%B4%E7%BA%BFTIMELINE.md,4/2/2020,,False

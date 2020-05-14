@@ -47,8 +47,15 @@ op_dict = {
 }
 
 
-def is_already_in_df(adm2_name, dst_policy, df):
-    return len(df[(df["policy"] == dst_policy) & (df["adm2_name"] == adm2_name)]) > 0
+def is_already_in_df(adm1_name, adm2_name, dst_policy, df):
+    found = df["policy"] == dst_policy
+    found = (
+        (found)
+        & (df["adm2_name"].isin(["All", adm2_name]))
+        & (df["adm1_name"].isin(["All", adm1_name]))
+    )
+
+    return found.sum() > 0
 
 
 def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
@@ -72,7 +79,10 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
 
     if country_code == "CHN":
         already_in_df_mask = pcopy.apply(
-            lambda row: is_already_in_df(row["adm2_name"], dst_policy, df), axis=1
+            lambda row: is_already_in_df(
+                row["adm1_name"], row["adm2_name"], dst_policy, df
+            ),
+            axis=1,
         )
         pcopy = pcopy[~already_in_df_mask].copy()
 
