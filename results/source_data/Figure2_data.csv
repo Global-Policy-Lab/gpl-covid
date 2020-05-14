@@ -1,29 +1,29 @@
 adm0,policy,beta,se
-"CHN","emergency_declaration_L0_to_L7",-.011,.043
+"CHN","emergency_declaration_L0_to_L7",-.012,.043
 "CHN","emergency_declaration_L8_to_L14",-.173,.046
 "CHN","emergency_declaration_L15_to_L21",-.234,.047
-"CHN","emergency_declaration_L22_to_L28",-.251,.047
+"CHN","emergency_declaration_L22_to_L28",-.25,.047
 "CHN","emergency_declaration_L29_to_L70",-.248,.047
-"CHN","travel_ban_local_L0_to_L7",.015,.015
+"CHN","travel_ban_local_L0_to_L7",.015,.016
 "CHN","travel_ban_local_L8_to_L14",-.009,.018
-"CHN","travel_ban_local_L15_to_L21",-.031,.023
+"CHN","travel_ban_local_L15_to_L21",-.031,.024
 "CHN","travel_ban_local_L22_to_L28",-.048,.029
 "CHN","travel_ban_local_L29_to_L70",-.079,.038
 "CHN","home_isolation_L0_to_L7",-.029,.014
 "CHN","home_isolation_L8_to_L14",-.021,.017
 "CHN","home_isolation_L15_to_L21",-.014,.021
 "CHN","home_isolation_L22_to_L28",-.003,.027
-"CHN","home_isolation_L29_to_L70",.034,.037
+"CHN","home_isolation_L29_to_L70",.035,.037
 "CHN","home_iso_L0_to_L7 + trvl_ban_loc_L0_to_L7",-.014,.012
-"CHN","home_iso_L8_to_L14 + trvl_ban_loc_L8_to_L14",-.031,.013
+"CHN","home_iso_L8_to_L14 + trvl_ban_loc_L8_to_L14",-.03,.013
 "CHN","home_iso_L15_to_L21 + trvl_ban_loc_L15_to_L21",-.045,.015
 "CHN","home_iso_L22_to_L28 + trvl_ban_loc_L22_to_L28",-.051,.016
-"CHN","home_iso_L29_to_L70 + trvl_ban_loc_L29_to_L70",-.045,.02
-"CHN","first week",-.025,.046
+"CHN","home_iso_L29_to_L70 + trvl_ban_loc_L29_to_L70",-.044,.02
+"CHN","first week",-.026,.046
 "CHN","second week",-.204,.049
 "CHN","third week",-.279,.047
 "CHN","fourth week",-.302,.046
-"CHN","fifth week and after",-.293,.047
+"CHN","fifth week and after",-.292,.047
 "CHN","no_policy rate",.309,.029
 "CHN_Wuhan","no_policy rate",.356,.03
 "KOR","p_1",-.083,.038
@@ -38,7 +38,7 @@ adm0,policy,beta,se
 "ITA","p_4",-.084,.055
 "ITA","p_5",-.121,.098
 "ITA","p_6",.048,.051
-"ITA","comb. policy",.028,.078
+"ITA","home_iso_combined",.028,.078
 "ITA","comb. policy",-.453,.105
 "ITA","no_policy rate",.372,.04
 "IRN","p_1",-.334,.089
@@ -51,17 +51,17 @@ adm0,policy,beta,se
 "FRA","natl_lockdown_comb",-.158,.053
 "FRA","comb. policy",-.17,.02
 "FRA","no_policy rate",.33,.05
-"USA","p_1",.013,.035
-"USA","p_2",-.25,.047
-"USA","p_3",-.063,.031
-"USA","p_4",-.023,.099
-"USA","p_5",-.052,.019
+"USA","p_1",.008,.035
+"USA","p_2",-.246,.047
+"USA","p_3",-.061,.031
+"USA","p_4",-.023,.098
+"USA","p_5",-.046,.017
 "USA","p_6",.024,.03
-"USA","p_7",0,.033
-"USA","p_8",-.059,.021
-"USA","p_9",.015,.02
-"USA","p_10",-.023,.02
+"USA","p_7",.002,.033
+"USA","p_8",-.056,.021
+"USA","p_9",.018,.02
+"USA","p_10",-.032,.018
 "USA","p_11",.053,.038
-"USA","home_iso_combined",-.121,.028
-"USA","comb. policy",-.365,.102
+"USA","home_iso_combined",-.126,.028
+"USA","comb. policy",-.357,.101
 "USA","no_policy rate",.286,.067
