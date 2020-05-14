@@ -38,7 +38,7 @@ ssc install ftools, replace # the latest version of reghdfe would also require t
 ssc install coefplot, replace
 ssc install filelist, replace
 ssc install outreg2, replace
-
+ssc install carryforward, replace
 ```
 
 ## Code Structure
