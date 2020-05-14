@@ -55,7 +55,8 @@ while(changed){
 china_policy_variables_to_use <- 
   c(
     names(china_data) %>% str_subset('home_isolation_'),
-    names(china_data) %>% str_subset('travel_ban_local_')
+    names(china_data) %>% str_subset('travel_ban_local_'),
+    names(china_data) %>% str_subset('emergency_declaration_')
   )  
 
 china_other_control_variables <- 
