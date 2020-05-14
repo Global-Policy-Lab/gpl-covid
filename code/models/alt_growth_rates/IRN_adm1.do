@@ -69,28 +69,11 @@ replace cum_confirmed_cases = . if t == 21976 | t == 21977
 
 //------------------testing regime changes
 
-// grab each date of any testing regime change
-preserve
-	collapse (min) t, by(testing_regime)
-	sort t //should already be sorted but just in case
-	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
-	levelsof t, local(testing_change_dates)
-restore
-
-// create a dummy for each testing regime change date
-foreach t_chg of local testing_change_dates{
-	local t_str = string(`t_chg', "%td")
-	gen testing_regime_change_`t_str' = t==`t_chg'
-		
-	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
-	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
-}
-
-// high_screening_regime in Qom, which transitioned on Mar 6
-// assume rollout completed on Mar 13
-drop testing_regime_change_06mar2020
+// high_screening_regime in Qom/Gilan/Isfahan, which transitioned on Mar 6
+// assume rollout completed on Mar 13 w rest of nation
 gen testing_regime_13mar2020 = t==mdy(3,13,2020)
 lab var testing_regime_13mar2020 "Testing regime change on Mar 13, 2020"
+
 
 //------------------diagnostic
 
@@ -110,11 +93,17 @@ lab var day_avg "Observed avg. change in log cases"
 
 // NOTE: no_gathering has no variation
 
+// create national school_closure var for provinces that close schools on 3/5
+by adm1_id: egen school_closure_natl0 = min(school_closure) 
+gen school_closure_natl = school_closure if school_closure_natl0==0
+	replace school_closure_natl = 0 if school_closure_natl==.
+drop school_closure_natl0
+	
 // Merging March 1-5 policies, since they all happened at the same time during 
 // break in the health data (missing cases for 3/2-3/3)
 // so p_1 = 1/3 on 3/1 when opt travel ban enacted, then p_1 = 1 starting 3/5
-gen p_1 = (travel_ban_local_opt + work_from_home + school_closure)/3
-lab var p_1 "Travel ban (opt), work from home, school closure"
+gen p_1 = (travel_ban_local_opt + work_from_home + school_closure_natl)/3
+lab var p_1 "Trvl ban opt, work home, school clos (natl)"
 
 // home isolation started March 13
 gen p_2 = home_isolation
@@ -135,8 +124,9 @@ outsheet using "models/reg_data/IRN_reg_data.csv", comma replace
 reghdfe D_l_cum_confirmed_cases p_* testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
 outreg2 using "results/tables/reg_results/IRN_estimates_table", sideway noparen nodepvar word replace label ///
- addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Iran, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ title(Iran, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ stats(coef se pval) dec(3) ctitle("Coefficient"; "Std Error"; "P-value") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ "This regression includes province fixed effects, day-of-week fixed effects, and clustered standard errors at the day level." "" ///
  "\'22Travel ban (opt), work from home, school closure\'22 policies were enacted March 1-5, 2020 which overlaps with missing provincial case data in Iran on March 2-3, 2020.")
 cap erase "results/tables/reg_results/IRN_estimates_table.txt"
 
@@ -201,7 +191,7 @@ local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefp
 
 // looking at different policies (FOR FIG2)
 coefplot, keep(p_1 p_2) tit("IRN: policy packages") subtitle(`subtitle2') ///
-caption("p_1 = (travel_ban_local_opt + work_from_home + school_closure) / 3", span) ///
+caption("p_1 = (travel_ban_local_opt + work_from_home + school_closure_natl) / 3", span) ///
 xline(0) name(IRN_policy, replace)
 
 
@@ -239,15 +229,15 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random, lwidth(vvthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
-title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
+title(Iran, ring(0) position(11)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/IRN_adm1_conf_cases_growth_rates_fixedx.gph, replace)
@@ -257,12 +247,12 @@ outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_co
 using "results/source_data/indiv/Figure3_IRN_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
-// tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+// tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+// (rspike ub_y_actual lb_y_actual t_random, lwidth(vvthin) color(blue*.5)) ///
 // (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 // (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 // (sc day_avg t, color(black)) ///
 // if e(sample), ///
 // title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
@@ -271,6 +261,8 @@ drop miss_ct
 
 
 //----------------------------------------------FIXED LAG 
+set seed 1234
+
 tempfile base_data
 save `base_data'
 
@@ -446,16 +438,5 @@ preserve
 	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
-	tw scatter i beta , xline(0,lc(black) lp(dash)) mc(black*.5)   ///
-	|| scatter i beta if sample == "full_sample", mc(red)  ///
-	yscale(range(0.5(0.5)3.5)) ylabel(1 "combined effect" ///
-	2  "Travel ban (opt), work from home, school closure" ///
-	3 "Home isolation", angle(0)) ///
-	xtitle("Estimated effect on daily growth rate", height(5)) ///
-	legend(order(2 1) lab(2 "Full sample") lab(1 "Leaving one region out") ///
-	region(lstyle(none))) ///
-	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
-	graph export results/figures/appendix/cross_valid/IRN.pdf, replace
-	capture graph export results/figures/appendix/cross_valid/IRN.png, replace	
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_IRN.csv", comma replace
 restore
