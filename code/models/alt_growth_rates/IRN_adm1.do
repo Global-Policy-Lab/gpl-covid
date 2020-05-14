@@ -430,16 +430,5 @@ preserve
 	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
-	tw scatter i beta , xline(0,lc(black) lp(dash)) mc(black*.5)   ///
-	|| scatter i beta if sample == "full_sample", mc(red)  ///
-	yscale(range(0.5(0.5)3.5)) ylabel(1 "combined effect" ///
-	2  "Travel ban (opt), work from home, school closure" ///
-	3 "Home isolation", angle(0)) ///
-	xtitle("Estimated effect on daily growth rate", height(5)) ///
-	legend(order(2 1) lab(2 "Full sample") lab(1 "Leaving one region out") ///
-	region(lstyle(none))) ///
-	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7)
-	graph export results/figures/appendix/cross_valid/IRN.pdf, replace
-	capture graph export results/figures/appendix/cross_valid/IRN.png, replace	
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_IRN.csv", comma replace
 restore
