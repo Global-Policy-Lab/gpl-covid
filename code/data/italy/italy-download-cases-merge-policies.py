@@ -364,9 +364,6 @@ def merge_health_and_policies(adm1_cases, adm2_cases, policies):
         adm2_cases, policies, 2, get_latlons=False
     )
 
-    adm1_cases["no_gathering_size"] = 0
-    adm2_cases["no_gathering_size"] = 0
-
     check_against_template(adm1_cases, adm2_cases)
 
     adm1_cases = adm1_cases.sort_values(["date", "adm1_name"], ascending=True)
