@@ -124,7 +124,7 @@ yline(`yline2', lc(black) lp(dot)) ///
 yline(`yline3', lc(black) lp(dot)) ///
 yline(`yline4', lc(black) lp(dot)) legend(off) ysize(20) xline(0, lc(black)) 
 graph export results/figures/appendix/fixed_lag/fig5_FL.pdf, replace
-stop
+
 // output source data for ED fig 5
 // Will pass "nosave" as argument during tests so that we don't overwrite
 if "`0'" == "" {
