@@ -44,24 +44,24 @@ adm0,policy,beta,se
 "IRN","p_1",-.334,.089
 "IRN","p_2",-.154,.033
 "IRN","comb. policy",-.487,.076
-"IRN","no_policy rate",.578,.051
-"FRA","national_lockdown",.081,.053
-"FRA","school_closure_pop",-.012,.041
-"FRA","pck_social_distanc",-.239,.072
-"FRA","natl_lockdown_comb",-.158,.053
-"FRA","comb. policy",-.17,.02
-"FRA","no_policy rate",.33,.05
-"USA","p_1",.008,.035
-"USA","p_2",-.246,.047
+"IRN","no_policy rate",.524,.079
+"FRA","national_lockdown",.083,.052
+"FRA","school_closure_pop",-.009,.042
+"FRA","pck_social_distanc",-.243,.072
+"FRA","natl_lockdown_comb",-.16,.054
+"FRA","comb. policy",-.169,.02
+"FRA","no_policy rate",.329,.051
+"USA","p_1",.011,.035
+"USA","p_2",-.246,.044
 "USA","p_3",-.061,.031
-"USA","p_4",-.023,.098
-"USA","p_5",-.046,.017
-"USA","p_6",.024,.03
-"USA","p_7",.002,.033
-"USA","p_8",-.056,.021
-"USA","p_9",.018,.02
-"USA","p_10",-.032,.018
-"USA","p_11",.053,.038
-"USA","home_iso_combined",-.126,.028
-"USA","comb. policy",-.357,.101
-"USA","no_policy rate",.286,.067
+"USA","p_4",-.027,.087
+"USA","p_5",-.047,.017
+"USA","p_6",.026,.031
+"USA","p_7",-.008,.033
+"USA","p_8",-.055,.021
+"USA","p_9",.008,.02
+"USA","p_10",-.03,.017
+"USA","p_11",.049,.037
+"USA","home_iso_combined",-.12,.027
+"USA","comb. policy",-.38,.095
+"USA","no_policy rate",.291,.067
