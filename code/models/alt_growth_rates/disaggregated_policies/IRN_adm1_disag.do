@@ -69,28 +69,11 @@ replace cum_confirmed_cases = . if t == 21976 | t == 21977
 
 //------------------testing regime changes
 
-// grab each date of any testing regime change
-preserve
-	collapse (min) t, by(testing_regime)
-	sort t //should already be sorted but just in case
-	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
-	levelsof t, local(testing_change_dates)
-restore
-
-// create a dummy for each testing regime change date
-foreach t_chg of local testing_change_dates{
-	local t_str = string(`t_chg', "%td")
-	gen testing_regime_change_`t_str' = t==`t_chg'
-		
-	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
-	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
-}
-
-// high_screening_regime in Qom, which transitioned on Mar 6
-// assume rollout completed on Mar 13
-drop testing_regime_change_06mar2020
+// high_screening_regime in Qom/Gilan/Isfahan, which transitioned on Mar 6
+// assume rollout completed on Mar 13 w rest of nation
 gen testing_regime_13mar2020 = t==mdy(3,13,2020)
 lab var testing_regime_13mar2020 "Testing regime change on Mar 13, 2020"
+
 
 //------------------diagnostic
 
@@ -178,12 +161,12 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
@@ -195,12 +178,12 @@ egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_
 outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
 using "results/source_data/indiv/ExtendedDataFigure6a_IRN_data.csv" if miss_ct<9 & e(sample), comma replace
 
-// tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+// tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+// (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 // (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 // (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 // (sc day_avg t, color(black)) ///
 // if e(sample), ///
 // title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
