@@ -381,12 +381,12 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vvthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
-|| (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random, lwidth(vvthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) lpattern(solid) m(square)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(China, ring(0) position(11)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
@@ -400,22 +400,20 @@ using "results/source_data/indiv/Figure3_CHN_data.csv" if miss_ct<9 & e(sample),
 drop miss_ct
 
 // for legend
-set scheme s1color
-tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random, lwidth(vvthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, msize(tiny) lwidth(vthin) color(blue*.5)) ///
-(connect m_y_counter t, msize(tiny) lwidth(vthin) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) lpattern(solid) m(square)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 tit(China) ytit(Growth rate of active confirmed cases) ///
-legend(order(6 8 5 7 9) cols(1) ///
-lab(6 "No policy scenario admin unit") lab(8 "No policy scenario national avg") ///
-lab(5 "Actual policies (predicted) admin unit") lab(7 "Actual policies (predicted) national avg") ///
-lab(7 "Observed change in log cases national avg") ///
+legend(order(1 3 5 2 4 6 7) cols(1) ///
+lab(1 "No policy scenario for admin unit") lab(2 "Actual policies (predicted) for admin unit") ///
+lab(3 "No policy scenario for admin unit") lab(4 "Actual policies (predicted) for admin unit") ///
+lab(5 "No policy scenario for national avg") lab(6 "Actual policies (predicted) for national avg") ///
+lab(7 "Observed change for national avg") ///
 region(lcolor(none))) scheme(s1color) xlabel(, format(%tdMon_DD)) ///
 yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) 
 graph export results/figures/fig3/raw/legend_fig3.pdf, replace
@@ -463,13 +461,12 @@ predict day_avg_wh if adm2_name  == "Wuhan" & e(sample) == 1
 
 // Graph of predicted growth rates
 // fixed x-axis across countries
-cap set scheme covid19_fig3 // optional scheme for graphs
-tw (rspike ub_y_actual_wh lb_y_actual_wh t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter_wh lb_counter_wh t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual_wh t, msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter_wh lb_counter_wh t_random2, lwidth(vthin) color(red*.5)) ///
+(rspike ub_y_actual_wh lb_y_actual_wh t_random, lwidth(vthin) color(blue*.5)) ///
 (scatter y_counter_wh t, msize(tiny) color(red*.5)) ///
-(connect y_actual_wh t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual_wh t, msize(tiny) color(blue*.5) ) ///
 (connect y_counter_wh t, color(red) lpattern(dash) m(Oh)) ///
+(connect y_actual_wh t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg_wh t, color(black)) ///
 if e(sample), ///
 title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
