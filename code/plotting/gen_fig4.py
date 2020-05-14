@@ -19,8 +19,11 @@ save_data = True
 fig_width = 3.5  # 89mm
 fig_height = 6.7  # 249mm
 
-grid_width = 2.8  # 89mm
-grid_height = 7.5  # 249mm
+# grid_width = 2.8  # 89mm
+# grid_height = 7.5  # 249mm
+
+grid_width = 2.6  # 89mm
+grid_height = 6.8  # 249mm
 
 scale_factor = 3.5 / 15.0  # old width was 15
 scale_factor_x = 2.8 / 15.0  # old width was 15
@@ -217,14 +220,14 @@ def plot_cases(ax, this_country_cases, legend_dict, update_legend):
         cases,
         marker="o",
         color="black",
-        s=36 * scale_factor ** 2,
+        s=16 * scale_factor ** 2,
         clip_on=False,
     )
     if update_legend:
         legend_dict["lines"].append(case_scatter)
 
         if leg_topright:
-            legend_dict["labels"].append("Cumulative \n observed cases")
+            legend_dict["labels"].append("Cumulative \nobserved cases")
         else:
             legend_dict["labels"].append("Cumulative observed cases")
 
@@ -532,11 +535,12 @@ def main():
         # 3. set title and axis labels
         ax[c].set_title(
             "  " + country_names[country],
-            fontsize=40 * scale_factor,
+            fontsize=36 * scale_factor,
             verticalalignment="top",
             loc="left",
             backgroundcolor="white",
             zorder=2,
+            pad=1.0,
         )
 
         ax[c].set_ylabel("Cumulative cases", fontsize=32 * scale_factor)
@@ -607,7 +611,7 @@ def main():
         leg = leg_ax.legend(
             handles=legend_dict["lines"],
             labels=legend_dict["labels"],
-            loc=(0.42, 0.82),
+            loc=(0.42, 0.6),
             fontsize=20 * scale_factor,
             title="Legend",
             frameon=False,
@@ -645,14 +649,16 @@ def main():
         out_fn = fig_dir / fig_name
         print("saving fig in {0}".format(out_fn))
         # plt.savefig(out_fn, bbox_inches="tight", bbox_extra_artists=(leg,))
-        vertical_pad_bottom = 0.65
-        vertical_pad_top = 0.6
+        vertical_pad_bottom = 0.6
+        vertical_pad_top = 1.2
+        horizontal_pad_left = -0.1
+        horizontal_pad_right = 0.3
         plt.savefig(
             out_fn,
             bbox_inches=transforms.Bbox.from_bounds(
-                -0.12,
+                horizontal_pad_left,
                 0 + vertical_pad_bottom,
-                fig_width,
+                fig_width - horizontal_pad_right,
                 fig_height - (vertical_pad_top),
             ),
         )
