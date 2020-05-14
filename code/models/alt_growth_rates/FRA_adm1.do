@@ -451,6 +451,12 @@ save `base_data'
 reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popwt ///
 national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) gen(L0_) title(main model) xline(0) 
+lincom national_lockdown + pck_social_distance
+replace L0_b = r(estimate) if L0_at == 3
+replace L0_ll1 = r(estimate) - 1.959964 * r(se) if L0_at == 3
+replace L0_ul1 = r(estimate) + 1.959964 * r(se) if L0_at == 3
+
+
 // get ATE
 local r2 = e(r2)
 preserve
@@ -469,7 +475,12 @@ restore
 reghdfe D_l_cum_hospitalized pck_social_distance school_closure_popwt national_lockdown ///
 testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 	 
 coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) gen(H0_) title(main model) xline(0) 
+lincom national_lockdown + pck_social_distance
+replace H0_b = r(estimate) if H0_at == 3
+replace H0_ll1 = r(estimate) - 1.959964 * r(se) if H0_at == 3
+replace H0_ul1 = r(estimate) + 1.959964 * r(se) if H0_at == 3
 replace H0_at = H0_at - 0.04
+
 
 foreach lags of num 1 2 3 4 5{ 
 	quietly {
@@ -486,6 +497,11 @@ foreach lags of num 1 2 3 4 5{
 	national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 	coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) ///
 	gen(L`lags'_) title (with fixed lag (4 days)) xline(0)
+	lincom national_lockdown + pck_social_distance
+	replace L`lags'_b = r(estimate) if L`lags'_at == 3
+	replace L`lags'_ll1 = r(estimate) - 1.959964 * r(se) if L`lags'_at == 3
+	replace L`lags'_ul1 = r(estimate) + 1.959964 * r(se) if L`lags'_at == 3
+	
 	local r2 = e(r2)
 	preserve
 		keep if e(sample) == 1
@@ -506,6 +522,10 @@ foreach lags of num 1 2 3 4 5{
 	testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 	coefplot, keep(pck_social_distance school_closure_popwt national_lockdown) ///
 	gen(H`lags'_) title (with fixed lag (4 days)) xline(0)
+	lincom national_lockdown + pck_social_distance
+	replace H`lags'_b = r(estimate) if H`lags'_at == 3
+	replace H`lags'_ll1 = r(estimate) - 1.959964 * r(se) if H`lags'_at == 3
+	replace H`lags'_ul1 = r(estimate) + 1.959964 * r(se) if H`lags'_at == 3	
 	replace H`lags'_at = H`lags'_at - 0.1 *`lags' - 0.04	
 	
 	foreach var in pck_social_distance school_closure_popwt national_lockdown{
