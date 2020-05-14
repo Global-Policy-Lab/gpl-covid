@@ -492,7 +492,9 @@ def get_policies_to_date_cache(policies, policy_panel, adm_level):
     policies = policies.sort_values("date_start", ascending=True)
     dates = [
         str(d)[:10]
-        for d in pd.date_range(start="2020-01-01", end="2020-05-01").to_list()
+        for d in pd.date_range(
+            start="2020-01-01", end=policy_panel["date"].max().strftime("%Y%m%d")
+        ).to_list()
     ]
 
     if adm_level == 2:
