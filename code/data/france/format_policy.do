@@ -172,7 +172,7 @@ foreach var in "event_cancel" "event_cancel_popw" "home_isolation" "home_isolati
 	drop seq
 	bysort adm1: carryforward `var', replace
 }
-br adm1 date no_gathering_inside_popw
+// br adm1 date no_gathering_inside_popw
 
 sort adm1 date
 bysort adm1: carryforward no_gathering_size, replace
