@@ -12,12 +12,18 @@ RECOVERY_DELAYS = range(15)
 
 def main():
 
+    # use the default cutoff date here
+    cutoff = pd.read_csv(
+        cutil.CODE / "data" / "cutoff_dates.csv", index_col=0, parse_dates=["end_date"]
+    ).end_date.default.date()
+
     print("Estimating removal rate (gamma) from CHN and KOR timeseries...")
     ## load korea from regression-ready data
     df_kor = pd.read_csv(
         cutil.DATA_PROCESSED / "adm1" / "KOR_processed.csv", parse_dates=["date"]
     )
     df_kor["name"] = df_kor.adm0_name + "_" + df_kor.adm1_name
+    df_kor = df_kor[df_kor["date"].dt.date <= cutoff]
     df_kor = df_kor.set_index(["name", "date"])
 
     ## load china from regression-ready data
@@ -25,6 +31,7 @@ def main():
         cutil.DATA_PROCESSED / "adm2" / "CHN_processed.csv", parse_dates=["date"]
     )
     df_chn["name"] = df_chn.adm0_name + "_" + df_chn.adm1_name + "_" + df_chn.adm2_name
+    df_chn = df_chn[df_chn["date"].dt.date <= cutoff]
     df_chn = df_chn.set_index(["name", "date"])
 
     ## combine
