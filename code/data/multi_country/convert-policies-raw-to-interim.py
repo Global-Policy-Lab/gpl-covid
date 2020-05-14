@@ -47,6 +47,16 @@ op_dict = {
 }
 
 
+def is_already_in_df(adm1_name, adm2_name, dst_policy, df):
+    # Assuming that any location with a policy end_date is specified at the adm2 level--true as of 5/13
+    found = (
+        (df["policy"] == dst_policy)
+        & (df["adm1_name"] == adm1_name)
+        & (df["adm2_name"] == adm2_name)
+    )
+    return found.sum() > 0
+
+
 def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
 
     dst_policy, dst_val, *dst_args = dst_rule
@@ -65,6 +75,15 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
         mask = (mask) & (op(df["policy_intensity"], src_val))
 
     pcopy = df[mask].copy()
+
+    if country_code == "CHN":
+        already_in_df_mask = pcopy.apply(
+            lambda row: is_already_in_df(
+                row["adm1_name"], row["adm2_name"], dst_policy, df
+            ),
+            axis=1,
+        )
+        pcopy = pcopy[~already_in_df_mask].copy()
 
     pcopy["policy"] = dst_policy
     pcopy["implied_policy"] = True
