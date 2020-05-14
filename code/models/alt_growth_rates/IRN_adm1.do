@@ -223,12 +223,12 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vvthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
-|| (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random, lwidth(vvthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Iran, ring(0) position(11)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
@@ -241,12 +241,12 @@ outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_co
 using "results/source_data/indiv/Figure3_IRN_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
-// tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+// tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+// (rspike ub_y_actual lb_y_actual t_random, lwidth(vvthin) color(blue*.5)) ///
 // (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 // (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 // (sc day_avg t, color(black)) ///
 // if e(sample), ///
 // title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///

@@ -309,12 +309,12 @@ g t_random2 = t + rnormal(0,1)/10
 
 // Graph of predicted growth rates (FOR FIG3)
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vvthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
-|| (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random,  lwidth(vvthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title("United States", ring(0) position(11)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
@@ -327,12 +327,12 @@ outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_co
 using "results/source_data/indiv/Figure3_USA_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
-// tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+// tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+// (rspike ub_y_actual lb_y_actual t_random,  lwidth(vvthin) color(blue*.5)) ///
 // (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 // (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 // (sc day_avg t, color(black)) ///
 // if e(sample), ///
 // title("United States", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
@@ -533,7 +533,7 @@ foreach lags of num 0/15{
 		restore
 	}
 	else {
-		qui reghdfe D_l_cum_confirmed_cases testing_regime_change_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 p_10 p_11, absorb(i.adm1_id i.dow) 	
+		qui reghdfe D_l_cum_confirmed_cases testing_regime_* p_1 p_2 p_3 p_4 p_5 p_6 p_7 p_8 p_9 p_10 p_11, absorb(i.adm1_id i.dow) 	
 		matrix rsq[`lags'+1,1] = e(r2)
 		matrix rsq[`lags'+1,2] = .
 		matrix rsq[`lags'+1,3] = `lags'	
@@ -559,7 +559,7 @@ reshape long L0_ L1_ L2_ L3_ L4_ L5_, i(policy) j(temp) string
 rename *_ *
 reshape long L, i(temp policy) j(val)
 tostring policy, replace
-replace policy = "No gathering, event cancel" if policy == "1"
+replace policy = "No gathering" if policy == "1"
 replace policy = "Social distance" if policy == "2"
 replace policy = "Quarantine positive cases"  if policy == "3"
 replace policy = "Paid sick leave" if policy == "4"
