@@ -5,6 +5,9 @@ set -e
 cd "$(dirname "$0")/.."
 
 if [ "$CONDA_DEFAULT_ENV" != "gpl-covid" ]; then
+    if [ "$CONDA_PREFIX" = "" ]; then
+        CONDA_PREFIX="/opt/conda"
+    fi
     source $CONDA_PREFIX/etc/profile.d/conda.sh
     conda activate gpl-covid
 fi
