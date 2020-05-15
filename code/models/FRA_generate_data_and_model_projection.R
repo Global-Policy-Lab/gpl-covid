@@ -48,13 +48,15 @@ while(changed){
 
 france_policy_variables_to_use <- 
   c(
-    "testing_regime_15mar2020",
     'pck_social_distance',
-    'school_closure',
+    'school_closure_popwt',
     'national_lockdown'
   )  
 
-france_other_control_variables <- 'day_of_week'
+france_other_control_variables <- c(
+  "day_of_week",
+  "testing_regime_15mar2020"
+)
 
 # reghdfe D_l_cum_confirmed_cases testing national_lockdown school_closure ///
 #   social_distance pck_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 

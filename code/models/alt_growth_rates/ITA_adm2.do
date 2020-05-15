@@ -128,10 +128,12 @@ outsheet using "models/reg_data/ITA_reg_data.csv", comma replace
 
 // main regression model
 reghdfe D_l_cum_confirmed_cases p_*, absorb(i.adm2_id i.dow, savefe) cluster(t) resid
+est store base
 
 outreg2 using "results/tables/reg_results/ITA_estimates_table", sideway noparen nodepvar word replace label ///
- addtext(Province FE, "YES", Day-of-Week FE, "YES") title(Italy, "Dependent variable: Growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ title(Italy, "Dependent variable: growth rate of cumulative confirmed cases (\u0916?log per day\'29") ///
+ stats(coef se pval) dec(3) ctitle("Coefficient"; "Std Error"; "P-value") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ "This regression includes province fixed effects, day-of-week fixed effects, and clustered standard errors at the day level." "" ///
  "\'22Social distance\'22 includes policies for working from home, maintaining 1 meter distance from others in public, and prohibiting public and private events.")
 cap erase "results/tables/reg_results/ITA_estimates_table.txt"
 
@@ -177,6 +179,40 @@ if e(sample)
 predictnl y_counter = _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of package of policies (FOR FIG2)
+
+// home_iso (p_6) implies no_gathering work_from_home social_distance (p_1), travel_ban_local (0.5 * p_3), business_closure (p_5)
+// ITA implies dictionary (gpl-covid/data/raw/multi_country/policy_implication_rules.json):
+//   "ITA": [
+//     [
+//       "home_isolation",  ">", 0,
+//       [
+//         ["no_gathering", 1],
+//         ["travel_ban_local", 0.5],
+//         ["work_from_home", 1],
+//         ["social_distance", 1]
+//       ]
+//     ],
+//     [
+//       "home_isolation", "=", 0.33,
+//       [
+//         ["business_closure", 0.33]
+//       ]
+//     ],
+//     [
+//       "home_isolation", ">=", 0.67,
+//       [
+//         ["business_closure", 0.67]
+//       ]
+//     ]
+//   ],
+lincom p_1 + (0.25*p_3) + (0.67*p_5) + p_6
+post results ("ITA") ("home_iso_combined") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
+nlcom (home_iso_combined: _b[p_1] + _b[p_3]*0.25 + _b[p_5]*0.67 + _b[p_6]), post
+est store nlcom
+
+// all policies
+est restore base
 lincom p_1 + p_2 + p_3 + p_4 + p_5 + p_6
 post results ("ITA") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
@@ -197,7 +233,11 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (similar to Fig2)
-coefplot, keep(p_*) tit("ITA: policy packages") subtitle(`subtitle2') xline(0) name(ITA_policy, replace)
+// coefplot, keep(p_*) tit("ITA: policy packages") subtitle(`subtitle2') xline(0) name(ITA_policy, replace)
+
+coefplot (base, keep(p_1 p_2 p_3 p_4 p_5)) ///
+(nlcom, keep(home_iso_combined)), tit("ITA: policy packages") ///
+subtitle(`subtitle2') xline(0) name(ITA_policy, replace)
 
 // export coefficients (FOR FIG2)
 postclose results
@@ -233,15 +273,15 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vvthin) color(blue*.5)) ///
+(rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
 || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
 (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
-title(Italy, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
+title(Italy, ring(0) position(11)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
 yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/ITA_adm2_conf_cases_growth_rates_fixedx.gph, replace)
