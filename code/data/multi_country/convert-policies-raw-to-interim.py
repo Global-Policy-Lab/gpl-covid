@@ -47,9 +47,19 @@ op_dict = {
 }
 
 
+def is_already_in_df(adm1_name, adm2_name, dst_policy, df):
+    # Assuming that any location with a policy end_date is specified at the adm2 level--true as of 5/13
+    found = (
+        (df["policy"] == dst_policy)
+        & (df["adm1_name"] == adm1_name)
+        & (df["adm2_name"] == adm2_name)
+    )
+    return found.sum() > 0
+
+
 def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
 
-    dst_policy, dst_val = dst_rule
+    dst_policy, dst_val, *dst_args = dst_rule
 
     # Get operator function from operator string
     op = op_dict[op_str]
@@ -66,7 +76,19 @@ def apply_rule(df, src_policy, op_str, src_val, dst_rule, country_code):
 
     pcopy = df[mask].copy()
 
+    if country_code == "CHN":
+        already_in_df_mask = pcopy.apply(
+            lambda row: is_already_in_df(
+                row["adm1_name"], row["adm2_name"], dst_policy, df
+            ),
+            axis=1,
+        )
+        pcopy = pcopy[~already_in_df_mask].copy()
+
     pcopy["policy"] = dst_policy
+    pcopy["implied_policy"] = True
+    if dst_policy == "no_gathering" and len(dst_args) > 0:
+        pcopy["no_gathering_size"] = dst_args[0]
 
     if country_code not in countries_wo_intensity:
         pcopy["policy_intensity"] = dst_val
@@ -96,6 +118,7 @@ def apply_usa_rule(df, src_policy, dst_policies):
         dst_category, dst_group = dst_policy.split(".")
         pcopy = psrc.copy()
         pcopy["policy"] = dst_category
+        pcopy["implied_policy"] = True
         pcopy[intensity_cols[0]] = dst_group
         for c in intensity_cols[1:]:
             pcopy[c] = np.nan
@@ -153,9 +176,11 @@ def process_country(country_code, implies):
         print(country_code)
         if country_code == "USA":
             df = clean_intensities_usa(df)
+
+        df["implied_policy"] = False
         df = apply_implies(df, implies[country_code], country_code)
         df = df.reset_index(drop=True)
-    df.to_csv(path_interim, index=False)
+    df.to_csv(path_interim, index=False, float_format="%.7f")
 
 
 def main():

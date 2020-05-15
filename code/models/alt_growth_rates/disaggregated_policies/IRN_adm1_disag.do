@@ -69,28 +69,11 @@ replace cum_confirmed_cases = . if t == 21976 | t == 21977
 
 //------------------testing regime changes
 
-// grab each date of any testing regime change
-preserve
-	collapse (min) t, by(testing_regime)
-	sort t //should already be sorted but just in case
-	drop if _n==1 //dropping 1st testing regime of sample (no change to control for)
-	levelsof t, local(testing_change_dates)
-restore
-
-// create a dummy for each testing regime change date
-foreach t_chg of local testing_change_dates{
-	local t_str = string(`t_chg', "%td")
-	gen testing_regime_change_`t_str' = t==`t_chg'
-		
-	local t_lbl = string(`t_chg', "%tdMon_DD,_YYYY")
-	lab var testing_regime_change_`t_str' "Testing regime change on `t_lbl'"
-}
-
-// high_screening_regime in Qom, which transitioned on Mar 6
-// assume rollout completed on Mar 13
-drop testing_regime_change_06mar2020
+// high_screening_regime in Qom/Gilan/Isfahan, which transitioned on Mar 6
+// assume rollout completed on Mar 13 w rest of nation
 gen testing_regime_13mar2020 = t==mdy(3,13,2020)
 lab var testing_regime_13mar2020 "Testing regime change on Mar 13, 2020"
+
 
 //------------------diagnostic
 
@@ -108,8 +91,21 @@ lab var day_avg "Observed avg. change in log cases"
 
 //------------------disaggregated model
 
+// create national opt travel ban var for all provinces except for Qom
+// since Qom institutes opt travel ban on 2/20 before sample period
+// and national opt travel ban enacted on 3/1
+gen travel_ban_local_opt_natl = travel_ban_local_opt
+	replace travel_ban_local_opt_natl = 0 if adm1_name=="Qom"
+
+// create national school_closure var for provinces that close schools on 3/5
+by adm1_id: egen school_closure_natl0 = min(school_closure) 
+gen school_closure_natl = school_closure if school_closure_natl0==0
+	replace school_closure_natl = 0 if school_closure_natl==.
+drop school_closure_natl0
+
+
 reghdfe D_l_cum_confirmed_cases testing_regime_* ///
-travel_ban_local_opt work_from_home school_closure home_isolation ///
+travel_ban_local_opt_natl work_from_home school_closure_natl home_isolation ///
 , absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
 
@@ -124,7 +120,7 @@ predictnl y_counter = testing_regime_13mar2020 * _b[testing_regime_13mar2020] + 
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of package of policies (FOR FIG2)
-lincom travel_ban_local_opt + work_from_home + school_closure + home_isolation
+lincom travel_ban_local_opt_natl + work_from_home + school_closure_natl + home_isolation
 
 local comb_policy = round(r(estimate), 0.001)
 local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
@@ -142,7 +138,7 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (FOR FIG2)
-coefplot, keep(travel_ban_local_opt work_from_home school_closure home_isolation) ///
+coefplot, keep(travel_ban_local_opt_natl work_from_home school_closure_natl home_isolation) ///
 tit("IRN: indiv policies") subtitle("`subtitle2'") ///
 xline(0) name(IRN_disag, replace)
 
@@ -150,11 +146,11 @@ xline(0) name(IRN_disag, replace)
 // compute ATE
 preserve
 	collapse (first) adm0_name (mean) D_l_cum_confirmed_cases ///
-	travel_ban_local_opt work_from_home school_closure home_isolation if e(sample) == 1
+	travel_ban_local_opt_natl work_from_home school_closure_natl home_isolation if e(sample) == 1
 	
-	predictnl ATE = travel_ban_local_opt * _b[travel_ban_local_opt] + ///
+	predictnl ATE = travel_ban_local_opt_natl * _b[travel_ban_local_opt_natl] + ///
 	work_from_home * _b[work_from_home] + ///
-	school_closure * _b[school_closure] + ///
+	school_closure_natl * _b[school_closure_natl] + ///
 	home_isolation * _b[home_isolation] ///
 	if e(sample), ci(LB UB) se(sd) p(pval)
 	
@@ -178,12 +174,12 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
@@ -195,12 +191,12 @@ egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_
 outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
 using "results/source_data/indiv/ExtendedDataFigure6a_IRN_data.csv" if miss_ct<9 & e(sample), comma replace
 
-// tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+// tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+// (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 // (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 // (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 // (sc day_avg t, color(black)) ///
 // if e(sample), ///
 // title(Iran, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
