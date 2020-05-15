@@ -67,7 +67,6 @@ code
 │   │   └── make_JHU_comparison_data.R
 │   ├── multi_country
 │   │   ├── convert-policies-raw-to-interim.py
-│   │   ├── default.profraw
 │   │   ├── download_6_countries_JHU.R
 │   │   ├── get_JHU_country_data.R
 │   │   ├── get_adm_info.py
