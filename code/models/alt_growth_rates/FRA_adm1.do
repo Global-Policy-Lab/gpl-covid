@@ -1,6 +1,7 @@
 // FRA | ADM1 
 
 clear all
+set scheme s1color
 //-----------------------setup
 
 // import end of sample cut-off 
@@ -10,8 +11,6 @@ local end_sample = end_date[1]
 
 // load data
 insheet using data/processed/adm1/FRA_processed.csv, clear 
-
-cap set scheme covid19_fig3 // optional scheme for graphs
  
 // set up time variables
 gen t = date(date, "YMD")
@@ -128,9 +127,11 @@ foreach var in "national_lockdown" "school_closure_popwt" "pck_social_distance" 
 
 predict e if e(sample), resid
 
-hist e, bin(30) tit(France) lcolor(white) fcolor(navy) xsize(5) name(hist_fra, replace)
+hist e, bin(30) tit(France) lcolor(white) fcolor(navy) xsize(5) ///
+ylabel(, angle(horizontal)) plotregion(lcolor(white)) name(hist_fra, replace)
 
-qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_fra, replace)
+qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) ///
+ylabel(, angle(horizontal)) plotregion(lcolor(white)) name(qn_fra, replace)
 
 graph combine hist_fra qn_fra, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_fra.gph, replace)
 graph drop hist_fra qn_fra
@@ -194,7 +195,7 @@ local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefp
 
 coefplot (base, keep(pck_social_distance school_closure_popwt)) ///
 (nlcom, keep(natl_lockdown_combined)), tit("FRA: policy packages") ///
-subtitle(`subtitle2') xline(0) name(FRA_policy, replace)
+subtitle(`subtitle2') xline(0) legend(off) name(FRA_policy, replace)
 
 // export coefficients (FOR FIG2)
 postclose results
@@ -240,7 +241,7 @@ tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
 if e(sample), ///
 title(France, ring(0) position(11)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) ///
 saving(results/figures/fig3/raw/FRA_adm1_conf_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
@@ -248,17 +249,17 @@ outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_co
 using "results/source_data/indiv/Figure3_FRA_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
-// tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-// (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
-// (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
-// (sc day_avg t, color(black)) ///
-// if e(sample), ///
-// title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-// xscale(range(21970(10)22000)) xlabel(21970(10)22000, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
+tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
+(scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
+(scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+(connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(sc day_avg t, color(black)) ///
+if e(sample), ///
+title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
+xscale(range(21970(10)22000)) xlabel(21970(10)22000, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) 
 
 
 //-------------------------------Hospitalizations
@@ -333,7 +334,8 @@ save `base_data0'
 	if e(sample), ///
 	title(France Hospitalizations, ring(0)) ytit("Growth rate of" "hospitalizations" "({&Delta}log per day)") ///
 	xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-	yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) saving(results/figures/appendix/FRA_adm1_hosp_growth_rates_fixedx.gph, replace)
+	yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) ///
+	saving(results/figures/appendix/FRA_adm1_hosp_growth_rates_fixedx.gph, replace)
 
 	egen miss_ct = rowmiss(y_actual_hosp lb_y_actual_hosp ub_y_actual_hosp y_counter_hosp lb_counter_hosp ub_counter_hosp m_y_actual_hosp m_y_counter_hosp day_avg_hosp)
 	outsheet adm0_name t y_actual_hosp lb_y_actual_hosp ub_y_actual_hosp y_counter_hosp lb_counter_hosp ub_counter_hosp m_y_actual_hosp m_y_counter_hosp day_avg_hosp ///
@@ -351,8 +353,8 @@ save `base_data0'
 	if e(sample), ///
 	title(France Hospitalizations, ring(0)) ytit("Growth rate of" "hospitalizations" "({&Delta}log per day)") ///
 	legend(order(7) cols(1) lab(7 "Observed change in log hospitalizations national avg") ///
-	region(lcolor(none))) scheme(s1color) xlabel(, format(%tdMon_DD)) ///
-	yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) 
+	region(lcolor(none))) xlabel(, format(%tdMon_DD)) ///
+	yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white))
 	graph export results/figures/appendix/legend_edfig9.pdf, replace
 
 use `base_data0', clear
@@ -421,7 +423,6 @@ foreach adm in `state_list' {
 postclose results
 
 preserve
-	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
 	tw scatter i beta if sample != "GrandEst", xline(0,lc(black) lp(dash)) mc(black*.5)  ///
@@ -579,7 +580,6 @@ restore
 
 
 
-set scheme s1color
 tw rspike L0_ll1 L0_ul1 L0_at , hor xline(0) lc(black) lw(thin) ///
 || scatter  L0_at L0_b, mc(black) ///
 || rspike L1_ll1 L1_ul1 L1_at , hor xline(0) lc(black*.9) lw(thin) ///
