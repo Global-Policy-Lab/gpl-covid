@@ -50,7 +50,7 @@ loop_df <- crossing(
   time_steps_per_day = c(6)
 ) %>% 
   left_join(underreporting, by = c("urcountry" = "country")) %>% 
-  filter(ifr == paper_ifr | gamma == paper_gamma)
+  filter(ifr == paper_ifr | (gamma == paper_gamma & sigma == Inf))
 
 pb <- dplyr::progress_estimated(nrow(loop_df))
 
@@ -77,13 +77,17 @@ loop_df <- loop_df %>%
 
 gamma_df <- loop_df %>% 
   filter(ifr == paper_ifr, gamma %in% c(0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4)) %>% 
-  select(country, gamma, sigma, time_steps_per_day, projection) %>% 
+  select(country, gamma, sigma, time_steps_per_day, projection, underreporting_estimate) %>% 
   unnest(projection) %>% 
   group_by(country, gamma, sigma, time_steps_per_day) %>% 
-  filter(date == max(date)) %>% 
+  filter(date == max(date)) %>%
+  mutate(cases_saved = predicted_cum_confirmed_cases_no_policy - predicted_cum_confirmed_cases_true,
+         infections_saved = cases_saved / underreporting_estimate) %>% 
   group_by(gamma, sigma, time_steps_per_day) %>% 
   summarise(predicted_cum_confirmed_cases_true = sum(predicted_cum_confirmed_cases_true),
-            predicted_cum_confirmed_cases_no_policy = sum(predicted_cum_confirmed_cases_no_policy)) %>% 
+            predicted_cum_confirmed_cases_no_policy = sum(predicted_cum_confirmed_cases_no_policy),
+            cases_saved = sum(cases_saved),
+            infections_saved = sum(infections_saved)) %>% 
   mutate(cases_saved = predicted_cum_confirmed_cases_no_policy - predicted_cum_confirmed_cases_true) %>% 
   arrange(time_steps_per_day, gamma, sigma) %>%
   ungroup() %>% 
@@ -149,7 +153,8 @@ out_scale_trimmed_no_policy <- gamma_df %>%
 yr_4 <- ggplot_build(out_scale_trimmed_no_policy)$layout$panel_params[[1]]$y.range
 out_scale_trimmed_no_policy <- out_scale_trimmed_no_policy + 
   scale_y_continuous("Estimated no-policy confirmed cases\n(linear scale trimmed)", labels = scales::comma,
-                     limits = yr_4, expand = c(0, 0))
+                     limits = yr_4, expand = c(0, 0),
+                     breaks = seq(round(yr_4[1], -6), round(yr_4[2], -6), by = 3000000))
 
 suppressWarnings({
   e <- expression(sigma*" = "*phantom(2)*"0.2"*" (SEIR)",sigma*" = 0.33"*" (SEIR)",sigma*" = "*phantom(2)*"0.5"*" (SEIR)",sigma*" = "*phantom(",,,,")*infinity*phantom(",,,,")*"(SIR)")
@@ -193,7 +198,7 @@ ifr_df <- loop_df %>%
   mutate(cases_saved = round(cases_saved, -3)) %>% 
   mutate(infections_saved = round(infections_saved, -3))
   
-out <- ifr_df %>% 
+ifr_table <- ifr_df %>% 
   pivot_wider(names_from = ifr,
               values_from = c(cases_saved, infections_saved)) %>% 
   gt(rowname_col = "display_country") %>% 
@@ -240,3 +245,18 @@ out <- ifr_df %>%
   tab_style(style = cell_text(weight = "bold", size = px(11/0.75), color = "black",
                               align = "left"), 
             locations = cells_title("title"))
+
+# Check these for the ranges quoted in the discussion
+# The ranges quoted are the outer range from 
+# the union of ifr_table and the numbers below
+gamma_df %>% 
+  filter(cases_saved == min(cases_saved))
+
+gamma_df %>% 
+  filter(cases_saved == max(cases_saved))
+
+gamma_df %>% 
+  filter(infections_saved == min(infections_saved))
+
+gamma_df %>% 
+  filter(infections_saved == max(infections_saved))
