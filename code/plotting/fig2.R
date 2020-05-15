@@ -96,6 +96,7 @@ df$effectsize[df$adm0 == "CHN" & df$beta == "-0.248"] <- " -0.25 (-0.34, -0.16)"
 df$growth[df$adm0 == "CHN" & df$growth == "-0.90"] <- " -0.90"
 
 #code individual policies
+df$order2 <- 0
 #KOR 
 #order policies somewhat chronologically
 df$order2[df$adm0 == "KOR" & df$policy == "p_1"] <- 2
