@@ -91,8 +91,21 @@ lab var day_avg "Observed avg. change in log cases"
 
 //------------------disaggregated model
 
+// create national opt travel ban var for all provinces except for Qom
+// since Qom institutes opt travel ban on 2/20 before sample period
+// and national opt travel ban enacted on 3/1
+gen travel_ban_local_opt_natl = travel_ban_local_opt
+	replace travel_ban_local_opt_natl = 0 if adm1_name=="Qom"
+
+// create national school_closure var for provinces that close schools on 3/5
+by adm1_id: egen school_closure_natl0 = min(school_closure) 
+gen school_closure_natl = school_closure if school_closure_natl0==0
+	replace school_closure_natl = 0 if school_closure_natl==.
+drop school_closure_natl0
+
+
 reghdfe D_l_cum_confirmed_cases testing_regime_* ///
-travel_ban_local_opt work_from_home school_closure home_isolation ///
+travel_ban_local_opt_natl work_from_home school_closure_natl home_isolation ///
 , absorb(i.adm1_id i.dow, savefe) cluster(date) resid
 
 
@@ -107,7 +120,7 @@ predictnl y_counter = testing_regime_13mar2020 * _b[testing_regime_13mar2020] + 
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of package of policies (FOR FIG2)
-lincom travel_ban_local_opt + work_from_home + school_closure + home_isolation
+lincom travel_ban_local_opt_natl + work_from_home + school_closure_natl + home_isolation
 
 local comb_policy = round(r(estimate), 0.001)
 local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
@@ -125,7 +138,7 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (FOR FIG2)
-coefplot, keep(travel_ban_local_opt work_from_home school_closure home_isolation) ///
+coefplot, keep(travel_ban_local_opt_natl work_from_home school_closure_natl home_isolation) ///
 tit("IRN: indiv policies") subtitle("`subtitle2'") ///
 xline(0) name(IRN_disag, replace)
 
@@ -133,11 +146,11 @@ xline(0) name(IRN_disag, replace)
 // compute ATE
 preserve
 	collapse (first) adm0_name (mean) D_l_cum_confirmed_cases ///
-	travel_ban_local_opt work_from_home school_closure home_isolation if e(sample) == 1
+	travel_ban_local_opt_natl work_from_home school_closure_natl home_isolation if e(sample) == 1
 	
-	predictnl ATE = travel_ban_local_opt * _b[travel_ban_local_opt] + ///
+	predictnl ATE = travel_ban_local_opt_natl * _b[travel_ban_local_opt_natl] + ///
 	work_from_home * _b[work_from_home] + ///
-	school_closure * _b[school_closure] + ///
+	school_closure_natl * _b[school_closure_natl] + ///
 	home_isolation * _b[home_isolation] ///
 	if e(sample), ci(LB UB) se(sd) p(pval)
 	
