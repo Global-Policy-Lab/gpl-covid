@@ -174,9 +174,13 @@ suppressWarnings({
   
   
   cowplot::save_plot(plot = final, filename = "results/figures/fig4/fig4_total_sensitivity_to_gamma.pdf",
-                     scale = 2, base_asp = 1.2)
+                     scale = 1.1, dpi = 300,
+                     base_width = 183/25.3,
+                     base_height = 183/25.3/1.2)
   cowplot::save_plot(plot = final, filename = "results/figures/fig4/fig4_total_sensitivity_to_gamma.jpg",
-                     scale = 2, base_asp = 1.2, dpi = 600)
+                     scale = 1.1, dpi = 300,
+                     base_width = 183/25.3,
+                     base_height = 183/25.3/1.2)
   write_csv(gamma_df %>% dplyr::select(-time_steps_per_day), path = "results/source_data/ExtendedDataFigure7.csv")
   if(file.exists("Rplots.pdf")){
     invisible(file.remove("Rplots.pdf"))
