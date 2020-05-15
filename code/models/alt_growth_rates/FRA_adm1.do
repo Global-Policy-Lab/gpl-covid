@@ -390,8 +390,13 @@ postfile results str18 adm0 str18 sample str18 policy beta se using `results_fil
 reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popwt ///
 national_lockdown testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 
+foreach var in "school_closure_popwt" "pck_social_distance" {
 	post results ("FRA") ("full_sample") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 }
+
+lincom national_lockdown + pck_social_distance
+post results ("FRA") ("full_sample") ("national_lockdown*") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
+
 lincom national_lockdown + school_closure_popwt + pck_social_distance
 post results ("FRA") ("full_sample") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 
@@ -406,9 +411,12 @@ levelsof adm1_name, local(state_list)
 foreach adm in `state_list' {
 	reghdfe D_l_cum_confirmed_cases pck_social_distance school_closure_popwt national_lockdown ///
 	 testing_regime_* if adm1_name != "`adm'" , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
-	foreach var in "national_lockdown" "school_closure_popwt" "pck_social_distance" {
+	foreach var in "school_closure_popwt" "pck_social_distance" {
 		post results ("FRA") ("`adm'") ("`var'") (round(_b[`var'], 0.001)) (round(_se[`var'], 0.001)) 
 	}
+	lincom national_lockdown + pck_social_distance
+	post results ("FRA") ("`adm'") ("national_lockdown*") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 	
+	
 	lincom national_lockdown + school_closure_popwt + pck_social_distance
 	post results ("FRA") ("`adm'") ("comb. policy") (round(r(estimate), 0.001)) (round(r(se), 0.001)) 
 	predictnl `counter_CV' = testing_regime_15mar2020 * _b[testing_regime_15mar2020] + ///
@@ -423,20 +431,9 @@ preserve
 	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
-	tw scatter i beta if sample != "GrandEst", xline(0,lc(black) lp(dash)) mc(black*.5)  ///
-	|| scatter i beta if sample == "full_sample", mc(red) ///
-	|| scatter i beta if sample == "GrandEst", mc(green) m(Oh) ///
-	yscale(range(0(1)6)) ylabel(1 "combined effect" ///
-	2 "Social distance" ///
-	3 "School closure" ///
-	4 "National lockdown", angle(0)) ytitle("") xtitle("Estimated effect on daily growth rate", height(5)) ///
-	ytitle("") xscale(range(-0.6(0.2)0.2)) xlabel(#5) xsize(7) ///
-	legend(order(2 1 3) lab(2 "Full sample") lab(1 "Leaving one region out") ///
-	lab(3 "w/o Grand Est") region(lstyle(none)) pos(11) ring(0)) 
-	graph export results/figures/appendix/cross_valid/FRA.pdf, replace
-	capture graph export results/figures/appendix/cross_valid/FRA.png, replace	
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_FRA.csv", comma replace
 restore
+
 
 //-------------------------------FIXED LAG
 set seed 1234
