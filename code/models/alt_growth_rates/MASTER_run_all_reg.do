@@ -2,9 +2,6 @@
 
 clear all
 
-// optional scheme for graphs
-capture set scheme covid19_fig3 
-
 // create folders for figure output 
 capture mkdir "results"
 capture mkdir "results/figures"
