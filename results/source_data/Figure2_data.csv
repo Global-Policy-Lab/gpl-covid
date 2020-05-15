@@ -44,7 +44,7 @@ adm0,policy,beta,se
 "IRN","p_1",-.334,.089
 "IRN","p_2",-.154,.033
 "IRN","comb. policy",-.487,.076
-"IRN","no_policy rate",.524,.079
+"IRN","no_policy rate",.52,.089
 "FRA","national_lockdown",.083,.052
 "FRA","school_closure_pop",-.009,.042
 "FRA","pck_social_distanc",-.243,.072
