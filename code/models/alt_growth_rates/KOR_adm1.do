@@ -1,6 +1,7 @@
 // KOR | ADM1
 
 clear all
+set scheme s1color
 //-----------------------setup
 
 // import end of sample cut-off 
@@ -10,8 +11,6 @@ local end_sample = end_date[1]
 
 // load data
 insheet using data/processed/adm1/KOR_processed.csv, clear 
-
-cap set scheme covid19_fig3 // optional scheme for graphs
 
 // set up time variables
 gen t = date(date, "YMD")
@@ -157,9 +156,11 @@ foreach var in "p_1" "p_2" "p_3" "p_4" {
 
 predict e if e(sample), resid
 
-hist e, bin(30) tit(South Korea) lcolor(white) fcolor(navy) xsize(5) name(hist_kor, replace)
+hist e, bin(30) tit(South Korea) lcolor(white) fcolor(navy) xsize(5) ///
+ylabel(, angle(horizontal)) plotregion(lcolor(white)) name(hist_kor, replace)
 
-qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_kor, replace)
+qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) ///
+ylabel(, angle(horizontal)) plotregion(lcolor(white)) name(qn_kor, replace)
 
 graph combine hist_kor qn_kor, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_kor.gph, replace)
 graph drop hist_kor qn_kor
@@ -260,7 +261,7 @@ tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
 if e(sample), ///
 title("South Korea", ring(0) position(11)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) ///
 saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
@@ -278,7 +279,7 @@ drop miss_ct
 // if e(sample), ///
 // title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
 // xscale(range(21960(10)22011)) xlabel(21960(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) 
+// yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) 
 
 
 //-------------------------------Cross-validation
@@ -325,7 +326,6 @@ foreach adm in `state_list' {
 postclose results
 
 preserve
-	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
 	g minCI = beta - 1.96* se
