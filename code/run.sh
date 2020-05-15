@@ -10,6 +10,7 @@ if [ "$CONDA_DEFAULT_ENV" != "gpl-covid" ]; then
     fi
     source $CONDA_PREFIX/etc/profile.d/conda.sh
     conda activate gpl-covid
+    chmod +x code/statab.sh
 fi
 
 # install our utilities
