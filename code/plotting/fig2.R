@@ -205,8 +205,8 @@ df$policy[df$adm0 == "FRA" & df$policy == "natl_lockdown_comb"] <- "National loc
 
 #order df
 df <- dplyr::arrange(df, desc(order), order2) 
-df.combined <- dplyr::arrange(df.combined, desc(order), order2) 
-df.no <- dplyr::arrange(df.no, desc(order), order2) 
+df.combined <- dplyr::arrange(df.combined, desc(order)) 
+df.no <- dplyr::arrange(df.no, desc(order)) 
 
 #set up columns for plotting
 df$country <- "United States"
