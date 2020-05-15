@@ -45,8 +45,7 @@ chn_data <- read_csv("models/reg_data/CHN_reg_data.csv",
            str_remove("on$") %>% str_remove("local") %>% 
            str_replace("^e", "E") %>% str_replace("^t", "T") %>% str_replace("^h", "H") %>% 
            str_trim(),
-         policy_factor = factor(policy, levels = c("Emergency declaration", "Travel ban", "Home isolation")),
-         n = if_else(n==0, NA_real_, n))
+         policy_factor = factor(policy, levels = c("Emergency declaration", "Travel ban", "Home isolation")))
 
 # KOR ----------------------------------------------------------------------------------------------------
 
@@ -109,19 +108,19 @@ ita_data <- read_csv("models/reg_data/ITA_reg_data.csv",
   arrange(adm1_name, adm2_name, date) %>% 
   # flag when policies are turned on
   select(adm0_name, adm1_name, adm1_id, date, dow, 
-         no_gathering, social_distance_opt, social_distance, work_from_home_opt, work_from_home, 
-         school_closure, 
-         travel_ban_local, transit_suspension, 
-         pos_cases_quarantine,
-         business_closure, 
-         home_isolation) %>% 
+         no_gathering_popwt, social_distance_opt_popwt, social_distance_popwt, work_from_home_opt_popwt, work_from_home_popwt, 
+         school_closure_popwt, 
+         travel_ban_local_popwt, transit_suspension_popwt, 
+         pos_cases_quarantine_popwt,
+         business_closure_popwt, 
+         home_isolation_popwt) %>% 
   group_by(adm0_name, adm1_name, adm1_id) %>% 
-  mutate_at(vars(c(no_gathering, social_distance_opt, social_distance, work_from_home_opt, work_from_home, 
-                   school_closure, 
-                   travel_ban_local, transit_suspension, 
-                   pos_cases_quarantine,
-                   business_closure, 
-                   home_isolation)), 
+  mutate_at(vars(c(no_gathering_popwt, social_distance_opt_popwt, social_distance_popwt, work_from_home_opt_popwt, work_from_home_popwt, 
+                   school_closure_popwt, 
+                   travel_ban_local_popwt, transit_suspension_popwt, 
+                   pos_cases_quarantine_popwt,
+                   business_closure_popwt, 
+                   home_isolation_popwt)), 
             list(on = ~ as.numeric((. - lag(.))>0))) %>% 
   ungroup() %>% 
   # calc total number of cities that enacted policy by policy type and dow
@@ -181,11 +180,11 @@ fra_data <- read_csv("models/reg_data/FRA_reg_data.csv",
   arrange(adm1_name, date) %>% 
   # flag when policies are turned on
   select(adm0_name, adm1_name, adm1_id, date, dow, 
-         no_gathering_1000, no_gathering_100, event_cancel, no_gathering_inside, social_distance,
-         school_closure, business_closure, home_isolation) %>% 
+         no_gathering_1000, no_gathering_100, event_cancel_popwt, no_gathering_inside_popwt, social_distance_popwt,
+         school_closure_popwt, business_closure, home_isolation_popwt) %>% 
   group_by(adm0_name, adm1_name, adm1_id) %>% 
-  mutate_at(vars(c(no_gathering_1000, no_gathering_100, event_cancel, no_gathering_inside, social_distance,
-                   school_closure, business_closure, home_isolation)), 
+  mutate_at(vars(c(no_gathering_1000, no_gathering_100, event_cancel_popwt, no_gathering_inside_popwt, social_distance_popwt,
+                   school_closure_popwt, business_closure, home_isolation_popwt)), 
             list(on = ~ as.numeric((. - lag(.))>0))) %>% 
   ungroup() %>% 
   # calc total number of cities that enacted policy by policy type and dow
@@ -215,25 +214,21 @@ usa_data <- read_csv("models/reg_data/USA_reg_data.csv",
   arrange(adm1_name, date) %>% 
   # flag when policies are turned on
   select(adm0_name, adm1_name, adm1_id, date, dow, 
-         event_cancel_popwt, no_gathering_opt, no_gathering,
-         social_distance_opt, social_distance, religious_closure_opt, religious_closure,
-         pos_cases_quarantine_opt, pos_cases_quarantine,
-         paid_sick_leave_opt, paid_sick_leave,
-         work_from_home_opt, work_from_home,
-         school_closure_opt, school_closure,
-         travel_ban_local_opt, travel_ban_local, transit_suspension_opt, transit_suspension,
-         business_closure_opt, business_closure, 
-         home_isolation_opt, home_isolation) %>% 
+         no_gathering_popwt, social_distance_popwt, 
+         pos_cases_quarantine_popwt, paid_sick_leave_popwt,
+         work_from_home_popwt, school_closure_popwt,
+         travel_ban_local_popwt, transit_suspension_popwt,
+         business_closure_popwt, religious_closure_popwt,
+         home_isolation_popwt,
+         federal_guidelines) %>% 
   group_by(adm0_name, adm1_name, adm1_id) %>% 
-  mutate_at(vars(c(event_cancel_popwt, no_gathering_opt, no_gathering,
-                   social_distance_opt, social_distance, religious_closure_opt, religious_closure,
-                   pos_cases_quarantine_opt, pos_cases_quarantine,
-                   paid_sick_leave_opt, paid_sick_leave,
-                   work_from_home_opt, work_from_home,
-                   school_closure_opt, school_closure,
-                   travel_ban_local_opt, travel_ban_local, transit_suspension_opt, transit_suspension,
-                   business_closure_opt, business_closure, 
-                   home_isolation_opt, home_isolation)), 
+  mutate_at(vars(c(no_gathering_popwt, social_distance_popwt, 
+                   pos_cases_quarantine_popwt, paid_sick_leave_popwt,
+                   work_from_home_popwt, school_closure_popwt,
+                   travel_ban_local_popwt, transit_suspension_popwt,
+                   business_closure_popwt, religious_closure_popwt,
+                   home_isolation_popwt,
+                   federal_guidelines)), 
             list(on = ~ as.numeric((. - lag(.))>0))) %>% 
   ungroup() %>% 
   # calc total number of cities that enacted policy by policy type and dow
@@ -263,12 +258,13 @@ combined <- bind_rows(
            str_to_lower() %>% 
            str_replace_all("_", " ") %>% 
            str_remove_all(" on|opt|local|\\d|inside|popwt") %>% 
-           str_trim())
+           str_trim() %>% 
+           str_replace("federal guidelines", "US federal guidelines"))
 
 unique(combined$policy) %>% sort()
 
 # create color palette
-pal <- colorRampPalette(brewer.pal(11, "RdYlBu"))(15)
+pal <- colorRampPalette(brewer.pal(11, "RdYlBu"))(16)
 
 # by policy and country
 combined %>% 
@@ -288,7 +284,7 @@ ggplot(aes(dow_factor, n, fill = Policy)) +
 # total policy count by dow and country
 tot_policy_ct <- combined %>% 
   group_by(country, dow, dow_factor) %>% 
-  summarise(n = sum(n, na.rm = TRUE)) %>% 
+  summarise(n = sum(n)) %>% 
   ungroup() %>% 
   group_by(country) %>% 
   mutate(pct = n / sum(n))
@@ -310,27 +306,3 @@ chisq_results <- map(unique(tot_policy_ct$country), function(c){
 }) %>% 
   bind_rows()
 
-
-# % Sat + Sun, M + F, Tu-Thu
-binned_ct <- combined %>% 
-  mutate(dow_bin = case_when(
-    dow %in% c(6,0) ~ "Sat + Sun",
-    dow %in% c(1,5) ~ "Mon + Fri",
-    dow %in% c(2,3,4) ~ "Tue + Wed + Thu"
-  )) %>% 
-  group_by(dow_bin) %>% 
-  summarise(n = sum(n, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  mutate(pct = n / sum(n))
-
-binned_ct_by_country <- combined %>% 
-  mutate(dow_bin = case_when(
-    dow %in% c(6,0) ~ "Sat + Sun",
-    dow %in% c(1,5) ~ "Mon + Fri",
-    dow %in% c(2,3,4) ~ "Tue + Wed + Thu"
-  )) %>% 
-  group_by(country, dow_bin) %>% 
-  summarise(n = sum(n, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  group_by(country) %>% 
-  mutate(pct = n / sum(n))
