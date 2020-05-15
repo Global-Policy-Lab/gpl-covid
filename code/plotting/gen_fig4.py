@@ -8,6 +8,7 @@ import matplotlib.colors
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import matplotlib.transforms as transforms
+import matplotlib.ticker as ticker
 import seaborn as sns
 import src.utils as cutil
 
@@ -22,10 +23,10 @@ fig_height = 6.7  # 249mm
 # grid_width = 2.8  # 89mm
 # grid_height = 7.5  # 249mm
 
-grid_width = 2.6  # 89mm
-grid_height = 6.8  # 249mm
+grid_width = 2.5  # 89mm
+grid_height = 6.7  # 249mm
 
-scale_factor = 3.5 / 15.0  # old width was 15
+scale_factor = 3.0 / 15.0  # old width was 15
 scale_factor_x = 2.8 / 15.0  # old width was 15
 
 leg_topright = True
@@ -346,7 +347,7 @@ def plot_bracket(ax, model_df):
         xy=text_spot_start,
         xytext=text_spot_end,
         annotation_clip=False,
-        fontsize=30 * scale_factor_x,
+        fontsize=27 * scale_factor_x,
         va="center",
     )
 
@@ -374,7 +375,7 @@ def annotate_cases(ax, cases):
         xy=cases_pos,
         xytext=text_pos,
         annotation_clip=False,
-        fontsize=30 * scale_factor_x,
+        fontsize=27 * scale_factor_x,
         va="center",
         arrowprops={
             "arrowstyle": "->",
@@ -534,16 +535,18 @@ def main():
 
         # 3. set title and axis labels
         ax[c].set_title(
-            "  " + country_names[country],
-            fontsize=36 * scale_factor,
+            " " + country_names[country],
+            fontsize=35 * scale_factor,
             verticalalignment="top",
             loc="left",
+            x=0.04,
+            y=0.85,
             backgroundcolor="white",
             zorder=2,
-            pad=1.0,
+            # pad=0.1,
         )
 
-        ax[c].set_ylabel("Cumulative cases", fontsize=32 * scale_factor)
+        ax[c].set_ylabel("Cumulative cases", fontsize=28 * scale_factor, labelpad=1)
         ax[c].set_yscale("log")
 
         ax[c].set_xlim(np.datetime64(start_date), np.datetime64(end_date))
@@ -553,7 +556,7 @@ def main():
         # dates on x axis
         days_all = mdates.DayLocator(interval=1)
         days_sparse = mdates.DayLocator(interval=10)
-        formatter = mdates.DateFormatter("%b %d")
+        formatter = mdates.DateFormatter("%b %-d")
 
         ax[c].xaxis.set_major_formatter(formatter)
         ax[c].xaxis.set_minor_locator(days_all)
@@ -563,7 +566,7 @@ def main():
         ax[c].tick_params(
             axis="x",
             which="major",
-            labelsize=24 * scale_factor_x,
+            labelsize=27 * scale_factor_x,
             length=10 * scale_factor_x,
             width=4 * scale_factor_x,
         )
@@ -574,30 +577,43 @@ def main():
             width=1.5 * scale_factor_x,
         )
 
+        # ax[c].set_yticks(ax[c].get_yticks(minor=True)[::5], minor=True)
+        ax[c].set_yticks(np.logspace(1, 7, base=10, num=4))
+        print(np.logspace(1, 7, base=10, num=4))
+        ax[c].set_yticks(
+            np.logspace(1, 8, base=10, num=8), minor=True,
+        )
+        print(np.logspace(1, 8, base=10, num=8))
+
         ax[c].tick_params(
             axis="y",
             which="major",
-            labelsize=26 * scale_factor,
+            labelsize=30 * scale_factor_x,
             length=8 * scale_factor,
             width=1 * scale_factor,
+            zorder=10,
+            pad=-0.2,
         )
 
         ax[c].tick_params(
             axis="y",
             which="minor",
-            labelsize=26 * scale_factor,
-            length=5 * scale_factor,
-            width=0.1 * scale_factor,
+            labelsize=27 * scale_factor_x,
+            length=8 * scale_factor,
+            width=1.5 * scale_factor,
+            zorder=10,
         )
-        ax[c].set_yticks(ax[c].get_yticks(minor=True)[::5], minor=True)
-        ax[c].set_yticks(np.logspace(1, 8, base=10, num=8))
 
-        sns.despine(ax=ax[c], top=True)
+        ax[c].set_yticklabels([], minor=True)
+
         sns.despine(ax=ax[c], top=True)
 
         # thicken the axes
         plt.setp(ax[c].spines.values(), linewidth=2 * scale_factor)
-        ax[c].grid(lw=1 * scale_factor)
+        ax[c].grid(which="major", axis="x", lw=1 * scale_factor, zorder=1)
+        ax[c].grid(which="minor", axis="y", lw=1 * scale_factor, zorder=1)
+
+        ax[c].yaxis.offsetText.set_fontsize(24)
 
     # add another axis so the annotations don't go away
     # extra_ax = fig.add_axes([0, 0, 1.0, 1.0])
@@ -611,11 +627,11 @@ def main():
         leg = leg_ax.legend(
             handles=legend_dict["lines"],
             labels=legend_dict["labels"],
-            loc=(0.42, 0.6),
-            fontsize=20 * scale_factor,
+            loc=(0.42, 0.2),
+            fontsize=27 * scale_factor_x,
             title="Legend",
             frameon=False,
-            markerscale=1.8 * scale_factor,
+            markerscale=1.0 * scale_factor,
         )
 
     else:
@@ -625,15 +641,15 @@ def main():
         leg = leg_ax.legend(
             handles=legend_dict["lines"],
             labels=legend_dict["labels"],
-            loc=(0.42, 0.82),
-            fontsize=24 * scale_factor,
+            loc=(0.42, 1.2),
+            fontsize=27 * scale_factor_x,
             title="Legend",
             frameon=True,
             markerscale=2 * scale_factor,
         )
 
     leg._legend_box.align = "left"
-    plt.setp(leg.get_title(), fontsize=24 * scale_factor)
+    plt.setp(leg.get_title(), fontsize=30 * scale_factor_x)
 
     leg_ax.axis("off")
 
@@ -649,10 +665,10 @@ def main():
         out_fn = fig_dir / fig_name
         print("saving fig in {0}".format(out_fn))
         # plt.savefig(out_fn, bbox_inches="tight", bbox_extra_artists=(leg,))
-        vertical_pad_bottom = 0.6
-        vertical_pad_top = 1.2
-        horizontal_pad_left = -0.1
-        horizontal_pad_right = 0.3
+        vertical_pad_bottom = 0.56
+        vertical_pad_top = 1.31
+        horizontal_pad_left = 0.04
+        horizontal_pad_right = 0.48
         plt.savefig(
             out_fn,
             bbox_inches=transforms.Bbox.from_bounds(
