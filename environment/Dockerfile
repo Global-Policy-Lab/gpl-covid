@@ -17,7 +17,8 @@ RUN stata 'ssc install coefplot' \
     && stata 'ssc install filelist' \
     && stata 'ssc install ftools' \
     && stata 'ssc install outreg2' \
-    && stata 'ssc install reghdfe' # Original versions: latest latest latest latest latest
+    && stata 'ssc install reghdfe' \
+    && stata 'ssc install carryforward'
 
 ENV PATH="/opt/conda/bin:$PATH"
 RUN install=Miniconda3-latest-Linux-x86_64.sh \

@@ -93,11 +93,23 @@ lab var day_avg "Observed avg. change in log cases"
 
 // NOTE: no_gathering has no variation
 
+// create national opt travel ban var for all provinces except for Qom
+// since Qom institutes opt travel ban on 2/20 before sample period
+// and national opt travel ban enacted on 3/1
+gen travel_ban_local_opt_natl = travel_ban_local_opt
+	replace travel_ban_local_opt_natl = 0 if adm1_name=="Qom"
+
+// create national school_closure var for provinces that close schools on 3/5
+by adm1_id: egen school_closure_natl0 = min(school_closure) 
+gen school_closure_natl = school_closure if school_closure_natl0==0
+	replace school_closure_natl = 0 if school_closure_natl==.
+drop school_closure_natl0
+	
 // Merging March 1-5 policies, since they all happened at the same time during 
 // break in the health data (missing cases for 3/2-3/3)
 // so p_1 = 1/3 on 3/1 when opt travel ban enacted, then p_1 = 1 starting 3/5
-gen p_1 = (travel_ban_local_opt + work_from_home + school_closure)/3
-lab var p_1 "Travel ban (opt), work from home, school closure"
+gen p_1 = (travel_ban_local_opt_natl + work_from_home + school_closure_natl)/3
+lab var p_1 "Trvl ban opt, work home, school clos (natl)"
 
 // home isolation started March 13
 gen p_2 = home_isolation
@@ -185,7 +197,7 @@ local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefp
 
 // looking at different policies (FOR FIG2)
 coefplot, keep(p_1 p_2) tit("IRN: policy packages") subtitle(`subtitle2') ///
-caption("p_1 = (travel_ban_local_opt + work_from_home + school_closure) / 3", span) ///
+caption("p_1 = (travel_ban_local_opt + work_from_home + school_closure_natl) / 3", span) ///
 xline(0) name(IRN_policy, replace)
 
 

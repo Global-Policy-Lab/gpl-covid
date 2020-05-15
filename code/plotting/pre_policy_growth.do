@@ -1,4 +1,4 @@
-set matsize 5000
+set memory 10000
 clear all
 
 // CHN | ADM2 -----------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ foreach adm2 of local city{
 	predict e_t_`adm2' if e(sample), resid
 	
 	// plot growth rate residuals, take out effect of controls
-	tw (sc e_g_`adm2' e_t_`adm2') (lfit e_g_`adm2' e_t_`adm2'), ///
+	tw (sc e_g_`adm2' e_t_`adm2', mcolor(red)) (lfit e_g_`adm2' e_t_`adm2', lcolor(gs10)), ///
 	title("`adm2', China") subtitle("pre-trend = `b_t', p = `b_t_p'") ///
 	ytitle(Growth rate residuals) xtitle("Date residuals") ///
 	xscale(r(-3(1)3)) xlabel(-3(1)3) name(`adm2'_pre, replace)
@@ -252,7 +252,7 @@ foreach adm1 of local province{
 	predict e_t_`adm1_str' if e(sample), resid
 	
 	// plot growth rate residuals, take out effect of controls
-	tw (sc e_g_`adm1_str' e_t_`adm1_str') (lfit e_g_`adm1_str' e_t_`adm1_str'), ///
+	tw (sc e_g_`adm1_str' e_t_`adm1_str', mcolor(red)) (lfit e_g_`adm1_str' e_t_`adm1_str', lcolor(gs10)), ///
 	title("`adm1', S. Korea") subtitle("pre-trend = `b_t', p = `b_t_p'") ///
 	ytitle(Growth rate residuals) xtitle("Date residuals") ///
 	xscale(r(-3(1)3)) xlabel(-3(1)3) name(`adm1_str'_pre, replace)
@@ -378,19 +378,19 @@ foreach adm2 of local province{
 	
 	// plot growth rate residuals, take out effect of controls
 	if inlist("`adm2'", "Milano", "Parma") {
-		tw (sc e_g_`adm2' e_t_`adm2') (lfit e_g_`adm2' e_t_`adm2'), ///
+		tw (sc e_g_`adm2' e_t_`adm2', mcolor(red)) (lfit e_g_`adm2' e_t_`adm2', lcolor(gs10)), ///
 		title("`adm2', Italy") subtitle("pre-trend = `b_t', p = `b_t_p'") ///
 		ytitle(Growth rate residuals) xtitle("Date residuals") ///
 		xscale(r(-1.5(.5)1.5)) xlabel(-1.5(.5)1.5) yscale(titlegap(*-35)) name(`adm2'_pre, replace)
 	} 
 	if "`adm2'"=="Pavia" {
-		tw (sc e_g_`adm2' e_t_`adm2') (lfit e_g_`adm2' e_t_`adm2'), ///
+		tw (sc e_g_`adm2' e_t_`adm2', mcolor(red)) (lfit e_g_`adm2' e_t_`adm2', lcolor(gs10)), ///
 		title("`adm2', Italy") subtitle("pre-trend = `b_t', p = `b_t_p'") ///
 		ytitle(Growth rate residuals) xtitle("Date residuals") ///
 		xscale(r(-1.5(.5)1.5)) xlabel(-1.5(.5)1.5) yscale(titlegap(*-28)) name(`adm2'_pre, replace)
 	} 
 	else if inlist("`adm2'", "Milano", "Parma", "Pavia")==0 {
-		tw (sc e_g_`adm2' e_t_`adm2') (lfit e_g_`adm2' e_t_`adm2'), ///
+		tw (sc e_g_`adm2' e_t_`adm2', mcolor(red)) (lfit e_g_`adm2' e_t_`adm2', lcolor(gs10)), ///
 		title("`adm2', Italy") subtitle("pre-trend = `b_t', p = `b_t_p'") ///
 		ytitle(Growth rate residuals) xtitle("Date residuals") ///
 		xscale(r(-1.5(.5)1.5)) xlabel(-1.5(.5)1.5) name(`adm2'_pre, replace)
@@ -472,13 +472,45 @@ predict e_t if e(sample), resid
 
 // plot growth rate residuals, take out effect of controls
 // plot dots and plot best fit line
-tw (sc e_g e_t) (lfit e_g e_t), title("Esfahan, Iran") ///
+tw (sc e_g e_t, mlabel(adm1_name)) (lfit e_g e_t), title("IRN") ///
 subtitle("pre-trend = `b_t'") ytitle(Growth rate residuals) xtitle("Date residuals") ///
 xscale(r(-1(0.5)1)) xlabel(-1(0.5)1) name(IRN_pre, replace)
 
 // 1st diff in log cases over time
 tw (sc D_D_l_cum_confirmed_cases t), title(IRN) ///
 ytitle(Diff in growth rates) xtitle("")
+
+
+// estimate pretrend for each province seperately
+bysort adm1_id: egen outcome_ct = count(D_l_cum_confirmed_cases)
+drop if outcome_ct<2
+
+levelsof adm1_name, local(province)
+
+foreach adm1 of local province{
+	display "`adm1'"
+	
+	reg D_l_cum_confirmed_cases t if adm1_name=="`adm1'", cluster(t)
+	
+	local b_t = round(_b[t], .001)
+	local b_t_se = round(_se[t], .001)
+	local b_t_t = _b[t]/_se[t]
+	local b_t_p = round(2*ttail(e(df_r),abs(`b_t_t')), .001)
+
+	// look at growth rate residuals
+	reg D_l_cum_confirmed_cases if adm1_name=="`adm1'", cluster(t)
+	predict e_g_`adm1' if e(sample), resid
+	
+	// look at date residuals, use for x-axis
+	reg t if D_l_cum_confirmed_cases!=. & adm1_name=="`adm1'"
+	predict e_t_`adm1' if e(sample), resid
+	
+	// plot growth rate residuals, take out effect of controls
+	tw (sc e_g_`adm1' e_t_`adm1', mcolor(red)) (lfit e_g_`adm1' e_t_`adm1', lcolor(gs10)), ///
+	title("`adm1', Iran") subtitle("pre-trend = `b_t', p = `b_t_p'") ///
+	ytitle(Growth rate residuals) xtitle("Date residuals") ///
+	xscale(r(-1.5(.5)1.5)) xlabel(-1.5(.5)1.5) name(`adm1'_pre, replace)
+}
 
 
 // FRA | ADM1 -----------------------------------------------------------------------------------
@@ -590,9 +622,17 @@ foreach adm1 of local region{
 	predict e_t_`adm1' if e(sample), resid
 	
 	// plot growth rate residuals, take out effect of controls
-	tw (sc e_g_`adm1' e_t_`adm1') (lfit e_g_`adm1' e_t_`adm1'), ///
-	title("`adm1', France") subtitle("pre-trend = `b_t', p = `b_t_p'") ///
-	ytitle(Growth rate residuals) xtitle("Date residuals") name(`adm1'_pre, replace)
+	if "`adm1'"=="BourgogneFrancheComté"{
+		tw (sc e_g_`adm1' e_t_`adm1', mcolor(red)) (lfit e_g_`adm1' e_t_`adm1', lcolor(gs10)), ///
+		title("`adm1', France", size(large)) subtitle("pre-trend = `b_t', p = `b_t_p'") ///
+		ytitle(Growth rate residuals) xtitle("Date residuals") yscale(titlegap(*-37)) name(`adm1'_pre, replace)
+	}
+	else if "`adm1'"!="BourgogneFrancheComté"{
+		tw (sc e_g_`adm1' e_t_`adm1', mcolor(red)) (lfit e_g_`adm1' e_t_`adm1', lcolor(gs10)), ///
+		title("`adm1', France") subtitle("pre-trend = `b_t', p = `b_t_p'") ///
+		ytitle(Growth rate residuals) xtitle("Date residuals") ///
+		xscale(r(-1.5(.5)1.5)) xlabel(-1.5(.5)1.5) name(`adm1'_pre, replace)
+	}
 }
 
 
@@ -673,7 +713,7 @@ predict e_t if e(sample), resid
 
 // plot growth rate residuals, take out effect of controls
 // plot dots and plot best fit line
-tw (sc e_g e_t, mlabel(adm1_name)) (lfit e_g e_t), title(USA) ///
+tw (sc e_g e_t, m(Oh) mlabel(adm1_name)) (lfit e_g e_t), title(USA) ///
 subtitle("pre-trend = `b_t', se = `b_t_se', p = `b_t_p', n = `n'")  ///
 ytitle(Growth rate residuals) xtitle("Date residuals") name(USA_pre, replace)
 
@@ -686,6 +726,8 @@ levelsof adm1_name, local(state)
 
 foreach adm1 of local state{
 	display "`adm1'"
+	local adm1_str = regexr("`adm1'", " ", "")
+	
 	reg D_l_cum_confirmed_cases t if adm1_name=="`adm1'", cluster(t)
 	
 	local b_t = round(_b[t], .001)
@@ -695,31 +737,35 @@ foreach adm1 of local state{
 
 	// look at growth rate residuals
 	reg D_l_cum_confirmed_cases if adm1_name=="`adm1'", cluster(t)
-	predict e_g_`adm1' if e(sample), resid
+	predict e_g_`adm1_str' if e(sample), resid
 	
 	// look at date residuals, use for x-axis
 	reg t if D_l_cum_confirmed_cases!=. & adm1_name=="`adm1'"
-	predict e_t_`adm1' if e(sample), resid
+	predict e_t_`adm1_str' if e(sample), resid
 	
 	// plot growth rate residuals, take out effect of controls
-	tw (sc e_g_`adm1' e_t_`adm1') (lfit e_g_`adm1' e_t_`adm1'), ///
+	tw (sc e_g_`adm1_str' e_t_`adm1_str', mcolor(red)) (lfit e_g_`adm1_str' e_t_`adm1_str', lcolor(gs10)), ///
 	title("`adm1', USA") subtitle("pre-trend = `b_t', p = `b_t_p'") ///
-	ytitle(Growth rate residuals) xtitle("Date residuals") name(`adm1'_pre, replace)
+	ytitle(Growth rate residuals) xtitle("Date residuals") ///
+	xscale(r(-2(.5)2)) xlabel(-2(.5)2) name(`adm1_str'_pre, replace)
 }
 
 
 
 // COMBINE -----------------------------------------------------------------------------------
 
-graph combine CHN_pre KOR_pre ITA_pre IRN_pre FRA_pre USA_pre, ///
-title("Pre-policy trends", size(small)) subtitle("controlling for testing regime changes and subnatl FE, clustered by date", size(small)) ///
-colfirst cols(2) imargin(tiny) iscale(0.5)
-
-graph export results/figures/appendix/prepolicy_growth_rates.pdf, replace
+// graph combine CHN_pre KOR_pre ITA_pre IRN_pre FRA_pre USA_pre, ///
+// title("Pre-policy trends", size(small)) subtitle("controlling for testing regime changes and subnatl FE, clustered by date", size(small)) ///
+// colfirst cols(2) imargin(tiny) iscale(0.5)
+//
+// graph export results/figures/appendix/prepolicy_growth_rates.pdf, replace
 
 
 graph combine Beijing_pre Wuhan_pre Busan_pre Gyeonggido_pre Seoul_pre ///
 Asti_pre Bergamo_pre Brescia_pre Cremona_pre Milano_pre Modena_pre Parma_pre Pavia_pre Piacenza_pre Treviso_pre Venezia_pre ///
-IRN_pre BourgogneFrancheComté_pre Occitanie_pre California_pre Colorado_pre Illinois_pre Massachusetts_pre Texas_pre, ///
+Esfahan_pre Gilan_pre Mazandaran_pre Qom_pre Tehran_pre ///
+BourgogneFrancheComté_pre IledeFrance_pre Occitanie_pre ///
+Colorado_pre Illinois_pre Iowa_pre Massachusetts_pre SouthCarolina_pre Texas_pre, ///
 title("Pre-policy trends", size(small)) subtitle("controlling for testing regime changes, clustered by date", size(small)) ///
-colfirst cols(6) imargin(tiny) iscale(0.3)
+colfirst cols(5) imargin(tiny) iscale(0.3)
+graph export results/figures/appendix/prepolicy_subnatl.png, replace
