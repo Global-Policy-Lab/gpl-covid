@@ -1,6 +1,7 @@
 ![build](https://github.com/bolliger32/gpl-covid/workflows/CI/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-# The Effect of Large-Scale Anti-Contagion Policies on the Coronavirus (COVID-19) Pandemic
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3829194.svg)](https://doi.org/10.5281/zenodo.3829194)
+# The Effect of Large-Scale Anti-Contagion Policies on the COVID-19 Pandemic
 
 This repository contains code and data necessary to replicate the findings of [our paper](https://www.medrxiv.org/content/10.1101/2020.03.22.20040642v2).
 
@@ -11,7 +12,7 @@ Scripts in this repository are written in R, Python, and Stata. Note that you wi
 The easiest way to interact with our code and data is via our [CodeOcean capsule](https://codeocean.com/capsule/1887579/tree/v1), because all of the relevant setup described below has been done for you. You may replicate the full analysis through the "Reproducible Run" feature or interact directly with our code through Jupyter Notebooks that run Python, R, and Stata. You may also utilize RStudio. If you wish to use the command line on a cloud workstation, you will want to activate our conda environment with `conda activate gpl-covid`.
 
 ### Github Repository
-You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.3" is the tag that is associated with the current version of the manuscript (as of 04/28/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
+You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.4" is the tag that is associated with the current version of the manuscript (as of 05/15/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
 
 ```bash
 conda env create -f environment/environment.yml
@@ -44,7 +45,7 @@ ssc install carryforward, replace
 ## Code Structure
 ```text
 code
-├── api_keys.json
+├── LICENSE
 ├── data
 │   ├── china
 │   │   ├── collate_data.py
@@ -66,8 +67,8 @@ code
 │   │   ├── generate_KOR_processed.R
 │   │   └── make_JHU_comparison_data.R
 │   ├── multi_country
+│   │   ├── convert-policies-raw-to-interim.py
 │   │   ├── download_6_countries_JHU.R
-│   │   ├── download_russell_underreporting_estimates.R
 │   │   ├── get_JHU_country_data.R
 │   │   ├── get_adm_info.py
 │   │   └── quality-check-processed-datasets.py
@@ -81,7 +82,6 @@ code
 │       ├── gen_state_name_abbrev_xwalk.R
 │       ├── get_usafacts_data.R
 │       └── merge_policy_and_cases.py
-├── default.profraw
 ├── models
 │   ├── CHN_create_CBs.R
 │   ├── CHN_generate_data_and_model_projection.R
@@ -115,16 +115,17 @@ code
 │   ├── predict_felm.R
 │   ├── projection_helper_functions.R
 │   ├── run_all_CB_simulations.R
-│   └── run_projection_with_multiple_gammas.R
+│   ├── run_projection_sensitivity.R
+│   └── test_that_r_coefs_match_stata.R
 ├── notebooks
 │   ├── archived
 │   │   ├── addl-sim-plots.ipynb
 │   │   └── resimulate-outbreaks.ipynb
-│   ├── iwb-misc.ipynb
 │   └── simulate-and-regress.ipynb
 ├── plotting
 │   ├── aggregate_fig1_source_data.py
 │   ├── count-policies.py
+│   ├── distribution_of_policies_by_dow.R
 │   ├── examine_lagged_relationship_between_new_deaths_recoveries_and_older_cases.R
 │   ├── extended_data_fig3_4.do
 │   ├── extended_data_fig5.do
@@ -134,6 +135,7 @@ code
 │   ├── figED1.py
 │   ├── figED2.R
 │   ├── gen_fig4.py
+│   ├── pre_policy_growth.do
 │   └── sims.py
 ├── run.sh
 ├── setup.py

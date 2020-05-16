@@ -5,8 +5,12 @@ set -e
 cd "$(dirname "$0")/.."
 
 if [ "$CONDA_DEFAULT_ENV" != "gpl-covid" ]; then
+    if [ "$CONDA_PREFIX" = "" ]; then
+        CONDA_PREFIX="/opt/conda"
+    fi
     source $CONDA_PREFIX/etc/profile.d/conda.sh
     conda activate gpl-covid
+    chmod +x code/statab.sh
 fi
 
 # install our utilities
@@ -70,7 +74,7 @@ fi
 if $STATA
 then
     printf "***Processing FRA epi data***\n"
-    code/statab.sh code/data/france/format_infected.do
+    code/statab.sh do code/data/france/format_infected.do
 fi
 
 #### USA
@@ -93,7 +97,7 @@ python code/data/china/collate_data.py
 if $STATA
 then
     printf "***Merging FRA data***\n"
-    code/statab.sh code/data/france/format_policy.do
+    code/statab.sh do code/data/france/format_policy.do
 fi
 
 # IRN
@@ -121,7 +125,7 @@ python code/data/multi_country/quality-check-processed-datasets.py
 if $STATA
 then
     printf "***Estimating regression model and creating Figure 3, SI Table 3, SI Table 5, ED Figure 10***\n"
-    code/statab.sh code/models/alt_growth_rates/MASTER_run_all_reg.do $NUMPROJ
+    code/statab.sh do code/models/alt_growth_rates/MASTER_run_all_reg.do $NUMPROJ
 fi
 
 
@@ -162,7 +166,7 @@ Rscript code/plotting/figED2.R $NDFLAG
 if $STATA
 then
     printf "***Creating ED Fig 3 and 4***\n"
-    code/statab.sh code/plotting/extended_data_fig3_4.do
+    code/statab.sh do code/plotting/extended_data_fig3_4.do
 fi
 
 # ED Figure 5
@@ -170,9 +174,9 @@ if $STATA
 then
     printf "***Creating ED Fig 5***\n"
     if [ $NUMPROJ == 1000 ]; then
-        code/statab.sh code/plotting/extended_data_fig5.do
+        code/statab.sh do code/plotting/extended_data_fig5.do
     else
-        code/statab.sh code/plotting/extended_data_fig5.do nosave
+        code/statab.sh do code/plotting/extended_data_fig5.do nosave
     fi
 fi
 
@@ -180,7 +184,7 @@ fi
 if $STATA
 then
     printf "***Estimating regression model with disaggregated policy variables and creating ED Figure 6 and SI Table 4***\n"
-    code/statab.sh code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
+    code/statab.sh do code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
 fi
 
 # ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
