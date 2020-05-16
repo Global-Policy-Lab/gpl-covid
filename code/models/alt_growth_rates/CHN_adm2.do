@@ -584,3 +584,124 @@ preserve
 	replace ite = ite + 1 if ite >= 6
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_CHN.csv", comma replace
 restore
+
+
+//------------------------------------FIXED LAG 
+tempfile base_data
+save `base_data'
+
+rename emergency_declaration* emerg_decl*
+
+reghdfe D_l_active_cases emerg_decl_L* travel_ban_local_L* home_isolation_L* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
+local r2=e(r2)
+preserve
+	keep if e(sample) == 1
+	collapse  D_l_active_cases home_isolation_*  travel_ban_local_* emerg_decl_*
+	predictnl ATE = ///	
+	home_isolation_L0_to_L7          * _b[home_isolation_L0_to_L7] + ///
+	travel_ban_local_L0_to_L7        * _b[travel_ban_local_L0_to_L7] + ///
+	emerg_decl_L0_to_L7   * _b[emerg_decl_L0_to_L7] + ///
+	home_isolation_L8_to_L14         * _b[home_isolation_L8_to_L14] +  ///
+	travel_ban_local_L8_to_L14       * _b[travel_ban_local_L8_to_L14] + ///
+	emerg_decl_L8_to_L14  * _b[emerg_decl_L8_to_L14] + ///
+	home_isolation_L15_to_L21        * _b[home_isolation_L15_to_L21] + ///
+	travel_ban_local_L15_to_L21      * _b[travel_ban_local_L15_to_L21] + /// 
+	emerg_decl_L15_to_L21 * _b[emerg_decl_L15_to_L21] + /// 
+	home_isolation_L22_to_L28        * _b[home_isolation_L22_to_L28] + /// 
+	travel_ban_local_L22_to_L28 	 * _b[travel_ban_local_L22_to_L28] + ///
+	emerg_decl_L22_to_L28 * _b[emerg_decl_L22_to_L28] + ///
+	home_isolation_L29_to_L70 		 * _b[home_isolation_L29_to_L70] + ///
+	travel_ban_local_L29_to_L70 	 * _b[travel_ban_local_L29_to_L70] + ///
+	emerg_decl_L29_to_L70 * _b[emerg_decl_L29_to_L70] ///
+	, ci(LB UB) se(sd) p(pval)
+	keep ATE LB UB sd pval 
+	g lag = 0
+	g r2 = `r2'
+	tempfile f0
+	save `f0'
+restore	 
+
+foreach lags of num 1 2 3 4 5{ 
+	quietly {
+	foreach var in home_isolation emerg_decl travel_ban_local {
+		g `var'_copy = `var'
+		g `var'_FL = L`lags'.`var'
+		replace `var'_FL = 0 if `var'_FL == .
+		replace `var' = `var'_FL
+		cap drop `var'_L*
+		
+		// gen weekly decomposition on new var
+		
+		gen `var'_L0_to_L7 = 0
+		forvalues i = 0/7 {
+			replace `var'_L0_to_L7 = 1 if L`i'.D.`var' == 1
+		}
+
+		gen `var'_L8_to_L14 = 0
+		forvalues i = 8/14 {
+			replace `var'_L8_to_L14 = 1 if L`i'.D.`var' == 1
+		}
+
+		gen `var'_L15_to_L21 = 0
+		forvalues i = 15/21 {
+			replace `var'_L15_to_L21 = 1 if L`i'.D.`var' == 1
+		}
+
+		gen `var'_L22_to_L28 = 0
+		forvalues i = 22/28 {
+			replace `var'_L22_to_L28 = 1 if L`i'.D.`var' == 1
+		}
+
+		gen `var'_L29_to_L70 = 0
+		forvalues i = 29/70 {
+			replace `var'_L29_to_L70 = 1 if L`i'.D.`var' == 1
+		}
+		
+	}
+	drop *_FL	
+	
+	reghdfe D_l_active_cases emerg_decl_L* travel_ban_local_L* home_isolation_L* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
+	local r2 = e(r2)
+	preserve
+		keep if e(sample) == 1
+		collapse  D_l_active_cases home_isolation_*  travel_ban_local_* emerg_decl_*
+		predictnl ATE = ///	
+		home_isolation_L0_to_L7          * _b[home_isolation_L0_to_L7] + ///
+		travel_ban_local_L0_to_L7        * _b[travel_ban_local_L0_to_L7] + ///
+		emerg_decl_L0_to_L7   * _b[emerg_decl_L0_to_L7] + ///
+		home_isolation_L8_to_L14         * _b[home_isolation_L8_to_L14] +  ///
+		travel_ban_local_L8_to_L14       * _b[travel_ban_local_L8_to_L14] + ///
+		emerg_decl_L8_to_L14  * _b[emerg_decl_L8_to_L14] + ///
+		home_isolation_L15_to_L21        * _b[home_isolation_L15_to_L21] + ///
+		travel_ban_local_L15_to_L21      * _b[travel_ban_local_L15_to_L21] + /// 
+		emerg_decl_L15_to_L21 * _b[emerg_decl_L15_to_L21] + /// 
+		home_isolation_L22_to_L28        * _b[home_isolation_L22_to_L28] + /// 
+		travel_ban_local_L22_to_L28 	 * _b[travel_ban_local_L22_to_L28] + ///
+		emerg_decl_L22_to_L28 * _b[emerg_decl_L22_to_L28] + ///
+		home_isolation_L29_to_L70 		 * _b[home_isolation_L29_to_L70] + ///
+		travel_ban_local_L29_to_L70 	 * _b[travel_ban_local_L29_to_L70] + ///
+		emerg_decl_L29_to_L70 * _b[emerg_decl_L29_to_L70] ///
+		, ci(LB UB) se(sd) p(pval)
+		keep ATE LB UB sd pval 
+		g lag = `lags'
+		g r2 = `r2'
+		tempfile f`lags'
+		save `f`lags''
+	restore	 
+
+
+	foreach var in home_isolation travel_ban_local emerg_decl {
+		replace `var' = `var'_copy
+		drop `var'_copy
+	}
+	}
+}
+
+use `ATE' , clear
+foreach L of num 0 1 2 3 4 5{
+	append using `f`L''
+}
+drop if lag == .
+g adm0 = "CHN"
+outsheet * using "models/CHN_ATE.csv", comma replace 
+
