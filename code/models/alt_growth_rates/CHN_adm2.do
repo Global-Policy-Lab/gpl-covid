@@ -1,7 +1,6 @@
 // CHN | ADM2
 
 clear all
-set scheme s1color
 //-----------------------setup
 
 // import end of sample cut-off 
@@ -11,6 +10,8 @@ local end_sample = end_date[1]
 
 // load data
 insheet using data/processed/adm2/CHN_processed.csv, clear 
+
+cap set scheme covid19_fig3 // optional scheme for graphs
 
 // set up time variables
 gen t = date(date, "YMD")
@@ -216,11 +217,9 @@ foreach var of varlist emergency_declaration_L* travel_ban_local_L* home_isolati
 
 predict e if e(sample), resid
 
-hist e, bin(30) tit(China) lcolor(white) fcolor(navy) xsize(5) ///
-ylabel(, angle(horizontal)) plotregion(lcolor(white)) name(hist_chn, replace) 
+hist e, bin(30) tit(China) lcolor(white) fcolor(navy) xsize(5) name(hist_chn, replace)
 
-qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) ///
-ylabel(, angle(horizontal)) plotregion(lcolor(white)) name(qn_chn, replace)
+qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_chn, replace)
 
 graph combine hist_chn qn_chn, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_chn.gph, replace)
 graph drop hist_chn qn_chn
@@ -326,7 +325,7 @@ local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefp
 
 coefplot (base, keep(emergency_declaration_L* travel_ban_local_L*)) ///
 (nlcom, keep(home_iso_trvl_ban_*)), tit("CHN: policy packages") ///
-subtitle(`subtitle2') xline(0) legend(off) name(CHN_policy, replace)
+subtitle(`subtitle2') xline(0) name(CHN_policy, replace)
 	
 
 // export predicted counterfactual growth rate
@@ -392,7 +391,7 @@ tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
 if e(sample), ///
 title(China, ring(0) position(11)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) ///
+yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
 saving(results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
@@ -415,7 +414,7 @@ lab(1 "No policy scenario for admin unit") lab(2 "Actual policies (predicted) fo
 lab(3 "No policy scenario for admin unit") lab(4 "Actual policies (predicted) for admin unit") ///
 lab(5 "No policy scenario for national avg") lab(6 "Actual policies (predicted) for national avg") ///
 lab(7 "Observed change for national avg") ///
-region(lcolor(none))) xlabel(, format(%tdMon_DD)) ///
+region(lcolor(none))) scheme(s1color) xlabel(, format(%tdMon_DD)) ///
 yline(0, lcolor(black)) yscale(r(0(.2).8)) ylabel(0(.2).8) 
 graph export results/figures/fig3/raw/legend_fig3.pdf, replace
 
@@ -472,14 +471,13 @@ tw (rspike ub_counter_wh lb_counter_wh t_random2, lwidth(vthin) color(red*.5)) /
 if e(sample), ///
 title("Wuhan, China", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") xtit("") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2)1.2)) ylabel(0(.2)1.2, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) ///
+yscale(r(0(.2)1.2)) ylabel(0(.2)1.2) plotregion(m(b=0)) ///
 saving(results/figures/appendix/subnatl_growth_rates/Wuhan_active_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh)
 outsheet adm0_name adm1_name adm2_name t y_actual_wh lb_y_actual_wh ub_y_actual_wh y_counter_wh lb_counter_wh ub_counter_wh day_avg_wh ///
 using "results/source_data/indiv/ExtendedDataFigure6b_Wuhan_data.csv" if miss_ct<7, comma replace
 drop miss_ct
-
 
 //-------------------------------Cross-validation
 tempvar counter_CV
@@ -580,12 +578,11 @@ foreach adm in `state_list' {
 postclose results
 
 preserve
+	set scheme s1color
 	use `results_file_crossV', clear
 	replace ite = ite + 1 if ite >= 6
 	outsheet * using "results/source_data/indiv/ExtendedDataFigure34_cross_valid_CHN.csv", comma replace
 restore
-
-
 
 //------------------------------------FIXED LAG 
 tempfile base_data
@@ -624,19 +621,43 @@ restore
 
 foreach lags of num 1 2 3 4 5{ 
 	quietly {
-	foreach var in home_isolation_L0_to_L7 travel_ban_local_L0_to_L7 emerg_decl_L0_to_L7 ///
-	home_isolation_L8_to_L14 travel_ban_local_L8_to_L14 emerg_decl_L8_to_L14 /// 
-	home_isolation_L15_to_L21 travel_ban_local_L15_to_L21 emerg_decl_L15_to_L21 ///  
-	home_isolation_L22_to_L28 travel_ban_local_L22_to_L28 emerg_decl_L22_to_L28 /// 
-	home_isolation_L29_to_L70 travel_ban_local_L29_to_L70 emerg_decl_L29_to_L70 {
+	foreach var in home_isolation emerg_decl travel_ban_local {
 		g `var'_copy = `var'
 		g `var'_FL = L`lags'.`var'
 		replace `var'_FL = 0 if `var'_FL == .
 		replace `var' = `var'_FL
+		cap drop `var'_L*
+		
+		// gen weekly decomposition on new var
+		
+		gen `var'_L0_to_L7 = 0
+		forvalues i = 0/7 {
+			replace `var'_L0_to_L7 = 1 if L`i'.D.`var' == 1
+		}
 
+		gen `var'_L8_to_L14 = 0
+		forvalues i = 8/14 {
+			replace `var'_L8_to_L14 = 1 if L`i'.D.`var' == 1
+		}
+
+		gen `var'_L15_to_L21 = 0
+		forvalues i = 15/21 {
+			replace `var'_L15_to_L21 = 1 if L`i'.D.`var' == 1
+		}
+
+		gen `var'_L22_to_L28 = 0
+		forvalues i = 22/28 {
+			replace `var'_L22_to_L28 = 1 if L`i'.D.`var' == 1
+		}
+
+		gen `var'_L29_to_L70 = 0
+		forvalues i = 29/70 {
+			replace `var'_L29_to_L70 = 1 if L`i'.D.`var' == 1
+		}
+		
 	}
-	drop *_FL
-
+	drop *_FL	
+	
 	reghdfe D_l_active_cases emerg_decl_L* travel_ban_local_L* home_isolation_L* testing_regime_change_* , absorb(i.adm12_id, savefe) cluster(t) resid
 	local r2 = e(r2)
 	preserve
@@ -667,11 +688,7 @@ foreach lags of num 1 2 3 4 5{
 	restore	 
 
 
-	foreach var in home_isolation_L0_to_L7 travel_ban_local_L0_to_L7 emerg_decl_L0_to_L7 ///
-	home_isolation_L8_to_L14 travel_ban_local_L8_to_L14 emerg_decl_L8_to_L14 /// 
-	home_isolation_L15_to_L21 travel_ban_local_L15_to_L21 emerg_decl_L15_to_L21 ///  
-	home_isolation_L22_to_L28 travel_ban_local_L22_to_L28 emerg_decl_L22_to_L28 /// 
-	home_isolation_L29_to_L70 travel_ban_local_L29_to_L70 emerg_decl_L29_to_L70 {
+	foreach var in home_isolation travel_ban_local emerg_decl {
 		replace `var' = `var'_copy
 		drop `var'_copy
 	}
