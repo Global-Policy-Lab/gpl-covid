@@ -128,9 +128,11 @@ graph export results/figures/appendix/fixed_lag/fig5_FL.pdf, replace
 // output source data for ED fig 5
 // Will pass "nosave" as argument during tests so that we don't overwrite
 if "`0'" == "" {
-    export excel adm0 policy beta lower upper using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_b") firstrow(var) sheetreplace
+    preserve
     import delim "results/source_data/indiv/ExtendedDataFigure5_b.csv", clear
-    export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_a") firstrow(var) sheetreplace
+    export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_a") firstrow(var) replace
+    restore
+    export excel adm0 policy beta lower upper using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_b") firstrow(var) sheetreplace
 }
 
 /*
