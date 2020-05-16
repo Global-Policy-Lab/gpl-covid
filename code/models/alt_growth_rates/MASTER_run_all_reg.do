@@ -82,7 +82,6 @@ foreach fn of local filenames{
 }
 
 use `CHN_ATE', clear
-drop if lag==0 & adm0=="CHN"
 foreach c in KOR ITA IRN FRA USA {
 	append using ``c'_ATE'
 }
