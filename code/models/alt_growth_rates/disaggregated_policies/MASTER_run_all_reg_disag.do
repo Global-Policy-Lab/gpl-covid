@@ -56,12 +56,7 @@ foreach fn of local filenames{
 	insheet using `filepath', clear
 	rename adm0 adm0_name
 	display "`fn'"
-	if "`fn'"=="CHN_ATE.csv"{
-		keep if lag==.
-	}
-	else if "`fn'"!="CHN_ATE.csv"{
-		keep if lag==0
-	}
+	keep if lag==0
 	gen model_type = "_grouped"
 	
 	tempfile `tempname'
