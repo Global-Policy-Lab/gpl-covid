@@ -233,7 +233,7 @@ def make_all_coeff_factorplots(
                 )
 
                 if plot_dir is not None:
-                    for suffix in ["pdf", "jpg"]:
+                    for suffix in ["pdf", "png"]:
                         g.fig.savefig(
                             plot_dir / f"{var}_pop_{p}_LHS_{LHS}.{suffix}",
                             dpi=300,
@@ -259,10 +259,10 @@ def make_all_coeff_factorplots(
             out_dir = out_base / t[1]
             out_dir.mkdir(parents=True, exist_ok=True)
             copyfile(
-                plot_dir / f"{t[0]}_pop_100000000_LHS_I.jpg", out_dir / f"{t[1]}_a.jpg"
+                plot_dir / f"{t[0]}_pop_100000000_LHS_I.png", out_dir / f"{t[1]}_a.png"
             )
             copyfile(
-                plot_dir / f"{t[0]}_pop_100000_LHS_IR.jpg", out_dir / f"{t[1]}_b.jpg"
+                plot_dir / f"{t[0]}_pop_100000_LHS_IR.png", out_dir / f"{t[1]}_b.png"
             )
 
     return None
