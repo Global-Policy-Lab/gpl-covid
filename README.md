@@ -198,9 +198,7 @@ For detailed information on the manual collection of policy, epidemiological, an
 #### Policy and testing data
 Most policy and testing data was manually collected from a variety of sources. A mapping was developed from each policy to one of the variables we encode for our regression. These sources and mappings are listed in a csv for each country following the pattern `data/raw/[country_name]/[country_code]_policy_data_sources.csv`.
 
-Any policy/testing data that was scraped programmatically is formatted similar to the manual data sheet and saved to `data/interim/[country_name]/[country_code]_policy_data_sources_other.csv`. These programmatic steps are listed below:
-
-##### United States
+In the U.S., testing regime data is obtained programmatically, via these steps:
 1. `python code/data/usa/download_latest_covidtrackingdotcom_data.py`: Downloads testing regime data. **Note**: It seems this site has been getting high traffic and frequently fails to process requests. If this script throws an error due to that issue, try again later.
 2. `python code/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.py`: Check that detected testing regime changes make sense and discard any false detections. Because this can be an interactive step, there is also a corresponding [Notebook](code/data/usa/add_testing_regimes_to_covidtrackingdotcom_data.ipynb) that you may run.
 
@@ -219,13 +217,11 @@ Any policy/testing data that was scraped programmatically is formatted similar t
 
 ##### Iran
 1. Copy all of the date lines from the "New COVID-19 cases in Iran by province" table on the [Wikipedia page tracking this outbreak in Iran](https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Iran).
-2. Open the excel file [data/raw/iran/covid_iran.xlsx](data/raw/iran/covid_iran.xlsx). This file contains the first step cleaning template for the cases data, as well as the information on key policy actions taken by the Iranian government. The tabs in this file are:
+2. Open the excel file [data/raw/iran/covid_iran.xlsx](data/raw/iran/covid_iran.xlsx). This file contains the first step cleaning template for the cases data. The tabs in this file are:
 
     a. `200314_cases_raw` :  A template into which raw data from the Wikipedia table -- see (1) -- should be pasted.
 
     b. `cases_cleaned--to_csv` :  A cleaned column format for the intermediate cases data. Simply extend the formulas (by copy/paste) in each row so that each row of the raw data is included. Do not change the column headings. Once all raw data has been included, save this tab to a csv file and save in [data/interim/iran/covid_iran_cases.csv](data/interim/iran/covid_iran_cases.csv).
-
-    c. `200314_policies--to_csv` :  A list of the key policies Iran implemented to combat the coronavirus, and sources. A copy of the information in this tab is saved as [data/raw/iran/IRN_policy_data_sources.csv](data/raw/iran/IRN_policy_data_sources.csv). To update data with future policy changes, update this tab with the relevant information and replace the csv with a new copy of this tab.
 
 ##### Italy
 Epi data is downloaded and merged with policy data in one step, described in [the following section](####Merge-policy-and-epidemiological-data)
@@ -240,7 +236,7 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 #### Merge all data for each country
 Run the following scripts to merge epi, policy, testing, and population data for each country. After completion, you may run [code/data/multi_country/quality-check-processed-datasets.py](code/data/multi_country/quality-check-processed-datasets.py), to make sure all of the fully processed datasets are correctly and consistently formatted.
 
-### Include policies implied by other policies
+##### Include policies implied by other policies
 1. `python code/data/multi_country/convert-policies-raw-to-interim.py`
 
 ##### China
@@ -315,7 +311,7 @@ Note that the outputs of [code/plotting/fig1.R](code/plotting/fig1.R) are requir
 
 #### Extended Data Figures 3-4
 
-`stata -b do code/plotting/extended_data_fig3_4.do`: Generate a csv with point estimate and standard errors used to plot a mock PDF version of figures A3 and A4. The final version in printed document are designed using Adobe Illustrator.
+`stata -b do code/plotting/extended_data_fig3_4.do`: Generate a csv with point estimate and standard errors used to plot a mock PDF version of ED Figures 3 and 4. The final version in printed document are designed using Adobe Illustrator.
 
 #### Extended Data Figure 5
 
@@ -324,7 +320,7 @@ Note that the outputs of [code/plotting/fig1.R](code/plotting/fig1.R) are requir
 
 #### Extended Data Figure 6
 
-`stata -b do code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do`: Generate subpanel plots and export to PDF. The final version in printed document are combined and designed using Adobe Illustrator.
+`stata -b do code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do`
 
 #### Extended Data Figure 7
 
@@ -337,7 +333,7 @@ Note that the outputs of [code/plotting/fig1.R](code/plotting/fig1.R) are requir
 
 #### Extended Data Figure 10
 
-ED Figure 10 is generated by the regression estimation step (`code/models/alt_growth_rates/MASTER_run_all_reg.do`). The final output file is `figures/appendix/ALL_conf_cases_e.png`. Please note that if you're running the Stata console in Unix, .png file formats are not supported and you would need to change the final format in line 50 of `code/models/alt_growth_rates/MASTER_run_all_reg.do` from .png to either .eps or .ps. For more information on supported file formats while using the `graph export` command on different operating systems, please click [here](https://www.stata.com/manuals13/g-2graphexport.pdf).
+ED Figure 10 is generated by the regression estimation step (`code/models/alt_growth_rates/MASTER_run_all_reg.do`). The final output file is `figures/appendix/ALL_conf_cases_e.png`
 
 ### Table Creation
 

@@ -49,7 +49,6 @@ fi
 
 ## data scraping and processing
 
-
 ### Geography/population
 printf "***Creating shape and population info for all countries***\n"
 python code/data/multi_country/get_adm_info.py $NDFLAG
