@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 
 # local imports
-import download_latest_covidtrackingdotcom_data as data_loader
 import src.utils as cutil
 
 # flag whether to save this output in the /data/interim/usa folder
@@ -27,8 +26,8 @@ def state_data_to_time_series(state_data):
 
 
 def calculate_testing_regimes(state_data, pct_chg_thresh=0.4, abs_chg_thresh=50):
-    # calculates testing regimes as changing whenever the pct_chg of total tests between previous
-    # current dates is above pct_chg_thresh
+    # calculates testing regimes as changing whenever the pct_chg of total tests
+    # between previous. current dates is above pct_chg_thresh
 
     state_data_sorted, timeseries_state_data = state_data_to_time_series(state_data)
 
@@ -38,7 +37,8 @@ def calculate_testing_regimes(state_data, pct_chg_thresh=0.4, abs_chg_thresh=50)
     testing_regimes = np.zeros(len(pct_changes_in_testing))
     regime = 0
 
-    # transition to a new regime if the absolute *and* percent changes exceed the thresholds
+    # transition to a new regime if the absolute *and* percent changes exceed the
+    # thresholds
     for i, (pct_change, abs_change) in enumerate(
         zip(pct_changes_in_testing, abs_changes_in_testing)
     ):
@@ -60,7 +60,8 @@ def main():
     state_names = np.unique(states_data["adm1_name"])
     print(len(state_names), "states represented")
 
-    # These factors determine what is programatically considered as a testing regime change candidate
+    # These factors determine what is programatically considered as a testing regime
+    # change candidate
     pct_change_thresh = 2.5
     abs_change_thresh = 150
 
@@ -76,7 +77,8 @@ def main():
         states_data.loc[state_data_idxs, "testing_regime"] = state_testing_regimes
 
     # 3. + 4. (notebook only)
-    # if you want to manually inspect and change results, use the notebook with the same name as this script.
+    # if you want to manually inspect and change results, use the notebook with the
+    # same name as this script.
 
     # 5. Save data
     print("writing csv with testing regime changes to {0}".format(fp_out))
