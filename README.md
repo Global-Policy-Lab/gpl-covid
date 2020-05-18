@@ -1,6 +1,5 @@
 ![build](https://github.com/bolliger32/gpl-covid/workflows/CI/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3831339.svg)](https://doi.org/10.5281/zenodo.3831339)
 # The Effect of Large-Scale Anti-Contagion Policies on the COVID-19 Pandemic
 
 This repository contains code and data necessary to replicate the findings of [our paper](https://www.medrxiv.org/content/10.1101/2020.03.22.20040642v3).
@@ -12,7 +11,7 @@ Scripts in this repository are written in R, Python, and Stata. Note that you wi
 The easiest way to interact with our code and data is via our CodeOcean capsule, because all of the relevant setup described below has been done for you. You may replicate the full analysis through the "Reproducible Run" feature or interact directly with our code through Jupyter Notebooks that run Python, R, and Stata. You may also utilize RStudio. If you wish to use the command line on a cloud workstation, you will want to activate our conda environment with `conda activate gpl-covid`.
 
 ### Github Repository
-You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.4.2" is the tag that is associated with the current version of the manuscript (as of 05/17/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
+You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.4.3" is the tag that is associated with the current version of the manuscript (as of 05/17/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
 
 ```bash
 conda env create -f environment/environment.yml
@@ -150,7 +149,7 @@ code
 ```
 
 ## Data Documentation
-A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found [here](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp). This is a live document that may be updated as additional data becomes available. For a version that is fixed at the time this manuscript was submitted, please see the link to our paper at the top of this README. A description of the variables appearing in `data/processed/[adm]/[country]_processed.csv` is available in [data/raw/multi_country/data_dictionary.xlsx](data/raw/multi_country/data_dictionary.xlsx)
+A detailed description of the epidemiological and policy data obtained and processed for this analysis can be found in the Supplementary Information associated with the article linked at the top of this README. A description of the variables appearing in `data/processed/[adm]/[country]_processed.csv` is available in [data/raw/multi_country/data_dictionary.xlsx](data/raw/multi_country/data_dictionary.xlsx). The epidemiological and policy data sources for all countries are listed in [data/raw/multi_country/data_sources.xlsx](data/raw/multi_country/data_sources.xlsx).
 
 ## Replication Steps
 
@@ -171,8 +170,6 @@ The entire pipeline can be run by calling `bash code/run.sh`. If you would rathe
 
 ### Data collection and processing
 The steps to obtain all data in <data/raw>, and then process this data into datasets that can be ingested into a regression, are described below. Note that some of the data collection was performed through manual downloading and/or processing of datasets and is described in as much detail as possible. The sections should be run in the order listed, as some files from later sections will depend on those from earlier sections (e.g. the geographical and population data).
-
-For detailed information on the manual collection of policy, epidemiological, and population information, see the [up-to-date](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp) version of our paper’s Supplementary Information. A version that was frozen at the time of latest submission is available with the article cited at the top of this README. Our epidemiological and policy data sources for all countries are listed [here](data/raw/multi_country/data_sources.xlsx), with a more frequently updated version [here](https://www.dropbox.com/scl/fi/v3o62qfrpam45ylaofekn/data_sources.gsheet?dl=0&rlkey=p3miruxmvq4cxqz7r3q7dc62t).
 
 #### Geographical and population data
 1. `python code/data/multi_country/get_adm_info.py`: Generates shapefiles and csvs with administrative unit names, geographies, and populations (most countries).
@@ -227,8 +224,7 @@ In the U.S., testing regime data is obtained programmatically, via these steps:
 Epi data is downloaded and merged with policy data in one step, described in [the following section](####Merge-policy-and-epidemiological-data)
 
 ##### South Korea
-1. Korean epi data were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. For more details on how we collected the data, please refer to the [Data Acquisition and Processing section in the appendix](https://www.dropbox.com/scl/fi/8djnxhj0wqqbyzg2qhiie/SI.gdoc?dl=0&rlkey=jnjy82ov2km7vc0q1k6190esp).
-This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
+1. Korean epi data were manually collected from various Korean provincial websites. Note that these provinces often report the data in different formats (e.g. pdf attachments, interactive dashboards) and usually do not have English translations. This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR_health.csv).
 
 ##### USA
 1. `Rscript code/data/usa/download_and_clean_usafacts.R`: Downloads county- and state-level data from [usafacts.org](https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/)
@@ -237,26 +233,26 @@ This data is saved in [data/interim/korea/KOR_health.csv](data/interim/korea/KOR
 Run the following scripts to merge epi, policy, testing, and population data for each country. After completion, you may run [code/data/multi_country/quality-check-processed-datasets.py](code/data/multi_country/quality-check-processed-datasets.py), to make sure all of the fully processed datasets are correctly and consistently formatted.
 
 ##### Include policies implied by other policies
-1. `python code/data/multi_country/convert-policies-raw-to-interim.py`
+`python code/data/multi_country/convert-policies-raw-to-interim.py`
 
 ##### China
-1. `python code/data/china/collate_data.py`
+`python code/data/china/collate_data.py`
 
 ##### France
-1. `stata -b do code/data/france/format_policy.do`
+`stata -b do code/data/france/format_policy.do`
 
 ##### Iran
 1. `Rscript code/data/iran/iran_cleaning.R`
 2. `python code/data/iran/iran-split-interim-into-processed.py`
 
 ##### Italy
-1. `python code/data/italy/italy-download-cases-merge-policies.py`
+`python code/data/italy/italy-download-cases-merge-policies.py`
 
 ##### South Korea
-1. `Rscript code/data/korea/generate_KOR_processed.R`
+`Rscript code/data/korea/generate_KOR_processed.R`
 
 ##### United States
-1. `python code/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
+`python code/data/usa/merge_policy_and_cases.py`: Merge all US data. This outputs [data/processed/adm1/USA_processed.csv](data/processed/adm1/USA_processed.csv).
 
 ### Regression model estimation
 Once data is obtained and processed, you can estimate regression models for each country using the following command:
