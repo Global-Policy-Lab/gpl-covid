@@ -61,7 +61,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
                                         sigma = Inf,
                                         time_steps_per_day = 6, mmat_actual = NULL,
                                         proportion_confirmed = 1,
-                                        return_no_policy_projection_output = FALSE){
+                                        return_raw_projection_output = FALSE){
   if(!"population" %in% names(full_data)){
     stop("\"population\" variable required. If unavailable, please add a column using full_data <- full_data %>% mutate(population = 1e+8)")
   }
@@ -217,10 +217,23 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       all()
   })
   
-  if(return_no_policy_projection_output){
-    out <- 
-      no_policy_counterfactual_data_storage %>% 
-      group_by(tmp_id) %>% 
+  if(return_raw_projection_output){
+    datetimes <- no_policy_counterfactual_data_storage %>%
+      group_by_at(.vars = vars(matches("^adm[0-2]_name$"))) %>%
+      summarise(timestep = list(
+        {
+          c(time_steps_per_day, rep(1:time_steps_per_day, times = length(date) - 1))
+        }
+      ),
+      date = list(
+        {
+          c(date[1], rep(date[-1], each = 6))
+        }
+      ))
+    
+    np_raw <-
+      no_policy_counterfactual_data_storage %>%
+      group_by_at(.vars = vars(matches("^adm[0-2]_name$"))) %>%
       summarise(projection_output = {
         list(calculate_projection_for_one_unit(
           cum_confirmed_cases_first = cum_confirmed_cases[1],
@@ -231,10 +244,39 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
           unit_population = population[1],
           proportion_confirmed = proportion_confirmed,
           all = TRUE
-        ))
-      }) %>% 
-      unnest(projection_output)
-    return(out)
+        ) %>%
+          rename_all(~paste0(., "_no_policy")))
+      }) %>%
+      ungroup() %>%
+      left_join(datetimes, by = datetimes %>% names() %>% str_subset("^adm[0-2]_name$")) %>%
+      unnest(c(projection_output, timestep, date)) %>%
+      select(matches("^adm[0-2]_name$"), date, timestep, everything())
+
+    true_raw <-
+      no_policy_counterfactual_data_storage %>%
+      group_by_at(.vars = vars(matches("^adm[0-2]_name$"))) %>%
+      summarise(projection_output = {
+        list(calculate_projection_for_one_unit(
+          cum_confirmed_cases_first = cum_confirmed_cases[1],
+          prediction_logdiff = prediction_logdiff,
+          time_steps_per_day = time_steps_per_day,
+          daily_gamma = gamma,
+          daily_sigma = sigma,
+          unit_population = population[1],
+          proportion_confirmed = proportion_confirmed,
+          all = TRUE
+        ) %>%
+          rename_all(~paste0(., "_with_policy")))
+      }) %>%
+      ungroup() %>%
+      left_join(datetimes, by = datetimes %>% names() %>% str_subset("^adm[0-2]_name$")) %>%
+      unnest(c(projection_output, timestep, date)) %>%
+      select(matches("^adm[0-2]_name$"), date, timestep, everything())
+    return(np_raw %>%
+             left_join(true_raw,
+                       by = true_raw %>%
+                         names() %>%
+                         str_subset("^adm[0-2]_name$|^date$|^timestep$")))
   }
   
   no_policy_counterfactual_data_storage <- 
@@ -288,7 +330,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
   out  
 }
 
-# Here we start at cum_confirmed_cases[1] - predict itself for the first one (exp(0))
+# Here we start at cum_confirmed_cases[1]
 # Then predict the using the sum of the log changes from the second on
 calculate_projection_for_one_unit <- function(cum_confirmed_cases_first, 
                                               prediction_logdiff,
@@ -299,7 +341,7 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
                                               all = FALSE, 
                                               daily_sigma = Inf){
   # cum_confirmed_cases == I + R
-  # number_of_infectious_individuals == I
+  # infectious_individuals == I
   stopifnot(is.na(prediction_logdiff[1]))
   stopifnot(!is.na(cum_confirmed_cases_first))
   
@@ -308,18 +350,18 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
   # the number from the data
   
   cum_confirmed_cases_simulated <- rep(NA_real_, (length(prediction_logdiff) - 1)*time_steps_per_day + 1)
-  number_of_infectious_individuals <- cum_confirmed_cases_simulated # NA
-  number_of_susceptible_individuals <- cum_confirmed_cases_simulated # NA
-  number_of_recovered_individuals <- cum_confirmed_cases_simulated # NA
+  infectious_individuals <- cum_confirmed_cases_simulated # NA
+  susceptible_individuals <- cum_confirmed_cases_simulated # NA
+  recovered_individuals <- cum_confirmed_cases_simulated # NA
   if (daily_sigma < Inf){
-    number_of_exposed_individuals <- cum_confirmed_cases_simulated # NA  
+    exposed_individuals <- cum_confirmed_cases_simulated # NA  
   }
   
   
   # Assumption here is that all individuals are infectious initially
-  number_of_infectious_individuals[1] <- cum_confirmed_cases_first/proportion_confirmed
+  infectious_individuals[1] <- cum_confirmed_cases_first/proportion_confirmed
   cum_confirmed_cases_simulated[1] <- cum_confirmed_cases_first
-  number_of_recovered_individuals[1] <- 0
+  recovered_individuals[1] <- 0
   new_gamma = (1 + daily_gamma)^(1/time_steps_per_day) - 1
   prediction_logdiff_interpolated <- c(NA_real_, rep(prediction_logdiff[-1], each = time_steps_per_day))
   stopifnot(length(prediction_logdiff_interpolated) == length(cum_confirmed_cases_simulated))
@@ -332,67 +374,69 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
     eig <- eigen(mat)
     pos_eig_vector <- eig$vectors[,which.max(eig$values)]
     # Assumes we're on the equilibrium path at the start
-    number_of_exposed_individuals[1] <- pos_eig_vector[1]/pos_eig_vector[2]*number_of_infectious_individuals[1]
-    number_of_susceptible_individuals[1] <- unit_population - number_of_infectious_individuals[1] - 
-      number_of_exposed_individuals[1]
+    exposed_individuals[1] <- pos_eig_vector[1]/pos_eig_vector[2]*infectious_individuals[1]
+    susceptible_individuals[1] <- unit_population - infectious_individuals[1] - 
+      exposed_individuals[1]
   } else {
-    number_of_susceptible_individuals[1] <- unit_population - number_of_infectious_individuals[1]
+    susceptible_individuals[1] <- unit_population - infectious_individuals[1]
   }
   
   
   for(i in 2:length(cum_confirmed_cases_simulated)){
-    new_removed <- number_of_infectious_individuals[i - 1]*new_gamma
+    new_removed <- infectious_individuals[i - 1]*new_gamma
     if (daily_sigma < Inf){
       new_beta <- (prediction_logdiff_interpolated[i]/time_steps_per_day + new_gamma) * 
         (prediction_logdiff_interpolated[i]/time_steps_per_day + new_sigma) / new_sigma
-      new_exposed_rate = new_beta*number_of_susceptible_individuals[i - 1]/unit_population
-      new_exposed = number_of_infectious_individuals[i - 1]*new_exposed_rate
+      new_exposed_rate = new_beta*susceptible_individuals[i - 1]/unit_population
+      new_exposed = infectious_individuals[i - 1]*new_exposed_rate
 
-      new_infected = number_of_exposed_individuals[i - 1]*new_sigma
+      new_infected = exposed_individuals[i - 1]*new_sigma
       
-      number_of_exposed_individuals[i] = 
-        number_of_exposed_individuals[i - 1] + new_exposed - new_infected
+      exposed_individuals[i] = 
+        exposed_individuals[i - 1] + new_exposed - new_infected
       
-      number_of_infectious_individuals[i] = 
-        number_of_infectious_individuals[i - 1] + new_infected - new_removed
+      infectious_individuals[i] = 
+        infectious_individuals[i - 1] + new_infected - new_removed
       
-      number_of_susceptible_individuals[i] = number_of_susceptible_individuals[i - 1] - 
+      susceptible_individuals[i] = susceptible_individuals[i - 1] - 
         new_exposed
       
-      number_of_recovered_individuals[i] <- unit_population - 
-        number_of_infectious_individuals[i] - 
-        number_of_susceptible_individuals[i] - 
-        number_of_exposed_individuals[i]
+      recovered_individuals[i] <- unit_population - 
+        infectious_individuals[i] - 
+        susceptible_individuals[i] - 
+        exposed_individuals[i]
     } else {
       new_infected_rate = (prediction_logdiff_interpolated[i]/time_steps_per_day + new_gamma)*
-        number_of_susceptible_individuals[i - 1]/unit_population
-      number_of_infectious_individuals[i] = 
-        number_of_infectious_individuals[i - 1]*exp(new_infected_rate - new_gamma)
+        susceptible_individuals[i - 1]/unit_population
+      infectious_individuals[i] = 
+        infectious_individuals[i - 1]*exp(new_infected_rate - new_gamma)
       
-      number_of_susceptible_individuals[i] = number_of_susceptible_individuals[i - 1] - 
-        number_of_infectious_individuals[i]*new_infected_rate
+      susceptible_individuals[i] = susceptible_individuals[i - 1] - 
+        infectious_individuals[i]*new_infected_rate
       
-      number_of_recovered_individuals[i] <- unit_population - 
-        number_of_infectious_individuals[i] - 
-        number_of_susceptible_individuals[i]
+      recovered_individuals[i] <- unit_population - 
+        infectious_individuals[i] - 
+        susceptible_individuals[i]
     }
     
-    new_true_infections <- number_of_infectious_individuals[i] - number_of_infectious_individuals[i - 1] + new_removed
+    new_true_infections <- infectious_individuals[i] - infectious_individuals[i - 1] + new_removed
     
     cum_confirmed_cases_simulated[i] = cum_confirmed_cases_simulated[i - 1] + new_true_infections*proportion_confirmed
   }
   if (all){
     if(daily_sigma < Inf){
-      out <- tibble(number_of_susceptible_individuals = number_of_susceptible_individuals, 
-                    number_of_infectious_individuals = number_of_infectious_individuals, 
-                    number_of_recovered_individuals = number_of_recovered_individuals,
-                    number_of_exposed_individuals = number_of_exposed_individuals,
-                    share_of_susceptible_individuals = number_of_susceptible_individuals / unit_population)
+      out <- tibble(susceptible_individuals = susceptible_individuals, 
+                    infectious_individuals = infectious_individuals, 
+                    recovered_individuals = recovered_individuals,
+                    exposed_individuals = exposed_individuals,
+                    share_of_susceptible_individuals = susceptible_individuals / unit_population,
+                    cum_confirmed_cases = cum_confirmed_cases_simulated)
     } else {
-      out <- tibble(number_of_susceptible_individuals = number_of_susceptible_individuals, 
-                    number_of_infectious_individuals = number_of_infectious_individuals, 
-                    number_of_recovered_individuals = number_of_recovered_individuals,
-                    share_of_susceptible_individuals = number_of_susceptible_individuals / unit_population)
+      out <- tibble(susceptible_individuals = susceptible_individuals, 
+                    infectious_individuals = infectious_individuals, 
+                    recovered_individuals = recovered_individuals,
+                    share_of_susceptible_individuals = susceptible_individuals / unit_population,
+                    cum_confirmed_cases = cum_confirmed_cases_simulated)
     }
   } else {
     out <- cum_confirmed_cases_simulated[seq(1, length(cum_confirmed_cases_simulated), by = time_steps_per_day)]

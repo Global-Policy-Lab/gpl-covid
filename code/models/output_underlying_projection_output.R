@@ -32,7 +32,7 @@ loop_df <- loop_df %>%
                                                 other_control_variables = ..5,
                                                 gamma = gamma,
                                                 proportion_confirmed = ..6,
-                                                return_no_policy_projection_output = TRUE)
+                                                return_raw_projection_output = TRUE)
              out
            }))
 
