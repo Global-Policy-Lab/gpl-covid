@@ -10,7 +10,6 @@ capture mkdir "results/figures/appendix/disaggregated_policies"
 capture mkdir "results/tables/" 
 capture mkdir "results/tables/ATE_disag" 
 capture mkdir "results/source_data" 
-capture copy "results/source_data/indiv/Figure3_CHN_data.csv" "results/source_data/indiv/ExtendedDataFigure6a_CHN_data.csv" 
 
 // run .do files
 do "code/models/alt_growth_rates/CHN_adm2.do"

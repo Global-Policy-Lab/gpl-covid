@@ -398,6 +398,8 @@ saving(results/figures/fig3/raw/CHN_adm2_active_cases_growth_rates_fixedx.gph, r
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
 outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
 using "results/source_data/indiv/Figure3_CHN_data.csv" if miss_ct<9 & e(sample), comma replace
+outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
+using "results/source_data/indiv/ExtendedDataFigure6a_CHN_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
 // for legend
