@@ -207,6 +207,11 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       magrittr::not() %>% 
       all()
   })
+  # no_policy_counterfactual_data_storage %>% 
+  #   group_by(tmp_id) %>% 
+  #   dplyr::slice(-1) %>% 
+  #   filter(is.na(prediction_logdiff))
+  
   # There should be no gaps in the dates for any unit
   stopifnot({
     no_policy_counterfactual_data_storage %>% 
@@ -217,6 +222,15 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       all()
   })
   
+  true_predict <- predict.felm(model, newdata = mmat_actual_for_prediction)
+  true_predict_df <- true_data_subset_for_prediction %>% 
+    mutate(prediction_logdiff = true_predict$fit) %>% 
+    select(tmp_id, date, prediction_logdiff)
+  
+  true_data_storage <- true_data_storage %>% 
+    ungroup() %>% 
+    left_join(true_predict_df, by = c("tmp_id", "date"))
+    
   if(return_raw_projection_output){
     datetimes <- no_policy_counterfactual_data_storage %>%
       group_by_at(.vars = vars(matches("^adm[0-2]_name$"))) %>%
@@ -253,7 +267,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       select(matches("^adm[0-2]_name$"), date, timestep, everything())
 
     true_raw <-
-      no_policy_counterfactual_data_storage %>%
+      true_data_storage %>%
       group_by_at(.vars = vars(matches("^adm[0-2]_name$"))) %>%
       summarise(projection_output = {
         list(calculate_projection_for_one_unit(
@@ -272,11 +286,15 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       left_join(datetimes, by = datetimes %>% names() %>% str_subset("^adm[0-2]_name$")) %>%
       unnest(c(projection_output, timestep, date)) %>%
       select(matches("^adm[0-2]_name$"), date, timestep, everything())
-    return(np_raw %>%
-             left_join(true_raw,
-                       by = true_raw %>%
-                         names() %>%
-                         str_subset("^adm[0-2]_name$|^date$|^timestep$")))
+    
+    out <- np_raw %>%
+      left_join(true_raw,
+                by = true_raw %>%
+                  names() %>%
+                  str_subset("^adm[0-2]_name$|^date$|^timestep$")) %>% 
+      mutate(cases_saved = cum_confirmed_cases_no_policy - cum_confirmed_cases_with_policy,
+             infections_saved = cum_infections_no_policy - cum_infections_with_policy)
+    return(out)
   }
   
   no_policy_counterfactual_data_storage <- 
@@ -295,14 +313,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
     })
   
   
-  true_predict <- predict.felm(model, newdata = mmat_actual_for_prediction)
-  true_predict_df <- true_data_subset_for_prediction %>% 
-    mutate(prediction_logdiff = true_predict$fit) %>% 
-    select(tmp_id, date, prediction_logdiff)
-  
   true_data_storage <- true_data_storage %>% 
-    ungroup() %>% 
-    left_join(true_predict_df, by = c("tmp_id", "date")) %>% 
     group_by(tmp_id) %>% 
     mutate(predicted_cum_confirmed_cases = {
       calculate_projection_for_one_unit(
@@ -423,6 +434,7 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
     
     cum_confirmed_cases_simulated[i] = cum_confirmed_cases_simulated[i - 1] + new_true_infections*proportion_confirmed
   }
+
   if (all){
     if(daily_sigma < Inf){
       out <- tibble(susceptible_individuals = susceptible_individuals, 
@@ -430,13 +442,15 @@ calculate_projection_for_one_unit <- function(cum_confirmed_cases_first,
                     recovered_individuals = recovered_individuals,
                     exposed_individuals = exposed_individuals,
                     share_of_susceptible_individuals = susceptible_individuals / unit_population,
-                    cum_confirmed_cases = cum_confirmed_cases_simulated)
+                    cum_confirmed_cases = cum_confirmed_cases_simulated,
+                    cum_infections = cum_confirmed_cases_simulated / proportion_confirmed)
     } else {
       out <- tibble(susceptible_individuals = susceptible_individuals, 
                     infectious_individuals = infectious_individuals, 
                     recovered_individuals = recovered_individuals,
                     share_of_susceptible_individuals = susceptible_individuals / unit_population,
-                    cum_confirmed_cases = cum_confirmed_cases_simulated)
+                    cum_confirmed_cases = cum_confirmed_cases_simulated,
+                    cum_infections = cum_confirmed_cases_simulated / proportion_confirmed)
     }
   } else {
     out <- cum_confirmed_cases_simulated[seq(1, length(cum_confirmed_cases_simulated), by = time_steps_per_day)]

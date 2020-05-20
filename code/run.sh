@@ -132,6 +132,7 @@ fi
 printf "***Projecting infections***\n"
 python code/models/get_gamma.py
 Rscript code/models/run_all_CB_simulations.R $NUMPROJ
+Rscript code/models/save_underlying_projection_output.R
 
 
 ## Figures and tables
