@@ -207,10 +207,6 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       magrittr::not() %>% 
       all()
   })
-  # no_policy_counterfactual_data_storage %>% 
-  #   group_by(tmp_id) %>% 
-  #   dplyr::slice(-1) %>% 
-  #   filter(is.na(prediction_logdiff))
   
   # There should be no gaps in the dates for any unit
   stopifnot({
@@ -241,7 +237,7 @@ compute_predicted_cum_cases <- function(full_data, model, policy_variables_used,
       ),
       date = list(
         {
-          c(date[1], rep(date[-1], each = 6))
+          c(date[1], rep(date[-1], each = time_steps_per_day))
         }
       ))
     
