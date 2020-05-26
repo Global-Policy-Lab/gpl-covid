@@ -60,7 +60,7 @@ loop_df <- loop_df %>%
                                                date[length(date)]))))
                   }, 
                   ~{
-                    list(c(.x, rep(.x[length(.x)],
+                    list(c(.x, rep(0,
                                    as.double(lubridate::today(tzone = "US/Pacific") - 
                                                date[length(date)]))))
                   },
