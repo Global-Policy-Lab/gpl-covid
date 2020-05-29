@@ -106,6 +106,12 @@ out_extended <- loop_df %>%
          projection_extended) %>% 
   unnest(projection_extended)
 
+output_dir <- "models/projections/raw/"
+
+if (!dir.exists(output_dir)){ #make dir if it doesn't exist
+  dir.create(output_dir, recursive=TRUE)
+}
+
 write_csv(out_sample, "models/projections/raw/raw_projection_output.csv")
 write_csv(out_extended, "models/projections/raw/raw_projection_output_extended.csv")
 
