@@ -150,7 +150,7 @@ results/*
 !results/source_data/
 results/source_data/indiv
 
-# Projections
+# raw projection output
 models/projections/raw/*
 
 # isort
