@@ -107,7 +107,7 @@ df$order2[df$adm0 == "KOR" & df$policy == "p_4"] <- 4
 df$policy[df$adm0 == "KOR" & df$policy == "p_1"] <- "WFH, business closure, other social dist. (opt)" #Work from home, no gathering, business closure, social distance (opt)
 df$policy[df$adm0 == "KOR" & df$policy == "p_2"] <- "Religious & welfare closure, no demonstration" 
 df$policy[df$adm0 == "KOR" & df$policy == "p_3"] <- "Emergency declaration"
-df$policy[df$adm0 == "KOR" & df$policy == "p_4"] <- "Quarantine positive cases "
+df$policy[df$adm0 == "KOR" & df$policy == "p_4"] <- "Quarantine inbound travelers "
 
 #USA 
 #order policies 
@@ -133,7 +133,7 @@ df$policy[df$adm0 == "USA" & df$policy == "p_7"] <- "Travel ban, transit suspens
 df$policy[df$adm0 == "USA" & df$policy == "p_8"] <- "Business closure"
 df$policy[df$adm0 == "USA" & df$policy == "p_9"] <- "Religious closure" 
 df$policy[df$adm0 == "USA" & df$policy == "home_iso_combined"] <- "Home isolation*" 
-df$policy[df$adm0 == "USA" & df$policy == "p_11"] <- "Federal guidelines" 
+df$policy[df$adm0 == "USA" & df$policy == "p_11"] <- "Slow the Spread Guidelines" 
 
 #IRN
 #order policies 
@@ -218,9 +218,9 @@ df$country[df$adm0 == "FRA"] <- "France"
 
 #plot
 #set theme for plotting
-dot.size <- 3
-font.size <- 14 #6 
-ave.font.size <- 2 #0.7
+dot.size <- 1
+font.size <- 6 
+ave.font.size <- 0.7
 
 theme_fig2 <- function(base_size=font.size) {
   ret <- theme_bw(base_size) %+replace%
@@ -300,8 +300,7 @@ growth.no <- ggplot(data = df.no) +
 
 #combine 3 plots into 1 figure
 all.plot.no <- grid.arrange(betas.no, eff.size.no, growth.no, ncol=3)
-#ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 8, height = 1.1) #vertical
-ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 18, height = 4) #spaced out
+ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 8, height = 1.1) #vertical
 
 #---------------------------------------------------------
 # Panel B: Effect of all policies combined
@@ -338,8 +337,7 @@ growth.comb <- ggplot(data = df.combined) +
 
 #combine 3 plots into 1 figure
 all.plot.comb <- grid.arrange(betas.combined, eff.size.comb, growth.comb, ncol=3)
-#ggsave(all.plot.comb, file = paste0(output_dir,"Fig2B_comb.pdf"), width = 8, height = 1.3) #vertical
-ggsave(all.plot.comb, file = paste0(output_dir,"Fig2B_comb.pdf"), width = 18, height = 5) #spaced out
+ggsave(all.plot.comb, file = paste0(output_dir,"Fig2B_comb.pdf"), width = 8, height = 1.3) #vertical
 
 #---------------------------------------------------------
 # Panel C: Individual policies
@@ -379,58 +377,4 @@ growth <- ggplot(data = df) +
 
 #combine 3 plots into 1 figure
 all.plot.ind <- grid.arrange(betas, eff.size, growth, ncol=3)
-#ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 11, height = 4) #vertical
-ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 28, height = 11) #spaced out
-
-#--------------------------------------------------------------------------------------------------
-#Country-specific Panel 2C
-for (adm in c("CHN", "KOR", "FRA", "IRN", "ITA", "USA")){
-  adm.df <- dplyr::filter(df, adm0 == adm)
-  betas <- ggplot(data = adm.df) + 
-    geom_segment(aes(x = lb, y = policy, xend = ub, yend = policy), size = 0.3, colour =  "grey39") + #grey CI
-    geom_point(aes(x=beta, y=policy, group = country, color = country),  size=dot.size, alpha = 0.9) +
-    #geom_hline(yintercept= y.breaks, colour="grey50", linetype="dotted", size = 0.3) +
-    geom_hline(yintercept= 0.5, colour="grey50", linetype="solid", size = 0.3) + 
-    geom_vline(xintercept=0, colour="grey30", linetype="solid", size = 0.3) + 
-    scale_colour_manual(name="", 
-                        breaks=c("China","France","Iran", "Italy", "South Korea", "United States"), 
-                        values=c("China"="salmon", "France"="#655643", "Iran"="#78bea2", "Italy"="paleturquoise4", "South Korea"="#e6ac27", "United States"="#bb7693")) + #retro
-    scale_y_discrete(limits = rev(adm.df$policy), position = "left") +
-    coord_cartesian(xlim =c(-0.9,0.9))  +
-    theme_fig2() + 
-    ggtitle(adm) +
-    xlab("Estimated effect on daily growth rate") + ylab("")  
-  
-  #effect size plot
-  eff.size <- ggplot(data = adm.df) + 
-    geom_point(aes(x=beta, y=effectsize, group = country), color = "grey", size=dot.size, alpha = 0.9) +
-    scale_y_discrete(limits = rev(adm.df$effectsize), position = "left") +
-    ggtitle("") +
-    coord_cartesian(xlim =c(-0.9,0.9))  +
-    xlab("Effect size (deltalog per day)") + ylab("") +
-    theme_fig2() 
-  
-  #growth plot
-  growth <- ggplot(data = adm.df) + 
-    geom_point(aes(x=beta, y=growth, group = country), color = "grey",  size=dot.size, alpha = 0.9) +
-    scale_y_discrete(limits = rev(as.character(adm.df$growth)), position = "left") +
-    ggtitle("") +
-    coord_cartesian(xlim =c(-0.9,0.9))  +
-    xlab("As percent growth (% per day)") + ylab("") +
-    theme_fig2() 
-  
-  if (adm %in% c("ITA", "KOR")){
-  vertical <- 4
-  } else if (adm %in% c("FRA", "IRN")){
-    vertical <- 1.5
-  } else {
-    vertical <- 8
-  }
-
-  #combine 3 plots into 1 figure
-  all.plot.ind <- grid.arrange(betas, eff.size, growth, ncol=3)
-  #ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 11, height = 4) #vertical
-  #ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 28, height = 11) #spaced out
-  ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_",adm,".pdf"), width = 15, height = vertical) #spaced out
-
-}
+ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 11, height = 4) #vertical
