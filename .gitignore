@@ -151,8 +151,7 @@ results/*
 results/source_data/indiv
 
 # Projections
-models/projections/projection_output_extended_daily.csv
-models/projections/raw_projection_output_extended.csv
+models/projections/raw/*
 
 # isort
 default.profraw
