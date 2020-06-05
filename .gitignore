@@ -150,9 +150,6 @@ results/*
 !results/source_data/
 results/source_data/indiv
 
-# raw projections
-models/projections/raw/*
-
 # isort
 default.profraw
 
