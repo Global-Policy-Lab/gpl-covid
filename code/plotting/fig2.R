@@ -201,7 +201,7 @@ df$order2[df$adm0 == "FRA" & df$policy == "natl_lockdown_comb"] <- 3
 #label policies
 df$policy[df$adm0 == "FRA" & df$policy == "school_closure_pop"] <- "School closure "
 df$policy[df$adm0 == "FRA" & df$policy == "pck_social_distanc"] <- "Cancel events, no gathering, other social dist." 
-df$policy[df$adm0 == "FRA" & df$policy == "natl_lockdown_comb"] <- "National lockdown*" 
+df$policy[df$adm0 == "FRA" & df$policy == "natl_lockdown_comb"] <- "Business closure, home isolation*" 
 
 #order df
 df <- dplyr::arrange(df, desc(order), order2) 
