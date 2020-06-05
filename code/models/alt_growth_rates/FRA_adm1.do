@@ -272,7 +272,7 @@ save `base_data0'
 	gen testing_regime_06apr2020 = t==mdy(4,6,2020)
 	gen mask_opt = t>=mdy(4,3,2020)
 	outsheet using "models/reg_data/FRA_hosp_reg_data.csv", comma replace
-stop
+
 	// hospitalization model
 	reghdfe D_l_cum_hospitalized pck_social_distance school_closure_popwt national_lockdown mask_opt ///
 	 testing_regime_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
