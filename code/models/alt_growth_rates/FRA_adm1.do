@@ -271,6 +271,7 @@ save `base_data0'
 	keep if t>=mdy(3,3,2020) //data quality cutoff, only one region had 10 hospitalizations prior to 3/3
 	gen testing_regime_06apr2020 = t==mdy(4,6,2020)
 	gen mask_opt = t>=mdy(4,3,2020)
+	outsheet using "models/reg_data/FRA_hosp_reg_data.csv", comma replace
 
 	// hospitalization model
 	reghdfe D_l_cum_hospitalized pck_social_distance school_closure_popwt national_lockdown mask_opt ///

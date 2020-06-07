@@ -27,18 +27,21 @@ def test_r_stata_match():
 
 def exclude_files(fileset, run_stata):
     """List all files that we know will not get updated or don't want to check:
-    1) Ignore all files ``in source_data/indiv``
-    2) SITable2.xlsx is created manually
-    3) ED figures 5, 8, and 9 + bootstraps are created using 1000 samples, while testing
+    1) Ignore all files in ``source_data/indiv``
+    2) Ignore all files in ``models/projections/raw``
+    3) SITable2.xlsx is created manually
+    4) ED figures 5, 8, and 9 + bootstraps are created using 1000 samples, while testing
        runs only with 2
-    4) Extra excluded data in "models" and "results/source_data" is created by stata
+    5) Extra excluded data in "models" and "results/source_data" is created by stata
        code (will not be created in SI if run on github-hosted runner)
-    5) TODO: Figure out why Fig 1 is getting randomly sorted differently by different
+    6) TODO: Figure out why Fig 1 is getting randomly sorted differently by different
        OS so that we can properly test it
     """
 
     files_to_exclude = (
         list(Path("results/source_data/indiv").glob("*"))
+        + list(Path("models/projections/raw").glob("*"))
+        + list(Path("models/projections").glob("*_bootstrap_projection.csv"))
         + [
             Path("results") / "source_data" / i
             for i in [
@@ -48,7 +51,6 @@ def exclude_files(fileset, run_stata):
                 "ExtendedDataFigure89.csv",
             ]
         ]
-        + list(Path("models/projections").glob("*_bootstrap_projection.csv"))
         + [Path("data/processed/[country]_processed.csv")]
     )
     if not run_stata:

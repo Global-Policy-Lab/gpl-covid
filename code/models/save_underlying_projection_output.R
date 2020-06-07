@@ -106,12 +106,18 @@ out_extended <- loop_df %>%
          projection_extended) %>% 
   unnest(projection_extended)
 
-write_csv(out_sample, "models/projections/raw_projection_output.csv")
-write_csv(out_extended, "models/projections/raw_projection_output_extended.csv")
+output_dir <- "models/projections/raw/"
+
+if (!dir.exists(output_dir)){ #make dir if it doesn't exist
+  dir.create(output_dir, recursive=TRUE)
+}
+
+write_csv(out_sample, "models/projections/raw/raw_projection_output.csv")
+write_csv(out_extended, "models/projections/raw/raw_projection_output_extended.csv")
 
 write_csv(out_sample %>% 
             filter(timestep == max(timestep)) %>% 
-            select(-timestep), "models/projections/projection_output_daily.csv")
+            select(-timestep), "models/projections/raw/projection_output_daily.csv")
 write_csv(out_extended %>% 
             filter(timestep == max(timestep)) %>% 
-            select(-timestep), "models/projections/projection_output_extended_daily.csv") 
+            select(-timestep), "models/projections/raw/projection_output_extended_daily.csv") 
