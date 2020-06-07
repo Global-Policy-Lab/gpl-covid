@@ -28,10 +28,11 @@ df$ub <- df$beta + 1.96*df$se
 df$lb <- df$beta - 1.96*df$se
 
 #create effect size column
-df$effectsize <- paste0(round(df$beta, 2), " (", round(df$lb,2), ", ", round(df$ub,2), ")")
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+df$effectsize <- paste0(specify_decimal(df$beta, 2), " (", specify_decimal(df$lb,2), ", ", specify_decimal(df$ub,2), ")")
 
 #calculate percentage growth
-df$growth <- as.character(round((exp(df$beta) - 1), 4)*100)
+df$growth <- specify_decimal((exp(df$beta) - 1)*100, 2)
 
 #Order countries
 df$order[df$adm0 == "CHN"] <- 6
@@ -56,89 +57,156 @@ df.no$policy[df.no$adm0 == "CHN_Wuhan" & df.no$policy == "no_policy rate"] <- "W
 
 #Panel 2: Effect of all policies combined
 df.combined <- filter(df, (df$policy == "comb. policy" & df$adm0 != "CHN") |
-                        df$policy == "first week (home+travel)" |
-                        df$policy == "second week (home+travel)" |
-                        df$policy == "third week (home+travel)" |
-                        df$policy == "fourth week (home+travel)" |
-                        df$policy == "fifth week (home+travel)" )
+                        df$policy == "first week" |
+                        df$policy == "second week" |
+                        df$policy == "third week" |
+                        df$policy == "fourth week" |
+                        df$policy == "fifth week and after" )
 
 df.combined$policy[df.combined$adm0 == "KOR" & df.combined$policy == "comb. policy"] <- "South Korea"
 df.combined$policy[df.combined$adm0 == "FRA" & df.combined$policy == "comb. policy"] <- "France"
 df.combined$policy[df.combined$adm0 == "ITA" & df.combined$policy == "comb. policy"] <- "Italy"
 df.combined$policy[df.combined$adm0 == "IRN" & df.combined$policy == "comb. policy"] <- "Iran"
 df.combined$policy[df.combined$adm0 == "USA" & df.combined$policy == "comb. policy"] <- "United States"
-df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "first week (home+travel)"] <- "China, Week 1"
-df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "second week (home+travel)"] <- "China, Week 2"
-df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "third week (home+travel)"] <- "China, Week 3"
-df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "fourth week (home+travel)"] <- "China, Week 4"
-df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "fifth week (home+travel)"] <- "China, Week 5"
+df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "first week"] <- "China, Wk  1"
+df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "second week"] <- "China, Wk  2"
+df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "third week"] <- "China, Wk  3"
+df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "fourth week"] <- "China, Wk  4"
+df.combined$policy[df.combined$adm0 == "CHN" & df.combined$policy == "fifth week and after"] <- "China, Wk  5"
 
 #Panel 3: Individual policies
-df <- filter(df, df$policy != "comb. policy" &
-               df$policy != "no_policy rate" &
-               df$policy != "first week (home+travel)" &
-               df$policy != "second week (home+travel)" &
-               df$policy != "third week (home+travel)" &
-               df$policy != "fourth week (home+travel)" &
-               df$policy != "fifth week (home+travel)" &
-               df$policy != "comb. policy Teheran")
+df <- filter(df, policy != "comb. policy" &
+               policy != "no_policy rate" &
+               policy != "first week" &
+               policy != "second week" &
+               policy != "third week" &
+               policy != "fourth week" &
+               policy != "fifth week and after" &
+               policy != "home_isolation_L0_to_L7" &
+               policy != "home_isolation_L8_to_L14" &
+               policy != "home_isolation_L15_to_L21" &
+               policy != "home_isolation_L22_to_L28" &
+               policy != "home_isolation_L29_to_L70" &
+               !(df$adm0=="ITA" & df$policy=="p_6") &  #remove non-combined home isolation from ITA
+               !(df$adm0=="FRA" & df$policy=="national_lockdown") &  #remove non-combined home isolation from FRA
+               !(df$adm0=="USA" & df$policy=="p_10")) #remove non-combined home isolation from USA
 
 #allow for duplicate discrete values to be plotted
-df$growth[df$adm0 == "USA" & df$growth == "-10.06"] <- " -10.06"
-df.combined$effectsize[df.combined$policy == "China, Week 5" & df.combined$effectsize == "-0.34 (-0.41, -0.27)"] <- " -0.34 (-0.41, -0.27)"
+df$effectsize[df$adm0 == "CHN" & df$beta == "-0.248"] <- " -0.25 (-0.34, -0.16)"
+df$growth[df$adm0 == "CHN" & df$growth == "-0.90"] <- " -0.90"
 
-#code policies individual policies
+#code individual policies
+df$order2 <- 0
 #KOR 
-df$policy[df$adm0 == "KOR" & df$policy == "p_1"] <- "Work from home, business closure, no gatherings, other social distance (opt)" #Work from home, no gatherings, business closure, social distance"
-df$policy[df$adm0 == "KOR" & df$policy == "p_2"] <- "No demonstrations, religious & welfare services closure"
+#order policies somewhat chronologically
+df$order2[df$adm0 == "KOR" & df$policy == "p_1"] <- 2
+df$order2[df$adm0 == "KOR" & df$policy == "p_2"] <- 1
+df$order2[df$adm0 == "KOR" & df$policy == "p_3"] <- 3
+df$order2[df$adm0 == "KOR" & df$policy == "p_4"] <- 4
+#label policies
+df$policy[df$adm0 == "KOR" & df$policy == "p_1"] <- "WFH, business closure, other social dist.(opt)" #Work from home, no gathering, business closure, social distance (opt)
+df$policy[df$adm0 == "KOR" & df$policy == "p_2"] <- "Religious & welfare closure, no demonstration" 
 df$policy[df$adm0 == "KOR" & df$policy == "p_3"] <- "Emergency declaration"
 df$policy[df$adm0 == "KOR" & df$policy == "p_4"] <- "Quarantine positive cases "
 
 #USA 
-df$policy[df$adm0 == "USA" & df$policy == "p_1"] <- "No gatherings, event cancellations"
-df$policy[df$adm0 == "USA" & df$policy == "p_2"] <- "Religious closure, other social distance"
+#order policies 
+df$order2[df$adm0 == "USA" & df$policy == "p_1"] <- 9
+df$order2[df$adm0 == "USA" & df$policy == "p_2"] <- 2
+df$order2[df$adm0 == "USA" & df$policy == "p_3"] <- 4
+df$order2[df$adm0 == "USA" & df$policy == "p_4"] <- 3
+df$order2[df$adm0 == "USA" & df$policy == "p_5"] <- 8
+df$order2[df$adm0 == "USA" & df$policy == "p_6"] <- 6
+df$order2[df$adm0 == "USA" & df$policy == "p_7"] <- 5
+df$order2[df$adm0 == "USA" & df$policy == "p_8"] <- 10
+df$order2[df$adm0 == "USA" & df$policy == "p_9"] <- 7
+df$order2[df$adm0 == "USA" & df$policy == "home_iso_combined"] <- 11 
+df$order2[df$adm0 == "USA" & df$policy == "p_11"] <- 1
+#label policies
+df$policy[df$adm0 == "USA" & df$policy == "p_1"] <- "No gathering"
+df$policy[df$adm0 == "USA" & df$policy == "p_2"] <- "Other social distance"
 df$policy[df$adm0 == "USA" & df$policy == "p_3"] <- "Quarantine positive cases"
 df$policy[df$adm0 == "USA" & df$policy == "p_4"] <- "Paid sick leave"
-df$policy[df$adm0 == "USA" & df$policy == "p_5"] <- "Work from home"
+df$policy[df$adm0 == "USA" & df$policy == "p_5"] <- "Work from home (WFH)"
 df$policy[df$adm0 == "USA" & df$policy == "p_6"] <- "School closure"
 df$policy[df$adm0 == "USA" & df$policy == "p_7"] <- "Travel ban, transit suspension"
 df$policy[df$adm0 == "USA" & df$policy == "p_8"] <- "Business closure"
-df$policy[df$adm0 == "USA" & df$policy == "p_9"] <- "Home isolation" 
+df$policy[df$adm0 == "USA" & df$policy == "p_9"] <- "Religious closure" 
+df$policy[df$adm0 == "USA" & df$policy == "home_iso_combined"] <- "Home isolation*" 
+df$policy[df$adm0 == "USA" & df$policy == "p_11"] <- "Federal guidelines" 
 
 #IRN
-df$policy[df$adm0 == "IRN" & df$policy == "p_1"] <- "School closure, travel ban (opt), work from home"
+#order policies 
+df$order2[df$adm0 == "IRN" & df$policy == "p_1"] <- 1
+df$order2[df$adm0 == "IRN" & df$policy == "p_2"] <- 2
+#label policies
+df$policy[df$adm0 == "IRN" & df$policy == "p_1"] <- "WFH, school closure, travel ban(opt)"
 df$policy[df$adm0 == "IRN" & df$policy == "p_2"] <- "Home isolation "
 
 #ITA
-df$policy[df$adm0 == "ITA" & df$policy == "p_1"] <- " Work from home, no gatherings, other social distance " 
+#order policies 
+df$order2[df$adm0 == "ITA" & df$policy == "p_1"] <- 3
+df$order2[df$adm0 == "ITA" & df$policy == "p_2"] <- 1
+df$order2[df$adm0 == "ITA" & df$policy == "p_3"] <- 4
+df$order2[df$adm0 == "ITA" & df$policy == "p_4"] <- 2
+df$order2[df$adm0 == "ITA" & df$policy == "p_5"] <- 5
+df$order2[df$adm0 == "ITA" & df$policy == "home_iso_combined"] <- 6
+#label policies
+df$policy[df$adm0 == "ITA" & df$policy == "p_1"] <- " WFH, no gathering, other social distance " 
 df$policy[df$adm0 == "ITA" & df$policy == "p_2"] <- " School closure"
 df$policy[df$adm0 == "ITA" & df$policy == "p_3"] <- " Travel ban, transit suspension"
 df$policy[df$adm0 == "ITA" & df$policy == "p_4"] <- " Quarantine positive cases"
 df$policy[df$adm0 == "ITA" & df$policy == "p_5"] <- " Business closure"
-df$policy[df$adm0 == "ITA" & df$policy == "p_6"] <- " Home isolation"
-
+df$policy[df$adm0 == "ITA" & df$policy == "home_iso_combined"] <- " Home isolation*" 
 
 #CHN 
-df$policy[df$adm0 == "CHN" & df$policy == "home_isolation_L0_to_L7"] <- "Home isolation, Week 1"
-df$policy[df$adm0 == "CHN" & df$policy == "home_isolation_L8_to_L14"] <- "Home isolation, Week 2"
-df$policy[df$adm0 == "CHN" & df$policy == "home_isolation_L15_to_L21"] <- "Home isolation, Week 3"
-df$policy[df$adm0 == "CHN" & df$policy == "home_isolation_L22_to_L28"] <- "Home isolation, Week 4"
-df$policy[df$adm0 == "CHN" & df$policy == "home_isolation_L29_to_L70"] <- "Home isolation, Week 5"
-df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L0_to_L7"] <- "Travel ban, Week 1"
-df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L8_to_L14"] <- "Travel ban, Week 2"
-df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L15_to_L21"] <- "Travel ban, Week 3"
-df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L22_to_L28"] <- "Travel ban, Week 4"
-df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L29_to_L70"] <- "Travel ban, Week 5"
+#order policies 
+df$order2[df$adm0 == "CHN" & df$policy == "travel_ban_local_L0_to_L7"] <- 6
+df$order2[df$adm0 == "CHN" & df$policy == "travel_ban_local_L8_to_L14"] <- 7
+df$order2[df$adm0 == "CHN" & df$policy == "travel_ban_local_L15_to_L21"] <- 8
+df$order2[df$adm0 == "CHN" & df$policy == "travel_ban_local_L22_to_L28"] <- 9
+df$order2[df$adm0 == "CHN" & df$policy == "travel_ban_local_L29_to_L70"] <- 10
+df$order2[df$adm0 == "CHN" & df$policy == "emergency_declaration_L0_to_L7"] <- 1
+df$order2[df$adm0 == "CHN" & df$policy == "emergency_declaration_L8_to_L14"] <- 2
+df$order2[df$adm0 == "CHN" & df$policy == "emergency_declaration_L15_to_L21"] <- 3
+df$order2[df$adm0 == "CHN" & df$policy == "emergency_declaration_L22_to_L28"] <- 4
+df$order2[df$adm0 == "CHN" & df$policy == "emergency_declaration_L29_to_L70"] <- 5
+df$order2[df$adm0 == "CHN" & df$policy == "home_iso_L0_to_L7 + trvl_ban_loc_L0_to_L7"] <- 11
+df$order2[df$adm0 == "CHN" & df$policy == "home_iso_L8_to_L14 + trvl_ban_loc_L8_to_L14"] <- 12
+df$order2[df$adm0 == "CHN" & df$policy == "home_iso_L15_to_L21 + trvl_ban_loc_L15_to_L21"] <- 13
+df$order2[df$adm0 == "CHN" & df$policy == "home_iso_L22_to_L28 + trvl_ban_loc_L22_to_L28"] <- 14
+df$order2[df$adm0 == "CHN" & df$policy == "home_iso_L29_to_L70 + trvl_ban_loc_L29_to_L70"] <- 15
+#label policies
+df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L0_to_L7"] <- "Travel ban, Wk 1"
+df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L8_to_L14"] <- "Travel ban, Wk 2"
+df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L15_to_L21"] <- "Travel ban, Wk 3"
+df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L22_to_L28"] <- "Travel ban, Wk 4"
+df$policy[df$adm0 == "CHN" & df$policy == "travel_ban_local_L29_to_L70"] <- "Travel ban, Wk 5"
+df$policy[df$adm0 == "CHN" & df$policy == "emergency_declaration_L0_to_L7"] <- "Emergency declaration, Wk 1"
+df$policy[df$adm0 == "CHN" & df$policy == "emergency_declaration_L8_to_L14"] <- "Emergency declaration, Wk 2"
+df$policy[df$adm0 == "CHN" & df$policy == "emergency_declaration_L15_to_L21"] <- "Emergency declaration, Wk 3"
+df$policy[df$adm0 == "CHN" & df$policy == "emergency_declaration_L22_to_L28"] <- "Emergency declaration, Wk 4"
+df$policy[df$adm0 == "CHN" & df$policy == "emergency_declaration_L29_to_L70"] <- "Emergency declaration, Wk 5"
+df$policy[df$adm0 == "CHN" & df$policy == "home_iso_L0_to_L7 + trvl_ban_loc_L0_to_L7"] <- "Home isolation, Wk 1*"
+df$policy[df$adm0 == "CHN" & df$policy == "home_iso_L8_to_L14 + trvl_ban_loc_L8_to_L14"] <- "Home isolation, Wk 2*"
+df$policy[df$adm0 == "CHN" & df$policy == "home_iso_L15_to_L21 + trvl_ban_loc_L15_to_L21"] <- "Home isolation, Wk 3*"
+df$policy[df$adm0 == "CHN" & df$policy == "home_iso_L22_to_L28 + trvl_ban_loc_L22_to_L28"] <- "Home isolation, Wk 4*"
+df$policy[df$adm0 == "CHN" & df$policy == "home_iso_L29_to_L70 + trvl_ban_loc_L29_to_L70"] <- "Home isolation, Wk 5*"
 
 #FRA
-df$policy[df$adm0 == "FRA" & df$policy == "school_closure"] <- "School closure "
-df$policy[df$adm0 == "FRA" & df$policy == "pck_social_distanc"] <- "Event cancellations, no gatherings, other social distance" #social distance, event cancel, no gatherings
-df$policy[df$adm0 == "FRA" & df$policy == "national_lockdown"] <- "Business closure, home isolation"
+#order policies 
+df$order2[df$adm0 == "FRA" & df$policy == "school_closure_pop"] <- 1
+df$order2[df$adm0 == "FRA" & df$policy == "pck_social_distanc"] <- 2
+df$order2[df$adm0 == "FRA" & df$policy == "natl_lockdown_comb"] <- 3
+#label policies
+df$policy[df$adm0 == "FRA" & df$policy == "school_closure_pop"] <- "School closure "
+df$policy[df$adm0 == "FRA" & df$policy == "pck_social_distanc"] <- "Cancel events, no gathering, other social dist." 
+df$policy[df$adm0 == "FRA" & df$policy == "natl_lockdown_comb"] <- "National lockdown*" 
 
 #order df
-df <- dplyr::arrange(df, desc(order), policy) 
-df.combined <- dplyr::arrange(df.combined, desc(order), policy) 
-df.no <- dplyr::arrange(df.no, desc(order), policy) 
+df <- dplyr::arrange(df, desc(order), order2) 
+df.combined <- dplyr::arrange(df.combined, desc(order)) 
+df.no <- dplyr::arrange(df.no, desc(order)) 
 
 #set up columns for plotting
 df$country <- "United States"
@@ -150,10 +218,10 @@ df$country[df$adm0 == "FRA"] <- "France"
 
 #plot
 #set theme for plotting 
-theme_fig2 <- function(base_size=11) {
+theme_fig2 <- function(base_size=6) {
   ret <- theme_bw(base_size) %+replace%
     theme(panel.background = element_rect(fill="#ffffff", colour=NA),
-          title=element_text(vjust=1.2, face="bold", size = 12),
+          title=element_text(vjust=1.2, face="bold", size = 6),
           panel.border = element_blank(), 
           axis.line=element_blank(),
           panel.grid.minor=element_blank(),
@@ -172,30 +240,38 @@ theme_fig2 <- function(base_size=11) {
 
 #average value across 6 countries
 df.6 <- filter(df.no, policy %in% c("China", "South Korea", "Italy", "Iran", "France", "United States")) 
-df.6$N<- c(3698, 595, 2899, 548, 270, 1235) # add number of obs for each country
+df.6$N <- c(3669, 595, 2898, 548, 270, 1238) # add number of obs for each country
 average.beta <- round(mean(df.6$beta), 2)
 average.se <- sqrt(sum((df.6$se)^2*df.6$N)/sum(df.6$N))
-average.beta.lb <- average.beta - 1.96*average.se
-average.beta.ub <- average.beta + 1.96*average.se
 average.beta.percent <- round((exp(average.beta)-1)*100, 0)
+
+#average value across 5 countries (exclude IRN)
+df.5 <- filter(df.no, policy %in% c("China", "South Korea", "Italy", "France", "United States")) #without IRN
+df.5$N <- c(3669, 595, 2898, 270, 1238) # without IRN
+average.beta.5 <- round(mean(df.5$beta), 2)
+average.se.5 <- sqrt(sum((df.5$se)^2*df.5$N)/sum(df.5$N))
+average.beta.percent.5 <- round((exp(average.beta.5)-1)*100, 0)
 
 #draw faint horizontal lines dividing countries
 y.breaks <- plyr::count(df$order)[2]
-y.breaks <- c(0, y.breaks[1:(nrow(y.breaks)-1),]) %>%
+y.breaks <- c(y.breaks[1:(nrow(y.breaks)-1),]) %>%
   cumsum() + 0.5
 
 #---------------------------------------------------------
 # Plot figures
 #---------------------------------------------------------
+dot.size <- 1
 
 # Panel A: Infection growth rate without policy
 betas.no <- ggplot(data = df.no) + 
   geom_segment(aes(x = lb, y = policy, xend = ub, yend = policy), size = 0.3, colour =  "grey39") + #grey CI
-  geom_point(aes(x=beta, y=policy),  color = "darkred", size=3, alpha = 0.9) +
-  geom_vline(xintercept=0, colour="grey30", linetype="solid", size = 0.3) + 
-  geom_vline(xintercept=average.beta, colour="darkred", linetype="dotted", size = 0.5) + #average beta
-  geom_hline(yintercept= 0.5, colour="grey50", linetype="dotted", size = 0.5) + 
-  geom_text(aes(x = 0.55, y = 6.5), size = 2, label= paste0("Average = ", average.beta, " (",average.beta.percent,"%)")) + 
+  geom_point(aes(x=beta, y=policy),  color = "darkred", size=dot.size, alpha = 0.9) +
+  geom_vline(xintercept=0, colour="grey30", linetype="solid", size = 0.3) + #zeroline
+  geom_vline(xintercept=average.beta, colour="darkred", linetype="dotted", size = 0.3) + #average beta
+  geom_vline(xintercept=average.beta.5, colour="darkred", linetype="dotted", size = 0.3, alpha = 0.5) + #average beta without IRN
+  geom_hline(yintercept= 0.5, colour="grey50", linetype="solid", size = 0.3) + 
+  geom_text(aes(x = 0.7, y = 6.5), size = 0.7, label= paste0("Average = ", average.beta, " (",average.beta.percent,"%)")) + 
+  geom_text(aes(x = 0.7, y = 5.5), size = 0.7, label= paste0("Average (exc. Iran) = ", average.beta.5, " (",average.beta.percent.5,"%)")) + 
   scale_y_discrete(limits = rev(df.no$policy), position = "left") +
   theme_fig2() + 
   coord_cartesian(xlim =c(-0.9,0.9))  +
@@ -203,7 +279,7 @@ betas.no <- ggplot(data = df.no) +
   ggtitle("Infection growth rate without policy") 
 
 eff.size.no <- ggplot(data = df.no) + 
-  geom_point(aes(x=beta, y=effectsize), color = "grey", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=effectsize), color = "grey", size=dot.size, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.no$effectsize), position = "left") +
   xlab("Effect size (deltalog per day)") + ylab("") +
   theme_fig2() +
@@ -212,7 +288,7 @@ eff.size.no <- ggplot(data = df.no) +
 
 #growth plot
 growth.no <- ggplot(data = df.no) + 
-  geom_point(aes(x=beta, y=growth), color = "grey", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=growth), color = "grey", size=dot.size, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.no$growth), position = "left") +
   xlab("As percent growth (% per day)") + ylab("") +
   theme_fig2() +
@@ -221,16 +297,16 @@ growth.no <- ggplot(data = df.no) +
 
 #combine 3 plots into 1 figure
 all.plot.no <- grid.arrange(betas.no, eff.size.no, growth.no, ncol=3)
-ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 18, height = 4)
- 
+ggsave(all.plot.no, file = paste0(output_dir,"Fig2A_nopolicy.pdf"), width = 8, height = 1.1) #vertical
+
 #---------------------------------------------------------
 # Panel B: Effect of all policies combined
 
 betas.combined <- ggplot(data = df.combined) + 
   geom_segment(aes(x = lb, y = policy, xend = ub, yend = policy), size = 0.3, colour =  "grey39") + #grey CI
-  geom_point(aes(x=beta, y=policy), color = "royalblue4", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=policy), color = "royalblue4", size=dot.size, alpha = 0.9) +
   geom_vline(xintercept=0, colour="grey30", linetype="solid", size = 0.3) + 
-  geom_hline(yintercept= 0.5, colour="grey50", linetype="dotted", size = 0.5) + 
+  geom_hline(yintercept= 0.5, colour="grey50", linetype="solid", size = 0.3) + 
   scale_y_discrete(limits = rev(df.combined$policy), position = "left") +
   theme_fig2() + 
   coord_cartesian(xlim =c(-0.9,0.9))  +
@@ -239,7 +315,7 @@ betas.combined <- ggplot(data = df.combined) +
 
 #effect size plot
 eff.size.comb <- ggplot(data = df.combined) + 
-  geom_point(aes(x=beta, y=effectsize), color = "grey", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=effectsize), color = "grey", size=dot.size, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.combined$effectsize), position = "left") +
   xlab("Effect size (deltalog per day)") +
   theme_fig2() +
@@ -249,7 +325,7 @@ eff.size.comb <- ggplot(data = df.combined) +
 
 #growth plot
 growth.comb <- ggplot(data = df.combined) + 
-  geom_point(aes(x=beta, y=growth), color = "grey", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=growth), color = "grey", size=dot.size, alpha = 0.9) +
   scale_y_discrete(limits = rev(df.combined$growth), position = "left") +
   xlab("As percent growth (% per day)") + ylab("") +
   theme_fig2() +
@@ -258,15 +334,15 @@ growth.comb <- ggplot(data = df.combined) +
 
 #combine 3 plots into 1 figure
 all.plot.comb <- grid.arrange(betas.combined, eff.size.comb, growth.comb, ncol=3)
-ggsave(all.plot.comb, file = paste0(output_dir,"Fig2B_comb.pdf"), width = 18, height = 5)
-  
+ggsave(all.plot.comb, file = paste0(output_dir,"Fig2B_comb.pdf"), width = 8, height = 1.3) #vertical
 #---------------------------------------------------------
 # Panel C: Individual policies
 
 betas <- ggplot(data = df) + 
   geom_segment(aes(x = lb, y = policy, xend = ub, yend = policy), size = 0.3, colour =  "grey39") + #grey CI
-  geom_point(aes(x=beta, y=policy, group = country, color = country),  size=3, alpha = 0.9) +
-  geom_hline(yintercept= y.breaks, colour="grey50", linetype="dotted", size = 0.5) + 
+  geom_point(aes(x=beta, y=policy, group = country, color = country),  size=dot.size, alpha = 0.9) +
+  geom_hline(yintercept= y.breaks, colour="grey50", linetype="dotted", size = 0.3) +
+  geom_hline(yintercept= 0.5, colour="grey50", linetype="solid", size = 0.3) + 
   geom_vline(xintercept=0, colour="grey30", linetype="solid", size = 0.3) + 
   scale_colour_manual(name="", 
                       breaks=c("China","France","Iran", "Italy", "South Korea", "United States"), 
@@ -279,7 +355,7 @@ betas <- ggplot(data = df) +
 
 #effect size plot
 eff.size <- ggplot(data = df) + 
-  geom_point(aes(x=beta, y=effectsize, group = country), color = "grey", size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=effectsize, group = country), color = "grey", size=dot.size, alpha = 0.9) +
   scale_y_discrete(limits = rev(df$effectsize), position = "left") +
   ggtitle("") +
   coord_cartesian(xlim =c(-0.9,0.9))  +
@@ -288,7 +364,7 @@ eff.size <- ggplot(data = df) +
 
 #growth plot
 growth <- ggplot(data = df) + 
-  geom_point(aes(x=beta, y=growth, group = country), color = "grey",  size=3, alpha = 0.9) +
+  geom_point(aes(x=beta, y=growth, group = country), color = "grey",  size=dot.size, alpha = 0.9) +
   scale_y_discrete(limits = rev(as.character(df$growth)), position = "left") +
   ggtitle("") +
   coord_cartesian(xlim =c(-0.9,0.9))  +
@@ -297,5 +373,5 @@ growth <- ggplot(data = df) +
 
 #combine 3 plots into 1 figure
 all.plot.ind <- grid.arrange(betas, eff.size, growth, ncol=3)
-ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 28, height = 10)
+ggsave(all.plot.ind, file = paste0(output_dir,"Fig2C_ind.pdf"), width = 11, height = 4) #vertical
 

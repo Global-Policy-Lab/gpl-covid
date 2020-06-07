@@ -1,6 +1,7 @@
 // FRA | ADM1 
 
 clear all
+set scheme s1color
 //-----------------------setup
 
 // import end of sample cut-off 
@@ -10,8 +11,6 @@ local end_sample = end_date[1]
 
 // load data
 insheet using data/processed/adm1/FRA_processed.csv, clear 
-
-cap set scheme covid19_fig3 // optional scheme for graphs
  
 // set up time variables
 gen t = date(date, "YMD")
@@ -92,10 +91,10 @@ lab var testing_regime_15mar2020 "Testing regime change on Mar 15, 2020"
 // combine all no_gathering policies, which are just diff intensities
 gen no_gathering_1000 = no_gathering_size <= 1000
 gen no_gathering_100 = no_gathering_size <= 100
-gen no_gathering_comb = (no_gathering_100 + no_gathering_1000 + no_gathering_inside) / 3
+gen no_gathering_comb = (no_gathering_100 + no_gathering_1000 + no_gathering_inside_popw) / 3
 
-reghdfe D_l_cum_confirmed_cases event_cancel social_distance no_gathering_comb ///
-school_closure business_closure home_isolation testing_regime_15mar2020, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
+reghdfe D_l_cum_confirmed_cases event_cancel_popw social_distance_popw no_gathering_comb ///
+school_closure_popwt business_closure home_isolation_popw testing_regime_15mar2020, absorb(i.adm1_id i.dow, savefe) cluster(t) resid 
 
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -109,7 +108,7 @@ predictnl y_counter =  testing_regime_15mar2020 * _b[testing_regime_15mar2020] +
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of all policies combined (FOR FIG2)
-lincom event_cancel + social_distance + no_gathering_comb + school_closure + business_closure + home_isolation
+lincom event_cancel_popw + social_distance_popw + no_gathering_comb + school_closure_popwt + business_closure + home_isolation_popw
 
 local comb_policy = round(r(estimate), 0.001)
 local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
@@ -127,8 +126,8 @@ local no_policy = round(r(mean), 0.001)
 local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefplot
 
 // looking at different policies (similar to FIG2)
-coefplot, keep(event_cancel social_distance no_gathering_comb school_closure ///
-business_closure home_isolation) ///
+coefplot, keep(event_cancel_popw social_distance_popw no_gathering_comb school_closure_popwt ///
+business_closure home_isolation_popw) ///
 tit("FRA: disaggregated policies") subtitle("`subtitle2'") ///
 xline(0) name(FRA_policy, replace) 
 
@@ -136,16 +135,16 @@ xline(0) name(FRA_policy, replace)
 // compute ATE
 preserve
 	collapse (first) adm0_name (mean) D_l_cum_confirmed_cases ///
-	event_cancel social_distance ///
-	no_gathering_comb school_closure ///
-	business_closure home_isolation if e(sample) == 1
+	event_cancel_popw social_distance_popw ///
+	no_gathering_comb school_closure_popwt ///
+	business_closure home_isolation_popw if e(sample) == 1
 	
-	predictnl ATE = event_cancel * _b[event_cancel] + ///
-	social_distance * _b[social_distance] + ///
+	predictnl ATE = event_cancel_popw * _b[event_cancel_popw] + ///
+	social_distance_popw * _b[social_distance_popw] + ///
 	no_gathering_comb * _b[no_gathering_comb] + ///
-	school_closure * _b[school_closure] + ///
+	school_closure_popwt * _b[school_closure_popwt] + ///
 	business_closure * _b[business_closure] + ///
-	home_isolation * _b[home_isolation] ///
+	home_isolation_popw * _b[home_isolation_popw] ///
 	if e(sample), ci(LB UB) se(sd) p(pval)
 	
 	outsheet * using "results/tables/ATE_disag/FRA_ATE_disag.csv", comma replace 
@@ -168,32 +167,31 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) ///
 saving(results/figures/appendix/disaggregated_policies/FRA_disag.gph, replace)
-
-// tw (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
-// (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
-// (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
-// (sc day_avg t, color(black)) ///
-// if e(sample), ///
-// title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
-// xscale(range(21970(10)22000)) xlabel(21970(10)22000, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
-
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
 outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
 using "results/source_data/indiv/ExtendedDataFigure6a_FRA_data.csv" if miss_ct<9 & e(sample), comma replace
+
+// tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+// (rspike ub_y_actual lb_y_actual t_random, lwidth(vthin) color(blue*.5)) ///
+// (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
+// (scatter y_actual t_random, msize(tiny) color(blue*.5) ) ///
+// (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (sc day_avg t, color(black)) ///
+// if e(sample), ///
+// title(France, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
+// xscale(range(21970(10)22000)) xlabel(21970(10)22000, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
+// yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off)

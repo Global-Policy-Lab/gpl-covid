@@ -17,16 +17,12 @@ if(!(exists("gamma") & class(gamma) != "function")){
       mean()
 }
 if(!exists("underreporting")){
-    underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
-                               col_types = cols(
-                                 country = col_character(),
-                                 total_cases = col_double(),
-                                 total_deaths = col_double(),
-                                 underreporting_estimate = col_double(),
-                                 lower = col_double(),
-                                 upper = col_double(),
-                                 underreporting_estimate_clean = col_character()
-                               ))
+  underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
+                             col_types = cols(
+                               country = col_character(),
+                               underreporting_estimate = col_double()
+                             )) %>% 
+    filter(ifr == 0.0075)
 }
 
 china_data <- read_csv('models/reg_data/CHN_reg_data.csv',                   
@@ -59,7 +55,8 @@ while(changed){
 china_policy_variables_to_use <- 
   c(
     names(china_data) %>% str_subset('home_isolation_'),
-    names(china_data) %>% str_subset('travel_ban_local_')
+    names(china_data) %>% str_subset('travel_ban_local_'),
+    names(china_data) %>% str_subset('emergency_declaration_')
   )  
 
 china_other_control_variables <- 

@@ -2,9 +2,6 @@
 
 clear all
 
-// optional scheme for graphs
-capture set scheme covid19_fig3 
-
 // create folders for output 
 capture mkdir "results/"
 capture mkdir "results/figures/"
@@ -13,7 +10,6 @@ capture mkdir "results/figures/appendix/disaggregated_policies"
 capture mkdir "results/tables/" 
 capture mkdir "results/tables/ATE_disag" 
 capture mkdir "results/source_data" 
-capture copy "results/source_data/indiv/Figure3_CHN_data.csv" "results/source_data/indiv/ExtendedDataFigure6a_CHN_data.csv" 
 
 // run .do files
 do "code/models/alt_growth_rates/CHN_adm2.do"
@@ -59,12 +55,7 @@ foreach fn of local filenames{
 	insheet using `filepath', clear
 	rename adm0 adm0_name
 	display "`fn'"
-	if "`fn'"=="CHN_ATE.csv"{
-		keep if lag==.
-	}
-	else if "`fn'"!="CHN_ATE.csv"{
-		keep if lag==0
-	}
+	keep if lag==0
 	gen model_type = "_grouped"
 	
 	tempfile `tempname'

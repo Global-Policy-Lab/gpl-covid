@@ -1,6 +1,7 @@
 // KOR | ADM1
 
 clear all
+set scheme s1color
 //-----------------------setup
 
 // import end of sample cut-off 
@@ -10,8 +11,6 @@ local end_sample = end_date[1]
 
 // load data
 insheet using data/processed/adm1/KOR_processed.csv, clear 
-
-cap set scheme covid19_fig3 // optional scheme for graphs
 
 // set up time variables
 gen t = date(date, "YMD")
@@ -139,8 +138,9 @@ outsheet using "models/reg_data/KOR_reg_data.csv", comma replace
 reghdfe D_l_active_cases p_* testing_regime_change_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
 outreg2 using "results/tables/reg_results/KOR_estimates_table", sideway noparen nodepvar word replace label ///
- addtext(Province FE, "YES", Day-of-Week FE, "YES") title(South Korea, "Dependent variable: Growth rate of active cases (\u0916?log per day\'29") ///
- ctitle("Coefficient"; "Robust Std. Error") nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" /// 
+ title(South Korea, "Dependent variable: growth rate of active cases (\u0916?log per day\'29") ///
+ stats(coef se pval) dec(3) ctitle("Coefficient"; "Std Error"; "P-value") nocons nonotes addnote("*** p<0.01, ** p<0.05, * p<0.1" "" ///
+ "This regression includes province fixed effects, day-of-week fixed effects, and clustered standard errors at the day level." "" ///
  "\'22Social distance (optional)\'22 includes recommended policies related to social distancing, e.g. no gathering, work from home, and closing businesses such as karaoke and cyber cafes." "" ///
  "\'22Social distance (mandatory)\'22 includes prohibiting rallies, closing churches, and closing welfare service facilities.")
 cap erase "results/tables/reg_results/KOR_estimates_table.txt"
@@ -156,9 +156,11 @@ foreach var in "p_1" "p_2" "p_3" "p_4" {
 
 predict e if e(sample), resid
 
-hist e, bin(30) tit(South Korea) lcolor(white) fcolor(navy) xsize(5) name(hist_kor, replace)
+hist e, bin(30) tit(South Korea) lcolor(white) fcolor(navy) xsize(5) ///
+ylabel(, angle(horizontal)) plotregion(lcolor(white)) name(hist_kor, replace)
 
-qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) name(qn_kor, replace)
+qnorm e, mcolor(black) rlopts(lcolor(black)) xsize(5) ///
+ylabel(, angle(horizontal)) plotregion(lcolor(white)) name(qn_kor, replace)
 
 graph combine hist_kor qn_kor, rows(1) xsize(10) saving(results/figures/appendix/error_dist/error_kor.gph, replace)
 graph drop hist_kor qn_kor
@@ -249,17 +251,17 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random,  lwidth(vvthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
-title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
+title("South Korea", ring(0) position(11)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) ///
 saving(results/figures/fig3/raw/KOR_adm1_active_cases_growth_rates_fixedx.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
@@ -267,17 +269,17 @@ outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_co
 using "results/source_data/indiv/Figure3_KOR_data.csv" if miss_ct<9 & e(sample), comma replace
 drop miss_ct
 
-// tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+// tw (rspike ub_counter lb_counter t_random2, lwidth(vvthin) color(red*.5)) ///
+// (rspike ub_y_actual lb_y_actual t_random,  lwidth(vvthin) color(blue*.5)) ///
 // (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 // (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 // (sc day_avg t, color(black)) ///
 // if e(sample), ///
 // title("South Korea", ring(0)) ytit("Growth rate of" "active cases" "({&Delta}log per day)") ///
 // xscale(range(21960(10)22011)) xlabel(21960(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) 
+// yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) 
 
 
 //-------------------------------Cross-validation
@@ -324,7 +326,6 @@ foreach adm in `state_list' {
 postclose results
 
 preserve
-	set scheme s1color
 	use `results_file_crossV', clear
 	egen i = group(policy)
 	g minCI = beta - 1.96* se
@@ -351,6 +352,7 @@ tempfile base_data
 save `base_data'
 
 //------------------------------------FIXED LAG 
+set seed 1234
 
 reghdfe D_l_active_cases testing_regime_change_* p_*, absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 coefplot, keep(p_*) gen(L0_) title(main model) xline(0)

@@ -27,16 +27,12 @@ if(!(exists("gamma") & class(gamma) != "function")){
       mean()
 }
 if(!exists("underreporting")){
-    underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
-                               col_types = cols(
-                                 country = col_character(),
-                                 total_cases = col_double(),
-                                 total_deaths = col_double(),
-                                 underreporting_estimate = col_double(),
-                                 lower = col_double(),
-                                 upper = col_double(),
-                                 underreporting_estimate_clean = col_character()
-                               ))
+  underreporting <- read_csv("data/interim/multi_country/under_reporting.csv",
+                             col_types = cols(
+                               country = col_character(),
+                               underreporting_estimate = col_double()
+                             )) %>% 
+    filter(ifr == 0.0075)
 }
 
 changed = TRUE
@@ -52,13 +48,15 @@ while(changed){
 
 france_policy_variables_to_use <- 
   c(
-    "testing_regime_15mar2020",
     'pck_social_distance',
-    'school_closure',
+    'school_closure_popwt',
     'national_lockdown'
   )  
 
-france_other_control_variables <- 'day_of_week'
+france_other_control_variables <- c(
+  "day_of_week",
+  "testing_regime_15mar2020"
+)
 
 # reghdfe D_l_cum_confirmed_cases testing national_lockdown school_closure ///
 #   social_distance pck_no_gathering , absorb(i.adm1_id i.dow, savefe) cluster(t) resid 

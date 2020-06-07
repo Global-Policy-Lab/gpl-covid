@@ -1,6 +1,7 @@
 // USA | adm1
 
 clear all
+set scheme s1color
 //-----------------------setup
 
 // import end of sample cut-off 
@@ -15,8 +16,6 @@ save `state_abb'
 
 // load data
 insheet using data/processed/adm1/USA_processed.csv, clear 
-
-cap set scheme covid19_fig3 // optional scheme for graphs
 
 // set up time variables
 gen t = date(date, "YMD",2020)
@@ -118,16 +117,11 @@ lab var day_avg "Observed avg. change in log cases"
 
 //------------------disaggregated model
 
-// combine optional policies with respective mandatory policies
-// weighing optional policies by 1/2
-foreach var of varlist school_closure travel_ban_local business_closure social_distance home_isolation work_from_home pos_cases_quarantine no_gathering paid_sick_leave transit_suspension religious_closure{
-	gen `var'_comb_popwt = `var'_popwt + `var'_opt_popwt * 0.5
-}
-
 reghdfe D_l_cum_confirmed_cases testing_regime_* ///
-event_cancel_popwt no_gathering_comb_popwt social_distance_comb_popwt religious_closure_comb_popwt ///
-pos_cases_quarantine_comb_popwt paid_sick_leave_comb_popwt work_from_home_comb_popwt ///
-school_closure_comb_popwt travel_ban_local_comb_popwt transit_suspension_comb_popwt business_closure_comb_popwt home_isolation_comb_popwt, ///
+no_gathering_popwt social_distance_popwt pos_cases_quarantine_popwt ///
+paid_sick_leave_popwt work_from_home_popwt school_closure_popwt ///
+travel_ban_local_popwt transit_suspension_popwt business_closure_popwt ///
+religious_closure_popwt home_isolation_popwt federal_guidelines, ///
 absorb(i.adm1_id i.dow, savefe) cluster(t) resid
 
 // ------------- generating predicted values and counterfactual predictions based on treatment
@@ -158,10 +152,10 @@ testing_regime_30mar2020_DE * _b[testing_regime_30mar2020_DE] + ///
 _b[_cons] + __hdfe1__ + __hdfe2__ if e(sample), ci(lb_counter ub_counter)
 
 // effect of all policies combined (FOR FIG2)
-lincom school_closure_comb_popwt + travel_ban_local_comb_popwt + business_closure_comb_popwt + ///
-social_distance_comb_popwt + home_isolation_comb_popwt + work_from_home_comb_popwt + ///
-pos_cases_quarantine_comb_popwt + no_gathering_comb_popwt + paid_sick_leave_comb_popwt + ///
-religious_closure_comb_popwt + event_cancel_popwt + transit_suspension_comb_popwt
+lincom no_gathering_popwt + social_distance_popwt + pos_cases_quarantine_popwt + ///
+paid_sick_leave_popwt + work_from_home_popwt + school_closure_popwt + ///
+travel_ban_local_popwt + transit_suspension_popwt + business_closure_popwt + ///
+religious_closure_popwt + home_isolation_popwt + federal_guidelines 
 
 local comb_policy = round(r(estimate), 0.001)
 local subtitle = "Combined effect = " + string(`comb_policy') // for coefplot
@@ -181,30 +175,29 @@ local subtitle2 = "`subtitle' ; No policy = " + string(`no_policy') // for coefp
 // looking at different policies (similar to FIG2)
 coefplot, keep(*_popwt) ///
 tit("USA: indiv policies") subtitle("`subtitle2'") graphregion(margin(0 5 0 5)) ///
-caption("var_comb_popwt = var_popwt + var_opt_popwt*.5", span) ///
 xline(0) name(USA_disag, replace)
 
 
 // compute ATE
 preserve
 	collapse (first) adm0_name (mean) D_l_cum_confirmed_cases ///
-	event_cancel_popwt no_gathering_comb_popwt social_distance_comb_popwt religious_closure_comb_popwt ///
-	pos_cases_quarantine_comb_popwt paid_sick_leave_comb_popwt work_from_home_comb_popwt ///
-	school_closure_comb_popwt travel_ban_local_comb_popwt transit_suspension_comb_popwt ///
-	business_closure_comb_popwt home_isolation_comb_popwt if e(sample) == 1
+	no_gathering_popwt social_distance_popwt pos_cases_quarantine_popwt ///
+	paid_sick_leave_popwt work_from_home_popwt school_closure_popwt ///
+	travel_ban_local_popwt transit_suspension_popwt business_closure_popwt ///
+	religious_closure_popwt home_isolation_popwt federal_guidelines if e(sample) == 1
 	
-	predictnl ATE = school_closure_comb_popwt * _b[school_closure_comb_popwt] + ///
-	travel_ban_local_comb_popwt * _b[travel_ban_local_comb_popwt] + ///
-	business_closure_comb_popwt * _b[business_closure_comb_popwt] + ///
-	social_distance_comb_popwt * _b[social_distance_comb_popwt] + ///
-	home_isolation_comb_popwt * _b[home_isolation_comb_popwt] + ///
-	work_from_home_comb_popwt * _b[work_from_home_comb_popwt] + ///
-	pos_cases_quarantine_comb_popwt * _b[pos_cases_quarantine_comb_popwt] + ///
-	no_gathering_comb_popwt * _b[no_gathering_comb_popwt] + ///
-	paid_sick_leave_comb_popwt * _b[paid_sick_leave_comb_popwt] + ///
-	religious_closure_comb_popwt * _b[religious_closure_comb_popwt] + ///
-	event_cancel_popwt * _b[event_cancel_popwt] + ///
-	transit_suspension_comb_popwt * _b[transit_suspension_comb_popwt] ///
+	predictnl ATE = no_gathering_popwt * _b[no_gathering_popwt] + ///
+	social_distance_popwt * _b[social_distance_popwt] + ///
+	pos_cases_quarantine_popwt * _b[pos_cases_quarantine_popwt] + ///
+	paid_sick_leave_popwt * _b[paid_sick_leave_popwt] + ///
+	work_from_home_popwt * _b[work_from_home_popwt] + ///
+	school_closure_popwt * _b[school_closure_popwt] + ///
+	travel_ban_local_popwt * _b[travel_ban_local_popwt] + ///
+	transit_suspension_popwt * _b[transit_suspension_popwt] + ///
+	business_closure_popwt * _b[business_closure_popwt] + ///
+	religious_closure_popwt * _b[religious_closure_popwt] + ///
+	home_isolation_popwt * _b[home_isolation_popwt] + ///
+	federal_guidelines * _b[federal_guidelines] ///
 	if e(sample), ci(LB UB) se(sd) p(pval)
 	
 	outsheet * using "results/tables/ATE_disag/USA_ATE_disag.csv", comma replace 
@@ -226,31 +219,31 @@ g t_random2 = t + rnormal(0,1)/10
 
 // Graph of predicted growth rates (FOR FIG3)
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title("United States", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) ///
 saving(results/figures/appendix/disaggregated_policies/USA_disag.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
 outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
 using "results/source_data/indiv/ExtendedDataFigure6a_USA_data.csv" if miss_ct<9 & e(sample), comma replace
 
-// tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+// tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+// (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 // (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 // (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 // (sc day_avg t, color(black)) ///
 // if e(sample), ///
 // title("United States", ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 // xscale(range(21977(10)22011)) xlabel(21977(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0))
+// yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off)

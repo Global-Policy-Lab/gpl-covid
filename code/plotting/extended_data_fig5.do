@@ -20,15 +20,15 @@ foreach GRP of num 2/5{
 	replace L = L + `GRP'/10 if grp == `GRP'
 }
 
-tw connect r2 L if grp == 1, mc(gold) lc(gold) || rspike max min L if grp == 1, lc(gold*.7) ///
-|| connect r2 L if grp == 2, mc(maroon) lc(maroon) || rspike max min L if grp == 2, lc(maroon*.7) ///
-|| connect r2 L if grp == 3, mc(ebblue) lc(ebblue) || rspike max min L if grp == 3, lc(ebblue*.7) ///
-|| connect r2 L if grp == 4, mc(green) lc(green) || rspike max min L if grp == 4, lc(green*.7) ///
-|| connect r2 L if grp == 5, mc(black) lc(black) || rspike max min L if grp == 5, lc(black*.7) ///
+tw connect r2 L if grp == 1, mc(gold) m(Oh) lc(gold) msize(large) || rspike max min L if grp == 1, lc(gold) lw(vthin) ///
+|| connect r2 L if grp == 2, mc(teal) m(Oh) lc(teal) msize(large) || rspike max min L if grp == 2, lc(teal) lw(vthin) ///
+|| connect r2 L if grp == 3, mc(gs10) m(Oh) lc(gs10) msize(large) || rspike max min L if grp == 3, lc(gs10) lw(vthin) ///
+|| connect r2 L if grp == 4, mc(black) m(Oh) lc(black) msize(large) || rspike max min L if grp == 4, lc(black) lw(vthin) ///
+|| connect r2 L if grp == 5, mc(purple) m(Oh) lc(purple) msize(large) || rspike max min L if grp == 5, lc(purple) lw(vthin) ///
 legend(order(1 3 5 7 9) lab(1 "FRA") lab(3 "IRN") lab(5 "ITA") lab(7 "KOR") lab(9 "USA") rows(1) region(lstyle(none))) ///
 xtitle(# fixed lags) ytitle(R-squared, height(10))
 
-outsheet * using "results/source_data/indiv/ExtendedDataFigure5_b.csv", replace
+outsheet * using "results/source_data/indiv/ExtendedDataFigure5_a.csv", replace
 graph export results/figures/appendix/fixed_lag/r2.pdf, replace
 
 
@@ -123,19 +123,16 @@ yline(`yline1', lc(black) lp(dot)) ///
 yline(`yline2', lc(black) lp(dot)) ///
 yline(`yline3', lc(black) lp(dot)) ///
 yline(`yline4', lc(black) lp(dot)) legend(off) ysize(20) xline(0, lc(black)) 
-
 graph export results/figures/appendix/fixed_lag/fig5_FL.pdf, replace
 
 // output source data for ED fig 5
 // Will pass "nosave" as argument during tests so that we don't overwrite
 if "`0'" == "" {
-    export excel adm0 policy beta lower upper using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_a") firstrow(var) sheetreplace
-
-    import delim "results/source_data/indiv/ExtendedDataFigure5_b.csv", clear
-    export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_b") firstrow(var) sheetreplace
-
-    import delim "results/source_data/indiv/ExtendedDataFigure5_CHN_event_study.csv", clear
-    export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_c") firstrow(var) sheetreplace
+    preserve
+    import delim "results/source_data/indiv/ExtendedDataFigure5_a.csv", clear
+    export excel using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_a") firstrow(var) replace
+    restore
+    export excel adm0 policy beta lower upper using "results/source_data/ExtendedDataFigure5_lags.xlsx", sheet("panel_b") firstrow(var) sheetreplace
 }
 
 /*

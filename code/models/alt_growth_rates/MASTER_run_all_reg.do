@@ -2,9 +2,6 @@
 
 clear all
 
-// optional scheme for graphs
-capture set scheme covid19_fig3 
-
 // create folders for figure output 
 capture mkdir "results"
 capture mkdir "results/figures"
@@ -69,7 +66,7 @@ foreach fn of local filenames{
 
 graph combine error_chn error_irn error_kor error_fra error_ita error_usa, rows(3)
 graph export results/figures/appendix/error_dist/ALL_conf_cases_e.pdf, replace
-cap graph export results/figures/appendix/error_dist/ALL_conf_cases_e.png, replace
+cap graph export results/figures/appendix/error_dist/ALL_conf_cases_e.eps, replace
 
 
 // make table comparing ATE models with different fixed lags by country
@@ -85,7 +82,6 @@ foreach fn of local filenames{
 }
 
 use `CHN_ATE', clear
-drop if lag==0 & adm0=="CHN"
 foreach c in KOR ITA IRN FRA USA {
 	append using ``c'_ATE'
 }
@@ -139,7 +135,6 @@ foreach fn of local filenames{
 	save ``tempname'', replace
 }
 use `Figure3_FRA_data', clear
-replace adm0_name = "FRA" if adm0_name=="France"
 rename t date
 
 foreach c in CHN KOR ITA IRN USA {
@@ -165,6 +160,5 @@ use `ExtendedDataFigure10_CHN_e', clear
 foreach c in KOR ITA IRN FRA USA {
 	append using `ExtendedDataFigure10_`c'_e'
 }
-replace adm0_name = "FRA" if adm0_name=="France"
 outsheet using "results/source_data/ExtendedDataFigure10_e.csv", comma replace
 

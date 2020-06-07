@@ -7,12 +7,29 @@ import pandas as pd
 import matplotlib.colors
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
+import matplotlib.transforms as transforms
+import matplotlib.ticker as ticker
 import seaborn as sns
 import src.utils as cutil
 
 # save the figure here
 save_fig = True
 save_data = True
+
+# in inches
+fig_width = 3.5  # 89mm
+fig_height = 6.7  # 249mm
+
+# grid_width = 2.8  # 89mm
+# grid_height = 7.5  # 249mm
+
+grid_width = 2.5  # 89mm
+grid_height = 6.7  # 249mm
+
+scale_factor = 3.0 / 15.0  # old width was 15
+scale_factor_x = 2.8 / 15.0  # old width was 15
+
+leg_topright = True
 
 fig_dir = cutil.HOME / "results" / "figures" / "fig4"
 fig_data_dir = cutil.HOME / "results" / "source_data"
@@ -114,12 +131,20 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
 
     if model is not None:
         model_no_pol = ax.plot(
-            dates_model, preds_no_policy, color=no_policy_color, lw=5, ls="--"
+            dates_model,
+            preds_no_policy,
+            color=no_policy_color,
+            lw=5 * scale_factor,
+            ls="--",
         )
 
         if update_legend:
             legend_dict["lines"].append(model_no_pol[0])
-            legend_dict["labels"].append('"No policy" scenario')
+
+            if leg_topright:
+                legend_dict["labels"].append('"No policy" \n scenario')
+            else:
+                egend_dict["labels"].append('"No policy" scenario')
 
     for i in range(num_ranges):
         if i >= 0:
@@ -145,12 +170,16 @@ def plot_quantiles(ax, quantiles, quantiles_dict, legend_dict, model, update_leg
 
     if model is not None:
         model_pol = ax.plot(
-            dates_model, preds_policy, color=policy_color, lw=5, ls="--"
+            dates_model, preds_policy, color=policy_color, lw=5 * scale_factor, ls="--"
         )
 
         if update_legend:
             legend_dict["lines"].append(model_pol[0])
-            legend_dict["labels"].append("Actual policies (predicted)")
+
+            if leg_topright:
+                legend_dict["labels"].append("Actual policies \n (predicted)")
+            else:
+                legend_dict["labels"].append("Actual policies (predicted)")
 
     # reset
     upper_idx = -1
@@ -188,11 +217,20 @@ def plot_cases(ax, this_country_cases, legend_dict, update_legend):
     cases = this_country_cases["cases"].values
 
     case_scatter = ax.scatter(
-        dates_cases.values, cases, marker="o", color="black", s=36, clip_on=False
+        dates_cases.values,
+        cases,
+        marker="o",
+        color="black",
+        s=16 * scale_factor ** 2,
+        clip_on=False,
     )
     if update_legend:
         legend_dict["lines"].append(case_scatter)
-        legend_dict["labels"].append("Cumulative observed cases")
+
+        if leg_topright:
+            legend_dict["labels"].append("Cumulative \nobserved cases")
+        else:
+            legend_dict["labels"].append("Cumulative observed cases")
 
     return ax
 
@@ -278,12 +316,26 @@ def plot_bracket(ax, model_df):
     )
 
     # put line
-    ax.arrow(start[0], start[1], 0, end[1] - start[1], lw=2, clip_on=False)
+    ax.arrow(
+        start[0], start[1], 0, end[1] - start[1], lw=2 * scale_factor_x, clip_on=False
+    )
     # put caps
     ax.arrow(
-        start_cap[0], start_cap[1], start[0] - start_cap[0], 0, lw=2, clip_on=False
+        start_cap[0],
+        start_cap[1],
+        start[0] - start_cap[0],
+        0,
+        lw=2 * scale_factor_x,
+        clip_on=False,
     )
-    ax.arrow(end_cap[0], end_cap[1], end[0] - end_cap[0], 0, lw=2, clip_on=False)
+    ax.arrow(
+        end_cap[0],
+        end_cap[1],
+        end[0] - end_cap[0],
+        0,
+        lw=2 * scale_factor_x,
+        clip_on=False,
+    )
 
     # rounds to the nearest 1,000
     # num_rounded = int(round(end[1] - start[1], -3))
@@ -295,7 +347,7 @@ def plot_bracket(ax, model_df):
         xy=text_spot_start,
         xytext=text_spot_end,
         annotation_clip=False,
-        fontsize=30,
+        fontsize=27 * scale_factor_x,
         va="center",
     )
 
@@ -315,7 +367,7 @@ def annotate_cases(ax, cases):
         cases_last / 100.0,
     )
 
-    annot_date = cases_date.strftime("%b %d")
+    annot_date = cases_date.strftime("%b %-d")
 
     annot = "{0}: {1:,d} \nconfirmed cases".format(annot_date, int(cases_last))
     ax.annotate(
@@ -323,15 +375,15 @@ def annotate_cases(ax, cases):
         xy=cases_pos,
         xytext=text_pos,
         annotation_clip=False,
-        fontsize=30,
+        fontsize=27 * scale_factor_x,
         va="center",
         arrowprops={
             "arrowstyle": "->",
-            "shrinkA": 10,
-            "shrinkB": 10,
+            "shrinkA": 10 * scale_factor_x,
+            "shrinkB": 10 * scale_factor_x,
             "connectionstyle": "arc3,rad=0.3",
             "color": "black",
-            "lw": 1.5,
+            "lw": 1.5 * scale_factor_x,
         },
     )
 
@@ -426,7 +478,7 @@ def main():
     # plot
     fig, ax = plt.subplots(
         len(countries_in_order),
-        figsize=(15, 7 * len(countries_in_order)),
+        figsize=(grid_width, grid_height),
         sharex=True,
         sharey=True,
     )
@@ -483,13 +535,18 @@ def main():
 
         # 3. set title and axis labels
         ax[c].set_title(
-            country_names[country],
-            fontsize=44,
-            verticalalignment="baseline",
-            loc="center",
+            " " + country_names[country],
+            fontsize=35 * scale_factor,
+            verticalalignment="top",
+            loc="left",
+            x=0.04,
+            y=0.85,
+            backgroundcolor="white",
+            zorder=2,
+            # pad=0.1,
         )
 
-        ax[c].set_ylabel("Predicted cumulative \ncases", fontsize=32)
+        ax[c].set_ylabel("Cumulative cases", fontsize=28 * scale_factor, labelpad=1)
         ax[c].set_yscale("log")
 
         ax[c].set_xlim(np.datetime64(start_date), np.datetime64(end_date))
@@ -499,43 +556,100 @@ def main():
         # dates on x axis
         days_all = mdates.DayLocator(interval=1)
         days_sparse = mdates.DayLocator(interval=10)
-        formatter = mdates.DateFormatter("%b %d")
+        formatter = mdates.DateFormatter("%b %-d")
 
         ax[c].xaxis.set_major_formatter(formatter)
         ax[c].xaxis.set_minor_locator(days_all)
         ax[c].xaxis.set_major_locator(days_sparse)
 
         # set to mostly match fig 3
-        ax[c].tick_params(axis="x", which="major", labelsize=28, length=10, width=4)
-        ax[c].tick_params(axis="x", which="minor", length=5, width=1.5)
-        ax[c].tick_params(axis="y", which="major", labelsize=26, length=8, width=1)
+        ax[c].tick_params(
+            axis="x",
+            which="major",
+            labelsize=27 * scale_factor_x,
+            length=10 * scale_factor_x,
+            width=4 * scale_factor_x,
+        )
+        ax[c].tick_params(
+            axis="x",
+            which="minor",
+            length=5 * scale_factor_x,
+            width=1.5 * scale_factor_x,
+        )
 
-        ax[c].tick_params(axis="y", which="minor", labelsize=26, length=5, width=0.1)
-        ax[c].set_yticks(ax[c].get_yticks(minor=True)[::5], minor=True)
-        ax[c].set_yticks(np.logspace(1, 8, base=10, num=8))
+        # ax[c].set_yticks(ax[c].get_yticks(minor=True)[::5], minor=True)
+        ax[c].set_yticks(np.logspace(1, 7, base=10, num=4))
+        print(np.logspace(1, 7, base=10, num=4))
+        ax[c].set_yticks(
+            np.logspace(1, 8, base=10, num=8), minor=True,
+        )
+        print(np.logspace(1, 8, base=10, num=8))
 
-        sns.despine(ax=ax[c], top=True)
+        ax[c].tick_params(
+            axis="y",
+            which="major",
+            labelsize=30 * scale_factor_x,
+            length=8 * scale_factor,
+            width=1 * scale_factor,
+            zorder=10,
+            pad=-0.2,
+        )
+
+        ax[c].tick_params(
+            axis="y",
+            which="minor",
+            labelsize=27 * scale_factor_x,
+            length=8 * scale_factor,
+            width=1.5 * scale_factor,
+            zorder=10,
+        )
+
+        ax[c].set_yticklabels([], minor=True)
+
         sns.despine(ax=ax[c], top=True)
 
         # thicken the axes
-        plt.setp(ax[c].spines.values(), linewidth=2)
-        ax[c].grid(lw=1)
+        plt.setp(ax[c].spines.values(), linewidth=2 * scale_factor)
+        ax[c].grid(which="major", axis="x", lw=1 * scale_factor, zorder=1)
+        ax[c].grid(which="minor", axis="y", lw=1 * scale_factor, zorder=1)
 
-    # add a legend axis
-    leg_ax = fig.add_axes([1.0, 0.6, 0.2, 0.2])
+        ax[c].yaxis.offsetText.set_fontsize(24)
 
-    leg = leg_ax.legend(
-        handles=legend_dict["lines"],
-        labels=legend_dict["labels"],
-        loc=(0.42, 0.82),
-        fontsize=32,
-        title="Legend",
-        frameon=False,
-        markerscale=3,
-    )
+    # add another axis so the annotations don't go away
+    # extra_ax = fig.add_axes([0, 0, 1.0, 1.0])
+    # extra_ax.axis("off")
+
+    if leg_topright:
+
+        # add a legend axis
+        leg_ax = fig.add_axes([0.88, 0.72, 0.1, 0.05])
+
+        leg = leg_ax.legend(
+            handles=legend_dict["lines"],
+            labels=legend_dict["labels"],
+            loc=(0.42, 0.2),
+            fontsize=27 * scale_factor_x,
+            title="Legend",
+            frameon=False,
+            markerscale=1.0 * scale_factor,
+        )
+
+    else:
+        # add a legend axis
+        leg_ax = fig.add_axes([0.1, 0.1, 0.1, 0.05])
+
+        leg = leg_ax.legend(
+            handles=legend_dict["lines"],
+            labels=legend_dict["labels"],
+            loc=(0.42, 1.2),
+            fontsize=27 * scale_factor_x,
+            title="Legend",
+            frameon=True,
+            markerscale=2 * scale_factor,
+        )
 
     leg._legend_box.align = "left"
-    plt.setp(leg.get_title(), fontsize=44)
+    plt.setp(leg.get_title(), fontsize=30 * scale_factor_x)
 
     leg_ax.axis("off")
 
@@ -544,12 +658,26 @@ def main():
     if save_data:
         out_fn = fig_data_dir / fig_data_fn
         print("saving fig data in {0}".format(out_fn))
-        df_all_countries.to_csv(out_fn, index=False)
+        # avoid rounding issues
+        df_all_countries.to_csv(out_fn, index=False, float_format="%.3f")
 
     if save_fig:
         out_fn = fig_dir / fig_name
         print("saving fig in {0}".format(out_fn))
-        plt.savefig(out_fn, bbox_inches="tight", bbox_extra_artists=(leg,))
+        # plt.savefig(out_fn, bbox_inches="tight", bbox_extra_artists=(leg,))
+        vertical_pad_bottom = 0.56
+        vertical_pad_top = 1.31
+        horizontal_pad_left = 0.04
+        horizontal_pad_right = 0.48
+        plt.savefig(
+            out_fn,
+            bbox_inches=transforms.Bbox.from_bounds(
+                horizontal_pad_left,
+                0 + vertical_pad_bottom,
+                fig_width - horizontal_pad_right,
+                fig_height - (vertical_pad_top),
+            ),
+        )
 
 
 if __name__ == "__main__":

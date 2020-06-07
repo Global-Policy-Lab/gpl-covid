@@ -1,6 +1,7 @@
 // ITA | adm2
 
 clear all
+set scheme s1color
 //-----------------------setup
 
 // import end of sample cut-off 
@@ -10,8 +11,6 @@ local end_sample = end_date[1]
 
 // load data
 insheet using data/processed/adm2/ITA_processed.csv, clear
-
-cap set scheme covid19_fig3 // optional scheme for graphs
 
 // set up time variables
 gen t = date(date, "YMD")
@@ -166,32 +165,32 @@ g t_random2 = t + rnormal(0,1)/10
 // Graph of predicted growth rates (FOR FIG3)
 
 // fixed x-axis across countries
-tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-(rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-|| (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+(rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+(scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+(connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 (sc day_avg t, color(black)) ///
 if e(sample), ///
 title(Italy, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 xscale(range(21930(10)22011)) xlabel(21930(10)22011, nolabels tlwidth(medthick)) tmtick(##10) ///
-yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) ///
+yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off) ///
 saving(results/figures/appendix/disaggregated_policies/ITA_disag.gph, replace)
 
 egen miss_ct = rowmiss(y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg)
 outsheet adm0_name t y_actual lb_y_actual ub_y_actual y_counter lb_counter ub_counter m_y_actual m_y_counter day_avg ///
 using "results/source_data/indiv/ExtendedDataFigure6a_ITA_data.csv" if miss_ct<9 & e(sample), comma replace
 
-// tw (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
-// (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
-// || (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
+// tw (rspike ub_counter lb_counter t_random2, lwidth(vthin) color(red*.5)) ///
+// (rspike ub_y_actual lb_y_actual t_random,  lwidth(vthin) color(blue*.5)) ///
 // (scatter y_counter t_random2, msize(tiny) color(red*.5)) ///
-// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
+// (scatter y_actual t_random,  msize(tiny) color(blue*.5) ) ///
 // (connect m_y_counter t, color(red) lpattern(dash) m(Oh)) ///
+// (connect m_y_actual t, color(blue) m(square) lpattern(solid)) ///
 // (sc day_avg t, color(black)) ///
 // if e(sample), ///
 // title(Italy, ring(0)) ytit("Growth rate of" "cumulative cases" "({&Delta}log per day)") ///
 // xscale(range(21970(10)22011)) xlabel(21970(10)22011, format(%tdMon_DD) tlwidth(medthick)) tmtick(##10) ///
-// yscale(r(0(.2).8)) ylabel(0(.2).8) plotregion(m(b=0)) 
+// yscale(r(0(.2).8)) ylabel(0(.2).8, angle(horizontal)) plotregion(m(l=0.5 r=0.5 b=0 t=0.5) lcolor(white)) legend(off)
 // br if adm2_name=="Isernia"

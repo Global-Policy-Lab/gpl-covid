@@ -259,10 +259,10 @@ def make_all_coeff_factorplots(
             out_dir = out_base / t[1]
             out_dir.mkdir(parents=True, exist_ok=True)
             copyfile(
-                plot_dir / f"{t[0]}_pop_100000000_LHS_I.pdf", out_dir / f"{t[1]}_a.pdf"
+                plot_dir / f"{t[0]}_pop_100000000_LHS_I.png", out_dir / f"{t[1]}_a.png"
             )
             copyfile(
-                plot_dir / f"{t[0]}_pop_100000_LHS_IR.pdf", out_dir / f"{t[1]}_b.pdf"
+                plot_dir / f"{t[0]}_pop_100000_LHS_IR.png", out_dir / f"{t[1]}_b.png"
             )
 
     return None

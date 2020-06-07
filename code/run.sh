@@ -5,8 +5,12 @@ set -e
 cd "$(dirname "$0")/.."
 
 if [ "$CONDA_DEFAULT_ENV" != "gpl-covid" ]; then
+    if [ "$CONDA_PREFIX" = "" ]; then
+        CONDA_PREFIX="/opt/conda"
+    fi
     source $CONDA_PREFIX/etc/profile.d/conda.sh
     conda activate gpl-covid
+    chmod +x code/statab.sh
 fi
 
 # install our utilities
@@ -45,7 +49,6 @@ fi
 
 ## data scraping and processing
 
-
 ### Geography/population
 printf "***Creating shape and population info for all countries***\n"
 python code/data/multi_country/get_adm_info.py $NDFLAG
@@ -70,7 +73,7 @@ fi
 if $STATA
 then
     printf "***Processing FRA epi data***\n"
-    code/statab.sh code/data/france/format_infected.do
+    code/statab.sh do code/data/france/format_infected.do
 fi
 
 #### USA
@@ -79,6 +82,10 @@ then
     printf "***Processing USA epi data***\n"
     Rscript code/data/usa/download_and_clean_usafacts.R
 fi
+
+### Fill in policies implied by other policies
+printf "***Filling in policies implied by other policies***\n"
+python code/data/multi_country/convert-policies-raw-to-interim.py
 
 ### Dataset merging
 #### CHN
@@ -89,20 +96,20 @@ python code/data/china/collate_data.py
 if $STATA
 then
     printf "***Merging FRA data***\n"
-    code/statab.sh code/data/france/format_policy.do
+    code/statab.sh do code/data/france/format_policy.do
 fi
 
 # IRN
-printf "***Processing  and merging IRN data***\n"
+printf "***Processing and merging IRN data***\n"
 Rscript code/data/iran/iran_cleaning.R
 python code/data/iran/iran-split-interim-into-processed.py
 
 # ITA
-printf "***Processing  and merging ITA data***\n"
+printf "***Processing and merging ITA data***\n"
 python code/data/italy/italy-download-cases-merge-policies.py $NDFLAG
 
 # KOR
-printf "***Processing  and merging KOR data***\n"
+printf "***Processing and merging KOR data***\n"
 Rscript code/data/korea/generate_KOR_processed.R
 
 # USA
@@ -113,16 +120,11 @@ python code/data/usa/merge_policy_and_cases.py
 printf "***Checking processed data***\n"
 python code/data/multi_country/quality-check-processed-datasets.py
 
-# Under-reporting data
-if $DOWNLOAD; then
-    Rscript code/data/multi_country/download_russell_underreporting_estimates.R
-fi
-
 ## regression model estimation
 if $STATA
 then
     printf "***Estimating regression model and creating Figure 3, SI Table 3, SI Table 5, ED Figure 10***\n"
-    code/statab.sh code/models/alt_growth_rates/MASTER_run_all_reg.do $NUMPROJ
+    code/statab.sh do code/models/alt_growth_rates/MASTER_run_all_reg.do $NUMPROJ
 fi
 
 
@@ -130,6 +132,7 @@ fi
 printf "***Projecting infections***\n"
 python code/models/get_gamma.py
 Rscript code/models/run_all_CB_simulations.R $NUMPROJ
+Rscript code/models/save_underlying_projection_output.R
 
 
 ## Figures and tables
@@ -163,7 +166,7 @@ Rscript code/plotting/figED2.R $NDFLAG
 if $STATA
 then
     printf "***Creating ED Fig 3 and 4***\n"
-    code/statab.sh code/plotting/extended_data_fig3_4.do
+    code/statab.sh do code/plotting/extended_data_fig3_4.do
 fi
 
 # ED Figure 5
@@ -171,9 +174,9 @@ if $STATA
 then
     printf "***Creating ED Fig 5***\n"
     if [ $NUMPROJ == 1000 ]; then
-        code/statab.sh code/plotting/extended_data_fig5.do
+        code/statab.sh do code/plotting/extended_data_fig5.do
     else
-        code/statab.sh code/plotting/extended_data_fig5.do nosave
+        code/statab.sh do code/plotting/extended_data_fig5.do nosave
     fi
 fi
 
@@ -181,12 +184,12 @@ fi
 if $STATA
 then
     printf "***Estimating regression model with disaggregated policy variables and creating ED Figure 6 and SI Table 4***\n"
-    code/statab.sh code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
+    code/statab.sh do code/models/alt_growth_rates/disaggregated_policies/MASTER_run_all_reg_disag.do
 fi
 
 # ED Figure 7 (Projection with multiple gamma plot - replace this text when numbered)
 printf "***Creating ED Fig 7***\n"
-Rscript code/models/run_projection_with_multiple_gammas.R
+Rscript code/models/run_projection_sensitivity.R
 
 # ED Figure 8/9
 printf "***Creating ED Fig 8/9***\n"
