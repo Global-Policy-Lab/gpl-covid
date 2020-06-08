@@ -1,6 +1,6 @@
 ![build](https://github.com/bolliger32/gpl-covid/workflows/CI/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3832367.svg)](https://doi.org/10.5281/zenodo.3832367)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3885328.svg)](https://doi.org/10.5281/zenodo.3885328)
 # The Effect of Large-Scale Anti-Contagion Policies on the COVID-19 Pandemic
 
 This repository contains code and data necessary to replicate the findings of [Hsiang et al. (Nature 2020)](https://www.nature.com/articles/s41586-020-2404-8).
