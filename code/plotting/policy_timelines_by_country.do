@@ -1,8 +1,172 @@
+capture mkdir "results/figures/policy_timelines/"
+
+
+// IRN | adm1 
+capture mkdir "results/figures/policy_timelines/irn"
+clear all
+set scheme s2color
+
+//-----------------------setup
+
+// import end of sample cut-off 
+import delim using code/data/cutoff_dates.csv, clear 
+keep if tag == "default"
+local end_sample = end_date[1]
+
+// load data
+insheet using data/processed/adm1/IRN_processed.csv, clear 
+
+// set up time variables
+gen t = date(date, "YMD")
+lab var t "date"
+gen dow = dow(t)
+gen month = month(t)
+gen year = year(t)
+gen day = day(t)
+
+// clean up
+encode adm1_name, gen(adm1_id)
+
+// set up panel
+tsset adm1_id t, daily
+
+// quality control
+replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
+keep if t >= mdy(2,27,2020) - 1 // start date
+keep if t <= date("`end_sample'","YMD") // to match other country end dates
+
+//------------------grouping treatments (based on timing and similarity)
+
+gen travel_ban_local_opt_natl = travel_ban_local_opt
+	replace travel_ban_local_opt_natl = 0 if adm1_name=="Qom"
+
+// create national school_closure var for provinces that close schools on 3/5
+by adm1_id: egen school_closure_natl0 = min(school_closure) 
+gen school_closure_natl = school_closure if school_closure_natl0==0
+	replace school_closure_natl = 0 if school_closure_natl==.
+drop school_closure_natl0
+	
+gen p_1 = (travel_ban_local_opt_natl + work_from_home + school_closure_natl)/3
+lab var p_1 "Trvl ban opt, work home, school clos (natl)"
+
+// home isolation started March 13
+gen p_2 = home_isolation
+lab var p_2 "Home isolation"
+
+g i = t
+br
+
+tw line p_* t if adm1_name=="Qom", xline(21971, lpattern(shortdash) lcolor(black)) title("Busan") legend(cols(1))
+graph export "results/figures/policy_timelines/irn/qom_legend.pdf", replace
+
+// graph policy timeline for each region
+levelsof adm1_name, local(region)
+local i = 1
+foreach adm1 of local region{
+	tw line p_* t if adm1_name=="`adm1'", ///
+	xline(21972, lpattern(shortdash) lcolor(black)) title("`adm1'", color(black)) ytitle(Policy Intensity) xtitle("") ///
+	ylabel(, angle(horizontal) nogrid) graphregion(color(white)) bgcolor(white) legend(off) ///
+	xscale(range(21971(5)21996)) xlabel(21971(5)21996, format(%tdMon_DD)) tmtick(##5) name(g`i', replace)
+	local i = `i' + 1
+}
+
+foreach j of num 1(5)30{
+	local k = `j' + 1
+	local l = `j' + 2
+	local m = `j' + 3
+	local n = `j' + 4
+	graph combine g`j' g`k' g`l' g`m' g`n', ///
+	cols(1) ysize(11) xsize(4) imargin(tiny) graphregion(color(white)) 
+	graph export "results/figures/policy_timelines/irn/reg`j'_`n'.pdf", replace
+}
+graph combine g31 g31 g31 g31 g31, 	cols(1) ysize(11) xsize(4) imargin(tiny) graphregion(color(white)) 
+graph export "results/figures/policy_timelines/irn/reg31.pdf", replace
+
+
+
+
+
+// KOR | ADM1
+capture mkdir "results/figures/policy_timelines/kor"
+
+clear all
+set scheme s2color
+//-----------------------setup
+
+// import end of sample cut-off 
+import delim using code/data/cutoff_dates.csv, clear 
+keep if tag == "default"
+local end_sample = end_date[1]
+
+// load data
+insheet using data/processed/adm1/KOR_processed.csv, clear 
+
+// set up time variables
+gen t = date(date, "YMD")
+lab var t "date"
+gen dow = dow(t)
+gen month = month(t)
+gen year = year(t)
+gen day = day(t)
+
+// clean up
+capture: drop adm2_id
+encode adm1_name, gen(adm1_id)
+duplicates report adm1_id t
+
+// set up panel
+tsset adm1_id t, daily
+
+// quality control
+replace active_cases = . if cum_confirmed_cases < 10 
+replace cum_confirmed_cases = . if cum_confirmed_cases < 10 
+
+keep if t >= mdy(2,17,2020) - 1 // start date
+keep if t <= date("`end_sample'","YMD") // to match other country end dates
+
+gen p_1 = (business_closure_opt + work_from_home_opt + social_distance_opt + no_gathering_opt) / 4
+gen p_2 = (no_demonstration + religious_closure + welfare_services_closure) / 3
+gen p_3 = emergency_declaration
+gen p_4 = pos_cases_quarantine
+
+lab var p_1 "Social distance (optional)"
+lab var p_2 "Social distance (mandatory)"
+lab var p_3 "Emergency declaration"
+lab var p_4 "Quarantine positive cases"
+
+tw line p_* t if adm1_name=="Busan", xline(21962, lpattern(shortdash) lcolor(black)) title("Busan") legend(cols(1))
+graph export "results/figures/policy_timelines/kor/busan_legend.pdf", replace
+
+// graph policy timeline for each region
+levelsof adm1_name, local(region)
+local i = 1
+foreach adm1 of local region{
+	tw line p_* t if adm1_name=="`adm1'", ///
+	xline(21962, lpattern(shortdash) lcolor(black)) title("`adm1'", color(black)) ytitle(Policy Intensity) xtitle("") ///
+	ylabel(, angle(horizontal) nogrid) graphregion(color(white)) bgcolor(white) legend(off) ///
+	xscale(range(21962(5)22011)) xlabel(21962(5)22011, format(%tdMon_DD)) tmtick(##5) name(g`i', replace)
+	local i = `i' + 1
+}
+graph combine g1 g2 g3 g4 g5, ///
+cols(1) ysize(11) xsize(4) imargin(tiny) graphregion(color(white)) 
+graph export "results/figures/policy_timelines/kor/reg1_5.pdf", replace
+
+graph combine g6 g7 g8 g9 g10, ///
+cols(1) ysize(11) xsize(4) imargin(tiny) graphregion(color(white)) 
+graph export "results/figures/policy_timelines/kor/reg6_10.pdf", replace
+
+graph combine g11 g12 g13 g14 g15, ///
+cols(1) ysize(11) xsize(4) imargin(tiny) graphregion(color(white))
+graph export "results/figures/policy_timelines/kor/reg11_15.pdf", replace
+
+graph combine g16 g17 g17 g17 g17, ///
+cols(1) ysize(11) xsize(4) imargin(tiny) graphregion(color(white))
+graph export "results/figures/policy_timelines/kor/reg16_17.pdf", replace
+
 // FRA | ADM1 -------------------------------------------------------------------
 
 clear all
 set scheme s2color
-
 capture mkdir "results/figures/policy_timelines/fra"
 
 // load data
