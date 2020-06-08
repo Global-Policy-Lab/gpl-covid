@@ -1,9 +1,9 @@
 ![build](https://github.com/bolliger32/gpl-covid/workflows/CI/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3832367.svg)](https://doi.org/10.5281/zenodo.3832367)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3885328.svg)](https://doi.org/10.5281/zenodo.3885328)
 # The Effect of Large-Scale Anti-Contagion Policies on the COVID-19 Pandemic
 
-This repository contains code and data necessary to replicate the findings of [our paper](https://www.medrxiv.org/content/10.1101/2020.03.22.20040642v3).
+This repository contains code and data necessary to replicate the findings of [Hsiang et al. (Nature 2020)](https://www.nature.com/articles/s41586-020-2404-8).
 
 ## Setup
 Scripts in this repository are written in R, Python, and Stata. Note that you will need a Stata license to fully replicate the analysis (provided in the CodeOcean capsule). Throughout this Readme, when indicating paths to code and data, it is assumed that you’ll execute scripts from the repo root directory.
@@ -12,7 +12,7 @@ Scripts in this repository are written in R, Python, and Stata. Note that you wi
 The easiest way to interact with our code and data is via our [CodeOcean capsule](https://codeocean.com/capsule/1887579/tree/v2), because all of the relevant setup described below has been done for you. You may replicate the full analysis through the "Reproducible Run" feature or interact directly with our code through Jupyter Notebooks that run Python, R, and Stata. You may also utilize RStudio. If you wish to use the command line on a cloud workstation, you will want to activate our conda environment with `conda activate gpl-covid`.
 
 ### Github Repository
-You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.4.5" is the tag that is associated with the current version of the manuscript (as of 05/18/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
+You may also view and download source code from our [Github Repository](https://github.com/bolliger32/gpl-covid). "v0.5.1" is the tag that is associated with the current version of the manuscript (as of 06/07/2020), but you may also view the latest codebase and datasets on the master branch. To run this code, you will first want to create and activate our [conda](https://docs.conda.io/projects/conda/en/latest/index.html) environment.
 
 ```bash
 conda env create -f environment/environment.yml
