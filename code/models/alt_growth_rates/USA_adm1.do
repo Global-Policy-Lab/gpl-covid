@@ -142,7 +142,7 @@ lab var p_7 "Travel ban"
 lab var p_8 "Business closure"
 lab var p_9 "Religious closure" 
 lab var p_10 "Home isolation" 
-lab var p_11 "Mar 16 Federal guidelines" 
+lab var p_11 "Slow the Spread Guidelines" 
 
 
 //------------------main estimates

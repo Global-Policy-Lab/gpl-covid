@@ -58,7 +58,7 @@ bysort adm12_id : egen ever_policy2 = max(travel_ban_local)
 bysort adm12_id : egen ever_policy3 = max(emergency_declaration) 
 // gen ever_policy = ever_policy1 + ever_policy2 + ever_policy3
 // br if ever_policy==0 //Macau but no cases
-gen ever_policy = ever_policy1 + ever_policy2 // only keeping 116 cities where we find at least one of travel ban or home iso b/c unlikely that the rest of cities did not implement
+gen ever_policy = ever_policy1 + ever_policy2 // only keeping 115 cities where we find at least one of travel ban or home iso b/c unlikely that the rest of cities did not implement
 keep if ever_policy > 0
 
 // flag which admin unit has longest series
